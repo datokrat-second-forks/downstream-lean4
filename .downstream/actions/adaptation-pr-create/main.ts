@@ -18,6 +18,7 @@ import {
   getInput,
   getInputOpt,
   getPr,
+  isAncestor,
   type ListPr,
   type Octokit,
   parseBool,
@@ -99,13 +100,11 @@ async function getBranch(
   }
 }
 
-async function ensureCorrectMergeBase(prefix: string, uPr: Pr): Promise<void> {
-  const uBranch = await getBranch(upstreamRepo, upstreamBranch);
-  assert(
-    uBranch !== undefined,
-    `Upstream branch "${upstreamBranch}" not found`,
-  );
-
+async function ensureCorrectMergeBase(
+  prefix: string,
+  uPr: Pr,
+  uBranch: Branch,
+): Promise<void> {
   const { data: mergeBase } = await octo.rest.repos.compareCommits({
     ...upstreamRepo,
     base: uPr.base.sha,
@@ -148,6 +147,52 @@ async function switchToAdaptationBranch(
       `origin/${downstreamBranch}`,
     ]);
   }
+}
+
+async function isDownstreamGreenReachable(
+  uPr: Pr,
+  uBranch: Branch,
+): Promise<boolean> {
+  return isAncestor(octo, upstreamRepo, uBranch.commit.sha, uPr.head.sha);
+}
+
+async function isGreenReachableFromAdaptationBranch(): Promise<boolean> {
+  const returnCode = await dRun(
+    "git",
+    ["merge-base", "--is-ancestor", `origin/${downstreamBranch}`, "HEAD"],
+    { ignoreReturnCode: true },
+  );
+  return returnCode === 0;
+}
+
+// If the upstream PR has caught up to `upstreamBranch` (downstream-green) but
+// the adaptation branch hasn't caught up to `downstreamBranch` (green) yet,
+// merge the latter in. Conflicts are resolved in favor of `downstreamBranch`,
+// since it reflects the latest state the downstream repo has already settled
+// on; if that's not possible automatically, ask a human to sort it out.
+async function mergeGreenIntoAdaptationBranch(
+  prefix: string,
+  uPr: Pr,
+): Promise<void> {
+  await dRun("git", ["fetch", "origin", downstreamBranch]);
+  if (await isGreenReachableFromAdaptationBranch()) return;
+
+  core.info(`Merging "${downstreamBranch}" into adaptation branch...`);
+  const returnCode = await dRun(
+    "git",
+    ["merge", "-X", "theirs", "--no-edit", `origin/${downstreamBranch}`],
+    { ignoreReturnCode: true },
+  );
+  if (returnCode === 0) return;
+
+  await dRun("git", ["merge", "--abort"]);
+  await updateStatus(
+    uPr,
+    prefix +
+      `Merging \`${downstreamBranch}\` into the adaptation branch failed due to ` +
+      "conflicts that could not be resolved automatically. Please resolve them manually.",
+  );
+  exit(`failed to merge "${downstreamBranch}" into adaptation branch`);
 }
 
 async function applyOverridesAndCommit(): Promise<void> {
@@ -293,12 +338,19 @@ async function run(): Promise<void> {
     exit(`Adaptation PR #${aPr.number} is labeled "${downstreamLabelMerge}"`);
   }
 
+  const uBranch = await getBranch(upstreamRepo, upstreamBranch);
+  assert(
+    uBranch !== undefined,
+    `Upstream branch "${upstreamBranch}" not found`,
+  );
+
   if (!hasForceLabel) {
     // We want to check the merge base before checking the CI status so users
     // don't wait for green CI only to then be told to rebase, which they could've
     // done all along. Also, if we eventually support automatic rebase, we don't
     // want to delay it by waiting for CI.
-    if (aBranch === undefined) await ensureCorrectMergeBase(prefix, uPr);
+    if (aBranch === undefined)
+      await ensureCorrectMergeBase(prefix, uPr, uBranch);
 
     await ensureUpstreamCiGreen(prefix, uPr);
   }
@@ -311,6 +363,10 @@ async function run(): Promise<void> {
   // if it doesn't exist already, we can just create the adaptation branch off
   // of downstreamBranch.
   await switchToAdaptationBranch(aBranchName, aBranch !== undefined);
+
+  if (await isDownstreamGreenReachable(uPr, uBranch)) {
+    await mergeGreenIntoAdaptationBranch(prefix, uPr);
+  }
 
   await applyOverridesAndCommit();
   await pushAdaptationBranch(aBranchName);

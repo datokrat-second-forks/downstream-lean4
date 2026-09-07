@@ -24961,6 +24961,13 @@ async function getPr(octo2, repo, n) {
   });
   return data;
 }
+async function isAncestor(octo2, repo, ancestorSha, descendantSha) {
+  const { data } = await octo2.rest.repos.compareCommitsWithBasehead({
+    ...repo,
+    basehead: `${ancestorSha}...${descendantSha}`
+  });
+  return data.status === "ahead" || data.status === "identical";
+}
 function upstreamPrNumberFor(branchName) {
   const match = /^adaptation-(\d+)$/.exec(branchName);
   return match === null ? void 0 : parseInt(match[1], 10);
@@ -25106,11 +25113,7 @@ async function findAdaptationPrMergeCandidates() {
 }
 async function isReachableFromRev(uPr) {
   if (!uPr.merged || uPr.merge_commit_sha === null) return false;
-  const { data } = await octo.rest.repos.compareCommitsWithBasehead({
-    ...upstreamRepo,
-    basehead: `${uPr.merge_commit_sha}...${upstreamRev}`
-  });
-  return data.status === "ahead" || data.status === "identical";
+  return isAncestor(octo, upstreamRepo, uPr.merge_commit_sha, upstreamRev);
 }
 async function mergeForPr(aPr) {
   info(

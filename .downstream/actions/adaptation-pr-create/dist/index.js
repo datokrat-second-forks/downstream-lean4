@@ -24970,6 +24970,13 @@ async function getPr(octo2, repo, n) {
   });
   return data;
 }
+async function isAncestor(octo2, repo, ancestorSha, descendantSha) {
+  const { data } = await octo2.rest.repos.compareCommitsWithBasehead({
+    ...repo,
+    basehead: `${ancestorSha}...${descendantSha}`
+  });
+  return data.status === "ahead" || data.status === "identical";
+}
 async function findPrFor(octo2, repo, branchName, options = {}) {
   const { state = "all", headOwner = repo.owner } = options;
   const { data } = await octo2.rest.pulls.list({
@@ -25053,12 +25060,7 @@ async function getBranch(repo, branch) {
     throw error2;
   }
 }
-async function ensureCorrectMergeBase(prefix, uPr) {
-  const uBranch = await getBranch(upstreamRepo, upstreamBranch);
-  assert(
-    uBranch !== void 0,
-    `Upstream branch "${upstreamBranch}" not found`
-  );
+async function ensureCorrectMergeBase(prefix, uPr, uBranch) {
   const { data: mergeBase } = await octo.rest.repos.compareCommits({
     ...upstreamRepo,
     base: uPr.base.sha,
@@ -25089,6 +25091,34 @@ async function switchToAdaptationBranch(aBranchName, aBranchExists) {
       `origin/${downstreamBranch}`
     ]);
   }
+}
+async function isDownstreamGreenReachable(uPr, uBranch) {
+  return isAncestor(octo, upstreamRepo, uBranch.commit.sha, uPr.head.sha);
+}
+async function isGreenReachableFromAdaptationBranch() {
+  const returnCode = await dRun(
+    "git",
+    ["merge-base", "--is-ancestor", `origin/${downstreamBranch}`, "HEAD"],
+    { ignoreReturnCode: true }
+  );
+  return returnCode === 0;
+}
+async function mergeGreenIntoAdaptationBranch(prefix, uPr) {
+  await dRun("git", ["fetch", "origin", downstreamBranch]);
+  if (await isGreenReachableFromAdaptationBranch()) return;
+  info(`Merging "${downstreamBranch}" into adaptation branch...`);
+  const returnCode = await dRun(
+    "git",
+    ["merge", "-X", "theirs", "--no-edit", `origin/${downstreamBranch}`],
+    { ignoreReturnCode: true }
+  );
+  if (returnCode === 0) return;
+  await dRun("git", ["merge", "--abort"]);
+  await updateStatus(
+    uPr,
+    prefix + `Merging \`${downstreamBranch}\` into the adaptation branch failed due to conflicts that could not be resolved automatically. Please resolve them manually.`
+  );
+  exit(`failed to merge "${downstreamBranch}" into adaptation branch`);
 }
 async function applyOverridesAndCommit() {
   if (overrideToolchain !== null) {
@@ -25196,12 +25226,21 @@ async function run() {
   if (aPr !== void 0 && aPr.labels.some((l) => l.name === downstreamLabelMerge)) {
     exit(`Adaptation PR #${aPr.number} is labeled "${downstreamLabelMerge}"`);
   }
+  const uBranch = await getBranch(upstreamRepo, upstreamBranch);
+  assert(
+    uBranch !== void 0,
+    `Upstream branch "${upstreamBranch}" not found`
+  );
   if (!hasForceLabel) {
-    if (aBranch === void 0) await ensureCorrectMergeBase(prefix, uPr);
+    if (aBranch === void 0)
+      await ensureCorrectMergeBase(prefix, uPr, uBranch);
     await ensureUpstreamCiGreen(prefix, uPr);
   }
   assert(overrideToolchain !== null, "at least one override is required");
   await switchToAdaptationBranch(aBranchName, aBranch !== void 0);
+  if (await isDownstreamGreenReachable(uPr, uBranch)) {
+    await mergeGreenIntoAdaptationBranch(prefix, uPr);
+  }
   await applyOverridesAndCommit();
   await pushAdaptationBranch(aBranchName);
   if (aPr === void 0) {
