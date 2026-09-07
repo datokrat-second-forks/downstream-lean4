@@ -9,6 +9,7 @@ import {
   addAndCommit,
   getInput,
   getPr,
+  isAncestor,
   type ListPr,
   parseRepo,
   type Pr,
@@ -179,11 +180,7 @@ async function findAdaptationPrMergeCandidates(): Promise<ListPr[]> {
 
 async function isReachableFromRev(uPr: Pr): Promise<boolean> {
   if (!uPr.merged || uPr.merge_commit_sha === null) return false;
-  const { data } = await octo.rest.repos.compareCommitsWithBasehead({
-    ...upstreamRepo,
-    basehead: `${uPr.merge_commit_sha}...${upstreamRev}`,
-  });
-  return data.status === "ahead" || data.status === "identical";
+  return isAncestor(octo, upstreamRepo, uPr.merge_commit_sha, upstreamRev);
 }
 
 // Returns `false` iff the adaptation PR needs manual attention.
