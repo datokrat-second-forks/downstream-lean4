@@ -29,12 +29,6 @@ jobs:
       - name: Set cache directory
         run: echo "LAKE_CACHE_DIR=$RUNNER_TEMP/cache" >> "$GITHUB_ENV"
 
-      - name: Configure problem matchers
-        uses: leanprover-community/gh-problem-matcher-wrap@master
-        with:
-          action: add
-          linters: lean
-
       - name: Restore cache
         run: |
           TOOLCHAIN="$(cat lean-toolchain)"
