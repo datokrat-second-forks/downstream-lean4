@@ -200,6 +200,6 @@ jobs:
           push-repo: leanprover/cslib
           push-branch: nightly-testing
           push-token: ${{ steps.app-token.outputs.token }}
-          push-only: true
+          push-directly: true
           pr-title: |-
             chore: downstream-lean4 adaptations for ${{ steps.toolchain.outputs.toolchain }}
