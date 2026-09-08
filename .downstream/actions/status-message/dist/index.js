@@ -23851,6 +23851,7 @@ async function postOrUpdateStatus(options) {
       issue_number: issueNumber2,
       body: fullBody
     });
+  } else if (comment.body === fullBody) {
   } else if (repost2) {
     await octo2.rest.issues.deleteComment({
       ...repo2,
