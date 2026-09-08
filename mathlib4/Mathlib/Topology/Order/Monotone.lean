@@ -27,25 +27,6 @@ open OrderDual (toDual ofDual)
 
 variable {α β : Type*}
 
-section DualBridge
-
-variable {α β : Type*}
-
-private lemma tendsto_toDual_comp_nhds_iff [TopologicalSpace β] {l : Filter α} {f : α → β} {b : β} :
-    Tendsto (⇑toDual ∘ f) l (𝓝 (toDual b)) ↔ Tendsto f l (𝓝 b) :=
-  ⟨fun h ↦ (continuous_ofDual.tendsto _).comp h, fun h ↦ (continuous_toDual.tendsto _).comp h⟩
-
-private lemma continuousWithinAt_toDual_comp_iff [TopologicalSpace α] [TopologicalSpace β]
-    {f : α → β} {s : Set α} {x : α} :
-    ContinuousWithinAt (⇑toDual ∘ f) s x ↔ ContinuousWithinAt f s x :=
-  tendsto_toDual_comp_nhds_iff
-
-private lemma continuousAt_toDual_comp_iff [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
-    {x : α} : ContinuousAt (⇑toDual ∘ f) x ↔ ContinuousAt f x :=
-  tendsto_toDual_comp_nhds_iff
-
-end DualBridge
-
 section LinearOrder
 
 variable [LinearOrder α] [TopologicalSpace α] [OrderTopology α] [LinearOrder β]
@@ -194,14 +175,15 @@ within a set is at most countable. -/
 theorem _root_.AntitoneOn.countable_not_continuousWithinAt
     {s : Set α} (hf : AntitoneOn f s) :
     Set.Countable {x ∈ s | ¬ContinuousWithinAt f s x} := by
-  simpa only [continuousWithinAt_toDual_comp_iff] using
-    hf.dual_right.countable_not_continuousWithinAt
+  unsealing_newtype OrderDual =>
+    exact hf.dual_right.countable_not_continuousWithinAt
 
 /-- In a second countable space, the set of points where an antitone function is not continuous
 is at most countable. -/
 theorem Antitone.countable_not_continuousAt (hf : Antitone f) :
     Set.Countable {x | ¬ContinuousAt f x} := by
-  simpa only [continuousAt_toDual_comp_iff] using hf.dual_right.countable_not_continuousAt
+  unsealing_newtype OrderDual =>
+    exact hf.dual_right.countable_not_continuousAt
 
 end Continuity
 
@@ -265,17 +247,17 @@ the infimum of the image of this set. -/
 theorem MonotoneOn.map_csInf_of_continuousWithinAt {f : α → β} {A : Set α}
     (Cf : ContinuousWithinAt f A (sInf A))
     (Mf : MonotoneOn f A) (A_nonemp : A.Nonempty) (A_bdd : BddBelow A := by bddDefault) :
-    f (sInf A) = sInf (f '' A) :=
-  .symm <| ((isGLB_csInf A_nonemp A_bdd).isGLB_of_tendsto Mf A_nonemp <|
-    Cf.mono_left fun ⦃_⦄ a ↦ a).csInf_eq (A_nonemp.image f)
+    f (sInf A) = sInf (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_csSup_of_continuousWithinAt (α := αᵒᵈ) (β := βᵒᵈ) Cf Mf.dual A_nonemp A_bdd
 
 /-- A monotone function continuous at the infimum of a nonempty set sends this infimum to
 the infimum of the image of this set. -/
 theorem Monotone.map_csInf_of_continuousAt {f : α → β} {A : Set α} (Cf : ContinuousAt f (sInf A))
     (Mf : Monotone f) (A_nonemp : A.Nonempty) (A_bdd : BddBelow A := by bddDefault) :
-    f (sInf A) = sInf (f '' A) :=
-  MonotoneOn.map_csInf_of_continuousWithinAt Cf.continuousWithinAt
-    (Mf.monotoneOn _) A_nonemp A_bdd
+    f (sInf A) = sInf (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_csSup_of_continuousAt (α := αᵒᵈ) (β := βᵒᵈ) Cf Mf.dual A_nonemp A_bdd
 
 /-- A monotone function continuous at the indexed infimum over a nonempty `Sort` sends this indexed
 infimum to the indexed infimum of the composition. -/
@@ -290,17 +272,17 @@ the supremum of the image of this set. -/
 theorem AntitoneOn.map_csInf_of_continuousWithinAt {f : α → β} {A : Set α}
     (Cf : ContinuousWithinAt f A (sInf A))
     (Af : AntitoneOn f A) (A_nonemp : A.Nonempty) (A_bdd : BddBelow A := by bddDefault) :
-    f (sInf A) = sSup (f '' A) :=
-  .symm <| ((isGLB_csInf A_nonemp A_bdd).isLUB_of_tendsto Af A_nonemp <|
-    Cf.mono_left fun ⦃_⦄ a ↦ a).csSup_eq (A_nonemp.image f)
+    f (sInf A) = sSup (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_csInf_of_continuousWithinAt (β := βᵒᵈ) Cf Af.dual_right A_nonemp A_bdd
 
 /-- An antitone function continuous at the infimum of a nonempty set sends this infimum to
 the supremum of the image of this set. -/
 theorem Antitone.map_csInf_of_continuousAt {f : α → β} {A : Set α} (Cf : ContinuousAt f (sInf A))
     (Af : Antitone f) (A_nonemp : A.Nonempty) (A_bdd : BddBelow A := by bddDefault) :
-    f (sInf A) = sSup (f '' A) :=
-  AntitoneOn.map_csInf_of_continuousWithinAt Cf.continuousWithinAt
-    (Af.antitoneOn _) A_nonemp A_bdd
+    f (sInf A) = sSup (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_csInf_of_continuousAt (β := βᵒᵈ) Cf Af.dual_right A_nonemp A_bdd
 
 /-- An antitone function continuous at the indexed infimum over a nonempty `Sort` sends this indexed
 infimum to the indexed supremum of the composition. -/
@@ -315,17 +297,17 @@ the infimum of the image of this set. -/
 theorem AntitoneOn.map_csSup_of_continuousWithinAt {f : α → β} {A : Set α}
     (Cf : ContinuousWithinAt f A (sSup A))
     (Af : AntitoneOn f A) (A_nonemp : A.Nonempty) (A_bdd : BddAbove A := by bddDefault) :
-    f (sSup A) = sInf (f '' A) :=
-  .symm <| ((isLUB_csSup A_nonemp A_bdd).isGLB_of_tendsto Af A_nonemp <|
-    Cf.mono_left fun ⦃_⦄ a ↦ a).csInf_eq (A_nonemp.image f)
+    f (sSup A) = sInf (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_csSup_of_continuousWithinAt (β := βᵒᵈ) Cf Af.dual_right A_nonemp A_bdd
 
 /-- An antitone function continuous at the supremum of a nonempty set sends this supremum to
 the infimum of the image of this set. -/
 theorem Antitone.map_csSup_of_continuousAt {f : α → β} {A : Set α} (Cf : ContinuousAt f (sSup A))
     (Af : Antitone f) (A_nonemp : A.Nonempty) (A_bdd : BddAbove A := by bddDefault) :
-    f (sSup A) = sInf (f '' A) :=
-  AntitoneOn.map_csSup_of_continuousWithinAt Cf.continuousWithinAt
-    (Af.antitoneOn _) A_nonemp A_bdd
+    f (sSup A) = sInf (f '' A) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_csSup_of_continuousAt (β := βᵒᵈ) Cf Af.dual_right A_nonemp A_bdd
 
 /-- An antitone function continuous at the indexed supremum over a nonempty `Sort` sends this
 indexed supremum to the indexed infimum of the composition. -/
@@ -381,66 +363,75 @@ this infimum to the infimum of the image of this set. -/
 theorem MonotoneOn.map_sInf_of_continuousWithinAt {f : α → β} {s : Set α}
     (Cf : ContinuousWithinAt f s (sInf s)) (Mf : MonotoneOn f s) (ftop : f ⊤ = ⊤) :
     f (sInf s) = sInf (f '' s) := by
-  rcases s.eq_empty_or_nonempty with h | h
-  · simp [h, ftop]
-  · exact Mf.map_csInf_of_continuousWithinAt Cf h
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_sSup_of_continuousWithinAt (α := αᵒᵈ) (β := βᵒᵈ) Cf Mf.dual ftop
 
 /-- A monotone function `f` sending `top` to `top` and continuous at the infimum of a set sends
 this infimum to the infimum of the image of this set. -/
 theorem Monotone.map_sInf_of_continuousAt {f : α → β} {s : Set α} (Cf : ContinuousAt f (sInf s))
-    (Mf : Monotone f) (ftop : f ⊤ = ⊤) : f (sInf s) = sInf (f '' s) :=
-  MonotoneOn.map_sInf_of_continuousWithinAt Cf.continuousWithinAt (Mf.monotoneOn _) ftop
+    (Mf : Monotone f) (ftop : f ⊤ = ⊤) : f (sInf s) = sInf (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_sSup_of_continuousAt (α := αᵒᵈ) (β := βᵒᵈ) Cf Mf.dual ftop
 
 /-- If a monotone function sending `top` to `top` is continuous at the indexed infimum over
 a `Sort`, then it sends this indexed infimum to the indexed infimum of the composition. -/
 theorem Monotone.map_iInf_of_continuousAt {ι : Sort*} {f : α → β} {g : ι → α}
     (Cf : ContinuousAt f (iInf g)) (Mf : Monotone f) (ftop : f ⊤ = ⊤) :
     f (iInf g) = iInf (f ∘ g) := by
-  rw [iInf, Mf.map_sInf_of_continuousAt Cf ftop, ← range_comp, iInf]
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_iSup_of_continuousAt (α := αᵒᵈ) (β := βᵒᵈ) Cf Mf.dual ftop
 
 /-- An antitone function `f` sending `bot` to `top` and continuous at the supremum of a set sends
 this supremum to the infimum of the image of this set. -/
 theorem AntitoneOn.map_sSup_of_continuousWithinAt {f : α → β} {s : Set α}
     (Cf : ContinuousWithinAt f s (sSup s)) (Af : AntitoneOn f s) (fbot : f ⊥ = ⊤) :
     f (sSup s) = sInf (f '' s) := by
-  rcases s.eq_empty_or_nonempty with h | h
-  · simp [h, fbot]
-  · exact Af.map_csSup_of_continuousWithinAt Cf h
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_sSup_of_continuousWithinAt
+      (show ContinuousWithinAt (OrderDual.toDual ∘ f) s (sSup s) from Cf) Af fbot
 
 /-- An antitone function `f` sending `bot` to `top` and continuous at the supremum of a set sends
 this supremum to the infimum of the image of this set. -/
 theorem Antitone.map_sSup_of_continuousAt {f : α → β} {s : Set α} (Cf : ContinuousAt f (sSup s))
-    (Af : Antitone f) (fbot : f ⊥ = ⊤) : f (sSup s) = sInf (f '' s) :=
-  AntitoneOn.map_sSup_of_continuousWithinAt Cf.continuousWithinAt (Af.antitoneOn _) fbot
+    (Af : Antitone f) (fbot : f ⊥ = ⊤) : f (sSup s) = sInf (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_sSup_of_continuousAt
+      (show ContinuousAt (OrderDual.toDual ∘ f) (sSup s) from Cf) Af fbot
 
 /-- An antitone function sending `bot` to `top` is continuous at the indexed supremum over
 a `Sort`, then it sends this indexed supremum to the indexed supremum of the composition. -/
 theorem Antitone.map_iSup_of_continuousAt {ι : Sort*} {f : α → β} {g : ι → α}
     (Cf : ContinuousAt f (iSup g)) (Af : Antitone f) (fbot : f ⊥ = ⊤) :
     f (⨆ i, g i) = ⨅ i, f (g i) := by
-  rw [iSup, Af.map_sSup_of_continuousAt Cf fbot, ← range_comp, iInf, comp_def]
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_iSup_of_continuousAt
+      (show ContinuousAt (OrderDual.toDual ∘ f) (iSup g) from Cf) Af fbot
 
 /-- An antitone function `f` sending `top` to `bot` and continuous at the infimum of a set sends
 this infimum to the supremum of the image of this set. -/
 theorem AntitoneOn.map_sInf_of_continuousWithinAt {f : α → β} {s : Set α}
     (Cf : ContinuousWithinAt f s (sInf s)) (Af : AntitoneOn f s) (ftop : f ⊤ = ⊥) :
     f (sInf s) = sSup (f '' s) := by
-  rcases s.eq_empty_or_nonempty with h | h
-  · simp [h, ftop]
-  · exact Af.map_csInf_of_continuousWithinAt Cf h
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.map_sInf_of_continuousWithinAt
+      (show ContinuousWithinAt (OrderDual.toDual ∘ f) s (sInf s) from Cf) Af ftop
 
 /-- An antitone function `f` sending `top` to `bot` and continuous at the infimum of a set sends
 this infimum to the supremum of the image of this set. -/
 theorem Antitone.map_sInf_of_continuousAt {f : α → β} {s : Set α} (Cf : ContinuousAt f (sInf s))
-    (Af : Antitone f) (ftop : f ⊤ = ⊥) : f (sInf s) = sSup (f '' s) :=
-  AntitoneOn.map_sInf_of_continuousWithinAt Cf.continuousWithinAt (Af.antitoneOn _) ftop
+    (Af : Antitone f) (ftop : f ⊤ = ⊥) : f (sInf s) = sSup (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_sInf_of_continuousAt
+      (show ContinuousAt (OrderDual.toDual ∘ f) (sInf s) from Cf) Af ftop
 
 /-- If an antitone function sending `top` to `bot` is continuous at the indexed infimum over
 a `Sort`, then it sends this indexed infimum to the indexed supremum of the composition. -/
 theorem Antitone.map_iInf_of_continuousAt {ι : Sort*} {f : α → β} {g : ι → α}
     (Cf : ContinuousAt f (iInf g)) (Af : Antitone f) (ftop : f ⊤ = ⊥) :
     f (iInf g) = iSup (f ∘ g) := by
-  rw [iInf, Af.map_sInf_of_continuousAt Cf ftop, ← range_comp, iSup]
+  unsealing_newtype OrderDual =>
+    exact Monotone.map_iInf_of_continuousAt
+      (show ContinuousAt (OrderDual.toDual ∘ f) (iInf g) from Cf) Af ftop
 
 end CompleteLinearOrder
 
@@ -529,8 +520,9 @@ theorem Monotone.tendsto_nhdsLT {α β : Type*} [LinearOrder α] [TopologicalSpa
 /-- A monotone map has a limit to the right of any point `x`, equal to `sInf (f '' (Ioi x))`. -/
 theorem Monotone.tendsto_nhdsGT {α β : Type*} [LinearOrder α] [TopologicalSpace α] [OrderTopology α]
     [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β] {f : α → β}
-    (Mf : Monotone f) (x : α) : Tendsto f (𝓝[>] x) (𝓝 (sInf (f '' Ioi x))) :=
-  MonotoneOn.tendsto_nhdsGT (Mf.monotoneOn _) (Mf.map_bddBelow bddBelow_Ioi)
+    (Mf : Monotone f) (x : α) : Tendsto f (𝓝[>] x) (𝓝 (sInf (f '' Ioi x))) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.tendsto_nhdsLT (α := αᵒᵈ) (β := βᵒᵈ) Mf.dual x
 
 lemma AntitoneOn.tendsto_nhdsWithin_Ioo_left {α β : Type*} [LinearOrder α] [TopologicalSpace α]
     [OrderTopology α] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β]
@@ -565,13 +557,15 @@ lemma AntitoneOn.tendsto_nhdsGT {α β : Type*} [LinearOrder α] [TopologicalSpa
 /-- An antitone map has a limit to the left of any point `x`, equal to `sInf (f '' (Iio x))`. -/
 theorem Antitone.tendsto_nhdsLT {α β : Type*} [LinearOrder α] [TopologicalSpace α] [OrderTopology α]
     [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β] {f : α → β}
-    (Af : Antitone f) (x : α) : Tendsto f (𝓝[<] x) (𝓝 (sInf (f '' Iio x))) :=
-  AntitoneOn.tendsto_nhdsLT (Af.antitoneOn _) (Af.map_bddAbove bddAbove_Iio)
+    (Af : Antitone f) (x : α) : Tendsto f (𝓝[<] x) (𝓝 (sInf (f '' Iio x))) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.tendsto_nhdsLT Af.dual_right x
 
 /-- An antitone map has a limit to the right of any point `x`, equal to `sSup (f '' (Ioi x))`. -/
 theorem Antitone.tendsto_nhdsGT {α β : Type*} [LinearOrder α] [TopologicalSpace α] [OrderTopology α]
     [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β] {f : α → β}
-    (Af : Antitone f) (x : α) : Tendsto f (𝓝[>] x) (𝓝 (sSup (f '' Ioi x))) :=
-  AntitoneOn.tendsto_nhdsGT (Af.antitoneOn _) (Af.map_bddBelow bddBelow_Ioi)
+    (Af : Antitone f) (x : α) : Tendsto f (𝓝[>] x) (𝓝 (sSup (f '' Ioi x))) := by
+  unsealing_newtype OrderDual =>
+    exact Monotone.tendsto_nhdsGT Af.dual_right x
 
 end ConditionallyCompleteLinearOrder

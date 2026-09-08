@@ -245,12 +245,14 @@ theorem toColex_update_lt_self_iff : toColex (update x i a) < toColex x ↔ a < 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem le_toColex_update_self_iff : toColex x ≤ toColex (update x i a) ↔ x i ≤ a := by
-  simp_rw [le_iff_lt_or_eq, lt_toColex_update_self_iff, toColex_inj, eq_update_self_iff]
+  unsealing_newtype OrderDual =>
+    exact le_toLex_update_self_iff (ι := ιᵒᵈ)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem toColex_update_le_self_iff : toColex (update x i a) ≤ toColex x ↔ a ≤ x i := by
-  simp_rw [le_iff_lt_or_eq, toColex_update_lt_self_iff, toColex_inj, update_eq_self_iff]
+  unsealing_newtype OrderDual =>
+    exact toLex_update_le_self_iff (ι := ιᵒᵈ)
 
 end Colex
 

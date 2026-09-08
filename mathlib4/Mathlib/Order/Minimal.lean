@@ -450,10 +450,8 @@ theorem minimal_mem_image_monotone_iff (ha : a ∈ s)
 @[to_dual (reorder := hf (x y, 3 4))]
 theorem minimal_mem_image_antitone (hf : ∀ ⦃x y⦄, x ∈ s → y ∈ s → (f x ≤ f y ↔ y ≤ x))
     (hx : Minimal (· ∈ s) x) : Maximal (· ∈ f '' s) (f x) := by
-  refine ⟨mem_image_of_mem f hx.prop, ?_⟩
-  rintro _ ⟨y, hy, rfl⟩
-  rw [hf hx.prop hy, hf hy hx.prop]
-  exact hx.le_of_le hy
+  unsealing_newtype OrderDual =>
+    exact minimal_mem_image_monotone (β := βᵒᵈ) (fun _ _ h h' ↦ hf h' h) hx
 
 @[to_dual (reorder := hf (x y, 3 4))]
 theorem minimal_mem_image_antitone_iff (ha : a ∈ s)

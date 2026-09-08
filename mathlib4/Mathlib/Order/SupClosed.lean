@@ -190,12 +190,14 @@ lemma isSublattice_pi {ι : Type*} {α : ι → Type*} [∀ i, Lattice (α i)] {
   ⟨supClosed_pi fun _i hi ↦ (ht _ hi).1, infClosed_pi fun _i hi ↦ (ht _ hi).2⟩
 
 @[to_dual (attr := simp)] lemma supClosed_preimage_toDual {s : Set αᵒᵈ} :
-    SupClosed (toDual ⁻¹' s) ↔ InfClosed s :=
-  ⟨fun h _ ha _ hb ↦ h ha hb, fun h _ ha _ hb ↦ h ha hb⟩
+    SupClosed (toDual ⁻¹' s) ↔ InfClosed s := by
+  unsealing_newtype OrderDual =>
+    exact Iff.rfl
 
 @[to_dual (attr := simp)] lemma supClosed_preimage_ofDual {s : Set α} :
-    SupClosed (ofDual ⁻¹' s) ↔ InfClosed s :=
-  ⟨fun h _ ha _ hb ↦ h ha hb, fun h _ ha _ hb ↦ h ha hb⟩
+    SupClosed (ofDual ⁻¹' s) ↔ InfClosed s := by
+  unsealing_newtype OrderDual =>
+    exact Iff.rfl
 
 @[simp] lemma isSublattice_preimage_toDual {s : Set αᵒᵈ} :
     IsSublattice (toDual ⁻¹' s) ↔ IsSublattice s := by

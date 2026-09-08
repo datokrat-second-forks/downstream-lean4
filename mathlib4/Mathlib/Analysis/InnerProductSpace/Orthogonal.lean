@@ -187,14 +187,15 @@ theorem le_orthogonal_orthogonal : K ≤ Kᗮᗮ :=
 
 /-- The inf of two orthogonal subspaces equals the subspace orthogonal
 to the sup. -/
-theorem inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K₁ ⊔ K₂)ᗮ :=
-  (OrderDual.toDual_inj (a := K₁ᗮ ⊓ K₂ᗮ) (b := (K₁ ⊔ K₂)ᗮ)).1 (orthogonal_gc 𝕜 E).l_sup.symm
+theorem inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K₁ ⊔ K₂)ᗮ := by
+  unsealing_newtype OrderDual =>
+    exact (orthogonal_gc 𝕜 E).l_sup.symm
 
 /-- The inf of an indexed family of orthogonal subspaces equals the
 subspace orthogonal to the sup. -/
 theorem iInf_orthogonal {ι : Type*} (K : ι → Submodule 𝕜 E) : ⨅ i, (K i)ᗮ = (iSup K)ᗮ := by
-  rw [← OrderDual.toDual_inj, toDual_iInf]
-  exact (orthogonal_gc 𝕜 E).l_iSup.symm
+  unsealing_newtype OrderDual =>
+    exact (orthogonal_gc 𝕜 E).l_iSup.symm
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
 theorem sInf_orthogonal (s : Set <| Submodule 𝕜 E) : ⨅ K ∈ s, Kᗮ = (sSup s)ᗮ := by
@@ -513,14 +514,15 @@ theorem orthogonal_orthogonal_monotone {K₁ K₂ : ClosedSubmodule 𝕜 E} (h :
 
 /-- The inf of two orthogonal subspaces equals the subspace orthogonal
 to the sup. -/
-theorem inf_orthogonal (K₁ K₂ : ClosedSubmodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K₁ ⊔ K₂)ᗮ :=
-  (OrderDual.toDual_inj (a := K₁ᗮ ⊓ K₂ᗮ) (b := (K₁ ⊔ K₂)ᗮ)).1 (orthogonal_gc 𝕜 E).l_sup.symm
+theorem inf_orthogonal (K₁ K₂ : ClosedSubmodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K₁ ⊔ K₂)ᗮ := by
+  unsealing_newtype OrderDual =>
+    exact (orthogonal_gc 𝕜 E).l_sup.symm
 
 /-- The inf of an indexed family of orthogonal subspaces equals the
 subspace orthogonal to the sup. -/
 theorem iInf_orthogonal {ι : Type*} (K : ι → ClosedSubmodule 𝕜 E) : ⨅ i, (K i)ᗮ = (iSup K)ᗮ := by
-  rw [← OrderDual.toDual_inj, toDual_iInf]
-  exact (orthogonal_gc 𝕜 E).l_iSup.symm
+  unsealing_newtype OrderDual =>
+    exact (orthogonal_gc 𝕜 E).l_iSup.symm
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
 theorem sInf_orthogonal (s : Set <| ClosedSubmodule 𝕜 E) : ⨅ K ∈ s, Kᗮ = (sSup s)ᗮ := by

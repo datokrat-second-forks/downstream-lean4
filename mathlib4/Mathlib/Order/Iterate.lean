@@ -65,8 +65,9 @@ theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
     exact hk.trans n.succ.lt_succ_self
 
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-    (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
-  hf.dual.seq_pos_lt_seq_of_lt_of_le (x := ⇑toDual ∘ y) (y := ⇑toDual ∘ x) hn h₀ hy hx
+    (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 
 theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
@@ -74,8 +75,9 @@ theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
   exacts [h₀, hf.seq_pos_lt_seq_of_lt_of_le (Nat.zero_lt_succ _) h₀.le hx hy]
 
 theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
-    (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
-  hf.dual.seq_lt_seq_of_lt_of_le (x := ⇑toDual ∘ y) (y := ⇑toDual ∘ x) n h₀ hy hx
+    (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
 
 /-!
 ### Iterates of two functions
@@ -130,10 +132,10 @@ theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
     rw [iterate_succ_apply']
     exact h _
 
-theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] :=
-  antitone_nat_of_succ_le fun n x => by
-    rw [iterate_succ_apply']
-    exact h _
+theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := by
+  unsealing_newtype OrderDual =>
+    exact fun m n hmn =>
+      @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
 
 end Preorder
 

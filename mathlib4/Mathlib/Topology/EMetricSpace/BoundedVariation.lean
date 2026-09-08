@@ -601,7 +601,8 @@ protected lemma _root_.BoundedVariationOn.ofDual
 
 @[simp] lemma boundedVariation_ofDual {f : α → E} {s : Set α} :
     BoundedVariationOn (f ∘ ofDual) (ofDual ⁻¹' s) ↔ BoundedVariationOn f s := by
-  simp only [BoundedVariationOn, eVariationOn.comp_ofDual]
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h ↦ h.ofDual, fun h ↦ h.ofDual⟩
 
 protected lemma _root_.LocallyBoundedVariationOn.ofDual {f : α → E} {s : Set α}
     (hf : LocallyBoundedVariationOn f s) :
@@ -874,13 +875,13 @@ intervals to the right of any point tends to `0`. -/
 theorem _root_.BoundedVariationOn.tendsto_eVariationOn_Ioc_zero [TopologicalSpace α]
     [OrderTopology α] {f : α → E} {s : Set α} (hf : BoundedVariationOn f s) (x : α) :
     Tendsto (fun y ↦ eVariationOn f (s ∩ Ioc x y)) (𝓝[s] x) (𝓝 0) := by
-  have : (fun y ↦ eVariationOn f (s ∩ Ioc x y)) =
-      (fun y ↦ eVariationOn (f ∘ ofDual) (ofDual ⁻¹' s ∩ Ico (toDual y) (toDual x))) := by
-    ext y
-    rw [Ico_toDual, ← preimage_inter, comp_ofDual]
-  rw [this]
-  have H := hf.ofDual.tendsto_eVariationOn_Ico_zero (toDual x)
-  rwa [nhdsWithin_toDual, Filter.tendsto_map'_iff] at H
+  unsealing_newtype OrderDual =>
+    have : (fun y ↦ eVariationOn f (s ∩ Ioc x y)) =
+        (fun y ↦ eVariationOn (f ∘ ofDual) (ofDual ⁻¹' s ∩ Ico (toDual y) (toDual x))) := by
+      ext y
+      rw [Ico_toDual, ← preimage_inter, comp_ofDual]
+    rw [this]
+    exact hf.ofDual.tendsto_eVariationOn_Ico_zero (toDual x)
 
 /-- A bounded variation function has a limit on its left within a set. -/
 theorem _root_.BoundedVariationOn.exists_tendsto_left [CompleteSpace M] [TopologicalSpace α]

@@ -312,18 +312,17 @@ instance (priority := 100) isNoetherian_of_subsingleton (R M) [Subsingleton R] [
   isNoetherian_of_finite R M
 
 theorem isNoetherian_of_submodule_of_noetherian (R M) [Semiring R] [AddCommMonoid M] [Module R M]
-    (N : Submodule R M) (h : IsNoetherian R M) : IsNoetherian R N :=
-  haveI := h.wellFoundedGT
-  isNoetherian_mk <| (wellFoundedLT_dual_iff _).1 <|
-    OrderEmbedding.wellFoundedLT (Submodule.MapSubtype.orderEmbedding N).dual
+    (N : Submodule R M) (h : IsNoetherian R M) : IsNoetherian R N := by
+  unsealing_newtype OrderDual =>
+    exact isNoetherian_mk
+      ⟨OrderEmbedding.wellFounded (Submodule.MapSubtype.orderEmbedding N).dual h.wf⟩
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Noetherian, then `M / S` is
 also Noetherian. -/
 theorem isNoetherian_of_tower (R) {S M} [Semiring R] [Semiring S] [AddCommMonoid M] [SMul R S]
-    [Module S M] [Module R M] [IsScalarTower R S M] (h : IsNoetherian R M) : IsNoetherian S M :=
-  haveI := h.wellFoundedGT
-  isNoetherian_mk <| (wellFoundedLT_dual_iff _).1 <|
-    (Submodule.restrictScalarsEmbedding R S M).dual.wellFoundedLT
+    [Module S M] [Module R M] [IsScalarTower R S M] (h : IsNoetherian R M) : IsNoetherian S M := by
+  unsealing_newtype OrderDual =>
+    exact isNoetherian_mk ⟨(Submodule.restrictScalarsEmbedding R S M).dual.wellFounded h.wf⟩
 
 instance isNoetherian_of_isNoetherianRing_of_finite (R M : Type*)
     [Ring R] [AddCommGroup M] [Module R M] [IsNoetherianRing R] [Module.Finite R M] :
@@ -346,10 +345,10 @@ theorem IsNoetherianRing.of_finite (R S) [Ring R] [Ring S] [Module R S] [IsScala
   isNoetherian_of_tower R inferInstance
 
 theorem isNoetherianRing_of_surjective (R) [Semiring R] (S) [Semiring S] (f : R →+* S)
-    (hf : Function.Surjective f) [H : IsNoetherianRing R] : IsNoetherianRing S :=
-  haveI := H.wellFoundedGT
-  isNoetherian_mk <| (wellFoundedLT_dual_iff _).1 <|
-    OrderEmbedding.wellFoundedLT (Ideal.orderEmbeddingOfSurjective f hf).dual
+    (hf : Function.Surjective f) [H : IsNoetherianRing R] : IsNoetherianRing S := by
+  unsealing_newtype OrderDual =>
+    exact isNoetherian_mk
+      ⟨OrderEmbedding.wellFounded (Ideal.orderEmbeddingOfSurjective f hf).dual H.wf⟩
 
 instance isNoetherianRing_rangeS {R} [Semiring R] {S} [Semiring S] (f : R →+* S)
     [IsNoetherianRing R] : IsNoetherianRing f.rangeS :=

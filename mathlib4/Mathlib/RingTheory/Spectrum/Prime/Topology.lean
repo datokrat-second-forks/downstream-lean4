@@ -171,8 +171,8 @@ theorem zeroLocus_vanishingIdeal_eq_closure (t : Set (PrimeSpectrum R)) :
 
 theorem vanishingIdeal_closure (t : Set (PrimeSpectrum R)) :
     vanishingIdeal (closure t) = vanishingIdeal t := by
-  rw [← zeroLocus_vanishingIdeal_eq_closure]
-  exact (gc R).u_l_u_eq_u (OrderDual.toDual t)
+  unsealing_newtype OrderDual =>
+    exact zeroLocus_vanishingIdeal_eq_closure t ▸ (gc R).u_l_u_eq_u t
 
 theorem closure_singleton (x) : closure ({x} : Set (PrimeSpectrum R)) = zeroLocus x.asIdeal := by
   rw [← zeroLocus_vanishingIdeal_eq_closure, vanishingIdeal_singleton]

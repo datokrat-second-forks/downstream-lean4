@@ -143,9 +143,9 @@ theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (
 
 /-- A module is Artinian iff every decreasing chain of submodules stabilizes. -/
 theorem monotone_stabilizes_iff_artinian :
-    (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M :=
-  (wellFoundedGT_iff_monotone_chain_condition (α := (Submodule R M)ᵒᵈ)).symm.trans
-    (wellFoundedGT_dual_iff _)
+    (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M := by
+  unsealing_newtype OrderDual =>
+    exact wellFoundedGT_iff_monotone_chain_condition.symm
 
 namespace IsArtinian
 
@@ -181,16 +181,17 @@ is eventually ⊤. -/
 theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     (h : ∀ n, Disjoint (partialSups (OrderDual.toDual ∘ f) n) (OrderDual.toDual (f (n + 1)))) :
     ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
-  -- A little off-by-one cleanup first:
-  rsuffices ⟨n, w⟩ : ∃ n : ℕ, ∀ m, n ≤ m → f (m + 1) = ⊤
-  · use n + 1
-    rintro (_ | m) p
-    · cases p
-    · apply w
-      exact Nat.succ_le_succ_iff.mp p
-  obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
-  refine ⟨n, fun m p ↦ congrArg OrderDual.ofDual ((h m).eq_bot_of_ge <| sup_eq_left.mp ?_)⟩
-  simpa only [partialSups_add_one] using! (w (m + 1) <| le_add_right p).symm.trans <| w m p
+  unsealing_newtype OrderDual =>
+    -- A little off-by-one cleanup first:
+    rsuffices ⟨n, w⟩ : ∃ n : ℕ, ∀ m, n ≤ m → OrderDual.toDual f (m + 1) = ⊤
+    · use n + 1
+      rintro (_ | m) p
+      · cases p
+      · apply w
+        exact Nat.succ_le_succ_iff.mp p
+    obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
+    refine ⟨n, fun m p ↦ (h m).eq_bot_of_ge <| sup_eq_left.mp ?_⟩
+    simpa only [partialSups_add_one] using! (w (m + 1) <| le_add_right p).symm.trans <| w m p
 
 end IsArtinian
 
@@ -207,13 +208,13 @@ variable [IsArtinian R M]
 
 lemma eventually_iInf_range_pow_eq (f : Module.End R M) :
     ∀ᶠ n in atTop, ⨅ m, LinearMap.range (f ^ m) = LinearMap.range (f ^ n) := by
-  obtain ⟨n, hn'⟩ := IsArtinian.monotone_stabilizes f.iterateRange
-  have hn : ∀ m, n ≤ m → LinearMap.range (f ^ n) = LinearMap.range (f ^ m) :=
-    fun m hm ↦ congrArg OrderDual.ofDual (hn' m hm)
-  refine eventually_atTop.mpr ⟨n, fun l hl ↦ le_antisymm (iInf_le _ _) (le_iInf fun m ↦ ?_)⟩
-  rcases le_or_gt l m with h | h
-  · rw [← hn _ (hl.trans h), hn _ hl]
-  · exact f.iterateRange.monotone h.le
+  unsealing_newtype OrderDual =>
+    obtain ⟨n, hn : ∀ m, n ≤ m → LinearMap.range (f ^ n) = LinearMap.range (f ^ m)⟩ :=
+      IsArtinian.monotone_stabilizes f.iterateRange
+    refine eventually_atTop.mpr ⟨n, fun l hl ↦ le_antisymm (iInf_le _ _) (le_iInf fun m ↦ ?_)⟩
+    rcases le_or_gt l m with h | h
+    · rw [← hn _ (hl.trans h), hn _ hl]
+    · exact f.iterateRange.monotone h.le
 
 end LinearMap
 
@@ -302,18 +303,19 @@ variable [IsArtinian R M]
 and range. -/
 theorem eventually_codisjoint_ker_pow_range_pow (f : Module.End R M) :
     ∀ᶠ n in atTop, Codisjoint (LinearMap.ker (f ^ n)) (LinearMap.range (f ^ n)) := by
-  obtain ⟨n, hn'⟩ := IsArtinian.monotone_stabilizes f.iterateRange
-  have hn : ∀ m, n ≤ m → LinearMap.range (f ^ n) = LinearMap.range (f ^ m) :=
-    fun m hm ↦ congrArg OrderDual.ofDual (hn' m hm)
-  refine eventually_atTop.mpr ⟨n, fun m hm ↦ codisjoint_iff.mpr ?_⟩
-  simp_rw [← hn _ hm, Submodule.eq_top_iff', Submodule.mem_sup]
-  intro x
-  rsuffices ⟨y, hy⟩ : ∃ y, (f ^ m) ((f ^ n) y) = (f ^ m) x
-  · exact ⟨x - (f ^ n) y, by simp [hy], (f ^ n) y, by simp⟩
-  -- Note: https://github.com/leanprover-community/mathlib4/pull/8386 had to change `mem_range` into `mem_range (f := _)`
-  simp_rw [f.pow_apply n, f.pow_apply m, ← iterate_add_apply, ← f.pow_apply (m + n),
-    ← f.pow_apply m, ← mem_range (f := _), ← hn _ (n.le_add_left m), hn _ hm]
-  exact LinearMap.mem_range_self (f ^ m) x
+  unsealing_newtype OrderDual =>
+    obtain ⟨n, hn : ∀ m, n ≤ m → LinearMap.range (f ^ n) = LinearMap.range (f ^ m)⟩ :=
+      IsArtinian.monotone_stabilizes f.iterateRange
+    refine eventually_atTop.mpr ⟨n, fun m hm ↦ codisjoint_iff.mpr ?_⟩
+    simp_rw [← hn _ hm, Submodule.eq_top_iff', Submodule.mem_sup]
+    intro x
+    rsuffices ⟨y, hy⟩ : ∃ y, (f ^ m) ((f ^ n) y) = (f ^ m) x
+    · exact ⟨x - (f ^ n) y, by simp [hy], (f ^ n) y, by simp⟩
+    -- Note: https://github.com/leanprover-community/mathlib4/pull/8386
+    -- had to change `mem_range` into `mem_range (f := _)`
+    simp_rw [f.pow_apply n, f.pow_apply m, ← iterate_add_apply, ← f.pow_apply (m + n),
+      ← f.pow_apply m, ← mem_range (f := _), ← hn _ (n.le_add_left m), hn _ hm]
+    exact LinearMap.mem_range_self (f ^ m) x
 
 /-- This is the Fitting decomposition of the module `M` with respect to the endomorphism `f`.
 

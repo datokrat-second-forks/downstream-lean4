@@ -101,8 +101,9 @@ theorem le_gfp {a : α} (h : a ≤ f a) : a ≤ f.gfp :=
 theorem gfp_le {a : α} (h : ∀ b, b ≤ f b → b ≤ a) : f.gfp ≤ a :=
   sSup_le h
 
-theorem gfp_le_map {a : α} (ha : f.gfp ≤ a) : f.gfp ≤ f a :=
-  f.gfp_le fun _ hb => hb.trans (f.mono <| sSup_le_iff.1 ha _ hb)
+theorem gfp_le_map {a : α} (ha : f.gfp ≤ a) : f.gfp ≤ f a := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.map_le_lfp ha
 
 @[simp]
 theorem map_gfp : f f.gfp = f.gfp := by
@@ -112,16 +113,17 @@ theorem map_gfp : f f.gfp = f.gfp := by
 theorem isFixedPt_gfp : IsFixedPt f f.gfp :=
   f.map_gfp
 
-theorem map_le_gfp {a : α} (ha : a ≤ f.gfp) : f a ≤ f.gfp :=
-  calc
-    f a ≤ f f.gfp := f.mono ha
-    _ = f.gfp := f.map_gfp
+theorem map_le_gfp {a : α} (ha : a ≤ f.gfp) : f a ≤ f.gfp := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.lfp_le_map ha
 
-theorem isGreatest_gfp_le : IsGreatest { a | a ≤ f a } f.gfp :=
-  ⟨f.map_gfp.ge, fun _ => f.le_gfp⟩
+theorem isGreatest_gfp_le : IsGreatest { a | a ≤ f a } f.gfp := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.isLeast_lfp_le
 
-theorem isGreatest_gfp : IsGreatest (fixedPoints f) f.gfp :=
-  ⟨f.isFixedPt_gfp, fun _ hb => f.le_gfp hb.ge⟩
+theorem isGreatest_gfp : IsGreatest (fixedPoints f) f.gfp := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.isLeast_lfp
 
 theorem gfp_induction {p : α → Prop} (step : ∀ a, p a → f.gfp ≤ a → p (f a))
     (hInf : ∀ s, (∀ a ∈ s, p a) → p (sInf s)) : p f.gfp := by
@@ -210,14 +212,15 @@ theorem nextFixed_le_iff {x : α} (hx : x ≤ f x) {y : fixedPoints f} :
     f.nextFixed x hx ≤ y ↔ x ≤ y :=
   ⟨fun h => (f.le_nextFixed hx).trans h, f.nextFixed_le hx⟩
 
-theorem le_prevFixed {x : α} (hx : f x ≤ x) {y : fixedPoints f} (h : ↑y ≤ x) :
-    y ≤ f.prevFixed x hx :=
-  Subtype.coe_le_coe.1 <| le_gfp _ <| le_inf h y.2.ge
-
 @[simp]
 theorem le_prevFixed_iff {x : α} (hx : f x ≤ x) {y : fixedPoints f} :
-    y ≤ f.prevFixed x hx ↔ ↑y ≤ x :=
-  ⟨fun h => (Subtype.coe_le_coe.2 h).trans (f.prevFixed_le hx), f.le_prevFixed hx⟩
+    y ≤ f.prevFixed x hx ↔ ↑y ≤ x := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.nextFixed_le_iff hx
+
+theorem le_prevFixed {x : α} (hx : f x ≤ x) {y : fixedPoints f} (h : ↑y ≤ x) :
+    y ≤ f.prevFixed x hx :=
+  (f.le_prevFixed_iff hx).2 h
 
 theorem le_map_sup_fixedPoints (x y : fixedPoints f) : (x ⊔ y : α) ≤ f (x ⊔ y) :=
   calc

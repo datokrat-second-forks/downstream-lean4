@@ -128,8 +128,10 @@ theorem upperClosure_singleton (a : α) : upperClosure ({a} : Set α) = UpperSet
 theorem upperClosure_univ : upperClosure (univ : Set α) = ⊥ :=
   bot_unique subset_upperClosure
 
-theorem upperClosure_union (s t : Set α) : upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t :=
-  congrArg OrderDual.ofDual (@gc_upperClosure_coe α _).l_sup
+theorem upperClosure_union (s t : Set α) :
+    upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t := by
+  unsealing_newtype OrderDual =>
+    exact (@gc_upperClosure_coe α _).l_sup
 
 @[to_dual existing (attr := simp)]
 theorem lowerClosure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosure s ⊔ lowerClosure t :=
@@ -137,7 +139,8 @@ theorem lowerClosure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosur
 
 theorem upperClosure_iUnion (f : ι → Set α) :
     upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) := by
-  simpa using congrArg OrderDual.ofDual ((@gc_upperClosure_coe α _).l_iSup (f := f))
+  unsealing_newtype OrderDual =>
+    exact (@gc_upperClosure_coe α _).l_iSup
 
 @[to_dual existing (attr := simp)]
 theorem lowerClosure_iUnion (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) :=

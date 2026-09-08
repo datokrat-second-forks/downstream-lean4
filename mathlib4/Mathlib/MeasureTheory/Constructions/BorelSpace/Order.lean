@@ -67,42 +67,6 @@ private lemma borel_comap_toDual (α : Type*) [TopologicalSpace α] :
   congr 1
   exact induced_toDual α
 
-private lemma preimage_toDual_Ico {α : Type*} [Preorder α] (l u : αᵒᵈ) :
-    ⇑OrderDual.toDual ⁻¹' Ico l u = Ioc (OrderDual.ofDual u) (OrderDual.ofDual l) := by
-  ext y
-  exact and_comm
-
-/-- `toDual` as a measurable equivalence; both directions are the identity on proofs, since
-`MeasurableSet[αᵒᵈ] s` is by definition `MeasurableSet (⇑toDual ⁻¹' s)`. -/
-private def toDualMeasurableEquiv (α : Type*) [MeasurableSpace α] : α ≃ᵐ αᵒᵈ where
-  toEquiv := OrderDual.toDual
-  measurable_toFun := fun _ hs ↦ hs
-  measurable_invFun := fun _ hs ↦ hs
-
-private lemma map_toDual_apply {α : Type*} [MeasurableSpace α] (μ : Measure α) (s : Set αᵒᵈ) :
-    μ.map OrderDual.toDual s = μ (⇑OrderDual.toDual ⁻¹' s) :=
-  MeasurableEquiv.map_apply (toDualMeasurableEquiv α) s
-
-private lemma eq_of_map_toDual_eq {α : Type*} [MeasurableSpace α] {μ ν : Measure α}
-    (h : μ.map OrderDual.toDual = ν.map OrderDual.toDual) : μ = ν := by
-  refine Measure.ext fun s _ ↦ ?_
-  have H : μ.map OrderDual.toDual (⇑OrderDual.ofDual ⁻¹' s)
-      = ν.map OrderDual.toDual (⇑OrderDual.ofDual ⁻¹' s) := by rw [h]
-  rw [map_toDual_apply, map_toDual_apply] at H
-  exact H
-
-private lemma measurable_ofDual {α : Type*} [MeasurableSpace α] :
-    Measurable (OrderDual.ofDual : αᵒᵈ → α) := fun _ hs ↦ hs
-
-private lemma measurable_of_toDual_comp {δ α : Type*} [MeasurableSpace δ] [MeasurableSpace α]
-    {f : δ → α} (h : Measurable fun b ↦ OrderDual.toDual (f b)) : Measurable f :=
-  measurable_ofDual.comp h
-
-private lemma aemeasurable_of_toDual_comp {δ α : Type*} [MeasurableSpace δ] [MeasurableSpace α]
-    {μ : Measure δ} {f : δ → α} (h : AEMeasurable (fun b ↦ OrderDual.toDual (f b)) μ) :
-    AEMeasurable f μ :=
-  measurable_ofDual.comp_aemeasurable h
-
 end DualBridge
 
 section OrderTopology
@@ -526,10 +490,9 @@ theorem ext_of_Ioc_finite {α : Type*} [TopologicalSpace α] {m : MeasurableSpac
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] (μ ν : Measure α)
     [IsFiniteMeasure μ] (hμν : μ univ = ν univ) (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) :
     μ = ν := by
-  refine eq_of_map_toDual_eq (ext_of_Ico_finite (α := αᵒᵈ) _ _ ?_ fun a b hab => ?_)
-  · rw [map_toDual_apply, map_toDual_apply]
-    exact hμν
-  · rw [map_toDual_apply, map_toDual_apply, preimage_toDual_Ico]
+  unsealing_newtype OrderDual =>
+    refine @ext_of_Ico_finite αᵒᵈ _ _ _ _ _ ‹_› μ ν ‹_› hμν fun a b hab => ?_
+    erw [Ico_toDual (α := α)]
     exact h hab
 
 /-- Two measures which are finite on closed-open intervals are equal if they agree on all
@@ -563,9 +526,10 @@ theorem ext_of_Ioc' {α : Type*} [TopologicalSpace α] {m : MeasurableSpace α}
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] [NoMinOrder α]
     (μ ν : Measure α) (hμ : ∀ ⦃a b⦄, a < b → μ (Ioc a b) ≠ ∞)
     (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν := by
-  refine eq_of_map_toDual_eq (ext_of_Ico' (α := αᵒᵈ) _ _ ?_ ?_) <;> intro a b hab <;>
-    simp only [map_toDual_apply, preimage_toDual_Ico]
-  exacts [hμ hab, h hab]
+  unsealing_newtype OrderDual =>
+    refine @ext_of_Ico' αᵒᵈ _ _ _ _ _ ‹_› _ μ ν ?_ ?_ <;>
+      intro a b hab <;> erw [Ico_toDual (α := α)]
+    exacts [hμ hab, h hab]
 
 /-- Two measures which are finite on closed-open intervals are equal if they agree on all
 closed-open intervals. -/
@@ -602,11 +566,9 @@ theorem ext_of_Iic {α : Type*} [TopologicalSpace α] {m : MeasurableSpace α}
 intervals. -/
 theorem ext_of_Ici {α : Type*} [TopologicalSpace α] {_ : MeasurableSpace α}
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] (μ ν : Measure α)
-    [IsFiniteMeasure μ] (h : ∀ a, μ (Ici a) = ν (Ici a)) : μ = ν :=
-  eq_of_map_toDual_eq (ext_of_Iic (α := αᵒᵈ) _ _ fun a => by
-    rw [map_toDual_apply, map_toDual_apply, show ⇑OrderDual.toDual ⁻¹' Iic a
-      = Ici (OrderDual.ofDual a) from rfl]
-    exact h _)
+    [IsFiniteMeasure μ] (h : ∀ a, μ (Ici a) = ν (Ici a)) : μ = ν := by
+  unsealing_newtype OrderDual =>
+    exact @ext_of_Iic αᵒᵈ _ _ _ _ _ ‹_› _ _ ‹_› h
 
 /-- Two measures which are finite on closed intervals are equal if they agree on all
 closed intervals. -/
@@ -871,14 +833,15 @@ theorem aemeasurable_restrict_of_monotoneOn [LinearOrder β] [OrderClosedTopolog
   aemeasurable_restrict_of_measurable_subtype hs this.measurable
 
 protected theorem Antitone.measurable [LinearOrder β] [OrderClosedTopology β] {f : β → α}
-    (hf : Antitone f) : Measurable f :=
-  measurable_of_toDual_comp (Monotone.measurable (α := αᵒᵈ) fun _ _ h ↦ hf h)
+    (hf : Antitone f) : Measurable f := by
+  unsealing_newtype OrderDual =>
+    exact @Monotone.measurable αᵒᵈ β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ hf
 
 theorem aemeasurable_restrict_of_antitoneOn [LinearOrder β] [OrderClosedTopology β] {μ : Measure β}
     {s : Set β} (hs : MeasurableSet s) {f : β → α} (hf : AntitoneOn f s) :
-    AEMeasurable f (μ.restrict s) :=
-  aemeasurable_of_toDual_comp
-    (aemeasurable_restrict_of_monotoneOn (α := αᵒᵈ) hs fun _ ha _ hb h ↦ hf ha hb h)
+    AEMeasurable f (μ.restrict s) := by
+  unsealing_newtype OrderDual =>
+    exact @aemeasurable_restrict_of_monotoneOn αᵒᵈ β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ _ hs _ hf
 
 theorem MeasurableSet.of_mem_nhdsGT_aux {s : Set α} (h : ∀ x ∈ s, s ∈ 𝓝[>] x)
     (h' : ∀ x ∈ s, ∃ y, x < y) : MeasurableSet s := by

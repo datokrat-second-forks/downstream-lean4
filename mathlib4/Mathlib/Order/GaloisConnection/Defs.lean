@@ -59,8 +59,9 @@ theorem monotone_intro (hu : Monotone u) (hl : Monotone l) (h_u_l : ∀ a, a ≤
 @[to_dual self]
 protected theorem dual {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
     GaloisConnection (OrderDual.toDual ∘ u ∘ OrderDual.ofDual)
-      (OrderDual.toDual ∘ l ∘ OrderDual.ofDual) :=
-  fun a b => (gc (OrderDual.ofDual b) (OrderDual.ofDual a)).symm
+      (OrderDual.toDual ∘ l ∘ OrderDual.ofDual) := by
+  unsealing_newtype OrderDual =>
+    exact fun a b => (gc b a).symm
 
 variable (gc : GaloisConnection l u)
 include gc

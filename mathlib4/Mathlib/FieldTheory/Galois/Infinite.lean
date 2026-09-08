@@ -240,23 +240,24 @@ set_option backward.isDefEq.respectTransparency false in
 open IntermediateField in
 theorem isOpen_iff_finite (L : IntermediateField k K) [IsGalois k K] :
     IsOpen L.fixingSubgroup.carrier ↔ FiniteDimensional k L := by
-  refine ⟨fun h ↦ ?_, fun h ↦ IntermediateField.fixingSubgroup_isOpen L⟩
-  have : (OrderDual.ofDual (IntermediateFieldEquivClosedSubgroup.toFun L)).carrier ∈ nhds 1 :=
-    IsOpen.mem_nhds h (congrFun rfl)
-  rw [GroupFilterBasis.nhds_one_eq] at this
-  rcases this with ⟨S, ⟨gp, ⟨M, hM, eq'⟩, eq⟩, sub⟩
-  rw [← eq, ← eq'] at sub
-  have := hM.out
-  let L' : FiniteGaloisIntermediateField k K := {
-    normalClosure k M K with
-    finiteDimensional := normalClosure.is_finiteDimensional k M K
-    isGalois := IsGalois.normalClosure k M K }
-  have : L ≤ L'.1 := by
-    apply le_trans _ (IntermediateField.le_normalClosure M)
-    rw [← fixedField_fixingSubgroup M, IntermediateField.le_iff_le]
-    exact sub
-  let _ : Algebra L L'.1 := RingHom.toAlgebra (IntermediateField.inclusion this)
-  exact FiniteDimensional.left k L L'.1
+  unsealing_newtype OrderDual =>
+    refine ⟨fun h ↦ ?_, fun h ↦ IntermediateField.fixingSubgroup_isOpen L⟩
+    have : (IntermediateFieldEquivClosedSubgroup.toFun L).carrier ∈ nhds 1 :=
+      IsOpen.mem_nhds h (congrFun rfl)
+    rw [GroupFilterBasis.nhds_one_eq] at this
+    rcases this with ⟨S, ⟨gp, ⟨M, hM, eq'⟩, eq⟩, sub⟩
+    rw [← eq, ← eq'] at sub
+    have := hM.out
+    let L' : FiniteGaloisIntermediateField k K := {
+      normalClosure k M K with
+      finiteDimensional := normalClosure.is_finiteDimensional k M K
+      isGalois := IsGalois.normalClosure k M K }
+    have : L ≤ L'.1 := by
+      apply le_trans _ (IntermediateField.le_normalClosure M)
+      rw [← fixedField_fixingSubgroup M, IntermediateField.le_iff_le]
+      exact sub
+    let _ : Algebra L L'.1 := RingHom.toAlgebra (IntermediateField.inclusion this)
+    exact FiniteDimensional.left k L L'.1
 
 theorem normal_iff_isGalois (L : IntermediateField k K) [IsGalois k K] :
     L.fixingSubgroup.Normal ↔ IsGalois k L := by

@@ -73,13 +73,13 @@ theorem leftDual_mem_rightFixedPoint (J : Set α) : R.leftDual J ∈ R.rightFixe
   unsealing_newtype OrderDual =>
     apply le_antisymm
     · apply R.gc_leftDual_rightDual.monotone_l; exact R.gc_leftDual_rightDual.le_u_l J
-    · exact R.gc_leftDual_rightDual.l_u_le (toDual (R.leftDual J))
+    · exact R.gc_leftDual_rightDual.l_u_le (R.leftDual J)
 
 /-- `rightDual` maps every element `I` to `leftFixedPoints`. -/
 theorem rightDual_mem_leftFixedPoint (I : Set β) : R.rightDual I ∈ R.leftFixedPoints := by
   unsealing_newtype OrderDual =>
     apply le_antisymm
-    · exact R.gc_leftDual_rightDual.monotone_u (R.gc_leftDual_rightDual.l_u_le (toDual I))
+    · apply R.gc_leftDual_rightDual.monotone_u; exact R.gc_leftDual_rightDual.l_u_le I
     · exact R.gc_leftDual_rightDual.le_u_l (R.rightDual I)
 
 /-- The maps `leftDual` and `rightDual` induce inverse bijections between the sets of fixed points.
@@ -94,13 +94,16 @@ theorem rightDual_leftDual_le_of_le {J J' : Set α} (h : J' ∈ R.leftFixedPoint
     R.rightDual (R.leftDual J) ≤ J' := by
   unsealing_newtype OrderDual =>
     rw [← h]
-    exact R.gc_leftDual_rightDual.monotone_u (R.gc_leftDual_rightDual.monotone_l h₁)
+    apply R.gc_leftDual_rightDual.monotone_u
+    apply R.gc_leftDual_rightDual.monotone_l
+    exact h₁
 
 theorem leftDual_rightDual_le_of_le {I I' : Set β} (h : I' ∈ R.rightFixedPoints) (h₁ : I ≤ I') :
     R.leftDual (R.rightDual I) ≤ I' := by
   unsealing_newtype OrderDual =>
     rw [← h]
-    exact R.gc_leftDual_rightDual.monotone_l
-      (R.gc_leftDual_rightDual.monotone_u (a := toDual I') (b := toDual I) h₁)
+    apply R.gc_leftDual_rightDual.monotone_l
+    apply R.gc_leftDual_rightDual.monotone_u
+    exact h₁
 
 end SetRel

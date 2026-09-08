@@ -244,19 +244,20 @@ private def ofDualAddHom {γ : Type*} [AddZeroClass γ] : γᵒᵈ →+ γ where
   map_zero' := rfl
   map_add' _ _ := rfl
 
-theorem antitone_iff_map_nonpos : Antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
-  monotone_toDual_comp_iff.symm.trans <|
-    monotone_iff_map_nonneg (F := α →+ βᵒᵈ) (toDualAddHom.comp (f : α →+ β))
+theorem antitone_iff_map_nonpos : Antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 := by
+  unsealing_newtype OrderDual =>
+    exact monotone_toDual_comp_iff.symm.trans <|
+      monotone_iff_map_nonneg (β := βᵒᵈ) (iamhc := iamhc) _
 
-theorem monotone_iff_map_nonpos : Monotone (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
-  antitone_comp_ofDual_iff.symm.trans <|
-    (antitone_iff_map_nonpos (F := αᵒᵈ →+ β)
-      ((f : α →+ β).comp ofDualAddHom)).trans OrderDual.forall
+theorem monotone_iff_map_nonpos : Monotone (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 := by
+  unsealing_newtype OrderDual =>
+    exact antitone_comp_ofDual_iff.symm.trans <|
+      antitone_iff_map_nonpos (α := αᵒᵈ) (iamhc := iamhc) _
 
-theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
-  monotone_comp_ofDual_iff.symm.trans <|
-    (monotone_iff_map_nonneg (F := αᵒᵈ →+ β)
-      ((f : α →+ β).comp ofDualAddHom)).trans OrderDual.forall
+theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a := by
+  unsealing_newtype OrderDual =>
+    exact monotone_comp_ofDual_iff.symm.trans <|
+      monotone_iff_map_nonneg (α := αᵒᵈ) (iamhc := iamhc) _
 
 theorem strictMono_iff_map_pos :
     StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a := by
@@ -266,17 +267,20 @@ theorem strictMono_iff_map_pos :
   · rw [← sub_add_cancel b a, map_add f]
     exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)
 
-theorem strictAnti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
-  strictMono_toDual_comp_iff.symm.trans <|
-    strictMono_iff_map_pos (F := α →+ βᵒᵈ) (toDualAddHom.comp (f : α →+ β))
+theorem strictAnti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 := by
+  unsealing_newtype OrderDual =>
+    exact strictMono_toDual_comp_iff.symm.trans <|
+      strictMono_iff_map_pos (β := βᵒᵈ) (iamhc := iamhc) _
 
-theorem strictMono_iff_map_neg : StrictMono (f : α → β) ↔ ∀ a < 0, f a < 0 :=
-  strictAnti_comp_ofDual_iff.symm.trans <|
-    (strictAnti_iff_map_neg (F := αᵒᵈ →+ β) ((f : α →+ β).comp ofDualAddHom)).trans OrderDual.forall
+theorem strictMono_iff_map_neg : StrictMono (f : α → β) ↔ ∀ a < 0, f a < 0 := by
+  unsealing_newtype OrderDual =>
+    exact strictAnti_comp_ofDual_iff.symm.trans <|
+      strictAnti_iff_map_neg (α := αᵒᵈ) (iamhc := iamhc) _
 
-theorem strictAnti_iff_map_pos : StrictAnti (f : α → β) ↔ ∀ a < 0, 0 < f a :=
-  strictMono_comp_ofDual_iff.symm.trans <|
-    (strictMono_iff_map_pos (F := αᵒᵈ →+ β) ((f : α →+ β).comp ofDualAddHom)).trans OrderDual.forall
+theorem strictAnti_iff_map_pos : StrictAnti (f : α → β) ↔ ∀ a < 0, 0 < f a := by
+  unsealing_newtype OrderDual =>
+    exact strictMono_comp_ofDual_iff.symm.trans <|
+      strictMono_iff_map_pos (α := αᵒᵈ) (iamhc := iamhc) _
 
 end OrderedAddCommGroup
 

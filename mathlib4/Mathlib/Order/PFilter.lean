@@ -79,9 +79,9 @@ instance : PartialOrder (PFilter P) := .ofSetLike (PFilter P) P
 
 theorem isPFilter : IsPFilter (F : Set P) := F.dual.isIdeal
 
-protected theorem nonempty : (F : Set P).Nonempty :=
-  let ⟨x, hx⟩ := F.dual.nonempty
-  ⟨ofDual x, hx⟩
+protected theorem nonempty : (F : Set P).Nonempty := by
+  unsealing_newtype OrderDual =>
+    exact F.dual.nonempty
 
 theorem directed : DirectedOn (· ≥ ·) (F : Set P) := by
   unsealing_newtype OrderDual =>

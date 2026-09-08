@@ -493,9 +493,9 @@ variable [LocallyFiniteOrderBot α] {a : α}
 theorem Iio_subset_Iic_self : Iio a ⊆ Iic a := by
   simpa [← coe_subset] using Set.Iio_subset_Iic_self
 
-theorem _root_.BddAbove.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
-  let ⟨a, ha⟩ := hs
-  (Iic a).finite_toSet.subset fun _ hx => mem_Iic.2 <| ha hx
+theorem _root_.BddAbove.finite {s : Set α} (hs : BddAbove s) : s.Finite := by
+  unsealing_newtype OrderDual =>
+    exact hs.dual.finite
 
 theorem _root_.Set.Infinite.not_bddAbove {s : Set α} : s.Infinite → ¬BddAbove s :=
   mt BddAbove.finite

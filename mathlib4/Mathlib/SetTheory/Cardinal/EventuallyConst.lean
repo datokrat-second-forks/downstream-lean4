@@ -57,9 +57,9 @@ theorem eventuallyConst_of_monotone (hf : Monotone f) : atTop.EventuallyConst f 
   refine .of_monotone_of_lt_cof hf ?_
   simpa [← small_iff_lift_mk_lt_univ]
 
-theorem eventuallyConst_of_antitone (hf : Antitone f) : atTop.EventuallyConst f :=
-  haveI : Small.{v} βᵒᵈ := (small_congr (OrderDual.ofDual : βᵒᵈ ≃ β)).2 ‹_›
-  (eventuallyConst_of_monotone (β := βᵒᵈ) hf.dual_right).comp ⇑OrderDual.ofDual
+theorem eventuallyConst_of_antitone (hf : Antitone f) : atTop.EventuallyConst f := by
+  unsealing_newtype OrderDual =>
+    exact eventuallyConst_of_monotone (β := βᵒᵈ) hf
 
 end Cardinal
 
@@ -70,8 +70,8 @@ theorem eventuallyConst_of_monotone (hf : Monotone f) : atTop.EventuallyConst f 
   refine .of_monotone_of_lt_cof hf ?_
   simpa [← small_iff_lift_mk_lt_univ]
 
-theorem eventuallyConst_of_antitone (hf : Antitone f) : atTop.EventuallyConst f :=
-  haveI : Small.{v} βᵒᵈ := (small_congr (OrderDual.ofDual : βᵒᵈ ≃ β)).2 ‹_›
-  (eventuallyConst_of_monotone (β := βᵒᵈ) hf.dual_right).comp ⇑OrderDual.ofDual
+theorem eventuallyConst_of_antitone (hf : Antitone f) : atTop.EventuallyConst f := by
+  unsealing_newtype OrderDual =>
+    exact eventuallyConst_of_monotone (β := βᵒᵈ) hf
 
 end Ordinal

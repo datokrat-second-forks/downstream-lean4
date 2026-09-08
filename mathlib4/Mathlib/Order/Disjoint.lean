@@ -291,8 +291,9 @@ open OrderDual
 
 @[to_dual]
 theorem Disjoint.dual [PartialOrder α] [OrderBot α] {a b : α} :
-    Disjoint a b → Codisjoint (toDual a) (toDual b) :=
-  fun h _ hax hbx ↦ h hax hbx
+    Disjoint a b → Codisjoint (toDual a) (toDual b) := by
+  unsealing_newtype OrderDual =>
+    exact id
 
 @[to_dual (attr := simp, grind =)]
 theorem disjoint_toDual_iff [PartialOrder α] [OrderTop α] {a b : α} :
@@ -350,8 +351,10 @@ lemma _root_.isCompl_comm : IsCompl x y ↔ IsCompl y x := ⟨IsCompl.symm, IsCo
 theorem dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2.dual, h.1.dual⟩
 
-theorem ofDual {a b : αᵒᵈ} (h : IsCompl a b) : IsCompl (OrderDual.ofDual a) (OrderDual.ofDual b) :=
-  ⟨disjoint_ofDual_iff.2 h.2, codisjoint_ofDual_iff.2 h.1⟩
+theorem ofDual {a b : αᵒᵈ} (h : IsCompl a b) :
+    IsCompl (OrderDual.ofDual a) (OrderDual.ofDual b) := by
+  unsealing_newtype OrderDual =>
+    exact ⟨h.2, h.1⟩
 
 end BoundedPartialOrder
 
@@ -404,8 +407,9 @@ theorem le_left_iff (h : IsCompl x y) : z ≤ x ↔ Disjoint z y :=
 theorem le_right_iff (h : IsCompl x y) : z ≤ y ↔ Disjoint z x :=
   h.symm.le_left_iff
 
-theorem left_le_iff (h : IsCompl x y) : x ≤ z ↔ Codisjoint z y :=
-  (h.dual.le_left_iff (z := OrderDual.toDual z)).trans disjoint_toDual_iff
+theorem left_le_iff (h : IsCompl x y) : x ≤ z ↔ Codisjoint z y := by
+  unsealing_newtype OrderDual =>
+    exact h.dual.le_left_iff
 
 theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ Codisjoint z x :=
   h.symm.left_le_iff
@@ -482,11 +486,13 @@ theorem eq_top_of_isCompl_bot (h : IsCompl x ⊥) : x = ⊤ := by rw [← sup_bo
 theorem eq_top_of_bot_isCompl (h : IsCompl ⊥ x) : x = ⊤ :=
   eq_top_of_isCompl_bot h.symm
 
-theorem eq_bot_of_isCompl_top (h : IsCompl x ⊤) : x = ⊥ :=
-  (OrderDual.toDual_inj (b := ⊥)).1 (eq_top_of_isCompl_bot h.dual)
+theorem eq_bot_of_isCompl_top (h : IsCompl x ⊤) : x = ⊥ := by
+  unsealing_newtype OrderDual =>
+    exact eq_top_of_isCompl_bot h.dual
 
-theorem eq_bot_of_top_isCompl (h : IsCompl ⊤ x) : x = ⊥ :=
-  (OrderDual.toDual_inj (b := ⊥)).1 (eq_top_of_bot_isCompl h.dual)
+theorem eq_bot_of_top_isCompl (h : IsCompl ⊤ x) : x = ⊥ := by
+  unsealing_newtype OrderDual =>
+    exact eq_top_of_bot_isCompl h.dual
 
 end
 

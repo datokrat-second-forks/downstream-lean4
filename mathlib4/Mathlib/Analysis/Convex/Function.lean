@@ -287,8 +287,9 @@ theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x 
       _ = r := Convex.combo_self hab r
       ⟩
 
-theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r ≤ f x }) :=
-  hf.dual.convex_le (OrderDual.toDual r)
+theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r ≤ f x }) := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.convex_le r
 
 theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) :
     Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := by
@@ -308,8 +309,9 @@ theorem convexOn_iff_convex_epigraph :
   ⟨ConvexOn.convex_epigraph, convexOn_of_convex_epigraph⟩
 
 theorem concaveOn_iff_convex_hypograph :
-    ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
-  ⟨ConcaveOn.convex_hypograph, concaveOn_of_convex_hypograph⟩
+    ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } := by
+  unsealing_newtype OrderDual =>
+    exact convexOn_iff_convex_epigraph (β := βᵒᵈ)
 
 end PosSMulMono
 
@@ -424,8 +426,9 @@ theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) :
         ⟩
 
 theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | r < f x }) :=
-  hf.dual.convex_lt (OrderDual.toDual r)
+    Convex 𝕜 ({ x ∈ s | r < f x }) := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.convex_lt r
 
 end PosSMulMono
 
@@ -575,8 +578,9 @@ theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x 
             (smul_le_smul_of_nonneg_left hy.2.le hb.le))
         _ = r := Convex.combo_self hab _⟩
 
-theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r < f x }) :=
-  hf.dual.convex_lt (OrderDual.toDual r)
+theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r < f x }) := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.convex_lt r
 
 theorem ConvexOn.openSegment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p q : E × β)
     (hp : p.1 ∈ s ∧ f p.1 < p.2) (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) :

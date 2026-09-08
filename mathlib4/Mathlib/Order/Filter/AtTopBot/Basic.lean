@@ -189,8 +189,10 @@ theorem tendsto_atTop_atTop : Tendsto f atTop atTop ↔ ∀ b : β, ∃ i : α, 
   tendsto_iInf.trans <| forall_congr' fun _ => tendsto_atTop_principal
 
 @[to_dual]
-theorem tendsto_atTop_atBot : Tendsto f atTop atBot ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → f a ≤ b :=
-  tendsto_iInf.trans <| forall_congr' fun _ => tendsto_atTop_principal
+theorem tendsto_atTop_atBot : Tendsto f atTop atBot ↔ ∀ b : β, ∃ i : α, ∀ a :
+    α, i ≤ a → f a ≤ b := by
+  unsealing_newtype OrderDual =>
+    exact tendsto_atTop_atTop (β := βᵒᵈ)
 
 @[to_dual]
 theorem tendsto_atTop_atTop_iff_of_monotone (hf : Monotone f) :

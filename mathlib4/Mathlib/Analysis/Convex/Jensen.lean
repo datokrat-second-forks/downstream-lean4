@@ -48,26 +48,6 @@ variable [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGrou
   [PartialOrder β] [IsOrderedAddMonoid β] [Module 𝕜 E] [Module 𝕜 β] [IsStrictOrderedModule 𝕜 β]
   {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E} {v : 𝕜} {q : E}
 
-omit [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [PartialOrder β] [IsOrderedAddMonoid β]
-  [IsStrictOrderedModule 𝕜 β] in
-open OrderDual in
-private lemma smul_toDual (c : 𝕜) (b : β) : c • toDual b = toDual (c • b) := rfl
-
-omit [PartialOrder β] [IsOrderedAddMonoid β] in
-open OrderDual in
-private lemma sum_toDual (t : Finset ι) (g : ι → β) :
-    ∑ i ∈ t, toDual (g i) = toDual (∑ i ∈ t, g i) := by
-  induction t using Finset.cons_induction with
-  | empty => rfl
-  | cons a t ha ih => rw [Finset.sum_cons, Finset.sum_cons, ih]; rfl
-
-omit [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [IsStrictOrderedModule 𝕜 β] [PartialOrder β]
-  [IsOrderedAddMonoid β] in
-open OrderDual in
-private lemma centerMass_toDual (t : Finset ι) (w : ι → 𝕜) (g : ι → β) :
-    t.centerMass w (fun i ↦ toDual (g i)) = toDual (t.centerMass w g) := by
-  simp only [Finset.centerMass, smul_toDual, sum_toDual]
-
 /-- Convex **Jensen's inequality**, `Finset.centerMass` version. -/
 theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : 0 < ∑ i ∈ t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
@@ -81,8 +61,8 @@ theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t,
 theorem ConcaveOn.le_map_centerMass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : 0 < ∑ i ∈ t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
     t.centerMass w (f ∘ p) ≤ f (t.centerMass w p) := by
-  simpa only [Function.comp_def, centerMass_toDual, OrderDual.toDual_le_toDual] using
-    hf.dual.map_centerMass_le h₀ h₁ hmem
+  unsealing_newtype OrderDual =>
+    exact (hf.dual.map_centerMass_le h₀ h₁ hmem :)
 
 /-- Convex **Jensen's inequality**, `Finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : ∑ i ∈ t, w i = 1)
@@ -383,10 +363,9 @@ theorem ConvexOn.le_sup_of_mem_convexHull {t : Finset E} (hf : ConvexOn 𝕜 s f
 
 theorem ConvexOn.inf_le_of_mem_convexHull {t : Finset E} (hf : ConcaveOn 𝕜 s f) (hts : ↑t ⊆ s)
     (hx : x ∈ convexHull 𝕜 (t : Set E)) :
-    t.inf' (coe_nonempty.1 <| convexHull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
-  by
-  have h := hf.dual.le_sup_of_mem_convexHull hts hx
-  rwa [← Finset.toDual_inf'] at h
+    t.inf' (coe_nonempty.1 <| convexHull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.le_sup_of_mem_convexHull hts hx
 
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/

@@ -374,19 +374,21 @@ theorem dualAnnihilator_gc :
     GaloisConnection
       (OrderDual.toDual ∘ (dualAnnihilator : Submodule R M → Submodule R (Module.Dual R M)))
       (dualCoannihilator ∘ OrderDual.ofDual) := by
-  intro a
-  refine OrderDual.toDual.surjective.forall.2 fun b => ?_
-  simp only [Function.comp_apply, OrderDual.toDual_le_toDual, OrderDual.ofDual_toDual,
-    SetLike.le_def, mem_dualAnnihilator, mem_dualCoannihilator]
-  grind
+  unsealing_newtype OrderDual =>
+    intro a b
+    induction b using OrderDual.rec
+    simp only [Function.comp_apply, OrderDual.toDual_le_toDual, OrderDual.ofDual_toDual,
+      SetLike.le_def, mem_dualAnnihilator, mem_dualCoannihilator]
+    grind
 
 theorem le_dualAnnihilator_iff_le_dualCoannihilator {U : Submodule R (Module.Dual R M)}
     {V : Submodule R M} : U ≤ V.dualAnnihilator ↔ V ≤ U.dualCoannihilator :=
   (dualAnnihilator_gc R M).le_iff_le
 
 @[simp]
-theorem dualAnnihilator_bot : (⊥ : Submodule R M).dualAnnihilator = ⊤ :=
-  OrderDual.toDual_inj.mp (dualAnnihilator_gc R M).l_bot
+theorem dualAnnihilator_bot : (⊥ : Submodule R M).dualAnnihilator = ⊤ := by
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).l_bot
 
 @[simp]
 theorem dualAnnihilator_top : (⊤ : Submodule R M).dualAnnihilator = ⊥ := by
@@ -411,20 +413,24 @@ theorem le_dualAnnihilator_dualCoannihilator (U : Submodule R M) :
   (dualAnnihilator_gc R M).le_u_l U
 
 theorem le_dualCoannihilator_dualAnnihilator (U : Submodule R (Module.Dual R M)) :
-    U ≤ U.dualCoannihilator.dualAnnihilator :=
-  (dualAnnihilator_gc R M).l_u_le (OrderDual.toDual U)
+    U ≤ U.dualCoannihilator.dualAnnihilator := by
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).l_u_le U
 
 theorem dualAnnihilator_dualCoannihilator_dualAnnihilator (U : Submodule R M) :
-    U.dualAnnihilator.dualCoannihilator.dualAnnihilator = U.dualAnnihilator :=
-  OrderDual.toDual_inj.mp ((dualAnnihilator_gc R M).l_u_l_eq_l U)
+    U.dualAnnihilator.dualCoannihilator.dualAnnihilator = U.dualAnnihilator := by
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).l_u_l_eq_l U
 
 theorem dualCoannihilator_dualAnnihilator_dualCoannihilator (U : Submodule R (Module.Dual R M)) :
-    U.dualCoannihilator.dualAnnihilator.dualCoannihilator = U.dualCoannihilator :=
-  (dualAnnihilator_gc R M).u_l_u_eq_u (OrderDual.toDual U)
+    U.dualCoannihilator.dualAnnihilator.dualCoannihilator = U.dualCoannihilator := by
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).u_l_u_eq_u U
 
 theorem dualAnnihilator_sup_eq (U V : Submodule R M) :
-    (U ⊔ V).dualAnnihilator = U.dualAnnihilator ⊓ V.dualAnnihilator :=
-  OrderDual.toDual_inj.mp (dualAnnihilator_gc R M).l_sup
+    (U ⊔ V).dualAnnihilator = U.dualAnnihilator ⊓ V.dualAnnihilator := by
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).l_sup
 
 theorem dualCoannihilator_sup_eq (U V : Submodule R (Module.Dual R M)) :
     (U ⊔ V).dualCoannihilator = U.dualCoannihilator ⊓ V.dualCoannihilator :=
@@ -432,8 +438,8 @@ theorem dualCoannihilator_sup_eq (U V : Submodule R (Module.Dual R M)) :
 
 theorem dualAnnihilator_iSup_eq {ι : Sort*} (U : ι → Submodule R M) :
     (⨆ i : ι, U i).dualAnnihilator = ⨅ i : ι, (U i).dualAnnihilator := by
-  rw [← OrderDual.toDual_inj, toDual_iInf]
-  exact (dualAnnihilator_gc R M).l_iSup
+  unsealing_newtype OrderDual =>
+    exact (dualAnnihilator_gc R M).l_iSup
 
 theorem dualCoannihilator_iSup_eq {ι : Sort*} (U : ι → Submodule R (Module.Dual R M)) :
     (⨆ i : ι, U i).dualCoannihilator = ⨅ i : ι, (U i).dualCoannihilator := by

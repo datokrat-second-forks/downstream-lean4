@@ -110,7 +110,8 @@ theorem lowerPolar_union (t₁ t₂ : Set β) :
 @[simp]
 theorem upperPolar_iUnion (f : ι → Set α) :
     upperPolar r (⋃ i, f i) = ⋂ i, upperPolar r (f i) := by
-  simpa using congrArg OrderDual.ofDual ((gc_upperPolar_lowerPolar r).l_iSup (f := f))
+  unsealing_newtype OrderDual =>
+    exact (gc_upperPolar_lowerPolar r).l_iSup
 
 @[simp]
 theorem lowerPolar_iUnion (f : ι → Set β) :
@@ -138,7 +139,7 @@ theorem subset_upperPolar_lowerPolar (t : Set β) :
 theorem upperPolar_lowerPolar_upperPolar (s : Set α) :
     upperPolar r (lowerPolar r <| upperPolar r s) = upperPolar r s := by
   unsealing_newtype OrderDual =>
-    exact OrderDual.toDual_inj.1 ((gc_upperPolar_lowerPolar r).l_u_l_eq_l _)
+    exact (gc_upperPolar_lowerPolar r).l_u_l_eq_l _
 
 @[simp]
 theorem lowerPolar_upperPolar_lowerPolar (t : Set β) :

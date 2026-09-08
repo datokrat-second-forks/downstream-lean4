@@ -211,11 +211,14 @@ theorem leftInverse_generateFrom :
     LeftInverse generateFrom fun t : TopologicalSpace α => { s | IsOpen[t] s } :=
   (gciGenerateFrom α).leftInverse_u_l
 
-theorem generateFrom_surjective : Surjective (generateFrom : Set (Set α) → TopologicalSpace α) :=
-  fun t => let ⟨g, hg⟩ := (gciGenerateFrom α).u_surjective t; ⟨OrderDual.ofDual g, hg⟩
+theorem generateFrom_surjective : Surjective (generateFrom : Set (Set α) → TopologicalSpace α) := by
+  unsealing_newtype OrderDual =>
+    exact (gciGenerateFrom α).u_surjective
 
-theorem setOfPred_isOpen_injective : Injective fun t : TopologicalSpace α => { s | IsOpen[t] s } :=
-  fun _ _ h => (gciGenerateFrom α).l_injective (congrArg OrderDual.toDual h)
+theorem setOfPred_isOpen_injective : Injective fun t :
+    TopologicalSpace α => { s | IsOpen[t] s } := by
+  unsealing_newtype OrderDual =>
+    exact (gciGenerateFrom α).l_injective
 
 @[deprecated (since := "2026-07-09")] alias setOf_isOpen_injective := setOfPred_isOpen_injective
 
@@ -1005,13 +1008,13 @@ theorem setOfPred_isOpen_iSup {t : ι → TopologicalSpace α} :
 
 theorem generateFrom_sUnion {S : Set (Set (Set α))} :
     generateFrom (⋃₀ S) = ⨅ s ∈ S, generateFrom s := by
-  rw [Set.sUnion_eq_iUnion, generateFrom_iUnion]
-  simp [iInf_subtype]
+  unsealing_newtype OrderDual =>
+    exact (gc_generateFrom α).u_sInf
 
 theorem setOfPred_isOpen_sSup {T : Set (TopologicalSpace α)} :
     { s | IsOpen[sSup T] s } = ⋂ t ∈ T, { s | IsOpen[t] s } := by
-  rw [sSup_eq_iSup', setOfPred_isOpen_iSup]
-  simp
+  unsealing_newtype OrderDual =>
+    exact (gc_generateFrom α).l_sSup
 
 @[deprecated (since := "2026-07-09")] alias setOf_isOpen_sSup := setOfPred_isOpen_sSup
 

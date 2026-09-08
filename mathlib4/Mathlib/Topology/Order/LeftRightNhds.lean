@@ -38,10 +38,6 @@ private theorem mem_nhdsWithin_toDual {X : Type*} [TopologicalSpace X] {x : X} {
   rw [nhdsWithin_toDual, Filter.mem_map]
   rfl
 
-private theorem nhdsGT_toDual {X : Type*} [TopologicalSpace X] [Preorder X] (x : X) :
-    𝓝[>] (toDual x) = map toDual (𝓝[<] x) := by
-  rw [Set.Ioi_toDual, nhdsWithin_toDual]
-
 section LinearOrder
 
 variable [TopologicalSpace α] [LinearOrder α]
@@ -267,9 +263,10 @@ lemma nhdsLT_basis_Ico [DenselyOrdered α] [NoMinOrder α] (a : α) :
   nhdsLT_basis_Ico_of_exists_lt <| exists_lt a
 
 theorem nhdsLT_eq_bot_iff {a : α} : 𝓝[<] a = ⊥ ↔ IsBot a ∨ ∃ b, b ⋖ a := by
-  have h := nhdsGT_eq_bot_iff (a := OrderDual.toDual a)
-  rw [nhdsGT_toDual, Filter.map_eq_bot_iff] at h
-  simpa using h
+  unsealing_newtype OrderDual =>
+    convert! (config := { preTransparency := .default })
+      nhdsGT_eq_bot_iff (a := OrderDual.toDual a) using 4
+    exact ofDual_covBy_ofDual_iff
 
 open List in
 /-- The following statements are equivalent:
@@ -515,14 +512,14 @@ variable [TopologicalSpace α] [LinearOrder α] [ClosedIicTopology α] {S : Set 
 /-- If `S` is order-connected and contains two points `x < y`, then `S` is a left neighbourhood
 of `y`. -/
 lemma mem_nhdsLE (hS : OrdConnected S) (hx : x ∈ S) (hy : y ∈ S) (hxy : x < y) : S ∈ 𝓝[≤] y := by
-  have h := hS.dual.mem_nhdsGE (x := toDual y) (y := toDual x) hy hx hxy
-  simpa using h
+  unsealing_newtype OrderDual =>
+    exact hS.dual.mem_nhdsGE hy hx hxy
 
 /-- If `S` is order-connected and contains two points `x < y`, then `S` is a punctured left
 neighbourhood of `y`. -/
 lemma mem_nhdsLT (hS : OrdConnected S) (hx : x ∈ S) (hy : y ∈ S) (hxy : x < y) : S ∈ 𝓝[<] y := by
-  have h := hS.dual.mem_nhdsGT (x := toDual y) (y := toDual x) hy hx hxy
-  simpa using h
+  unsealing_newtype OrderDual =>
+    exact hS.dual.mem_nhdsGT hy hx hxy
 
 end OrdConnected
 

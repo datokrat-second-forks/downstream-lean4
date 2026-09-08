@@ -174,19 +174,22 @@ theorem strictMonoOn_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n : �
     hψ _ <| (succ_le_iff_of_not_isMax ha').1 ha
 
 theorem strictAntiOn_Iic_of_succ_lt [SuccOrder α] [IsSuccArchimedean α] {n : α}
-    (hψ : ∀ m, m < n → ψ (succ m) < ψ m) : StrictAntiOn ψ (Set.Iic n) :=
-  strictAntiOn_of_succ_lt ordConnected_Iic fun _a ha' _ ha ↦
-    hψ _ <| (succ_le_iff_of_not_isMax ha').1 ha
+    (hψ : ∀ m, m < n → ψ (succ m) < ψ m) : StrictAntiOn ψ (Set.Iic n) := by
+  unsealing_newtype OrderDual =>
+    exact fun i hi j hj hij =>
+      @strictMonoOn_Iic_of_lt_succ α βᵒᵈ _ _ ψ _ _ n hψ i hi j hj hij
 
 theorem strictMonoOn_Ici_of_pred_lt [PredOrder α] [IsPredArchimedean α] {n : α}
-    (hψ : ∀ m, n < m → ψ (pred m) < ψ m) : StrictMonoOn ψ (Set.Ici n) :=
-  strictMonoOn_of_pred_lt ordConnected_Ici fun _a ha' _ ha ↦
-    hψ _ <| (le_pred_iff_of_not_isMin ha').1 ha
+    (hψ : ∀ m, n < m → ψ (pred m) < ψ m) : StrictMonoOn ψ (Set.Ici n) := by
+  unsealing_newtype OrderDual =>
+    exact fun i hi j hj hij =>
+      @strictMonoOn_Iic_of_lt_succ αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
 
 theorem strictAntiOn_Ici_of_lt_pred [PredOrder α] [IsPredArchimedean α] {n : α}
-    (hψ : ∀ m, n < m → ψ m < ψ (pred m)) : StrictAntiOn ψ (Set.Ici n) :=
-  strictAntiOn_of_lt_pred ordConnected_Ici fun _a ha' _ ha ↦
-    hψ _ <| (le_pred_iff_of_not_isMin ha').1 ha
+    (hψ : ∀ m, n < m → ψ m < ψ (pred m)) : StrictAntiOn ψ (Set.Ici n) := by
+  unsealing_newtype OrderDual =>
+    exact fun i hi j hj hij =>
+      @strictAntiOn_Iic_of_succ_lt αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
 
 end SuccOrder
 

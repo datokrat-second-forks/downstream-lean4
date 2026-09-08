@@ -134,8 +134,8 @@ protected theorem IsUpperSet.interior (h : IsUpperSet s) : IsUpperSet (interior 
   exact h.compl.closure
 
 protected theorem IsLowerSet.interior (h : IsLowerSet s) : IsLowerSet (interior s) := by
-  rw [← isUpperSet_compl, ← closure_compl]
-  exact h.compl.closure
+  unsealing_newtype OrderDual =>
+    exact h.toDual.interior
 
 protected theorem Set.OrdConnected.interior (h : s.OrdConnected) : (interior s).OrdConnected := by
   rw [← h.upperClosure_inter_lowerClosure, interior_inter]

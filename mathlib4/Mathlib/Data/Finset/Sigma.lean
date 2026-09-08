@@ -125,7 +125,8 @@ theorem _root_.biSup_finsetSigma' [CompleteLattice β] (s : Finset ι) (t : ∀ 
 
 theorem _root_.biInf_finsetSigma [CompleteLattice β] (s : Finset ι) (t : ∀ i, Finset (α i))
     (f : Sigma α → β) : ⨅ ij ∈ s.sigma t, f ij = ⨅ (i ∈ s) (j ∈ t i), f ⟨i, j⟩ := by
-  simp_rw [← Finset.iInf_coe, Finset.coe_sigma, biInf_sigma]
+  unsealing_newtype OrderDual =>
+    exact biSup_finsetSigma (β := βᵒᵈ) _ _ _
 
 theorem _root_.biInf_finsetSigma' [CompleteLattice β] (s : Finset ι) (t : ∀ i, Finset (α i))
     (f : ∀ i, α i → β) : ⨅ (i ∈ s) (j ∈ t i), f i j = ⨅ ij ∈ s.sigma t, f ij.fst ij.snd :=

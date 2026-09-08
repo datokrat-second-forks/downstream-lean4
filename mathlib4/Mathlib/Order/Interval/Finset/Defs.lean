@@ -669,23 +669,23 @@ lemma Finset.Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).map toDual.toEmb
 @[to_dual self]
 lemma Finset.Icc_ofDual (a b : αᵒᵈ) :
     Icc (ofDual a) (ofDual b) = (Icc b a).map ofDual.toEmbedding := by
-  ext x
-  rw [mem_map_equiv, mem_Icc, mem_Icc, and_comm]
-  exact Iff.rfl
+  unsealing_newtype OrderDual =>
+    rw [Finset.Icc_orderDual_def, Finset.map_map]
+    exact map_refl.symm
 
 @[to_dual (reorder := a b)]
 lemma Finset.Ico_ofDual (a b : αᵒᵈ) :
     Ico (ofDual a) (ofDual b) = (Ioc b a).map ofDual.toEmbedding := by
-  ext x
-  rw [mem_map_equiv, mem_Ioc, mem_Ico, and_comm]
-  exact Iff.rfl
+  unsealing_newtype OrderDual =>
+    rw [Finset.Ioc_orderDual_def, Finset.map_map]
+    exact map_refl.symm
 
 @[to_dual self]
 lemma Finset.Ioo_ofDual (a b : αᵒᵈ) :
     Ioo (ofDual a) (ofDual b) = (Ioo b a).map ofDual.toEmbedding := by
-  ext x
-  rw [mem_map_equiv, mem_Ioo, mem_Ioo, and_comm]
-  exact Iff.rfl
+  unsealing_newtype OrderDual =>
+    rw [Finset.Ioo_orderDual_def, Finset.map_map]
+    exact map_refl.symm
 
 end LocallyFiniteOrder
 
@@ -718,15 +718,15 @@ lemma Finset.Iio_toDual (a : α) : Iio (toDual a) = (Ioi a).map toDual.toEmbeddi
 
 @[to_dual]
 lemma Finset.Ici_ofDual (a : αᵒᵈ) : Ici (ofDual a) = (Iic a).map ofDual.toEmbedding := by
-  ext x
-  rw [mem_map_equiv, mem_Ici, mem_Iic]
-  exact Iff.rfl
+  unsealing_newtype OrderDual =>
+    rw [Iic_orderDual_def, Finset.map_map]
+    exact map_refl.symm
 
 @[to_dual]
 lemma Finset.Ioi_ofDual (a : αᵒᵈ) : Ioi (ofDual a) = (Iio a).map ofDual.toEmbedding := by
-  ext x
-  rw [mem_map_equiv, mem_Ioi, mem_Iio]
-  exact Iff.rfl
+  unsealing_newtype OrderDual =>
+    rw [Iio_orderDual_def, Finset.map_map]
+    exact map_refl.symm
 
 end LocallyFiniteOrderTop
 

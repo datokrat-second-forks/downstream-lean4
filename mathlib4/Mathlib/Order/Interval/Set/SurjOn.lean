@@ -67,9 +67,8 @@ theorem surjOn_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Functi
 
 theorem surjOn_Iio_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
     (a : α) : SurjOn f (Iio a) (Iio (f a)) := by
-  rw [← compl_Ici, ← compl_compl (Iio (f a))]
-  refine MapsTo.surjOn_compl ?_ h_surj
-  exact fun x hx => (h_mono hx).not_gt
+  unsealing_newtype OrderDual =>
+    exact @surjOn_Ioi_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
 
 theorem surjOn_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
     (a : α) : SurjOn f (Ici a) (Ici (f a)) := by

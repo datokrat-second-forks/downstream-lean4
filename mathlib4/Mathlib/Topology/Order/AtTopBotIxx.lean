@@ -136,8 +136,9 @@ theorem comap_coe_Ioi_nhdsGT (a : X) (ha : IsPredPrelimit a := by exact .of_dens
 
 @[simp]
 theorem comap_coe_Iio_nhdsLT (a : X) (ha : IsSuccPrelimit a := by exact .of_dense _) :
-    comap ((↑) : Iio a → X) (𝓝[<] a) = atTop :=
-  comap_coe_nhdsLT_of_Ioo_subset Subset.rfl (fun ⟨x, hx⟩ => ⟨x, hx, Ioo_subset_Iio_self⟩) ha
+    comap ((↑) : Iio a → X) (𝓝[<] a) = atTop := by
+  unsealing_newtype OrderDual =>
+    exact comap_coe_Ioi_nhdsGT (toDual a) ha.dual
 
 @[simp]
 theorem map_coe_Ioo_atTop (h : a < b) (hb : IsSuccPrelimit b := by exact .of_dense _) :
@@ -156,8 +157,9 @@ theorem map_coe_Ioi_atBot (a : X) (ha : IsPredPrelimit a := by exact .of_dense _
 
 @[simp]
 theorem map_coe_Iio_atTop (a : X) (ha : IsSuccPrelimit a := by exact .of_dense _) :
-    map ((↑) : Iio a → X) atTop = 𝓝[<] a :=
-  map_coe_atTop_of_Ioo_subset Subset.rfl (fun b hb => ⟨b, hb, Ioo_subset_Iio_self⟩) ha
+    map ((↑) : Iio a → X) atTop = 𝓝[<] a := by
+  unsealing_newtype OrderDual =>
+    exact map_coe_Ioi_atBot (toDual a) ha.dual
 
 variable {α : Type*} {l : Filter α} {f : X → α}
 

@@ -244,9 +244,9 @@ theorem Filter.Tendsto.exists_within_forall_ge [LinearOrder β] {s : Set α} (hs
     exact @Filter.Tendsto.exists_within_forall_le _ βᵒᵈ _ _ hs _ hf
 
 theorem Filter.Tendsto.exists_forall_ge [Nonempty α] [LinearOrder β] {f : α → β}
-    (hf : Tendsto f cofinite atBot) : ∃ a₀, ∀ a, f a ≤ f a₀ :=
-  let ⟨a₀, _, ha₀⟩ := hf.exists_within_forall_ge univ_nonempty
-  ⟨a₀, fun a => ha₀ a (mem_univ _)⟩
+    (hf : Tendsto f cofinite atBot) : ∃ a₀, ∀ a, f a ≤ f a₀ := by
+  unsealing_newtype OrderDual =>
+    exact @Filter.Tendsto.exists_forall_le _ βᵒᵈ _ _ _ hf
 
 theorem Function.Surjective.le_map_cofinite {f : α → β} (hf : Surjective f) :
     cofinite ≤ map f cofinite := fun _ h => .of_preimage h hf

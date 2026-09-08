@@ -553,13 +553,15 @@ theorem compl_sdiff : (x \ y)ᶜ = x ⇨ y := by
 
 @[simp]
 theorem compl_himp : (x ⇨ y)ᶜ = x \ y := by
-  rw [himp_eq, sdiff_eq, compl_sup, compl_compl, inf_comm]
+  unsealing_newtype OrderDual =>
+    exact @compl_sdiff αᵒᵈ _ _ _
 
 theorem compl_sdiff_compl : xᶜ \ yᶜ = y \ x := by rw [sdiff_compl, sdiff_eq, inf_comm]
 
 @[simp]
 theorem compl_himp_compl : xᶜ ⇨ yᶜ = y ⇨ x := by
-  rw [himp_eq, himp_eq, compl_compl, sup_comm]
+  unsealing_newtype OrderDual =>
+    exact @compl_sdiff_compl αᵒᵈ _ _ _
 
 theorem disjoint_compl_left_iff : Disjoint xᶜ y ↔ y ≤ x := by
   rw [← le_compl_iff_disjoint_left, compl_compl]
@@ -567,8 +569,9 @@ theorem disjoint_compl_left_iff : Disjoint xᶜ y ↔ y ≤ x := by
 theorem disjoint_compl_right_iff : Disjoint x yᶜ ↔ x ≤ y := by
   rw [← le_compl_iff_disjoint_right, compl_compl]
 
-theorem codisjoint_himp_self_left : Codisjoint (x ⇨ y) x :=
-  codisjoint_iff.2 <| by rw [himp_eq, sup_assoc, compl_sup_eq_top, sup_top_eq]
+theorem codisjoint_himp_self_left : Codisjoint (x ⇨ y) x := by
+  unsealing_newtype OrderDual =>
+    exact @disjoint_sdiff_self_left αᵒᵈ _ _ _
 
 theorem codisjoint_himp_self_right : Codisjoint x (x ⇨ y) :=
   codisjoint_himp_self_left.symm

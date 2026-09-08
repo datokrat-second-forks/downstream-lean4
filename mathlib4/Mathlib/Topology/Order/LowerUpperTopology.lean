@@ -455,8 +455,8 @@ instance : ClosedIicTopology α :=
 
 /-- The lower closure of a finite set is closed in the upper topology. -/
 theorem isClosed_lowerClosure (h : s.Finite) : IsClosed (lowerClosure s : Set α) := by
-  simp only [← LowerSet.iSup_Iic, LowerSet.coe_iSup]
-  exact h.isClosed_biUnion fun _ _ => isClosed_Iic
+  unsealing_newtype OrderDual =>
+    exact IsLower.isClosed_upperClosure (α := αᵒᵈ) h
 
 /-- Every set open in the upper topology is an upper set. -/
 theorem isUpperSet_of_isOpen (h : IsOpen s) : IsUpperSet s := by
@@ -488,8 +488,8 @@ protected theorem isTopologicalBasis : IsTopologicalBasis (upperBasis α) := by
 if and only if the preimage of every interval `Set.Iic a` is a closed set. -/
 lemma continuous_iff_Iic [TopologicalSpace β] {f : β → α} :
     Continuous f ↔ ∀ a, IsClosed (f ⁻¹' (Iic a)) := by
-  obtain rfl := IsUpper.topology_eq α
-  simp [continuous_generateFrom_iff]
+  unsealing_newtype OrderDual =>
+    exact IsLower.continuous_iff_Ici (α := αᵒᵈ)
 
 end Preorder
 

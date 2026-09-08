@@ -162,8 +162,9 @@ variable [PartialOrder N]
 theorem toLex_monotone : Monotone (@toLex (α →₀ N)) :=
   fun a b h ↦ DFinsupp.toLex_monotone (id h : ∀ i, (toDFinsupp a) i ≤ (toDFinsupp b) i)
 
-theorem toColex_monotone : Monotone (@toColex (α →₀ N)) :=
-  fun a b h ↦ DFinsupp.toColex_monotone (id h : ∀ i, (toDFinsupp a) i ≤ (toDFinsupp b) i)
+theorem toColex_monotone : Monotone (@toColex (α →₀ N)) := by
+  unsealing_newtype OrderDual =>
+    exact toLex_monotone (α := αᵒᵈ)
 
 end NHasZero
 

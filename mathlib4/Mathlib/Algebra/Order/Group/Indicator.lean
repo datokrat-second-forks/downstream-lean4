@@ -81,9 +81,8 @@ lemma mulIndicator_le' (hfg : ∀ a ∈ s, f a ≤ g a) (hg : ∀ a, a ∉ s →
 @[to_additive]
 lemma le_mulIndicator_apply (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) :
     y ≤ mulIndicator s g a := by
-  by_cases ha : a ∈ s
-  · simpa [ha] using hfg ha
-  · simpa [ha] using hf ha
+  unsealing_newtype OrderDual =>
+    exact mulIndicator_apply_le' (M := Mᵒᵈ) hfg hf
 
 @[to_additive]
 lemma le_mulIndicator (hfg : ∀ a ∈ s, f a ≤ g a) (hf : ∀ a ∉ s, f a ≤ 1) :

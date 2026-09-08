@@ -307,7 +307,8 @@ variable [BooleanAlgebra α] [DecidableLE α]
 
 @[simp] lemma compl_truncatedInf (s : Finset α) (a : α) :
     (truncatedInf s a)ᶜ = truncatedSup sᶜˢ aᶜ := by
-  rw [← compl_inj_iff, compl_compl, compl_truncatedSup, compls_compls, compl_compl]
+  unsealing_newtype OrderDual =>
+    exact map_truncatedInf (OrderIso.compl α) _ _
 
 end BooleanAlgebra
 

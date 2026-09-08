@@ -404,9 +404,8 @@ protected lemma monotone_iff_continuous [TopologicalSpace α] [TopologicalSpace 
 
 lemma monotone_to_lowerTopology_continuous [TopologicalSpace α] [TopologicalSpace β]
     [Topology.IsLowerSet α] [IsLower β] {f : α → β} (hf : Monotone f) : Continuous f := by
-  simp_rw [continuous_def, isOpen_iff_isLowerSet]
-  intro s hs
-  exact (IsLower.isLowerSet_of_isOpen hs).preimage hf
+  unsealing_newtype OrderDual =>
+    exact IsUpperSet.monotone_to_upperTopology_continuous (α := αᵒᵈ) (β := βᵒᵈ) hf.dual
 
 lemma lowerSet_le_lower {t₁ t₂ : TopologicalSpace α} [@Topology.IsLowerSet α t₁ _]
     [@IsLower α t₂ _] : t₁ ≤ t₂ := fun s hs => by

@@ -42,18 +42,20 @@ lemma fibration_iff_image_Iic [Preorder α] [Preorder β] (hf : Monotone f) :
 
 lemma Fibration.isUpperSet_image [LE α] [LE β] (hf : Fibration (· ≥ ·) (· ≥ ·) f)
     {s : Set α} (hs : IsUpperSet s) : IsUpperSet (f '' s) := by
-  rintro _ y' e ⟨x, hx, rfl⟩; obtain ⟨y, e', rfl⟩ := hf e; exact ⟨_, hs e' hx, rfl⟩
+  unsealing_newtype OrderDual =>
+    exact @Fibration.isLowerSet_image αᵒᵈ βᵒᵈ _ _ _ hf s hs
 
 alias _root_.IsUpperSet.image_fibration := Fibration.isUpperSet_image
 
 lemma fibration_iff_isUpperSet_image_Ici [Preorder α] [LE β] :
-    Fibration (· ≥ ·) (· ≥ ·) f ↔ ∀ x, IsUpperSet (f '' Ici x) :=
-  ⟨fun h x ↦ (isUpperSet_Ici x).image_fibration h, fun H x _ e ↦ H x e ⟨x, le_rfl, rfl⟩⟩
+    Fibration (· ≥ ·) (· ≥ ·) f ↔ ∀ x, IsUpperSet (f '' Ici x) := by
+  unsealing_newtype OrderDual =>
+    exact @fibration_iff_isLowerSet_image_Iic αᵒᵈ βᵒᵈ _ _ _
 
 lemma fibration_iff_isUpperSet_image [Preorder α] [LE β] :
-    Fibration (· ≥ ·) (· ≥ ·) f ↔ ∀ s, IsUpperSet s → IsUpperSet (f '' s) :=
-  ⟨Fibration.isUpperSet_image,
-    fun H ↦ fibration_iff_isUpperSet_image_Ici.mpr (H _ <| isUpperSet_Ici ·)⟩
+    Fibration (· ≥ ·) (· ≥ ·) f ↔ ∀ s, IsUpperSet s → IsUpperSet (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact @fibration_iff_isLowerSet_image αᵒᵈ βᵒᵈ _ _ _
 
 lemma fibration_iff_image_Ici [Preorder α] [Preorder β] (hf : Monotone f) :
     Fibration (· ≥ ·) (· ≥ ·) f ↔ ∀ x, f '' Ici x = Ici (f x) := by

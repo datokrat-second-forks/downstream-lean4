@@ -327,7 +327,8 @@ theorem _root_.iSup_iInf_of_monotone {ι ι' α : Type*} [Finite ι] [Preorder �
 theorem _root_.iSup_iInf_of_antitone {ι ι' α : Type*} [Finite ι] [Preorder ι'] [Nonempty ι']
     [IsCodirectedOrder ι'] [Order.Frame α] {f : ι → ι' → α} (hf : ∀ i, Antitone (f i)) :
     ⨆ j, ⨅ i, f i j = ⨅ i, ⨆ j, f i j := by
-  simpa only [iInf_univ] using finite_univ.iSup_biInf_of_antitone fun i _ => hf i
+  unsealing_newtype OrderDual =>
+    exact @iSup_iInf_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ _ fun i => (hf i).dual_left
 
 /-- An increasing union distributes over finite intersection. -/
 theorem iUnion_iInter_of_monotone {ι ι' α : Type*} [Finite ι] [Preorder ι'] [IsDirectedOrder ι']

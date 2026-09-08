@@ -746,9 +746,9 @@ tends to `Filter.atTop : Filter β` along `Filter.atBot : Filter ↥s` and tends
 surjective. We formulate the conclusion as `Function.surjOn f s Set.univ`. -/
 theorem ContinuousOn.surjOn_of_tendsto' {f : α → δ} {s : Set α} [OrdConnected s] (hs : s.Nonempty)
     (hf : ContinuousOn f s) (hbot : Tendsto (fun x : s => f x) atBot atTop)
-    (htop : Tendsto (fun x : s => f x) atTop atBot) : SurjOn f s univ :=
-  haveI := Classical.inhabited_of_nonempty hs.to_subtype
-  surjOn_iff_surjective.2 <| hf.domRestrict.surjective' hbot htop
+    (htop : Tendsto (fun x : s => f x) atTop atBot) : SurjOn f s univ := by
+  unsealing_newtype OrderDual =>
+    exact ContinuousOn.surjOn_of_tendsto (δ := δᵒᵈ) hs hf hbot htop
 
 /-!
 ### Monotonicity of injective continuous functions

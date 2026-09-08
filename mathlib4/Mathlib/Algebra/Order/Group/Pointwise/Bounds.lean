@@ -39,11 +39,15 @@ lemma subset_upperBounds_mul (s t : Set M) : upperBounds s * upperBounds t ⊆ u
 
 @[to_additive]
 lemma mul_mem_lowerBounds_mul (ha : a ∈ lowerBounds s) (hb : b ∈ lowerBounds t) :
-    a * b ∈ lowerBounds (s * t) := forall_mem_image2.2 fun _ hx _ hy => mul_le_mul' (ha hx) (hb hy)
+    a * b ∈ lowerBounds (s * t) := by
+  unsealing_newtype OrderDual =>
+    exact mul_mem_upperBounds_mul (M := Mᵒᵈ) ha hb
 
 @[to_additive]
-lemma subset_lowerBounds_mul (s t : Set M) : lowerBounds s * lowerBounds t ⊆ lowerBounds (s * t) :=
-  image2_subset_iff.2 fun _ hx _ hy => mul_mem_lowerBounds_mul hx hy
+lemma subset_lowerBounds_mul (s t : Set M) :
+    lowerBounds s * lowerBounds t ⊆ lowerBounds (s * t) := by
+  unsealing_newtype OrderDual =>
+    exact subset_upperBounds_mul (M := Mᵒᵈ) _ _
 
 @[to_additive]
 lemma BddAbove.mul (hs : BddAbove s) (ht : BddAbove t) : BddAbove (s * t) :=
@@ -74,12 +78,14 @@ variable [Group G] [Preorder G] [MulLeftMono G]
   [MulRightMono G] {s t : Set G} {a b : G}
 
 @[to_additive (attr := simp)]
-theorem bddAbove_inv : BddAbove s⁻¹ ↔ BddBelow s :=
-  ((OrderIso.inv G).bddAbove_preimage (s := ofDual ⁻¹' s)).trans bddAbove_preimage_ofDual
+theorem bddAbove_inv : BddAbove s⁻¹ ↔ BddBelow s := by
+  unsealing_newtype OrderDual =>
+  exact ((OrderIso.inv G).bddAbove_preimage (s := ofDual ⁻¹' s))
 
 @[to_additive (attr := simp)]
-theorem bddBelow_inv : BddBelow s⁻¹ ↔ BddAbove s :=
-  ((OrderIso.inv G).bddBelow_preimage (s := ofDual ⁻¹' s)).trans bddBelow_preimage_ofDual
+theorem bddBelow_inv : BddBelow s⁻¹ ↔ BddAbove s := by
+  unsealing_newtype OrderDual =>
+    exact (OrderIso.inv G).bddBelow_preimage
 
 @[to_additive]
 theorem BddAbove.inv (h : BddAbove s) : BddBelow s⁻¹ :=
@@ -90,24 +96,28 @@ theorem BddBelow.inv (h : BddBelow s) : BddAbove s⁻¹ :=
   bddAbove_inv.2 h
 
 @[to_additive (attr := simp)]
-theorem isLUB_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ :=
-  ((OrderIso.inv G).isLUB_preimage (s := ofDual ⁻¹' s)).trans isLUB_preimage_ofDual
+theorem isLUB_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ := by
+  unsealing_newtype OrderDual =>
+    exact (OrderIso.inv G).isLUB_preimage
 
 @[to_additive]
 theorem isLUB_inv' : IsLUB s⁻¹ a⁻¹ ↔ IsGLB s a := by
-  rw [isLUB_inv, inv_inv]
+  unsealing_newtype OrderDual =>
+    exact (OrderIso.inv G).isLUB_preimage'
 
 @[to_additive]
 theorem IsGLB.inv (h : IsGLB s a) : IsLUB s⁻¹ a⁻¹ :=
   isLUB_inv'.2 h
 
 @[to_additive (attr := simp)]
-theorem isGLB_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ :=
-  ((OrderIso.inv G).isGLB_preimage (s := ofDual ⁻¹' s)).trans isGLB_preimage_ofDual
+theorem isGLB_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ := by
+  unsealing_newtype OrderDual =>
+    exact (OrderIso.inv G).isGLB_preimage
 
 @[to_additive]
 theorem isGLB_inv' : IsGLB s⁻¹ a⁻¹ ↔ IsLUB s a := by
-  rw [isGLB_inv, inv_inv]
+  unsealing_newtype OrderDual =>
+    exact (OrderIso.inv G).isGLB_preimage'
 
 @[to_additive]
 theorem IsLUB.inv (h : IsLUB s a) : IsGLB s⁻¹ a⁻¹ :=
@@ -116,8 +126,8 @@ theorem IsLUB.inv (h : IsLUB s a) : IsGLB s⁻¹ a⁻¹ :=
 @[to_additive]
 lemma BddBelow.range_inv {α : Type*} {f : α → G} (hf : BddBelow (range f)) :
     BddAbove (range (fun x => (f x)⁻¹)) := by
-  obtain ⟨c, hc⟩ := hf
-  exact ⟨c⁻¹, by rintro - ⟨x, rfl⟩; exact inv_le_inv_iff.2 (hc (mem_range_self x))⟩
+  unsealing_newtype OrderDual =>
+    exact hf.range_comp_left (OrderIso.inv G).monotone
 
 @[to_additive]
 lemma BddAbove.range_inv {α : Type*} {f : α → G} (hf : BddAbove (range f)) :
@@ -146,7 +156,7 @@ lemma IsLUB.div (hs : IsLUB s a) (ht : IsGLB t b) :
 @[to_additive]
 lemma IsGLB.div (hs : IsGLB s a) (ht : IsLUB t b) :
     IsGLB (s / t) (a / b) := by
-  rw [div_eq_mul_inv, div_eq_mul_inv]
-  exact hs.mul ht.inv
+  unsealing_newtype OrderDual =>
+    exact IsLUB.div (G := Gᵒᵈ) hs ht
 
 end Group

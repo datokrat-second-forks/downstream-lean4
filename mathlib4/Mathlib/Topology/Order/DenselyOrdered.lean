@@ -118,7 +118,8 @@ theorem interior_Ici [NoMinOrder α] {a : α} : interior (Ici a) = Ioi a :=
 
 @[simp]
 theorem interior_Iic' {a : α} (ha : (Ioi a).Nonempty) : interior (Iic a) = Iio a := by
-  rw [← compl_Ioi, interior_compl, closure_Ioi' ha, compl_Ici]
+  unsealing_newtype OrderDual =>
+    exact interior_Ici' (α := αᵒᵈ) ha
 
 theorem interior_Iic [NoMaxOrder α] {a : α} : interior (Iic a) = Iio a :=
   interior_Iic' nonempty_Ioi

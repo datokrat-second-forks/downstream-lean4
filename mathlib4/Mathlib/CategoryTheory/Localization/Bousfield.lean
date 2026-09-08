@@ -120,7 +120,7 @@ lemma galoisConnection_isLocal :
     GaloisConnection (OrderDual.toDual ∘ isLocal (C := C))
       (MorphismProperty.isLocal ∘ OrderDual.ofDual) := by
   unsealing_newtype OrderDual =>
-    exact fun P W ↦ le_isLocal_iff P (OrderDual.ofDual W)
+    exact le_isLocal_iff
 
 end
 
@@ -204,7 +204,7 @@ lemma galoisConnection_isColocal :
     GaloisConnection (OrderDual.toDual ∘ isColocal (C := C))
       (MorphismProperty.isColocal ∘ OrderDual.ofDual) := by
   unsealing_newtype OrderDual =>
-    exact fun P W ↦ le_isColocal_iff P (OrderDual.ofDual W)
+    exact le_isColocal_iff
 
 end
 

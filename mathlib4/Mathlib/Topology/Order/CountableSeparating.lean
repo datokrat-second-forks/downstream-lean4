@@ -90,10 +90,12 @@ lemma of_forall_eventually_lt_iff (h : ∀ x, ∀ᶠ a in l, f a < x ↔ g a < x
 lemma of_forall_eventually_le_iff (h : ∀ x, ∀ᶠ a in l, f a ≤ x ↔ g a ≤ x) : f =ᶠ[l] g :=
   of_forall_separating_preimage (· ∈ range Iic) <| forall_mem_range.2 <| fun x ↦ .set_eq (h x)
 
-lemma of_forall_eventually_gt_iff (h : ∀ x, ∀ᶠ a in l, x < f a ↔ x < g a) : f =ᶠ[l] g :=
-  of_forall_separating_preimage (· ∈ range Ioi) <| forall_mem_range.2 <| fun x ↦ .set_eq (h x)
+lemma of_forall_eventually_gt_iff (h : ∀ x, ∀ᶠ a in l, x < f a ↔ x < g a) : f =ᶠ[l] g := by
+  unsealing_newtype OrderDual =>
+    exact of_forall_eventually_lt_iff (X := Xᵒᵈ) h
 
-lemma of_forall_eventually_ge_iff (h : ∀ x, ∀ᶠ a in l, x ≤ f a ↔ x ≤ g a) : f =ᶠ[l] g :=
-  of_forall_separating_preimage (· ∈ range Ici) <| forall_mem_range.2 <| fun x ↦ .set_eq (h x)
+lemma of_forall_eventually_ge_iff (h : ∀ x, ∀ᶠ a in l, x ≤ f a ↔ x ≤ g a) : f =ᶠ[l] g := by
+  unsealing_newtype OrderDual =>
+    exact of_forall_eventually_le_iff (X := Xᵒᵈ) h
 
 end Filter.EventuallyEq

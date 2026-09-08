@@ -164,8 +164,9 @@ instance OrderDual.instDiscreteTopology [DiscreteTopology X] : DiscreteTopology 
 
 theorem continuous_toDual : Continuous (toDual : X → Xᵒᵈ) := continuous_coinduced_rng
 
-theorem continuous_ofDual : Continuous (ofDual : Xᵒᵈ → X) :=
-  continuous_coinduced_dom.2 continuous_id
+theorem continuous_ofDual : Continuous (ofDual : Xᵒᵈ → X) := by
+  unsealing_newtype OrderDual =>
+    exact continuous_id
 
 theorem isOpenMap_toDual : IsOpenMap (toDual : X → Xᵒᵈ) := by
   unsealing_newtype OrderDual =>

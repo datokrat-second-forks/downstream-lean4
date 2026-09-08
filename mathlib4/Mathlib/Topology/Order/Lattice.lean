@@ -142,7 +142,8 @@ lemma finset_inf'_nhds [SemilatticeInf L] [ContinuousInf L]
 lemma finset_inf'_nhds_apply [SemilatticeInf L] [ContinuousInf L]
     (hne : s.Nonempty) (hs : ∀ i ∈ s, Tendsto (f i) l (𝓝 (g i))) :
     Tendsto (fun a ↦ s.inf' hne (f · a)) l (𝓝 (s.inf' hne g)) := by
-  simpa only [← Finset.inf'_apply] using finset_inf'_nhds hne hs
+  unsealing_newtype OrderDual =>
+    exact finset_sup'_nhds_apply (L := Lᵒᵈ) hne hs
 
 lemma finset_sup_nhds [SemilatticeSup L] [OrderBot L] [ContinuousSup L]
     (hs : ∀ i ∈ s, Tendsto (f i) l (𝓝 (g i))) : Tendsto (s.sup f) l (𝓝 (s.sup g)) := by
@@ -164,7 +165,8 @@ lemma finset_inf_nhds [SemilatticeInf L] [OrderTop L] [ContinuousInf L]
 lemma finset_inf_nhds_apply [SemilatticeInf L] [OrderTop L] [ContinuousInf L]
     (hs : ∀ i ∈ s, Tendsto (f i) l (𝓝 (g i))) :
     Tendsto (fun a ↦ s.inf (f · a)) l (𝓝 (s.inf g)) := by
-  simpa only [← Finset.inf_apply] using finset_inf_nhds hs
+  unsealing_newtype OrderDual =>
+    exact finset_sup_nhds_apply (L := Lᵒᵈ) hs
 
 end Filter.Tendsto
 

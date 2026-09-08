@@ -460,10 +460,9 @@ theorem UpperSemicontinuousWithinAt.mono (h : UpperSemicontinuousWithinAt f s x)
 theorem UpperSemicontinuousWithinAt.congr_of_eventuallyEq {a : α}
     (h : UpperSemicontinuousWithinAt f s a)
     (has : a ∈ s) (hfg : ∀ᶠ x in nhdsWithin a s, f x = g x) :
-    UpperSemicontinuousWithinAt g s a :=
-  SemicontinuousWithinAt.congr_of_eventuallyEq h has <| by
-    filter_upwards [hfg] with x hx
-    simp [hx]
+    UpperSemicontinuousWithinAt g s a := by
+  unsealing_newtype OrderDual =>
+    exact LowerSemicontinuousWithinAt.congr_of_eventuallyEq (β := βᵒᵈ) h has hfg
 
 theorem upperSemicontinuousWithinAt_univ_iff :
     UpperSemicontinuousWithinAt f univ x ↔ UpperSemicontinuousAt f x :=

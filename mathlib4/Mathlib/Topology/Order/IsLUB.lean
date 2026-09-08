@@ -61,8 +61,9 @@ theorem IsLUB.nhdsWithin_neBot {a : α} {s : Set α} (ha : IsLUB s a) (hs : s.No
   mem_closure_iff_nhdsWithin_neBot.1 (ha.mem_closure hs)
 
 theorem IsGLB.nhdsWithin_neBot {a : α} {s : Set α} (ha : IsGLB s a) (hs : s.Nonempty) :
-    NeBot (𝓝[s] a) :=
-  mem_closure_iff_nhdsWithin_neBot.1 (ha.mem_closure hs)
+    NeBot (𝓝[s] a) := by
+  unsealing_newtype OrderDual =>
+    exact IsLUB.nhdsWithin_neBot (α := αᵒᵈ) ha hs
 
 theorem isLUB_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ upperBounds s) (hsf : s ∈ f)
     [NeBot (f ⊓ 𝓝 a)] : IsLUB s a :=
@@ -443,8 +444,8 @@ theorem exists_seq_strictAnti_strictMono_tendsto [DenselyOrdered α] [FirstCount
 theorem exists_seq_tendsto_sInf {α : Type*} [ConditionallyCompleteLinearOrder α]
     [TopologicalSpace α] [OrderTopology α] [FirstCountableTopology α] {S : Set α} (hS : S.Nonempty)
     (hS' : BddBelow S) : ∃ u : ℕ → α, Antitone u ∧ Tendsto u atTop (𝓝 (sInf S)) ∧ ∀ n, u n ∈ S := by
-  rcases (isGLB_csInf hS hS').exists_seq_antitone_tendsto hS with ⟨u, hu⟩
-  exact ⟨u, hu.1, hu.2.2⟩
+  unsealing_newtype OrderDual =>
+    exact exists_seq_tendsto_sSup (α := αᵒᵈ) hS hS'
 
 theorem Dense.exists_seq_strictAnti_tendsto_of_lt [DenselyOrdered α] [FirstCountableTopology α]
     {s : Set α} (hs : Dense s) {x y : α} (hy : x < y) :

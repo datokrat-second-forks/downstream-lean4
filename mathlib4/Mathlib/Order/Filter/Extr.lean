@@ -710,9 +710,8 @@ theorem Filter.EventuallyEq.isMaxFilter_iff {α β : Type*} [Preorder β] {f g :
 theorem Filter.EventuallyLE.isMinFilter {α β : Type*} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (hle : f ≤ᶠ[l] g) (hfga : f a = g a) (h : IsMinFilter f l a) :
     IsMinFilter g l a := by
-  refine hle.mp (h.mono fun x hf hgf => ?_)
-  rw [← hfga]
-  exact le_trans hf hgf
+  unsealing_newtype OrderDual =>
+    exact @Filter.EventuallyLE.isMaxFilter _ βᵒᵈ _ _ _ _ _ hle hfga h
 
 theorem IsMinFilter.congr {α β : Type*} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
     (h : IsMinFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=

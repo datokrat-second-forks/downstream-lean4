@@ -288,28 +288,34 @@ theorem bot_sets_eq : (⊥ : Filter α).sets = univ := rfl
 as the second alternative, to be used as an instance. -/
 theorem eq_or_neBot (f : Filter α) : f = ⊥ ∨ NeBot f := (eq_or_ne f ⊥).imp_right NeBot.mk
 
-theorem sup_sets_eq {f g : Filter α} : (f ⊔ g).sets = f.sets ∩ g.sets :=
-  (giGenerate α).gc.u_inf (b₁ := OrderDual.toDual f) (b₂ := OrderDual.toDual g)
+theorem sup_sets_eq {f g : Filter α} : (f ⊔ g).sets = f.sets ∩ g.sets := by
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.u_inf
 
-theorem sSup_sets_eq {s : Set (Filter α)} : (sSup s).sets = ⋂ f ∈ s, (f : Filter α).sets :=
-  Set.ext fun _ ↦ by simp [Filter.mem_sSup]
+theorem sSup_sets_eq {s : Set (Filter α)} : (sSup s).sets = ⋂ f ∈ s, (f : Filter α).sets := by
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.u_sInf
 
-theorem iSup_sets_eq {f : ι → Filter α} : (iSup f).sets = ⋂ i, (f i).sets :=
-  Set.ext fun _ ↦ by simp [iSup, Filter.mem_sSup]
+theorem iSup_sets_eq {f : ι → Filter α} : (iSup f).sets = ⋂ i, (f i).sets := by
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.u_iInf
 
-theorem generate_empty : Filter.generate ∅ = (⊤ : Filter α) :=
-  le_antisymm le_top (le_generate_iff.2 (Set.empty_subset _))
+theorem generate_empty : Filter.generate ∅ = (⊤ : Filter α) := by
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.l_bot
 
 theorem generate_univ : Filter.generate univ = (⊥ : Filter α) :=
   bot_unique fun _ _ => GenerateSets.basic (mem_univ _)
 
 theorem generate_union {s t : Set (Set α)} :
-    Filter.generate (s ∪ t) = Filter.generate s ⊓ Filter.generate t :=
-  congrArg OrderDual.ofDual (giGenerate α).gc.l_sup
+    Filter.generate (s ∪ t) = Filter.generate s ⊓ Filter.generate t := by
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.l_sup
 
 theorem generate_iUnion {s : ι → Set (Set α)} :
     Filter.generate (⋃ i, s i) = ⨅ i, Filter.generate (s i) := by
-  simpa using congrArg OrderDual.ofDual ((giGenerate α).gc.l_iSup (f := s))
+  unsealing_newtype OrderDual =>
+    exact (giGenerate α).gc.l_iSup
 
 @[simp]
 theorem mem_sup {f g : Filter α} {s : Set α} : s ∈ f ⊔ g ↔ s ∈ f ∧ s ∈ g :=

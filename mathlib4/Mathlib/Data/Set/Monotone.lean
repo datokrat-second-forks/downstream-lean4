@@ -31,9 +31,8 @@ theorem _root_.MonotoneOn.congr (h₁ : MonotoneOn f₁ s) (h : s.EqOn f₁ f₂
   exact h₁ ha hb hab
 
 theorem _root_.AntitoneOn.congr (h₁ : AntitoneOn f₁ s) (h : s.EqOn f₁ f₂) : AntitoneOn f₂ s := by
-  intro a ha b hb hab
-  rw [← h ha, ← h hb]
-  exact h₁ ha hb hab
+  unsealing_newtype OrderDual =>
+    exact h₁.dual_right.congr h
 
 theorem _root_.StrictMonoOn.congr (h₁ : StrictMonoOn f₁ s) (h : s.EqOn f₁ f₂) :
     StrictMonoOn f₂ s := by
@@ -43,9 +42,8 @@ theorem _root_.StrictMonoOn.congr (h₁ : StrictMonoOn f₁ s) (h : s.EqOn f₁ 
 
 theorem _root_.StrictAntiOn.congr (h₁ : StrictAntiOn f₁ s) (h : s.EqOn f₁ f₂) :
     StrictAntiOn f₂ s := by
-  intro a ha b hb hab
-  rw [← h ha, ← h hb]
-  exact h₁ ha hb hab
+  unsealing_newtype OrderDual =>
+    exact h₁.dual_right.congr h
 
 theorem EqOn.congr_monotoneOn (h : s.EqOn f₁ f₂) : MonotoneOn f₁ s ↔ MonotoneOn f₂ s :=
   ⟨fun h₁ => h₁.congr h, fun h₂ => h₂.congr h.symm⟩

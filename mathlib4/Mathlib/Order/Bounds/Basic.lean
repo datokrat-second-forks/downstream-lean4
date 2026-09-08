@@ -95,12 +95,14 @@ lemma bddAbove_preimage_toDual {s : Set αᵒᵈ} : BddAbove (toDual ⁻¹' s) �
     exact Iff.rfl
 
 @[to_dual]
-theorem BddAbove.dual (h : BddAbove s) : BddBelow (ofDual ⁻¹' s) :=
-  h.elim fun x hx ↦ ⟨toDual x, fun _ hy ↦ hx hy⟩
+theorem BddAbove.dual (h : BddAbove s) : BddBelow (ofDual ⁻¹' s) := by
+  unsealing_newtype OrderDual =>
+    exact h
 
 @[to_dual]
-theorem IsLeast.dual (h : IsLeast s a) : IsGreatest (ofDual ⁻¹' s) (toDual a) :=
-  ⟨h.1, fun _ hy ↦ h.2 hy⟩
+theorem IsLeast.dual (h : IsLeast s a) : IsGreatest (ofDual ⁻¹' s) (toDual a) := by
+  unsealing_newtype OrderDual =>
+    exact h
 
 @[to_dual]
 theorem IsLUB.dual (h : IsLUB s a) : IsGLB (ofDual ⁻¹' s) (toDual a) := by
@@ -456,8 +458,8 @@ theorem bddAbove_iff_exists_ge [SemilatticeSup γ] {s : Set γ} (x₀ : γ) :
 @[to_dual existing bddAbove_iff_exists_ge]
 theorem bddBelow_iff_exists_le [SemilatticeInf γ] {s : Set γ} (x₀ : γ) :
     BddBelow s ↔ ∃ x, x ≤ x₀ ∧ ∀ y ∈ s, x ≤ y := by
-  rw [bddBelow_def, exists_le_and_iff_exists]
-  exact Antitone.ball fun x _ => antitone_le
+  unsealing_newtype OrderDual =>
+    exact bddAbove_iff_exists_ge (toDual x₀)
 
 @[to_dual exists_le]
 theorem BddAbove.exists_ge [SemilatticeSup γ] {s : Set γ} (hs : BddAbove s) (x₀ : γ) :

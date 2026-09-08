@@ -75,26 +75,6 @@ open OrderDual
 
 variable {α β : Type*} [TopologicalSpace α] [Preorder β] {f : α → β} {s : Set α} {x : α}
 
-private lemma lowerSemicontinuousWithinAt_toDual_iff :
-    LowerSemicontinuousWithinAt (fun a ↦ toDual (f a)) s x ↔ UpperSemicontinuousWithinAt f s x :=
-  ⟨fun h y hy ↦ h (toDual y) hy, fun h y hy ↦ h (ofDual y) hy⟩
-
-private lemma upperSemicontinuousWithinAt_toDual_iff :
-    UpperSemicontinuousWithinAt (fun a ↦ toDual (f a)) s x ↔ LowerSemicontinuousWithinAt f s x :=
-  ⟨fun h y hy ↦ h (toDual y) hy, fun h y hy ↦ h (ofDual y) hy⟩
-
-private lemma lowerSemicontinuousAt_toDual_iff :
-    LowerSemicontinuousAt (fun a ↦ toDual (f a)) x ↔ UpperSemicontinuousAt f x :=
-  ⟨fun h y hy ↦ h (toDual y) hy, fun h y hy ↦ h (ofDual y) hy⟩
-
-private lemma upperSemicontinuousAt_toDual_iff :
-    UpperSemicontinuousAt (fun a ↦ toDual (f a)) x ↔ LowerSemicontinuousAt f x :=
-  ⟨fun h y hy ↦ h (toDual y) hy, fun h y hy ↦ h (ofDual y) hy⟩
-
-private lemma lowerSemicontinuousOn_toDual_iff :
-    LowerSemicontinuousOn (fun a ↦ toDual (f a)) s ↔ UpperSemicontinuousOn f s :=
-  forall₂_congr fun _ _ ↦ lowerSemicontinuousWithinAt_toDual_iff
-
 /-- `toDual` as a homeomorphism, to transport closedness of (hypo/epi)graphs. -/
 private def toDualHomeomorph {X : Type*} [TopologicalSpace X] : X ≃ₜ Xᵒᵈ where
   toEquiv := toDual
@@ -431,17 +411,15 @@ theorem Continuous.comp_lowerSemicontinuous {g : γ → δ} {f : α → γ} (hg 
 
 theorem ContinuousAt.comp_lowerSemicontinuousWithinAt_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : LowerSemicontinuousWithinAt f s x) (gmon : Antitone g) :
-    UpperSemicontinuousWithinAt (g ∘ f) s x :=
-  lowerSemicontinuousWithinAt_toDual_iff.1
-    (ContinuousAt.comp_lowerSemicontinuousWithinAt (δ := δᵒᵈ) (g := ⇑OrderDual.toDual ∘ g)
-      (continuous_toDual.continuousAt.comp hg) hf gmon.dual_right)
+    UpperSemicontinuousWithinAt (g ∘ f) s x := by
+  unsealing_newtype OrderDual =>
+    exact ContinuousAt.comp_lowerSemicontinuousWithinAt (δ := δᵒᵈ) (f := f) (g := g) hg hf gmon
 
 theorem ContinuousAt.comp_lowerSemicontinuousAt_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : LowerSemicontinuousAt f x) (gmon : Antitone g) :
-    UpperSemicontinuousAt (g ∘ f) x :=
-  lowerSemicontinuousAt_toDual_iff.1
-    (ContinuousAt.comp_lowerSemicontinuousAt (δ := δᵒᵈ) (g := ⇑OrderDual.toDual ∘ g)
-      (continuous_toDual.continuousAt.comp hg) hf gmon.dual_right)
+    UpperSemicontinuousAt (g ∘ f) x := by
+  unsealing_newtype OrderDual =>
+    exact ContinuousAt.comp_lowerSemicontinuousAt (δ := δᵒᵈ) (f := f) (g := g) hg hf gmon
 
 theorem Continuous.comp_lowerSemicontinuousOn_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : LowerSemicontinuousOn f s) (gmon : Antitone g) : UpperSemicontinuousOn (g ∘ f) s :=
@@ -921,9 +899,9 @@ variable {γ : Type*} [LinearOrder γ]
 /-- The overlevel sets of an upper semicontinuous function on a compact set are compact. -/
 theorem UpperSemicontinuousOn.isCompact_inter_preimage_Ici {f : α → γ}
     (hfs : UpperSemicontinuousOn f s) (ks : IsCompact s) (c : γ) :
-    IsCompact (s ∩ f ⁻¹' Ici c) :=
-  LowerSemicontinuousOn.isCompact_inter_preimage_Iic (γ := γᵒᵈ)
-    (lowerSemicontinuousOn_toDual_iff.2 hfs) ks (OrderDual.toDual c)
+    IsCompact (s ∩ f ⁻¹' Ici c) := by
+  unsealing_newtype OrderDual =>
+    exact LowerSemicontinuousOn.isCompact_inter_preimage_Iic (γ := γᵒᵈ) hfs ks c
 
 open scoped Set.Notation in
 /-- An intersection of overlevel sets of an upper semicontinuous function on a compact set is
@@ -1069,17 +1047,15 @@ theorem Continuous.comp_upperSemicontinuous {g : γ → δ} {f : α → γ} (hg 
 
 theorem ContinuousAt.comp_upperSemicontinuousWithinAt_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousWithinAt f s x) (gmon : Antitone g) :
-    LowerSemicontinuousWithinAt (g ∘ f) s x :=
-  upperSemicontinuousWithinAt_toDual_iff.1
-    (ContinuousAt.comp_upperSemicontinuousWithinAt (δ := δᵒᵈ) (g := ⇑OrderDual.toDual ∘ g)
-      (continuous_toDual.continuousAt.comp hg) hf gmon.dual_right)
+    LowerSemicontinuousWithinAt (g ∘ f) s x := by
+  unsealing_newtype OrderDual =>
+    exact ContinuousAt.comp_upperSemicontinuousWithinAt (δ := δᵒᵈ) (f := f) (g := g) hg hf gmon
 
 theorem ContinuousAt.comp_upperSemicontinuousAt_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousAt f x) (gmon : Antitone g) :
-    LowerSemicontinuousAt (g ∘ f) x :=
-  upperSemicontinuousAt_toDual_iff.1
-    (ContinuousAt.comp_upperSemicontinuousAt (δ := δᵒᵈ) (g := ⇑OrderDual.toDual ∘ g)
-      (continuous_toDual.continuousAt.comp hg) hf gmon.dual_right)
+    LowerSemicontinuousAt (g ∘ f) x := by
+  unsealing_newtype OrderDual =>
+    exact ContinuousAt.comp_upperSemicontinuousAt (δ := δᵒᵈ) (f := f) (g := g) hg hf gmon
 
 theorem Continuous.comp_upperSemicontinuousOn_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : UpperSemicontinuousOn f s) (gmon : Antitone g) : LowerSemicontinuousOn (g ∘ f) s :=

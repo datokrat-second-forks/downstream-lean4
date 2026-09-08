@@ -255,8 +255,9 @@ instance (priority := 100) (α : Type*) [LT α] [h : WellFoundedLT α] : WellFou
   ⟨InvImage.wf OrderDual.ofDual' h.wf⟩
 
 @[to_dual]
-theorem wellFoundedGT_dual_iff (α : Type*) [LT α] : WellFoundedGT αᵒᵈ ↔ WellFoundedLT α :=
-  ⟨fun h => ⟨InvImage.wf OrderDual.mk h.wf⟩, fun h => ⟨InvImage.wf OrderDual.ofDual' h.wf⟩⟩
+theorem wellFoundedGT_dual_iff (α : Type*) [LT α] : WellFoundedGT αᵒᵈ ↔ WellFoundedLT α := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h => ⟨h.wf⟩, fun h => ⟨h.wf⟩⟩
 
 /-- A well order is a well-founded linear order. -/
 @[wikidata Q659746]

@@ -290,8 +290,9 @@ theorem essSup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f 
   le_bot_iff.mp (sInf_le (by simp))
 
 @[simp]
-theorem essInf_measure_zero {_ : MeasurableSpace α} {f : α → β} : essInf f (0 : Measure α) = ⊤ :=
-  top_le_iff.mp (le_sSup (by simp))
+theorem essInf_measure_zero {_ : MeasurableSpace α} {f : α → β} : essInf f (0 : Measure α) = ⊤ := by
+  unsealing_newtype OrderDual =>
+    exact @essSup_measure_zero α βᵒᵈ _ _ _
 
 theorem essSup_const_bot : essSup (fun _ : α => (⊥ : β)) μ = (⊥ : β) :=
   limsup_const_bot

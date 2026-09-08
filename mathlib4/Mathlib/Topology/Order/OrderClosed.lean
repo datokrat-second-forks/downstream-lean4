@@ -104,11 +104,6 @@ theorem Dense.orderDual [TopologicalSpace α] {s : Set α} (hs : Dense s) :
     Dense (OrderDual.ofDual ⁻¹' s) :=
   hs.preimage isOpenMap_ofDual
 
-private lemma tendsto_toDual_iff {X Y : Type*} [TopologicalSpace X] {f : Y → X} {F : Filter Y}
-    {a : X} :
-    Tendsto (fun i ↦ OrderDual.toDual (f i)) F (𝓝 (OrderDual.toDual a)) ↔ Tendsto f F (𝓝 a) :=
-  ⟨fun h ↦ (continuous_ofDual.tendsto _).comp h, fun h ↦ (continuous_toDual.tendsto _).comp h⟩
-
 section General
 variable [TopologicalSpace α] [Preorder α] {s : Set α}
 
@@ -551,15 +546,15 @@ lemma monotone_of_frequently_monotone_of_tendsto (hF : ∃ᶠ i in l, Monotone (
 /-- The limit of a collection of functions that is frequently antitone on a set is antitone on
 that set. -/
 lemma antitoneOn_of_frequently_antitoneOn_of_tendsto (hF : ∃ᶠ i in l, AntitoneOn (F i) s)
-    (hlim : ∀ x ∈ s, Tendsto (fun i ↦ F i x) l (𝓝 (f x))) : AntitoneOn f s :=
-  monotoneOn_of_frequently_monotoneOn_of_tendsto (α := αᵒᵈ) hF
-    fun x hx ↦ tendsto_toDual_iff.2 (hlim x hx)
+    (hlim : ∀ x ∈ s, Tendsto (fun i ↦ F i x) l (𝓝 (f x))) : AntitoneOn f s := by
+  unsealing_newtype OrderDual =>
+    exact monotoneOn_of_frequently_monotoneOn_of_tendsto (α := αᵒᵈ) hF hlim
 
 /-- The limit of a collection of functions that is frequently antitone is antitone. -/
 lemma antitone_of_frequently_antitone_of_tendsto (hF : ∃ᶠ i in l, Antitone (F i))
-    (hlim : ∀ x, Tendsto (fun i ↦ F i x) l (𝓝 (f x))) : Antitone f :=
-  monotone_of_frequently_monotone_of_tendsto (α := αᵒᵈ) hF
-    fun x ↦ tendsto_toDual_iff.2 (hlim x)
+    (hlim : ∀ x, Tendsto (fun i ↦ F i x) l (𝓝 (f x))) : Antitone f := by
+  unsealing_newtype OrderDual =>
+    exact monotone_of_frequently_monotone_of_tendsto (α := αᵒᵈ) hF hlim
 
 /-- The set of monotone functions on a set is closed. -/
 theorem isClosed_monotoneOn : IsClosed {f : β → α | MonotoneOn f s} := by

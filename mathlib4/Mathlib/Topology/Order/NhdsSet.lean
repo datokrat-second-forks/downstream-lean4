@@ -41,7 +41,8 @@ theorem nhdsSet_Ici : 𝓝ˢ (Ici a) = 𝓝 a ⊔ 𝓟 (Ioi a) := by
   rw [← Ioi_insert, nhdsSet_insert, nhdsSet_Ioi]
 
 theorem nhdsSet_Iic : 𝓝ˢ (Iic a) = 𝓝 a ⊔ 𝓟 (Iio a) := by
-  rw [← Iio_insert, nhdsSet_insert, nhdsSet_Iio]
+  unsealing_newtype OrderDual =>
+    exact nhdsSet_Ici (α := αᵒᵈ)
 
 theorem nhdsSet_Ico (h : a < b) : 𝓝ˢ (Ico a b) = 𝓝 a ⊔ 𝓟 (Ioo a b) := by
   rw [← Ioo_insert_left h, nhdsSet_insert, nhdsSet_Ioo]
@@ -72,12 +73,14 @@ theorem Ici_mem_nhdsSet_Ici (h : a < b) : Ici a ∈ 𝓝ˢ (Ici b) :=
 -/
 
 theorem Iio_mem_nhdsSet_Iic_iff : Iio b ∈ 𝓝ˢ (Iic a) ↔ a < b := by
-  rw [isOpen_Iio.mem_nhdsSet, Iic_subset_Iio]
+  unsealing_newtype OrderDual =>
+    exact Ioi_mem_nhdsSet_Ici_iff (α := αᵒᵈ)
 
 alias ⟨_, Iio_mem_nhdsSet_Iic⟩ := Iio_mem_nhdsSet_Iic_iff
 
-theorem Iic_mem_nhdsSet_Iic (h : a < b) : Iic b ∈ 𝓝ˢ (Iic a) :=
-  mem_of_superset (Iio_mem_nhdsSet_Iic h) Iio_subset_Iic_self
+theorem Iic_mem_nhdsSet_Iic (h : a < b) : Iic b ∈ 𝓝ˢ (Iic a) := by
+  unsealing_newtype OrderDual =>
+    exact Ici_mem_nhdsSet_Ici (α := αᵒᵈ) h
 
 /-!
 ### Lemmas about `Ixx _ ?_ ∈ 𝓝ˢ (Set.Icc _ _)`
@@ -193,10 +196,8 @@ theorem Iic_mem_nhdsSet_Iic_iff {a b : α} [NeBot (𝓝[>] b)] : Iic a ∈ 𝓝�
 
 theorem hasBasis_nhdsSet_Ici_Ioi (a : α) [h : Nonempty (Iio a)] :
     HasBasis (𝓝ˢ (Ici a)) (· < a) Ioi := by
-  refine ⟨fun s ↦ ⟨fun hs ↦ ?_, fun ⟨b, hab, hb⟩ ↦ mem_of_superset (Ioi_mem_nhdsSet_Ici hab) hb⟩⟩
-  rw [nhdsSet_Ici, mem_sup, mem_principal] at hs
-  rcases exists_Ioc_subset_of_mem_nhds hs.1 (Set.nonempty_coe_sort.1 h) with ⟨b, hab, hbs⟩
-  exact ⟨b, hab, fun x hx ↦ (le_or_gt x a).elim (fun hxa ↦ hbs ⟨hx, hxa⟩) fun hxa ↦ hs.2 hxa⟩
+  unsealing_newtype OrderDual =>
+    exact have : Nonempty (Ioi (toDual a)) := ‹_›; hasBasis_nhdsSet_Iic_Iio (toDual a)
 
 theorem hasBasis_nhdsSet_Ici_Ici (a : α) [NeBot (𝓝[<] a)] :
     HasBasis (𝓝ˢ (Ici a)) (· < a) Ici := by
@@ -204,6 +205,7 @@ theorem hasBasis_nhdsSet_Ici_Ici (a : α) [NeBot (𝓝[<] a)] :
     exact have : NeBot (𝓝[>] (toDual a)) := ‹_›; hasBasis_nhdsSet_Iic_Iic (toDual a)
 
 @[simp]
-theorem Ici_mem_nhdsSet_Ici_iff {a b : α} [NeBot (𝓝[<] b)] : Ici a ∈ 𝓝ˢ (Ici b) ↔ a < b :=
-  (hasBasis_nhdsSet_Ici_Ici b).mem_iff.trans
-    ⟨fun ⟨_c, hcb, hac⟩ ↦ (Ici_subset_Ici.1 hac).trans_lt hcb, fun h ↦ ⟨_, h, Subset.rfl⟩⟩
+theorem Ici_mem_nhdsSet_Ici_iff {a b : α} [NeBot (𝓝[<] b)] : Ici a ∈ 𝓝ˢ (Ici b) ↔ a < b := by
+  unsealing_newtype OrderDual =>
+    have : NeBot (𝓝[>] (toDual b)) := ‹_›
+    exact Iic_mem_nhdsSet_Iic_iff (a := toDual a) (b := toDual b)

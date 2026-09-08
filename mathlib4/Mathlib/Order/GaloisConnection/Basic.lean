@@ -192,19 +192,22 @@ theorem sSup_image2_eq_sSup_sSup (h₁ : ∀ b, GaloisConnection (swap l b) (u�
 @[to_dual]
 theorem sSup_image2_eq_sSup_sInf (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
-    sSup (image2 l s t) = l (sSup s) (sInf t) :=
-  (isLUB_image2_of_isLUB_isGLB h₁ h₂ (isLUB_sSup _) (isGLB_sInf _)).sSup_eq
+    sSup (image2 l s t) = l (sSup s) (sInf t) := by
+  unsealing_newtype OrderDual =>
+    exact sSup_image2_eq_sSup_sSup (β := βᵒᵈ) h₁ h₂
 
 @[to_dual]
 theorem sSup_image2_eq_sInf_sSup (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sSup (image2 l s t) = l (sInf s) (sSup t) :=
-  (isLUB_image2_of_isGLB_isLUB h₁ h₂ (isGLB_sInf _) (isLUB_sSup _)).sSup_eq
+    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sSup (image2 l s t) = l (sInf s) (sSup t) := by
+  unsealing_newtype OrderDual =>
+    exact sSup_image2_eq_sSup_sSup (α := αᵒᵈ) h₁ h₂
 
 @[to_dual]
 theorem sSup_image2_eq_sInf_sInf (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
-    sSup (image2 l s t) = l (sInf s) (sInf t) :=
-  (isLUB_image2_of_isGLB_isGLB h₁ h₂ (isGLB_sInf _) (isGLB_sInf _)).sSup_eq
+    sSup (image2 l s t) = l (sInf s) (sInf t) := by
+  unsealing_newtype OrderDual =>
+    exact sSup_image2_eq_sSup_sSup (α := αᵒᵈ) (β := βᵒᵈ) h₁ h₂
 
 end CompleteLattice
 

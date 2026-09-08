@@ -214,8 +214,9 @@ theorem aecover_Ioi_of_Ici : AECover (μ.restrict (Ioi A)) l fun i ↦ Ici (a i)
   (aecover_Ioi_of_Ioi ha).superset (fun _ ↦ Ioi_subset_Ici_self) fun _ ↦ measurableSet_Ici
 
 include hb in
-theorem aecover_Iio_of_Iic : AECover (μ.restrict (Iio B)) l fun i ↦ Iic (b i) :=
-  (aecover_Iio_of_Iio hb).superset (fun _ ↦ Iio_subset_Iic_self) fun _ ↦ measurableSet_Iic
+theorem aecover_Iio_of_Iic : AECover (μ.restrict (Iio B)) l fun i ↦ Iic (b i) := by
+  unsealing_newtype OrderDual =>
+    exact aecover_Ioi_of_Ici (α := αᵒᵈ) hb
 
 include hb hc in
 theorem aecover_Iio_of_Ico : AECover (μ.restrict (Iio B)) l fun i ↦ Ico (c i) (b i) where

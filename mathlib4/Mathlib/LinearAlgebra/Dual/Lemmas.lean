@@ -474,8 +474,9 @@ theorem dualAnnihilator_le_dualAnnihilator_iff {W W' : Subspace K V} :
   (dualAnnihilatorGci K V).l_le_l_iff
 
 theorem dualAnnihilator_inj {W W' : Subspace K V} :
-    W.dualAnnihilator = W'.dualAnnihilator ↔ W = W' :=
-  ⟨fun h ↦ (dualAnnihilatorGci K V).l_injective (congrArg OrderDual.toDual h), congr_arg _⟩
+    W.dualAnnihilator = W'.dualAnnihilator ↔ W = W' := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h ↦ (dualAnnihilatorGci K V).l_injective h, congr_arg _⟩
 
 /-- Given a subspace `W` of `V` and an element of its dual `φ`, `dualLift W φ` is
 an arbitrary extension of `φ` to an element of the dual of `V`.

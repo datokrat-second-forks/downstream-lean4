@@ -35,12 +35,14 @@ instance : LT (Lex (NonemptyInterval α)) where
   lt x y := toLex (ofLex x).toDualProd < toLex (ofLex y).toDualProd
 
 theorem toLex_le_toLex {x y : NonemptyInterval α} :
-    toLex x ≤ toLex y ↔ y.fst < x.fst ∨ x.fst = y.fst ∧ x.snd ≤ y.snd :=
-  Prod.lex_def.trans (or_congr_right (and_congr_left' OrderDual.toDual_inj))
+    toLex x ≤ toLex y ↔ y.fst < x.fst ∨ x.fst = y.fst ∧ x.snd ≤ y.snd := by
+  unsealing_newtype OrderDual =>
+    exact Prod.lex_def
 
 theorem toLex_lt_toLex {x y : NonemptyInterval α} :
-    toLex x < toLex y ↔ y.fst < x.fst ∨ x.fst = y.fst ∧ x.snd < y.snd :=
-  Prod.lex_def.trans (or_congr_right (and_congr_left' OrderDual.toDual_inj))
+    toLex x < toLex y ↔ y.fst < x.fst ∨ x.fst = y.fst ∧ x.snd < y.snd := by
+  unsealing_newtype OrderDual =>
+    exact Prod.lex_def
 
 instance [DecidableEq α] [DecidableLT α] [DecidableLE α] : DecidableLE (Lex (NonemptyInterval α)) :=
   fun _ _ => decidable_of_iff' _ toLex_le_toLex

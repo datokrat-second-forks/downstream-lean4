@@ -116,12 +116,12 @@ lemma le_llp_rlp : T ≤ T.rlp.llp := by
 @[simp]
 lemma rlp_llp_rlp : T.rlp.llp.rlp = T.rlp := by
   unsealing_newtype OrderDual =>
-    exact gc_llp_rlp.u_l_u_eq_u (OrderDual.toDual T)
+    exact gc_llp_rlp.u_l_u_eq_u T
 
 @[simp]
 lemma llp_rlp_llp : T.llp.rlp.llp = T.llp := by
   unsealing_newtype OrderDual =>
-    exact OrderDual.toDual_inj.1 (gc_llp_rlp.l_u_l_eq_l T)
+    exact gc_llp_rlp.l_u_l_eq_l T
 
 lemma antitone_rlp : Antitone (rlp : MorphismProperty C → _) := by
   unsealing_newtype OrderDual =>

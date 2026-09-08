@@ -67,8 +67,9 @@ variable [Preorder α] [Preorder β] {f : α → β} {s t : Set α} {a : α}
 
 @[to_dual]
 theorem mem_upperBounds_image (Hf : AntitoneOn f t) (Hst : s ⊆ t) (Has : a ∈ lowerBounds s) :
-    a ∈ t → f a ∈ upperBounds (f '' s) := fun Hat ↦
-  forall_mem_image.2 fun _ H => Hf Hat (Hst H) (Has H)
+    a ∈ t → f a ∈ upperBounds (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact Hf.dual_right.mem_lowerBounds_image Hst Has
 
 @[to_dual]
 theorem mem_upperBounds_image_self (Hf : AntitoneOn f t) :
@@ -78,15 +79,16 @@ theorem mem_upperBounds_image_self (Hf : AntitoneOn f t) :
 @[to_dual]
 theorem image_lowerBounds_subset_upperBounds_image (Hf : AntitoneOn f t) (Hst : s ⊆ t) :
     f '' (lowerBounds s ∩ t) ⊆ upperBounds (f '' s) := by
-  rintro _ ⟨a, ha, rfl⟩
-  exact Hf.mem_upperBounds_image Hst ha.1 ha.2
+  unsealing_newtype OrderDual =>
+    exact Hf.dual_right.image_lowerBounds_subset_lowerBounds_image Hst
 
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 @[to_dual /-- The image under an antitone function of a set which is bounded below is bounded
 above. -/]
 theorem map_bddAbove (Hf : AntitoneOn f t) (Hst : s ⊆ t) :
-    (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) := fun ⟨C, hs, ht⟩ =>
-  ⟨f C, Hf.mem_lowerBounds_image Hst hs ht⟩
+    (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) := by
+  unsealing_newtype OrderDual =>
+    exact Hf.dual_right.map_bddAbove Hst
 
 /-- An antitone map sends a greatest element of a set to a least element of its image. -/
 @[to_dual /-- An antitone map sends a least element of a set to a greatest element of its
@@ -140,8 +142,8 @@ theorem mem_upperBounds_image (Ha : a ∈ lowerBounds s) : f a ∈ upperBounds (
 @[to_dual]
 theorem image_lowerBounds_subset_upperBounds_image :
     f '' lowerBounds s ⊆ upperBounds (f '' s) := by
-  rintro _ ⟨a, ha, rfl⟩
-  exact hf.mem_upperBounds_image ha
+  unsealing_newtype OrderDual =>
+    exact hf.dual_right.image_lowerBounds_subset_lowerBounds_image
 
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 @[to_dual /-- The image under an antitone function of a set which is bounded below is bounded

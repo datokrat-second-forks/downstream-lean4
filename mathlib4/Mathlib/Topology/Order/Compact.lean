@@ -45,14 +45,6 @@ private lemma IsCompact.preimage_ofDual {α : Type*} [TopologicalSpace α] {s : 
   have h := hs.image (continuous_toDual (X := α))
   rwa [Equiv.image_eq_preimage_symm, OrderDual.toDual_symm_eq] at h
 
-private lemma image_toDual_comp {α β : Type*} {f : α → β} {s : Set α} :
-    (⇑toDual ∘ f) '' s = ⇑ofDual ⁻¹' (f '' s) := by
-  rw [Set.image_comp, Equiv.image_eq_preimage_symm, OrderDual.toDual_symm_eq]
-
-private lemma sSup_image_toDual {α β : Type*} [InfSet β] {f : α → β} {s : Set α} :
-    sSup ((⇑toDual ∘ f) '' s) = toDual (sInf (f '' s)) := by
-  rw [image_toDual_comp, toDual_sInf]
-
 end DualBridge
 
 /-!
@@ -188,8 +180,9 @@ theorem IsCompact.exists_isGLB [ClosedIicTopology α] {s : Set α} (hs : IsCompa
   (hs.exists_isLeast ne_s).imp (fun x (hx : IsLeast s x) => ⟨hx.1, hx.isGLB⟩)
 
 theorem IsCompact.exists_isLUB [ClosedIciTopology α] {s : Set α} (hs : IsCompact s)
-    (ne_s : s.Nonempty) : ∃ x ∈ s, IsLUB s x :=
-  (hs.exists_isGreatest ne_s).imp (fun x (hx : IsGreatest s x) => ⟨hx.1, hx.isLUB⟩)
+    (ne_s : s.Nonempty) : ∃ x ∈ s, IsLUB s x := by
+  unsealing_newtype OrderDual =>
+    exact IsCompact.exists_isGLB (α := αᵒᵈ) hs ne_s
 
 theorem cocompact_le_atBot_atTop [CompactIccSpace α] :
     cocompact α ≤ atBot ⊔ atTop := by
@@ -306,8 +299,9 @@ theorem Continuous.exists_forall_le' [ClosedIicTopology α] {f : β → α} (hf 
 /-- The **extreme value theorem**: if a continuous function `f` is smaller than a value in its range
 away from compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge' [ClosedIciTopology α] {f : β → α} (hf : Continuous f)
-    (x₀ : β) (h : ∀ᶠ x in cocompact β, f x ≤ f x₀) : ∃ x : β, ∀ y : β, f y ≤ f x :=
-  Continuous.exists_forall_le' (α := αᵒᵈ) (continuous_toDual.comp hf) x₀ h
+    (x₀ : β) (h : ∀ᶠ x in cocompact β, f x ≤ f x₀) : ∃ x : β, ∀ y : β, f y ≤ f x := by
+  unsealing_newtype OrderDual =>
+    exact Continuous.exists_forall_le' (α := αᵒᵈ) hf x₀ h
 
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
 sets, then it has a global minimum. -/
@@ -320,8 +314,8 @@ theorem Continuous.exists_forall_le [ClosedIicTopology α] [Nonempty β] {f : β
 compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge [ClosedIciTopology α] [Nonempty β] {f : β → α}
     (hf : Continuous f) (hlim : Tendsto f (cocompact β) atBot) : ∃ x, ∀ y, f y ≤ f x := by
-  inhabit β
-  exact hf.exists_forall_ge' default (hlim.eventually <| eventually_le_atBot _)
+  unsealing_newtype OrderDual =>
+    exact Continuous.exists_forall_le (α := αᵒᵈ) hf hlim
 
 /-- A continuous function with compact support has a global minimum. -/
 @[to_additive /-- A continuous function with compact support has a global minimum. -/]
@@ -395,9 +389,9 @@ theorem IsCompact.sSup_lt_iff_of_continuous [ClosedIciTopology α] {f : β → �
 theorem IsCompact.lt_sInf_iff_of_continuous [ClosedIicTopology α] {f : β → α} {K : Set β}
     (hK : IsCompact K) (h0K : K.Nonempty) (hf : ContinuousOn f K) (y : α) :
     y < sInf (f '' K) ↔ ∀ x ∈ K, y < f x := by
-  have h := IsCompact.sSup_lt_iff_of_continuous (α := αᵒᵈ) (f := ⇑toDual ∘ f) hK h0K
-    (continuous_toDual.comp_continuousOn hf) (toDual y)
-  rwa [sSup_image_toDual] at h
+  unsealing_newtype OrderDual =>
+    exact IsCompact.sSup_lt_iff_of_continuous (α := αᵒᵈ)
+      hK h0K (continuous_toDual.comp_continuousOn hf) y
 
 end ConditionallyCompleteLinearOrder
 
@@ -416,25 +410,27 @@ theorem IsCompact.sInf_mem [ClosedIicTopology α] {s : Set α} (hs : IsCompact s
   ha.csInf_mem
 
 theorem IsCompact.sSup_mem [ClosedIciTopology α] {s : Set α} (hs : IsCompact s)
-    (ne_s : s.Nonempty) : sSup s ∈ s :=
-  IsCompact.sInf_mem (α := αᵒᵈ) hs.preimage_ofDual ne_s.preimage_ofDual
+    (ne_s : s.Nonempty) : sSup s ∈ s := by
+  unsealing_newtype OrderDual =>
+    exact IsCompact.sInf_mem (α := αᵒᵈ) hs ne_s
 
 theorem IsCompact.isGLB_sInf [ClosedIicTopology α] {s : Set α} (hs : IsCompact s)
     (ne_s : s.Nonempty) : IsGLB s (sInf s) :=
   isGLB_csInf ne_s hs.bddBelow
 
 theorem IsCompact.isLUB_sSup [ClosedIciTopology α] {s : Set α} (hs : IsCompact s)
-    (ne_s : s.Nonempty) : IsLUB s (sSup s) :=
-  isGLB_preimage_ofDual.1
-    (IsCompact.isGLB_sInf (α := αᵒᵈ) hs.preimage_ofDual ne_s.preimage_ofDual)
+    (ne_s : s.Nonempty) : IsLUB s (sSup s) := by
+  unsealing_newtype OrderDual =>
+    exact IsCompact.isGLB_sInf (α := αᵒᵈ) hs ne_s
 
 theorem IsCompact.isLeast_sInf [ClosedIicTopology α] {s : Set α} (hs : IsCompact s)
     (ne_s : s.Nonempty) : IsLeast s (sInf s) :=
   ⟨hs.sInf_mem ne_s, (hs.isGLB_sInf ne_s).1⟩
 
 theorem IsCompact.isGreatest_sSup [ClosedIciTopology α] {s : Set α} (hs : IsCompact s)
-    (ne_s : s.Nonempty) : IsGreatest s (sSup s) :=
-  ⟨hs.sSup_mem ne_s, (hs.isLUB_sSup ne_s).1⟩
+    (ne_s : s.Nonempty) : IsGreatest s (sSup s) := by
+  unsealing_newtype OrderDual =>
+    exact IsCompact.isLeast_sInf (α := αᵒᵈ) hs ne_s
 
 theorem IsCompact.exists_sInf_image_eq_and_le [ClosedIicTopology α] {s : Set β}
     (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α} (hf : ContinuousOn f s) :
@@ -455,10 +451,9 @@ theorem IsCompact.exists_sInf_image_eq [ClosedIicTopology α] {s : Set β} (hs :
   ⟨x, hxs, hx⟩
 
 theorem IsCompact.exists_sSup_image_eq [ClosedIciTopology α] {s : Set β} (hs : IsCompact s)
-    (ne_s : s.Nonempty) : ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, sSup (f '' s) = f x :=
-  fun hf ↦
-    let ⟨x, hxs, hx, _⟩ := hs.exists_sSup_image_eq_and_ge ne_s hf
-    ⟨x, hxs, hx⟩
+    (ne_s : s.Nonempty) : ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, sSup (f '' s) = f x := by
+  unsealing_newtype OrderDual =>
+    exact IsCompact.exists_sInf_image_eq (α := αᵒᵈ) hs ne_s
 
 end InfSup
 

@@ -220,8 +220,9 @@ theorem IsLUB.biUnion_Iio_eq (h : IsLUB s a) : ⋃ x ∈ s, Iio x = Iio a := by
   unsealing_newtype OrderDual =>
     exact h.dual.biUnion_Ioi_eq
 
-theorem IsLUB.iUnion_Iio_eq (h : IsLUB (range f) a) : ⋃ x, Iio (f x) = Iio a :=
-  biUnion_range.symm.trans h.biUnion_Iio_eq
+theorem IsLUB.iUnion_Iio_eq (h : IsLUB (range f) a) : ⋃ x, Iio (f x) = Iio a := by
+  unsealing_newtype OrderDual =>
+    exact h.dual.iUnion_Ioi_eq
 
 theorem iUnion_Ioi_eq_Ioi_iInf {R : Type*} [CompleteLinearOrder R] {f : ι → R} :
     ⋃ i : ι, Ioi (f i) = Ioi (⨅ i, f i) :=
@@ -260,7 +261,8 @@ theorem iUnion_Ici_eq_Ici_iInf {R : Type*} [CompleteLattice R] {f : ι → R}
 
 theorem iUnion_Iic_eq_Iic_iSup {R : Type*} [CompleteLattice R] {f : ι → R}
     (has_greatest_elem : (⨆ i, f i) ∈ range f) : ⋃ i : ι, Iic (f i) = Iic (⨆ i, f i) := by
-  simp [← isLUB_iSup.isGreatest has_greatest_elem |>.biUnion_Iic_eq_Iic]
+  unsealing_newtype OrderDual =>
+    exact @iUnion_Ici_eq_Ici_iInf ι (OrderDual R) _ f has_greatest_elem
 
 theorem iUnion_Iio_eq_univ_iff : ⋃ i, Iio (f i) = univ ↔ (¬ BddAbove (range f)) := by
   simp [not_bddAbove_iff, Set.eq_univ_iff_forall]

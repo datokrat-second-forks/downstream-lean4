@@ -127,8 +127,8 @@ lemma Antitone.isChain_image [Preorder α] [Preorder β] {s : Set α} {f : α �
 
 theorem Antitone.isChain_range [LinearOrder α] [Preorder β] {f : α → β} (hf : Antitone f) :
     IsChain (· ≤ ·) (range f) := by
-  rw [← image_univ]
-  exact hf.isChain_image (isChain_of_trichotomous _)
+  unsealing_newtype OrderDual =>
+    exact hf.dual_left.isChain_range
 
 theorem IsChain.lt_of_le [PartialOrder α] {s : Set α} (h : IsChain (· ≤ ·) s) :
     IsChain (· < ·) s := fun _a ha _b hb hne ↦

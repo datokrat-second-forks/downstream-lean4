@@ -167,14 +167,14 @@ theorem preimage_iso_iff [LE α] [LE β] {t : Set β} {φ : α ≃o β} :
   ⟨fun h => (φ.image_preimage t).subst (h.image_iso φ), fun h => h.preimage_iso _⟩
 
 theorem to_dual [LE α] (hs : IsAntichain (· ≤ ·) s) :
-    @IsAntichain αᵒᵈ (· ≤ ·) (⇑OrderDual.ofDual ⁻¹' s) :=
-  fun _ ha _ hb hab => hs hb ha fun h => hab (congrArg OrderDual.mk h).symm
+    @IsAntichain αᵒᵈ (· ≤ ·) (⇑OrderDual.ofDual ⁻¹' s) := by
+  unsealing_newtype OrderDual =>
+    exact fun _ ha _ hb hab => hs hb ha hab.symm
 
 theorem to_dual_iff [LE α] :
-    IsAntichain (· ≤ ·) s ↔ @IsAntichain αᵒᵈ (· ≤ ·) (⇑OrderDual.ofDual ⁻¹' s) :=
-  ⟨to_dual, fun hs _ ha _ hb hab =>
-    hs (x := OrderDual.toDual _) (y := OrderDual.toDual _) hb ha
-      (fun h => hab (congrArg OrderDual.ofDual' h).symm)⟩
+    IsAntichain (· ≤ ·) s ↔ @IsAntichain αᵒᵈ (· ≤ ·) (⇑OrderDual.ofDual ⁻¹' s) := by
+  unsealing_newtype OrderDual =>
+    exact ⟨to_dual, to_dual⟩
 
 theorem image_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) :
     IsAntichain (· ≤ ·) (compl '' s) := by
@@ -265,8 +265,9 @@ theorem IsAntichain.top_mem_iff [OrderTop α] (hs : IsAntichain (· ≤ ·) s) :
 theorem IsAntichain.minimal_mem_iff (hs : IsAntichain (· ≤ ·) s) : Minimal (· ∈ s) a ↔ a ∈ s :=
   ⟨fun h ↦ h.prop, fun h ↦ ⟨h, fun _ hys hyx ↦ (hs.eq hys h hyx).symm.le⟩⟩
 
-theorem IsAntichain.maximal_mem_iff (hs : IsAntichain (· ≤ ·) s) : Maximal (· ∈ s) a ↔ a ∈ s :=
-  ⟨fun h ↦ h.prop, fun h ↦ ⟨h, fun _ hys hyx ↦ (hs.eq h hys hyx).ge⟩⟩
+theorem IsAntichain.maximal_mem_iff (hs : IsAntichain (· ≤ ·) s) : Maximal (· ∈ s) a ↔ a ∈ s := by
+  unsealing_newtype OrderDual =>
+    exact hs.to_dual.minimal_mem_iff
 
 /-- If `t` is an antichain shadowing and including the set of maximal elements of `s`,
 then `t` *is* the set of maximal elements of `s`. -/
@@ -315,8 +316,9 @@ theorem setOfPred_maximal_antichain (P : α → Prop) : IsAntichain (· ≤ ·) 
 @[deprecated (since := "2026-07-09")]
 alias setOf_maximal_antichain := setOfPred_maximal_antichain
 
-theorem setOfPred_minimal_antichain (P : α → Prop) : IsAntichain (· ≤ ·) {x | Minimal P x} :=
-  fun _ ⟨hx, _⟩ _ hy hne hle ↦ hne (hle.antisymm <| hy.2 hx hle)
+theorem setOfPred_minimal_antichain (P : α → Prop) : IsAntichain (· ≤ ·) {x | Minimal P x} := by
+  unsealing_newtype OrderDual =>
+    exact (setOfPred_maximal_antichain (α := αᵒᵈ) P).swap
 
 @[deprecated (since := "2026-07-09")] alias setOf_minimal_antichain := setOfPred_minimal_antichain
 

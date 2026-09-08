@@ -87,8 +87,9 @@ theorem not_strictAnti_of_wellFoundedLT [Preorder α] [WellFoundedLT α] (f : �
   (RelEmbedding.natGT f (fun n ↦ hf (by simp))).not_wellFounded wellFounded_lt
 
 theorem not_strictMono_of_wellFoundedGT [Preorder α] [WellFoundedGT α] (f : ℕ → α) :
-    ¬ StrictMono f := fun hf ↦
-  not_strictAnti_of_wellFoundedLT (α := αᵒᵈ) (OrderDual.toDual ∘ f) fun _ _ h ↦ hf h
+    ¬ StrictMono f := by
+  unsealing_newtype OrderDual =>
+    exact not_strictAnti_of_wellFoundedLT (α := αᵒᵈ) f
 
 namespace Nat
 

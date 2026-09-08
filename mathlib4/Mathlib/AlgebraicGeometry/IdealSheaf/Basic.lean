@@ -627,8 +627,10 @@ lemma gc : @GaloisConnection X.IdealSheafData (Closeds X)ᵒᵈ _ _
     (fun I ↦ OrderDual.toDual I.support) (fun Z ↦ vanishingIdeal (OrderDual.ofDual Z)) :=
   fun _ _ ↦ le_support_iff_le_vanishingIdeal
 
-lemma vanishingIdeal_antimono {S T : Closeds X} (h : S ≤ T) : vanishingIdeal T ≤ vanishingIdeal S :=
-  gc.monotone_u (OrderDual.toDual_le_toDual.2 h)
+lemma vanishingIdeal_antimono {S T : Closeds X} (h : S ≤ T) :
+    vanishingIdeal T ≤ vanishingIdeal S := by
+  unsealing_newtype OrderDual =>
+    exact gc.monotone_u h
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -654,8 +656,8 @@ lemma vanishingIdeal_support {I : IdealSheafData X} :
 
 @[simp] lemma vanishingIdeal_sSup (Z : Set (Closeds X)) :
     vanishingIdeal (sSup Z) = ⨅ z ∈ Z, vanishingIdeal z := by
-  rw [sSup_eq_iSup]
-  simp only [vanishingIdeal_iSup]
+  unsealing_newtype OrderDual =>
+    exact gc.u_sInf
 
 @[simp] lemma vanishingIdeal_sup (Z Z' : TopologicalSpace.Closeds X) :
     vanishingIdeal (Z ⊔ Z') = vanishingIdeal Z ⊓ vanishingIdeal Z' := gc.u_inf
@@ -672,8 +674,8 @@ lemma vanishingIdeal_support {I : IdealSheafData X} :
 
 @[simp] lemma support_sSup (I : Set X.IdealSheafData) :
     (sSup I).support = ⨅ i ∈ I, i.support := by
-  rw [sSup_eq_iSup]
-  simp only [support_iSup]
+  unsealing_newtype OrderDual =>
+    exact gc.l_sSup
 
 end ofIsClosed
 

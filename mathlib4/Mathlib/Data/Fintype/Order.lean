@@ -345,16 +345,19 @@ lemma map_iSup_of_monotone (f : ι → α) {g : α → β} (hg : Monotone g) :
   map_iSup_of_monotoneOn (monotoneOn_univ.mpr hg) (fun i ↦ Set.mem_univ (f i))
 
 lemma map_iInf_of_monotone (f : ι → α) {g : α → β} (hg : Monotone g) :
-    g (⨅ i, f i) = ⨅ i, g (f i) :=
-  map_iInf_of_monotoneOn (monotoneOn_univ.mpr hg) (fun i ↦ Set.mem_univ (f i))
+    g (⨅ i, f i) = ⨅ i, g (f i) := by
+  unsealing_newtype OrderDual =>
+    exact map_iSup_of_monotone (α := αᵒᵈ) (β := βᵒᵈ) f fun _ _ h ↦ hg h
 
 lemma map_iSup_of_antitone (f : ι → α) {g : α → β} (hg : Antitone g) :
-    g (⨆ i, f i) = ⨅ i, g (f i) :=
-  map_iSup_of_antitoneOn (antitoneOn_univ.mpr hg) (fun i ↦ Set.mem_univ (f i))
+    g (⨆ i, f i) = ⨅ i, g (f i) := by
+  unsealing_newtype OrderDual =>
+    exact map_iSup_of_monotone (β := βᵒᵈ) f hg
 
 lemma map_iInf_of_antitone (f : ι → α) {g : α → β} (hg : Antitone g) :
-    g (⨅ i, f i) = ⨆ i, g (f i) :=
-  map_iInf_of_antitoneOn (antitoneOn_univ.mpr hg) (fun i ↦ Set.mem_univ (f i))
+    g (⨅ i, f i) = ⨆ i, g (f i) := by
+  unsealing_newtype OrderDual =>
+    exact map_iInf_of_monotone (β := βᵒᵈ) f hg
 
 @[to_dual ciInf_le_iff]
 theorem le_ciSup_iff {a : α} {f : ι → α} : a ≤ ⨆ i, f i ↔ ∃ x, a ≤ f x := by

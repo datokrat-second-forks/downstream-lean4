@@ -161,7 +161,9 @@ instance [h : Unique α] : Unique αᵒᵈ where
 theorem toDual_inj {a b : α} : toDual a = toDual b ↔ a = b := by simp
 theorem ofDual_inj {a b : αᵒᵈ} : ofDual a = ofDual b ↔ a = b := by simp
 
-@[ext] lemma ext {a b : αᵒᵈ} (h : ofDual a = ofDual b) : a = b := ofDual.injective h
+@[ext] lemma ext {a b : αᵒᵈ} (h : ofDual a = ofDual b) : a = b := by
+  unsealing_newtype OrderDual =>
+    exact h
 
 @[to_dual self, simp]
 theorem toDual_le_toDual [LE α] {a b : α} : toDual a ≤ toDual b ↔ b ≤ a := .rfl
@@ -187,10 +189,10 @@ and `induction`. -/
 protected def rec {motive : αᵒᵈ → Sort*} (toDual : ∀ a : α, motive (toDual a)) :
     ∀ a : αᵒᵈ, motive a := fun a ↦ toDual (ofDual a)
 
-@[simp] protected theorem «forall» {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (toDual a) :=
-  ⟨fun h _ ↦ h _, fun h a ↦ h (ofDual a)⟩
-@[simp] protected theorem «exists» {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) :=
-  ⟨fun ⟨a, ha⟩ ↦ ⟨ofDual a, ha⟩, fun ⟨a, ha⟩ ↦ ⟨toDual a, ha⟩⟩
+@[simp] protected theorem «forall» {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (toDual a) := by
+  unsealing_newtype OrderDual => rfl
+@[simp] protected theorem «exists» {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) := by
+  unsealing_newtype OrderDual => rfl
 
 @[to_dual self] alias ⟨_, _root_.LE.le.dual⟩ := toDual_le_toDual
 @[to_dual self] alias ⟨_, _root_.LT.lt.dual⟩ := toDual_lt_toDual

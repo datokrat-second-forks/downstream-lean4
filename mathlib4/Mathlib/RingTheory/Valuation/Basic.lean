@@ -1089,11 +1089,6 @@ private lemma val_congr {Γ : Type*} {a b : Multiplicative Γᵒᵈ} (h : a = b)
     OrderDual.ofDual (Multiplicative.toAdd a) = OrderDual.ofDual (Multiplicative.toAdd b) :=
   congrArg _ h
 
-/-- Transporting an equation between `Γ` values up to `Valuation R (Multiplicative Γᵒᵈ)` values. -/
-private lemma addVal_congr {Γ : Type*} {a b : Γ} (h : a = b) :
-    Multiplicative.ofAdd (OrderDual.toDual a) = Multiplicative.ofAdd (OrderDual.toDual b) :=
-  congrArg (fun x ↦ Multiplicative.ofAdd (OrderDual.toDual x)) h
-
 section Basic
 
 section Monoid
@@ -1166,12 +1161,14 @@ theorem ofValuation_apply (v : Valuation R (Multiplicative Γ₀ᵒᵈ)) (r : R)
 end
 
 @[simp]
-theorem map_zero : v 0 = (⊤ : Γ₀) :=
-  val_congr (Valuation.map_zero v)
+theorem map_zero : v 0 = (⊤ : Γ₀) := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_zero v
 
 @[simp]
-theorem map_one : v 1 = (0 : Γ₀) :=
-  val_congr (Valuation.map_one v)
+theorem map_one : v 1 = (0 : Γ₀) := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_one v
 
 @[simp]
 theorem map_mul (x y : R) : v (x * y) = v x + v y :=
@@ -1198,8 +1195,9 @@ theorem map_le_sum {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf :
   v.map_sum_le hf
 
 theorem map_lt_sum {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤)
-    (hf : ∀ i ∈ s, g < v (f i)) : g < v (∑ i ∈ s, f i) :=
-  v.map_sum_lt (fun h ↦ hg (val_congr h)) hf
+    (hf : ∀ i ∈ s, g < v (f i)) : g < v (∑ i ∈ s, f i) := by
+  unsealing_newtype OrderDual =>
+    exact v.map_sum_lt hg hf
 
 theorem map_lt_sum' {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤)
     (hf : ∀ i ∈ s, g < v (f i)) : g < v (∑ i ∈ s, f i) :=
@@ -1210,8 +1208,9 @@ theorem map_pow (x : R) (n : ℕ) : v (x ^ n) = n • (v x) :=
   val_congr (Valuation.map_pow v x n)
 
 @[ext]
-theorem ext {v₁ v₂ : AddValuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ :=
-  Valuation.ext fun r ↦ addVal_congr (h r)
+theorem ext {v₁ v₂ : AddValuation R Γ₀} (h : ∀ r, v₁ r = v₂ r) : v₁ = v₂ := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.ext h
 
 -- The following definition is not an instance, because we have more than one `v` on a given `R`.
 -- In addition, type class inference would not be able to infer `v`.
@@ -1265,11 +1264,13 @@ def IsEquiv (v₁ : AddValuation R Γ₀) (v₂ : AddValuation R Γ'₀) : Prop 
   Valuation.IsEquiv v₁ v₂
 
 @[simp]
-theorem map_neg (x : R) : v (-x) = v x :=
-  val_congr (Valuation.map_neg v x)
+theorem map_neg (x : R) : v (-x) = v x := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_neg v x
 
-theorem map_sub_swap (x y : R) : v (x - y) = v (y - x) :=
-  val_congr (Valuation.map_sub_swap v x y)
+theorem map_sub_swap (x y : R) : v (x - y) = v (y - x) := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_sub_swap v x y
 
 theorem map_sub (x y : R) : min (v x) (v y) ≤ v (x - y) :=
   Valuation.map_sub v x y
@@ -1279,8 +1280,9 @@ theorem map_le_sub {x y : R} {g : Γ₀} (hx : g ≤ v x) (hy : g ≤ v y) : g �
 
 variable {x y : R}
 
-theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = @Min.min Γ₀ _ (v x) (v y) :=
-  val_congr (Valuation.map_add_of_distinct_val v fun h' ↦ h (val_congr h'))
+theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = @Min.min Γ₀ _ (v x) (v y) := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_add_of_distinct_val v h
 
 theorem map_add_eq_of_lt_left {x y : R} (h : v x < v y) :
     v (x + y) = v x := by
@@ -1298,8 +1300,9 @@ theorem map_sub_eq_of_lt_left {x y : R} (hx : v x < v y) :
 theorem map_sub_eq_of_lt_right {x y : R} (hx : v y < v x) :
     v (x - y) = v y := map_sub_swap v x y ▸ map_sub_eq_of_lt_left v hx
 
-theorem map_eq_of_lt_sub (h : v x < v (y - x)) : v y = v x :=
-  val_congr (Valuation.map_eq_of_sub_lt v h)
+theorem map_eq_of_lt_sub (h : v x < v (y - x)) : v y = v x := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_eq_of_sub_lt v h
 
 end Monoid
 
@@ -1308,12 +1311,14 @@ section Group
 variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ring R] (v : AddValuation R Γ₀) {x y : R}
 
 @[simp]
-theorem map_inv (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -(v x) :=
-  val_congr (map_inv₀ (toValuation v) x)
+theorem map_inv (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -(v x) := by
+  unsealing_newtype OrderDual =>
+    exact map_inv₀ (toValuation v) x
 
 @[simp]
-theorem map_div (v : AddValuation K Γ₀) {x y : K} : v (x / y) = v x - v y :=
-  val_congr (map_div₀ (toValuation v) x y)
+theorem map_div (v : AddValuation K Γ₀) {x y : K} : v (x / y) = v x - v y := by
+  unsealing_newtype OrderDual =>
+    exact map_div₀ (toValuation v) x y
 
 end Group
 
@@ -1375,11 +1380,13 @@ def supp : Ideal R :=
   Valuation.supp v
 
 @[simp]
-theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = (⊤ : Γ₀) :=
-  (Valuation.mem_supp_iff v x).trans ⟨fun hx ↦ val_congr hx, fun hx ↦ addVal_congr hx⟩
+theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = (⊤ : Γ₀) := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.mem_supp_iff v x
 
-theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
-  val_congr (Valuation.map_add_supp v a h)
+theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
+  unsealing_newtype OrderDual =>
+    exact Valuation.map_add_supp v a h
 
 end Supp
 

@@ -824,15 +824,17 @@ protected theorem max [Preorder α] [LinearOrder β] {f g : α → β} (hf : Ant
 
 @[to_dual le_map_inf]
 theorem map_sup_le [SemilatticeSup α] [SemilatticeInf β] {f : α → β} (h : Antitone f) (x y : α) :
-    f (x ⊔ y) ≤ f x ⊓ f y :=
-  (h.dual_right.le_map_sup (f := ⇑OrderDual.toDual ∘ f) x y :)
+    f (x ⊔ y) ≤ f x ⊓ f y := by
+  unsealing_newtype OrderDual =>
+    exact h.dual_right.le_map_sup x y
 
 variable [LinearOrder α]
 
 @[to_dual]
 theorem map_sup [SemilatticeInf β] {f : α → β} (hf : Antitone f) (x y : α) :
-    f (x ⊔ y) = f x ⊓ f y :=
-  OrderDual.toDual_inj.1 (hf.dual_right.map_sup (f := ⇑OrderDual.toDual ∘ f) x y)
+    f (x ⊔ y) = f x ⊓ f y := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual_right.map_sup x y
 
 end Antitone
 

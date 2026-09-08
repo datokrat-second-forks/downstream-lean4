@@ -672,9 +672,9 @@ theorem AntitoneOn.memLp_top (hanti : AntitoneOn f s) {a b : X}
 
 theorem AntitoneOn.memLp_of_measure_ne_top (hanti : AntitoneOn f s) {a b : X}
     (ha : IsLeast s a) (hb : IsGreatest s b) (hs : μ s ≠ ∞) (h's : MeasurableSet s) :
-    MemLp f p (μ.restrict s) :=
-  (hanti.memLp_top ha hb h's).mono_exponent_of_measure_support_ne_top (s := univ)
-    (by simp) (by simpa using hs) le_top
+    MemLp f p (μ.restrict s) := by
+  unsealing_newtype OrderDual =>
+    exact MonotoneOn.memLp_of_measure_ne_top (E := Eᵒᵈ) hanti ha hb hs h's
 
 theorem AntitoneOn.memLp_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hanti : AntitoneOn f s) : MemLp f p (μ.restrict s) := by
