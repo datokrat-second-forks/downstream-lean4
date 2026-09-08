@@ -20,12 +20,12 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
   // compatible transform (i.e. "__esModule" has not been set), then set
   // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target2, "default", { value: mod, enumerable: true }) : target2,
   mod
 ));
 
@@ -225,7 +225,7 @@ var require_tunnel = __commonJS({
       }
       return host;
     }
-    function mergeOptions(target) {
+    function mergeOptions(target2) {
       for (var i = 1, len = arguments.length; i < len; ++i) {
         var overrides = arguments[i];
         if (typeof overrides === "object") {
@@ -233,12 +233,12 @@ var require_tunnel = __commonJS({
           for (var j = 0, keyLen = keys.length; j < keyLen; ++j) {
             var k = keys[j];
             if (overrides[k] !== void 0) {
-              target[k] = overrides[k];
+              target2[k] = overrides[k];
             }
           }
         }
       }
-      return target;
+      return target2;
     }
     var debug2;
     if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
@@ -4439,8 +4439,8 @@ var require_util2 = __commonJS({
          * @param {unknown} target
          * @param {'key' | 'value' | 'key+value'} kind
          */
-        constructor(target, kind) {
-          this.#target = target;
+        constructor(target2, kind) {
+          this.#target = target2;
           this.#kind = kind;
           this.#index = 0;
         }
@@ -4490,8 +4490,8 @@ var require_util2 = __commonJS({
         },
         next: { writable: true, enumerable: true, configurable: true }
       });
-      return function(target, kind) {
-        return new FastIterableIterator(target, kind);
+      return function(target2, kind) {
+        return new FastIterableIterator(target2, kind);
       };
     }
     function iteratorMixin(name, object, kInternalIterator, keyIndex = 0, valueIndex = 1) {
@@ -8318,8 +8318,8 @@ var require_pool = __commonJS({
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
         this.on("connectionError", (origin2, targets, error2) => {
-          for (const target of targets) {
-            const idx = this[kClients].indexOf(target);
+          for (const target2 of targets) {
+            const idx = this[kClients].indexOf(target2);
             if (idx !== -1) {
               this[kClients].splice(idx, 1);
             }
@@ -12503,12 +12503,12 @@ var require_response = __commonJS({
         ...state
       };
       return new Proxy(response, {
-        get(target, p) {
-          return p in state ? state[p] : target[p];
+        get(target2, p) {
+          return p in state ? state[p] : target2[p];
         },
-        set(target, p, value) {
+        set(target2, p, value) {
           assert2(!(p in state));
-          target[p] = value;
+          target2[p] = value;
           return true;
         }
       });
@@ -16814,9 +16814,9 @@ var require_util7 = __commonJS({
     function isClosed(ws) {
       return ws[kReadyState] === states.CLOSED;
     }
-    function fireEvent(e, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
+    function fireEvent(e, target2, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
       const event = eventFactory(e, eventInitDict);
-      target.dispatchEvent(event);
+      target2.dispatchEvent(event);
     }
     function websocketMessageReceived(ws, type, data) {
       if (ws[kReadyState] !== states.OPEN) {
@@ -24797,28 +24797,28 @@ var handler = {
   has({ scope }, methodName) {
     return endpointMethodsMap.get(scope).has(methodName);
   },
-  getOwnPropertyDescriptor(target, methodName) {
+  getOwnPropertyDescriptor(target2, methodName) {
     return {
-      value: this.get(target, methodName),
+      value: this.get(target2, methodName),
       // ensures method is in the cache
       configurable: true,
       writable: true,
       enumerable: true
     };
   },
-  defineProperty(target, methodName, descriptor) {
-    Object.defineProperty(target.cache, methodName, descriptor);
+  defineProperty(target2, methodName, descriptor) {
+    Object.defineProperty(target2.cache, methodName, descriptor);
     return true;
   },
-  deleteProperty(target, methodName) {
-    delete target.cache[methodName];
+  deleteProperty(target2, methodName) {
+    delete target2.cache[methodName];
     return true;
   },
   ownKeys({ scope }) {
     return [...endpointMethodsMap.get(scope).keys()];
   },
-  set(target, methodName, value) {
-    return target.cache[methodName] = value;
+  set(target2, methodName, value) {
+    return target2.cache[methodName] = value;
   },
   get({ octokit, scope, cache }, methodName) {
     if (cache[methodName]) {
@@ -25075,14 +25075,17 @@ function getInputOpt(name) {
   const value = getInput(name, { required: false });
   return value === "" ? null : value;
 }
+function parseBool(input) {
+  return input.trim().toLowerCase() === "true";
+}
 function parseRepo(input) {
   const match = /^([^/]+)\/([^/]+)$/.exec(input);
   assert(match !== null, `Expected "owner/repo", not "${input}"`);
   return { owner: match[1], repo: match[2] };
 }
-async function findPrFor(octo2, repo, branchName, options = {}) {
+async function findPrFor(octo, repo, branchName, options = {}) {
   const { state = "all", headOwner = repo.owner } = options;
-  const { data } = await octo2.rest.pulls.list({
+  const { data } = await octo.rest.pulls.list({
     ...repo,
     head: `${headOwner}:${branchName}`,
     state,
@@ -25105,15 +25108,26 @@ var trackingBranch = getInput2("tracking-branch");
 var pushRepo = parseRepo(getInput2("push-repo"));
 var pushBranch = getInput2("push-branch");
 var pushToken = getInput2("push-token");
-var targetRepo = parseRepo(getInput2("target-repo"));
-var targetBranch = getInput2("target-branch");
-var targetToken = getInput2("target-token");
+var pushDirectly = parseBool(getInput2("push-directly"));
+var targetRepo = getInputOpt("target-repo");
+var targetBranch = getInputOpt("target-branch");
+var targetToken = getInputOpt("target-token");
 var prTitle = getInput2("pr-title");
 var prBody = getInputOpt("pr-body");
 setSecret(downstreamToken);
 setSecret(pushToken);
-setSecret(targetToken);
-var octo = getOctokit(targetToken);
+if (targetToken !== null) setSecret(targetToken);
+var target = (function() {
+  if (pushDirectly) return void 0;
+  assert(targetRepo !== null, "target-repo is required");
+  assert(targetBranch !== null, "target-branch is required");
+  assert(targetToken !== null, "target-token is required");
+  return {
+    repo: parseRepo(targetRepo),
+    branch: targetBranch,
+    octo: getOctokit(targetToken)
+  };
+})();
 async function dRun(cmd, args, options) {
   return await exec(cmd, args, { ...options, cwd: downstreamPath });
 }
@@ -25175,17 +25189,19 @@ async function prepareExportBranch() {
     abort(`split.py exited with code ${exitCode}`);
   }
 }
-async function pushExportBranch() {
+async function pushToPushBranch(force) {
   await dRun("git", [
-    ...["push", "--force"],
-    ...[authUrl(pushToken, pushRepo), `HEAD:refs/heads/${pushBranch}`]
+    "push",
+    ...force ? ["--force"] : [],
+    authUrl(pushToken, pushRepo),
+    `HEAD:refs/heads/${pushBranch}`
   ]);
 }
-async function createExportPr() {
+async function createExportPr(target2) {
   info("Creating export PR...");
-  const { data } = await octo.rest.pulls.create({
-    ...targetRepo,
-    base: targetBranch,
+  const { data } = await target2.octo.rest.pulls.create({
+    ...target2.repo,
+    base: target2.branch,
     head: `${pushRepo.owner}:${pushBranch}`,
     title: prTitle,
     body: prBody ?? void 0
@@ -25197,19 +25213,22 @@ async function advanceTrackingBranch(sha) {
   await dRun("git", ["push", "origin", `${sha}:refs/heads/${trackingBranch}`]);
 }
 async function run() {
+  setOutput("pushed", "false");
   setOutput("created", "false");
   const buildReport = await loadBuildReport();
   const repoEntry = buildReport.repos.find((r) => r.name === subrepo);
   if (!repoEntry?.green) {
     exit(`Subrepo "${subrepo}" is not green, nothing to export.`);
   }
-  const existingPr = await findPrFor(octo, targetRepo, pushBranch, {
-    state: "open",
-    headOwner: pushRepo.owner
-  });
-  if (existingPr !== void 0) {
-    setOutput("number", String(existingPr.number));
-    exit(`Export PR #${existingPr.number} already exists.`);
+  if (target !== void 0) {
+    const existingPr = await findPrFor(target.octo, target.repo, pushBranch, {
+      state: "open",
+      headOwner: pushRepo.owner
+    });
+    if (existingPr !== void 0) {
+      setOutput("number", String(existingPr.number));
+      exit(`Export PR #${existingPr.number} already exists.`);
+    }
   }
   await cloneDownstreamRepo();
   const isAncestor = await trackingBranchIsTrueAncestor(buildReport.commit_sha);
@@ -25221,10 +25240,15 @@ async function run() {
   await dRun("git", ["checkout", buildReport.commit_sha]);
   const hasChanges = await prepareExportBranch();
   if (hasChanges) {
-    await pushExportBranch();
-    const number = await createExportPr();
-    setOutput("created", "true");
-    setOutput("number", String(number));
+    if (target === void 0) {
+      await pushToPushBranch(false);
+      setOutput("pushed", "true");
+    } else {
+      await pushToPushBranch(true);
+      const number = await createExportPr(target);
+      setOutput("created", "true");
+      setOutput("number", String(number));
+    }
   }
   await advanceTrackingBranch(buildReport.commit_sha);
 }
