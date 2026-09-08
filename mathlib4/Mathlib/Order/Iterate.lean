@@ -21,7 +21,7 @@ a circle homeomorphism.
 
 public section
 
-open Function
+open Function OrderDual
 
 open Function (Commute)
 
@@ -66,7 +66,7 @@ theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
 
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
-  hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
+  hf.dual.seq_pos_lt_seq_of_lt_of_le (x := ⇑toDual ∘ y) (y := ⇑toDual ∘ x) hn h₀ hy hx
 
 theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
@@ -75,7 +75,7 @@ theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
 
 theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
     (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
-  hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
+  hf.dual.seq_lt_seq_of_lt_of_le (x := ⇑toDual ∘ y) (y := ⇑toDual ∘ x) n h₀ hy hx
 
 /-!
 ### Iterates of two functions
@@ -130,8 +130,10 @@ theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
     rw [iterate_succ_apply']
     exact h _
 
-theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
-  @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
+theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] :=
+  antitone_nat_of_succ_le fun n x => by
+    rw [iterate_succ_apply']
+    exact h _
 
 end Preorder
 
@@ -165,8 +167,9 @@ theorem iterate_pos_lt_of_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stric
   · simp [h.iterate_right _ _, hg.iterate _ hx]
 
 theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x}
-    (hx : f x < g x) {n} (hn : 0 < n) : f^[n] x < g^[n] x :=
-  @iterate_pos_lt_of_map_lt αᵒᵈ _ g f h.symm hg.dual hf.dual x hx n hn
+    (hx : f x < g x) {n} (hn : 0 < n) : f^[n] x < g^[n] x := by
+  unsealing_newtype OrderDual =>
+    exact @iterate_pos_lt_of_map_lt αᵒᵈ _ g f h.symm hg.dual hf.dual x hx n hn
 
 end Preorder
 
@@ -180,8 +183,9 @@ theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stri
   · simp only [lt_asymm H, lt_asymm (h.symm.iterate_pos_lt_of_map_lt' hg hf H hn)]
 
 theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n}
-    (hn : 0 < n) : f^[n] x < g^[n] x ↔ f x < g x :=
-  @iterate_pos_lt_iff_map_lt αᵒᵈ _ _ _ h.symm hg.dual hf.dual x n hn
+    (hn : 0 < n) : f^[n] x < g^[n] x ↔ f x < g x := by
+  unsealing_newtype OrderDual =>
+    exact @iterate_pos_lt_iff_map_lt αᵒᵈ _ _ _ h.symm hg.dual hf.dual x n hn
 
 theorem iterate_pos_le_iff_map_le (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
     (hn : 0 < n) : f^[n] x ≤ g^[n] x ↔ f x ≤ g x := by
@@ -213,8 +217,10 @@ theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone
 
 /-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
 an antitone sequence. -/
-theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => f^[n] x :=
-  hf.dual.monotone_iterate_of_le_map hx
+theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) :
+    Antitone fun n => f^[n] x := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.monotone_iterate_of_le_map hx
 
 end Monotone
 
@@ -233,7 +239,8 @@ theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
 /-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
 form a strictly antitone sequence. -/
 theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :
-    StrictAnti fun n => f^[n] x :=
-  hf.dual.strictMono_iterate_of_lt_map hx
+    StrictAnti fun n => f^[n] x := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.strictMono_iterate_of_lt_map hx
 
 end StrictMono

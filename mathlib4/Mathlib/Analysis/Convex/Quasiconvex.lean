@@ -63,20 +63,24 @@ def QuasilinearOn : Prop :=
 variable {𝕜 s f}
 
 theorem QuasiconvexOn.dual : QuasiconvexOn 𝕜 s f → QuasiconcaveOn 𝕜 s (toDual ∘ f) :=
-  id
+  fun hf r ↦ hf (ofDual r)
 
 theorem QuasiconcaveOn.dual : QuasiconcaveOn 𝕜 s f → QuasiconvexOn 𝕜 s (toDual ∘ f) :=
-  id
+  fun hf r ↦ hf (ofDual r)
 
 theorem QuasilinearOn.dual : QuasilinearOn 𝕜 s f → QuasilinearOn 𝕜 s (toDual ∘ f) :=
-  And.symm
+  fun hf ↦ ⟨hf.2.dual, hf.1.dual⟩
+
+private theorem quasiconvexOn_toDual_comp_iff {𝕜 E β : Type*} [Semiring 𝕜] [PartialOrder 𝕜]
+    [AddCommMonoid E] [LE β] [SMul 𝕜 E] {s : Set E} {f : E → β} :
+    QuasiconvexOn 𝕜 s (⇑toDual ∘ f) ↔ QuasiconcaveOn 𝕜 s f :=
+  ⟨fun hf r ↦ hf (toDual r), fun hf r ↦ hf (ofDual r)⟩
 
 theorem Convex.quasiconvexOn_of_convex_le (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | f x ≤ r }) :
     QuasiconvexOn 𝕜 s f := fun r => hs.inter (h r)
 
 theorem Convex.quasiconcaveOn_of_convex_ge (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | r ≤ f x }) :
-    QuasiconcaveOn 𝕜 s f :=
-  Convex.quasiconvexOn_of_convex_le (β := βᵒᵈ) hs h
+    QuasiconcaveOn 𝕜 s f := fun r => hs.inter (h r)
 
 theorem QuasiconvexOn.convex [IsDirectedOrder β] (hf : QuasiconvexOn 𝕜 s f) : Convex 𝕜 s :=
   fun x hx y hy _ _ ha hb hab =>
@@ -108,15 +112,17 @@ theorem QuasiconvexOn.monotone_comp
 
 theorem QuasiconvexOn.antitone_comp (hg : Antitone g) (hf : QuasiconvexOn 𝕜 s f) :
     QuasiconcaveOn 𝕜 s (g ∘ f) :=
-  hf.monotone_comp (γ := γᵒᵈ) hg
+  (quasiconvexOn_toDual_comp_iff (f := g ∘ f)).1
+    (QuasiconvexOn.monotone_comp (γ := γᵒᵈ) (g := ⇑toDual ∘ g) hg.dual_right hf)
 
 theorem QuasiconcaveOn.monotone_comp (hg : Monotone g) (hf : QuasiconcaveOn 𝕜 s f) :
-    QuasiconcaveOn 𝕜 s (g ∘ f) :=
-  QuasiconvexOn.monotone_comp hg.dual hf
+    QuasiconcaveOn 𝕜 s (g ∘ f) := by
+  unsealing_newtype OrderDual =>
+    exact QuasiconvexOn.monotone_comp hg.dual hf
 
 theorem QuasiconcaveOn.antitone_comp (hg : Antitone g) (hf : QuasiconcaveOn 𝕜 s f) :
     QuasiconvexOn 𝕜 s (g ∘ f) :=
-  QuasiconvexOn.monotone_comp (β := βᵒᵈ) hg.dual hf
+  QuasiconvexOn.monotone_comp (β := βᵒᵈ) hg.dual_left hf.dual
 
 theorem QuasilinearOn.monotone_comp (hg : Monotone g) (hf : QuasilinearOn 𝕜 s f) :
     QuasilinearOn 𝕜 s (g ∘ f) :=
@@ -171,7 +177,7 @@ theorem QuasiconcaveOn.isPreconnected_preimage_subtype {s : Set E} {t : β}
 theorem QuasiconvexOn.isPreconnected_preimage_subtype {s : Set E} {t : β}
     (hfc : QuasiconvexOn ℝ s f) :
     IsPreconnected (s ↓∩ (f ⁻¹' Iic t)) :=
-  QuasiconcaveOn.isPreconnected_preimage_subtype (β := βᵒᵈ) hfc
+  QuasiconcaveOn.isPreconnected_preimage_subtype (β := βᵒᵈ) (t := toDual t) hfc.dual
 
 theorem QuasilinearOn.isPreconnected_preimage_subtype {s : Set E} {t : β}
     (hfc : QuasilinearOn ℝ s f) :
@@ -192,7 +198,7 @@ theorem QuasiconvexOn.sup [SemilatticeSup β] (hf : QuasiconvexOn 𝕜 s f)
 
 theorem QuasiconcaveOn.inf [SemilatticeInf β] (hf : QuasiconcaveOn 𝕜 s f)
     (hg : QuasiconcaveOn 𝕜 s g) : QuasiconcaveOn 𝕜 s (f ⊓ g) :=
-  hf.dual.sup hg
+  (quasiconvexOn_toDual_comp_iff (f := f ⊓ g)).1 (hf.dual.sup hg.dual)
 
 end Semilattice_β
 
@@ -209,8 +215,9 @@ theorem quasiconvexOn_iff_le_max : QuasiconvexOn 𝕜 s f ↔ Convex 𝕜 s ∧ 
     ⟨hf.1 hx.1 hy.1 ha hb hab, (hf.2 hx.1 hy.1 ha hb hab).trans <| max_le hx.2 hy.2⟩⟩
 
 theorem quasiconcaveOn_iff_min_le : QuasiconcaveOn 𝕜 s f ↔ Convex 𝕜 s ∧ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄,
-    y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → min (f x) (f y) ≤ f (a • x + b • y) :=
-  quasiconvexOn_iff_le_max (β := βᵒᵈ)
+    y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → min (f x) (f y) ≤ f (a • x + b • y) := by
+  unsealing_newtype OrderDual =>
+    exact quasiconvexOn_iff_le_max (β := βᵒᵈ)
 
 theorem quasilinearOn_iff_mem_uIcc : QuasilinearOn 𝕜 s f ↔ Convex 𝕜 s ∧ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄,
     y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ uIcc (f x) (f y) := by
@@ -227,7 +234,7 @@ theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) :
 
 theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) :
     Convex 𝕜 ({ x ∈ s | r < f x }) :=
-  hf.dual.convex_lt r
+  hf.dual.convex_lt (toDual r)
 
 end LinearOrder_β
 

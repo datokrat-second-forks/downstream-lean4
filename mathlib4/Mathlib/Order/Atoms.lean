@@ -156,13 +156,13 @@ def IsCoatom [OrderTop α] (a : α) : Prop :=
 
 @[simp]
 theorem isCoatom_dual_iff_isAtom [OrderBot α] {a : α} :
-    IsCoatom (OrderDual.toDual a) ↔ IsAtom a :=
-  Iff.rfl
+    IsCoatom (OrderDual.toDual a) ↔ IsAtom a := by
+  simp [IsCoatom, IsAtom, OrderDual.forall, ← OrderDual.toDual_bot]
 
 @[simp]
 theorem isAtom_dual_iff_isCoatom [OrderTop α] {a : α} :
-    IsAtom (OrderDual.toDual a) ↔ IsCoatom a :=
-  Iff.rfl
+    IsAtom (OrderDual.toDual a) ↔ IsCoatom a := by
+  simp [IsCoatom, IsAtom, OrderDual.forall, ← OrderDual.toDual_top]
 
 alias ⟨_, IsAtom.dual⟩ := isCoatom_dual_iff_isAtom
 
@@ -170,14 +170,17 @@ alias ⟨_, IsCoatom.dual⟩ := isAtom_dual_iff_isCoatom
 
 variable [OrderTop α] {a x : α}
 
-theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.Ici x) :=
-  ha.dual.Iic hax
+theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.Ici x) := by
+  unsealing_newtype OrderDual =>
+    exact ha.dual.Iic hax
 
-theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoatom (a : α) :=
-  @IsAtom.of_isAtom_coe_Iic αᵒᵈ _ _ x a ha
+theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoatom (a : α) := by
+  unsealing_newtype OrderDual =>
+    exact @IsAtom.of_isAtom_coe_Iic αᵒᵈ _ _ x a ha
 
-theorem isCoatom_iff_ge_of_le : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ b ≠ ⊤, a ≤ b → b ≤ a :=
-  isAtom_iff_le_of_ge (α := αᵒᵈ)
+theorem isCoatom_iff_ge_of_le : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ b ≠ ⊤, a ≤ b → b ≤ a := by
+  unsealing_newtype OrderDual =>
+    exact isAtom_iff_le_of_ge (α := αᵒᵈ)
 
 lemma IsCoatom.ne_top (ha : IsCoatom a) : a ≠ ⊤ := ha.1
 
@@ -188,15 +191,16 @@ section PartialOrder
 variable [PartialOrder α] [OrderTop α] {a b x : α}
 
 theorem IsCoatom.lt_iff (h : IsCoatom a) : a < x ↔ x = ⊤ :=
-  h.dual.lt_iff
+  ⟨h.2 x, fun hx => hx.symm ▸ h.1.lt_top⟩
 
-theorem IsCoatom.le_iff (h : IsCoatom a) : a ≤ x ↔ x = ⊤ ∨ x = a :=
-  h.dual.le_iff
+theorem IsCoatom.le_iff (h : IsCoatom a) : a ≤ x ↔ x = ⊤ ∨ x = a := by
+  rw [le_iff_lt_or_eq, h.lt_iff, @eq_comm _ a x]
 
 lemma IsCoatom.lt_top (h : IsCoatom a) : a < ⊤ :=
   h.lt_iff.mpr rfl
 
-lemma IsCoatom.le_iff_eq (ha : IsCoatom a) (hb : b ≠ ⊤) : a ≤ b ↔ b = a := ha.dual.le_iff_eq hb
+lemma IsCoatom.le_iff_eq (ha : IsCoatom a) (hb : b ≠ ⊤) : a ≤ b ↔ b = a :=
+  ha.le_iff.trans <| or_iff_right hb
 
 lemma IsCoatom.ne_iff_eq_top (ha : IsCoatom a) (hab : a ≤ b) : b ≠ a ↔ b = ⊤ where
   mp := (ha.le_iff.1 hab).resolve_right
@@ -206,14 +210,14 @@ lemma IsCoatom.ne_top_iff_eq (ha : IsCoatom a) (hab : a ≤ b) : b ≠ ⊤ ↔ b
   (ha.ne_iff_eq_top hab).not_right.symm
 
 theorem IsCoatom.Ici_eq (h : IsCoatom a) : Set.Ici a = {⊤, a} :=
-  h.dual.Iic_eq
+  Set.ext fun _ => h.le_iff
 
 lemma Set.Ioi_eq_singleton_top_iff : Ioi a = {⊤} ↔ IsCoatom a := by
   simp [IsCoatom, superset_antisymm_iff, lt_top_iff_ne_top]
 
 @[simp]
-theorem covBy_top_iff : a ⋖ ⊤ ↔ IsCoatom a :=
-  toDual_covBy_toDual_iff.symm.trans bot_covBy_iff
+theorem covBy_top_iff : a ⋖ ⊤ ↔ IsCoatom a := by
+  simp only [CovBy, lt_top_iff_ne_top, IsCoatom, not_not]
 
 alias ⟨CovBy.isCoatom, IsCoatom.covBy_top⟩ := covBy_top_iff
 
@@ -255,8 +259,9 @@ end PartialOrder
 section Coframe
 variable [Coframe α] {f : ι → α} {s : Set α} {a : α}
 
-protected lemma IsCoatom.iInf_le (ha : IsCoatom a) : iInf f ≤ a ↔ ∃ i, f i ≤ a :=
-  IsAtom.le_iSup (α := αᵒᵈ) ha
+protected lemma IsCoatom.iInf_le (ha : IsCoatom a) : iInf f ≤ a ↔ ∃ i, f i ≤ a := by
+  unsealing_newtype OrderDual =>
+    exact IsAtom.le_iSup (α := αᵒᵈ) ha
 
 protected lemma IsCoatom.sInf_le (ha : IsCoatom a) : sInf s ≤ a ↔ ∃ b ∈ s, b ≤ a := by
   simp [sInf_eq_iInf', ha.iInf_le]
@@ -353,14 +358,16 @@ lemma IsCoatomic.exists_coatom [OrderTop α] [Nontrivial α] [IsCoatomic α] : �
 variable {α}
 
 @[simp]
-theorem isCoatomic_dual_iff_isAtomic [OrderBot α] : IsCoatomic αᵒᵈ ↔ IsAtomic α :=
-  ⟨fun h => ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩, fun h =>
-    ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩⟩
+theorem isCoatomic_dual_iff_isAtomic [OrderBot α] : IsCoatomic αᵒᵈ ↔ IsAtomic α := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h => ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩, fun h =>
+        ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩⟩
 
 @[simp]
-theorem isAtomic_dual_iff_isCoatomic [OrderTop α] : IsAtomic αᵒᵈ ↔ IsCoatomic α :=
-  ⟨fun h => ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩, fun h =>
-    ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩⟩
+theorem isAtomic_dual_iff_isCoatomic [OrderTop α] : IsAtomic αᵒᵈ ↔ IsCoatomic α := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h => ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩, fun h =>
+        ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩⟩
 
 namespace IsAtomic
 
@@ -398,10 +405,11 @@ theorem isAtomic_iff_forall_isAtomic_Iic [OrderBot α] :
         (Exists.imp' (↑) fun ⟨_, _⟩ => And.imp_left IsAtom.of_isAtom_coe_Iic)⟩⟩
 
 theorem isCoatomic_iff_forall_isCoatomic_Ici [OrderTop α] :
-    IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
-  isAtomic_dual_iff_isCoatomic.symm.trans <|
-    isAtomic_iff_forall_isAtomic_Iic.trans <|
-      forall_congr' fun _ => isCoatomic_dual_iff_isAtomic.symm.trans Iff.rfl
+    IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) := by
+  unsealing_newtype OrderDual =>
+    exact isAtomic_dual_iff_isCoatomic.symm.trans <|
+        isAtomic_iff_forall_isAtomic_Iic.trans <|
+          forall_congr' fun _ => isCoatomic_dual_iff_isAtomic.symm.trans Iff.rfl
 
 section StronglyAtomic
 
@@ -436,7 +444,8 @@ theorem isStronglyAtomic_dual_iff_is_stronglyCoatomic :
 
 @[simp] theorem isStronglyCoatomic_dual_iff_is_stronglyAtomic :
     IsStronglyCoatomic αᵒᵈ ↔ IsStronglyAtomic α := by
-  rw [← isStronglyAtomic_dual_iff_is_stronglyCoatomic]; rfl
+  unsealing_newtype OrderDual =>
+    rw [← isStronglyAtomic_dual_iff_is_stronglyCoatomic]; rfl
 
 instance OrderDual.instIsStronglyCoatomic [IsStronglyAtomic α] : IsStronglyCoatomic αᵒᵈ := by
   rwa [isStronglyCoatomic_dual_iff_is_stronglyAtomic]
@@ -466,8 +475,12 @@ theorem Set.OrdConnected.isStronglyAtomic [IsStronglyAtomic α] {s : Set α}
         using! hcx.lt, fun y hy hy' ↦ hcx.2 (by simpa using! hy) (by simpa using! hy')⟩, hxd⟩
 
 theorem Set.OrdConnected.isStronglyCoatomic [IsStronglyCoatomic α] {s : Set α}
-    (h : Set.OrdConnected s) : IsStronglyCoatomic s :=
-  isStronglyAtomic_dual_iff_is_stronglyCoatomic.1 h.dual.isStronglyAtomic
+    (h : Set.OrdConnected s) : IsStronglyCoatomic s where
+  exists_le_covBy_of_lt := by
+    rintro ⟨c, hc⟩ ⟨d, hd⟩ hcd
+    obtain ⟨x, hcx, hxd⟩ := (Subtype.mk_lt_mk.1 hcd).exists_le_covby
+    exact ⟨⟨x, h.out' hc hd ⟨hcx, hxd.le⟩⟩, hcx,
+      ⟨by simpa using! hxd.lt, fun y hy hy' ↦ hxd.2 (by simpa using! hy) (by simpa using! hy')⟩⟩
 
 instance [IsStronglyAtomic α] {s : Set α} [Set.OrdConnected s] : IsStronglyAtomic s :=
   Set.OrdConnected.isStronglyAtomic <| by assumption
@@ -513,7 +526,8 @@ theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
 @[deprecated instIsStronglyAtomicOfWellFoundedLT +typeChanged (since := "2026-08-01")]
 theorem isCoatomic_of_orderTop_gt_wellFounded [OrderTop α]
     (h : WellFounded ((· > ·) : α → α → Prop)) : IsCoatomic α :=
-  isAtomic_dual_iff_isCoatomic.1 (@isAtomic_of_orderBot_wellFounded_lt αᵒᵈ _ _ h)
+  isAtomic_dual_iff_isCoatomic.1
+    (@isAtomic_of_orderBot_wellFounded_lt αᵒᵈ _ _ (InvImage.wf OrderDual.ofDual h))
 
 end WellFounded
 
@@ -577,12 +591,14 @@ export IsCoatomistic (isGLB_coatoms)
 variable {α}
 
 @[simp]
-theorem isCoatomistic_dual_iff_isAtomistic [OrderBot α] : IsCoatomistic αᵒᵈ ↔ IsAtomistic α :=
-  ⟨fun h => ⟨fun b => by apply h.isGLB_coatoms⟩, fun h => ⟨fun b => by apply h.isLUB_atoms⟩⟩
+theorem isCoatomistic_dual_iff_isAtomistic [OrderBot α] : IsCoatomistic αᵒᵈ ↔ IsAtomistic α := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h => ⟨fun b => by apply h.isGLB_coatoms⟩, fun h => ⟨fun b => by apply h.isLUB_atoms⟩⟩
 
 @[simp]
-theorem isAtomistic_dual_iff_isCoatomistic [OrderTop α] : IsAtomistic αᵒᵈ ↔ IsCoatomistic α :=
-  ⟨fun h => ⟨fun b => by apply h.isLUB_atoms⟩, fun h => ⟨fun b => by apply h.isGLB_coatoms⟩⟩
+theorem isAtomistic_dual_iff_isCoatomistic [OrderTop α] : IsAtomistic αᵒᵈ ↔ IsCoatomistic α := by
+  unsealing_newtype OrderDual =>
+    exact ⟨fun h => ⟨fun b => by apply h.isLUB_atoms⟩, fun h => ⟨fun b => by apply h.isGLB_coatoms⟩⟩
 
 namespace IsAtomistic
 
@@ -744,12 +760,13 @@ lemma IsSimpleOrder.of_forall_eq_top {α : Type*} [LE α] [BoundedOrder α] [Non
 
 theorem isSimpleOrder_iff_isSimpleOrder_orderDual [LE α] [BoundedOrder α] :
     IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ := by
-  constructor <;> intro i
-  · exact
-      { eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
-  · exact
-      { exists_pair_ne := @exists_pair_ne αᵒᵈ _
-        eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
+  unsealing_newtype OrderDual =>
+    constructor <;> intro i
+    · exact
+        { eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
+    · exact
+        { exists_pair_ne := @exists_pair_ne αᵒᵈ _
+          eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
 
 theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : (⊥ : α) ≠ (⊤ : α) := by
   obtain ⟨a, b, h⟩ := exists_pair_ne α
@@ -965,7 +982,8 @@ theorem isSimpleOrder_iff_isAtom_top [PartialOrder α] [BoundedOrder α] :
 
 theorem isSimpleOrder_iff_isCoatom_bot [PartialOrder α] [BoundedOrder α] :
     IsSimpleOrder α ↔ IsCoatom (⊥ : α) :=
-  isSimpleOrder_iff_isSimpleOrder_orderDual.trans isSimpleOrder_iff_isAtom_top
+  isSimpleOrder_iff_isSimpleOrder_orderDual.trans <|
+    isSimpleOrder_iff_isAtom_top.trans isAtom_dual_iff_isCoatom
 
 namespace Set
 
@@ -995,8 +1013,9 @@ theorem isAtom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) 
   exact CovBy.of_image f (hbot.symm ▸ hb)
 
 theorem isCoatom_of_map_top_of_image [OrderTop α] [OrderTop β] (f : β ↪o α) (htop : f ⊤ = ⊤)
-    {b : β} (hb : IsCoatom (f b)) : IsCoatom b :=
-  f.dual.isAtom_of_map_bot_of_image htop hb
+    {b : β} (hb : IsCoatom (f b)) : IsCoatom b := by
+  simp only [← covBy_top_iff] at hb ⊢
+  exact CovBy.of_image f (htop.symm ▸ hb)
 
 end OrderEmbedding
 
@@ -1052,27 +1071,31 @@ namespace GaloisCoinsertion
 variable [PartialOrder α] [PartialOrder β]
 
 theorem isCoatom_of_l_top [OrderTop α] [OrderTop β] {l : α → β} {u : β → α}
-    (gi : GaloisCoinsertion l u) (hbot : l ⊤ = ⊤) {a : α} (hb : IsCoatom (l a)) : IsCoatom a :=
-  gi.dual.isAtom_of_u_bot hbot hb.dual
+    (gi : GaloisCoinsertion l u) (hbot : l ⊤ = ⊤) {a : α} (hb : IsCoatom (l a)) : IsCoatom a := by
+  unsealing_newtype OrderDual =>
+    exact gi.dual.isAtom_of_u_bot hbot hb.dual
 
 theorem isCoatom_iff [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b)
-    (b : β) : IsCoatom (u b) ↔ IsCoatom b :=
-  gi.dual.isAtom_iff htop h_coatom b
+    (b : β) : IsCoatom (u b) ↔ IsCoatom b := by
+  unsealing_newtype OrderDual =>
+    exact gi.dual.isAtom_iff htop h_coatom b
 
 theorem isCoatom_iff' [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b)
-    (a : α) : IsCoatom (l a) ↔ IsCoatom a :=
-  gi.dual.isAtom_iff' htop h_coatom a
+    (a : α) : IsCoatom (l a) ↔ IsCoatom a := by
+  unsealing_newtype OrderDual =>
+    exact gi.dual.isAtom_iff' htop h_coatom a
 
 theorem isAtom_of_image [OrderBot α] [OrderBot β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) {a : α} (hb : IsAtom (l a)) : IsAtom a :=
-  gi.dual.isCoatom_of_image hb.dual
+  isCoatom_dual_iff_isAtom.1 (gi.dual.isCoatom_of_image (b := OrderDual.toDual a) hb.dual)
 
 theorem isAtom_iff [OrderBot α] [OrderBot β] [IsAtomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (h_atom : ∀ b, IsAtom b → l (u b) = b) (a : α) :
-    IsAtom (l a) ↔ IsAtom a :=
-  gi.dual.isCoatom_iff h_atom a
+    IsAtom (l a) ↔ IsAtom a := by
+  unsealing_newtype OrderDual =>
+    exact gi.dual.isCoatom_iff h_atom a
 
 end GaloisCoinsertion
 
@@ -1087,8 +1110,9 @@ theorem isAtom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAto
 
 @[simp]
 theorem isCoatom_iff [OrderTop α] [OrderTop β] (f : α ≃o β) (a : α) :
-    IsCoatom (f a) ↔ IsCoatom a :=
-  f.dual.isAtom_iff a
+    IsCoatom (f a) ↔ IsCoatom a := by
+  unsealing_newtype OrderDual =>
+    exact f.dual.isAtom_iff a
 
 theorem isSimpleOrder_iff [BoundedOrder α] [BoundedOrder β] (f : α ≃o β) :
     IsSimpleOrder α ↔ IsSimpleOrder β := by
@@ -1250,9 +1274,10 @@ instance isAtomic [∀ i, PartialOrder (π i)] [∀ i, OrderBot (π i)] [∀ i, 
     by classical exact ⟨Function.update ⊥ i a, isAtom_single ha, update_le_iff.2 ⟨hab, by simp⟩⟩
 
 instance isCoatomic [∀ i, PartialOrder (π i)] [∀ i, OrderTop (π i)] [∀ i, IsCoatomic (π i)] :
-    IsCoatomic (∀ i, π i) :=
-  isAtomic_dual_iff_isCoatomic.1 <|
-    show IsAtomic (∀ i, (π i)ᵒᵈ) from inferInstance
+    IsCoatomic (∀ i, π i) := by
+  unsealing_newtype OrderDual =>
+    exact isAtomic_dual_iff_isCoatomic.1 <|
+      show IsAtomic (∀ i, (π i)ᵒᵈ) from inferInstance
 
 instance isAtomistic [∀ i, PartialOrder (π i)] [∀ i, OrderBot (π i)] [∀ i, IsAtomistic (π i)] :
     IsAtomistic (∀ i, π i) where
@@ -1269,9 +1294,10 @@ instance isAtomistic [∀ i, PartialOrder (π i)] [∀ i, OrderBot (π i)] [∀ 
       exact hj ⟨Function.update ⊥ i x, ⟨⟨_, x, hx₁, rfl⟩, by simp [update_le_iff, hx₂]⟩, by simp⟩
 
 instance isCoatomistic [∀ i, CompleteLattice (π i)] [∀ i, IsCoatomistic (π i)] :
-    IsCoatomistic (∀ i, π i) :=
-  isAtomistic_dual_iff_isCoatomistic.1 <|
-    show IsAtomistic (∀ i, (π i)ᵒᵈ) from inferInstance
+    IsCoatomistic (∀ i, π i) := by
+  unsealing_newtype OrderDual =>
+    exact isAtomistic_dual_iff_isCoatomistic.1 <|
+      show IsAtomistic (∀ i, (π i)ᵒᵈ) from inferInstance
 
 end Pi
 

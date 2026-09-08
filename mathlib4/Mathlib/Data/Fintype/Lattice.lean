@@ -28,7 +28,7 @@ theorem sup_univ_eq_iSup [CompleteLattice β] (f : α → β) : Finset.univ.sup 
 
 /-- A special case of `Finset.inf_eq_iInf` that omits the useless `x ∈ univ` binder. -/
 theorem inf_univ_eq_iInf [CompleteLattice β] (f : α → β) : Finset.univ.inf f = iInf f :=
-  @sup_univ_eq_iSup _ βᵒᵈ _ _ (f : α → βᵒᵈ)
+  (inf_eq_iInf _ f).trans <| congr_arg _ <| funext fun _ => iInf_pos (mem_univ _)
 
 @[simp]
 theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) :
@@ -38,8 +38,9 @@ theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) :
 
 @[simp]
 theorem fold_sup_univ [SemilatticeSup α] [OrderTop α] (a : α) :
-    (Finset.univ.fold max a fun x => x) = ⊤ :=
-  @fold_inf_univ αᵒᵈ _ _ _ _
+    (Finset.univ.fold max a fun x => x) = ⊤ := by
+  unsealing_newtype OrderDual =>
+    exact @fold_inf_univ αᵒᵈ ‹Fintype α› _ _ _
 
 lemma mem_inf [DecidableEq α] {s : Finset ι} {f : ι → Finset α} {a : α} :
     a ∈ s.inf f ↔ ∀ i ∈ s, a ∈ f i := by induction s using Finset.cons_induction <;> simp [*]

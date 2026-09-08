@@ -125,7 +125,7 @@ pigeonholes, then for some pigeonhole, the total weight of the pigeons in this p
 than `b`. -/
 theorem exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul (hf : ∀ a ∈ s, f a ∈ t)
     (hb : ∑ x ∈ s, w x < #t • b) : ∃ y ∈ t, ∑ x ∈ s with f x = y, w x < b :=
-  exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum (M := Mᵒᵈ) hf hb
+  exists_lt_of_sum_lt <| by simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is greater than `n • b`, they are sorted into some
@@ -147,8 +147,9 @@ then for at least one of these `n` pigeonholes, the total weight of the pigeons 
 is less than `b`. -/
 theorem exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul
     (ht : ∀ y ∉ t, (0 : M) ≤ ∑ x ∈ s with f x = y, w x) (hb : ∑ x ∈ s, w x < #t • b) :
-    ∃ y ∈ t, ∑ x ∈ s with f x = y, w x < b :=
-  exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum (M := Mᵒᵈ) ht hb
+    ∃ y ∈ t, ∑ x ∈ s with f x = y, w x < b := by
+  unsealing_newtype OrderDual =>
+    exact exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum (M := Mᵒᵈ) ht hb
 
 /-!
 #### Non-strict inequality versions
@@ -169,7 +170,7 @@ are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total weight 
 this pigeonhole is less than or equal to `b`. -/
 theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
     (hb : ∑ x ∈ s, w x ≤ #t • b) : ∃ y ∈ t, ∑ x ∈ s with f x = y, w x ≤ b :=
-  exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (M := Mᵒᵈ) hf ht hb
+  exists_le_of_sum_le ht <| by simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is greater than or equal to `n • b`, they
@@ -192,8 +193,9 @@ there is nonnegative, then for at least one of these `n` pigeonholes, the total 
 pigeons in this pigeonhole is less than or equal to `b`. -/
 theorem exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
     (hf : ∀ y ∉ t, (0 : M) ≤ ∑ x ∈ s with f x = y, w x) (ht : t.Nonempty)
-    (hb : ∑ x ∈ s, w x ≤ #t • b) : ∃ y ∈ t, ∑ x ∈ s with f x = y, w x ≤ b :=
-  exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum (M := Mᵒᵈ) hf ht hb
+    (hb : ∑ x ∈ s, w x ≤ #t • b) : ∃ y ∈ t, ∑ x ∈ s with f x = y, w x ≤ b := by
+  unsealing_newtype OrderDual =>
+    exact exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum (M := Mᵒᵈ) hf ht hb
 
 end
 
@@ -358,15 +360,17 @@ version: there is a pigeonhole with the total weight of pigeons in it less than 
 the total number of pigeonholes times `b` is greater than the total weight of all pigeons. -/
 theorem exists_sum_fiber_lt_of_sum_lt_nsmul (hb : ∑ x, w x < card β • b) :
     ∃ y, ∑ x with f x = y, w x < b :=
-  exists_lt_sum_fiber_of_nsmul_lt_sum (M := Mᵒᵈ) _ hb
+  let ⟨y, _, hy⟩ := exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul (fun _ _ => mem_univ _) hb
+  ⟨y, hy⟩
 
 /-- The pigeonhole principle for finitely many pigeons of different weights, non-strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it less than or equal to `b`
 provided that the total number of pigeonholes times `b` is greater than or equal to the total weight
 of all pigeons. -/
 theorem exists_sum_fiber_le_of_sum_le_nsmul [Nonempty β] (hb : ∑ x, w x ≤ card β • b) :
-    ∃ y, ∑ x with f x = y, w x ≤ b :=
-  exists_le_sum_fiber_of_nsmul_le_sum (M := Mᵒᵈ) _ hb
+    ∃ y, ∑ x with f x = y, w x ≤ b := by
+  unsealing_newtype OrderDual =>
+    exact exists_le_sum_fiber_of_nsmul_le_sum (M := Mᵒᵈ) _ hb
 
 end
 
