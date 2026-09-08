@@ -25160,6 +25160,9 @@ function ensurePrIsUnmerged(pr) {
   if (pr.merged_at !== null) exit("PR is merged, exiting...");
   info("PR is unmerged, continuing...");
 }
+function adaptationPrTitleFor(uPr) {
+  return `[#${uPr.number}] ${uPr.title}`;
+}
 function statusPrefix(aPr) {
   if (aPr === void 0) return "";
   const pr = `${downstreamRepo.owner}/${downstreamRepo.repo}#${aPr}`;
@@ -25277,6 +25280,16 @@ async function getDownstreamDefaultBranch() {
   info(`Downstream default branch is "${data.default_branch}"`);
   return data.default_branch;
 }
+async function syncTitle(uPr, aPr) {
+  const expectedTitle = adaptationPrTitleFor(uPr);
+  if (aPr.title === expectedTitle) return;
+  info(`Updating title of adaptation PR #${aPr.number}...`);
+  await octo.rest.pulls.update({
+    ...downstreamRepo,
+    pull_number: aPr.number,
+    title: expectedTitle
+  });
+}
 async function syncState(uPr, aPr) {
   if (uPr.merged_at !== null) exit("PR is merged, exiting...");
   if (aPr.merged_at !== null) exit("Adaptation PR is merged, exiting...");
@@ -25324,7 +25337,7 @@ async function createAdaptationPrFor(uPr, aBranchName) {
     ...downstreamRepo,
     base: defaultBranch,
     head: aBranchName,
-    title: `[#${uPr.number}] ${uPr.title}`,
+    title: adaptationPrTitleFor(uPr),
     body: `This is the adaptation PR for ${uPrRef}.`,
     draft: uPr.draft
   });
@@ -25349,7 +25362,10 @@ async function run() {
   const aPr = aBranch === void 0 ? void 0 : await findPrFor(octo, downstreamRepo, aBranchName);
   const prefix = statusPrefix(aPr?.number);
   if (aPr !== void 0) setOutput("number", String(aPr.number));
-  if (aPr !== void 0) await syncState(uPr, aPr);
+  if (aPr !== void 0) {
+    await syncTitle(uPr, aPr);
+    await syncState(uPr, aPr);
+  }
   if (uPr.state !== "open") exit("PR is closed, exiting...");
   if (aBranch === void 0)
     info(`Adaptation branch "${aBranchName}" does not exist`);
