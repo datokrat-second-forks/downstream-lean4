@@ -500,9 +500,9 @@ variable [PartialOrder α] [TopologicalSpace α] [IsUpper α]
 
 -- see Note [lower instance priority]
 /-- The upper topology on a partial order is T₀. -/
-instance (priority := 90) t0Space : T0Space α :=
-  (t0Space_iff_inseparable α).2 fun x y h =>
-    Iic_injective <| by simpa only [inseparable_iff_closure_eq, closure_singleton] using h
+instance (priority := 90) t0Space : T0Space α := by
+  unsealing_newtype OrderDual =>
+    exact IsLower.t0Space (α := αᵒᵈ)
 
 end PartialOrder
 

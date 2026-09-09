@@ -480,12 +480,9 @@ theorem Set.OrdConnected.isStronglyAtomic [IsStronglyAtomic α] {s : Set α}
         using! hcx.lt, fun y hy hy' ↦ hcx.2 (by simpa using! hy) (by simpa using! hy')⟩, hxd⟩
 
 theorem Set.OrdConnected.isStronglyCoatomic [IsStronglyCoatomic α] {s : Set α}
-    (h : Set.OrdConnected s) : IsStronglyCoatomic s where
-  exists_le_covBy_of_lt := by
-    rintro ⟨c, hc⟩ ⟨d, hd⟩ hcd
-    obtain ⟨x, hcx, hxd⟩ := (Subtype.mk_lt_mk.1 hcd).exists_le_covby
-    exact ⟨⟨x, h.out' hc hd ⟨hcx, hxd.le⟩⟩, hcx,
-      ⟨by simpa using! hxd.lt, fun y hy hy' ↦ hxd.2 (by simpa using! hy) (by simpa using! hy')⟩⟩
+    (h : Set.OrdConnected s) : IsStronglyCoatomic s := by
+  unsealing_newtype OrderDual =>
+    exact isStronglyAtomic_dual_iff_is_stronglyCoatomic.1 h.dual.isStronglyAtomic
 
 instance [IsStronglyAtomic α] {s : Set α} [Set.OrdConnected s] : IsStronglyAtomic s :=
   Set.OrdConnected.isStronglyAtomic <| by assumption

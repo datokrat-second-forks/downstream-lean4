@@ -32,17 +32,9 @@ instance (priority := low) {α : Type*}
 open Topology.IsLowerSet in
 instance (priority := low) {α : Type*}
     [TopologicalSpace α] [LinearOrder α] [Topology.IsLowerSet α] :
-    CompletelyNormalSpace α where
-  completely_normal s t hcst hsct := by
-    obtain (rfl | ⟨a, ha⟩) := s.eq_empty_or_nonempty
-    case inl => simp
-    obtain (rfl | ⟨b, hb⟩) := t.eq_empty_or_nonempty
-    case inl => simp
-    exfalso
-    grewrite [← singleton_subset_iff.mpr ha, ← singleton_subset_iff.mpr hb] at hcst hsct
-    conv at hcst => equals b < a => simp
-    conv at hsct => equals a < b => simp
-    exact lt_asymm hcst hsct
+    CompletelyNormalSpace α := by
+  unsealing_newtype OrderDual =>
+    exact inferInstanceAs (CompletelyNormalSpace αᵒᵈ)
 
 instance : CompletelyNormalSpace Prop :=
   let := Prop.linearOrder

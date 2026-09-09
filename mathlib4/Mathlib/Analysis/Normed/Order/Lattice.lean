@@ -140,10 +140,9 @@ instance (priority := 100) HasSolidNorm.continuousInf : ContinuousInf α := by
 -- see Note [lower instance priority]
 instance (priority := 100) HasSolidNorm.continuousSup {α : Type*}
     [NormedAddCommGroup α] [Lattice α] [HasSolidNorm α] [IsOrderedAddMonoid α] :
-    ContinuousSup α where
-  continuous_sup := continuous_ofDual.comp
-    ((HasSolidNorm.continuousInf (α := αᵒᵈ)).continuous_inf.comp
-      (continuous_toDual.prodMap continuous_toDual))
+    ContinuousSup α := by
+  unsealing_newtype OrderDual =>
+    exact OrderDual.continuousSup αᵒᵈ
 
 -- see Note [lower instance priority]
 /--

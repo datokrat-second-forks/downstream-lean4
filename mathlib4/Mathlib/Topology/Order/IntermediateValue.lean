@@ -772,10 +772,11 @@ theorem Continuous.strictMono_of_inj_boundedOrder [BoundedOrder α] {f : α → 
       have : u = ⊥ := hf_i hu.2
       simp_all
 
+set_option backward.isDefEq.respectTransparency false in
 theorem Continuous.strictAnti_of_inj_boundedOrder [BoundedOrder α] {f : α → δ}
-    (hf_c : Continuous f) (hf : f ⊤ ≤ f ⊥) (hf_i : Injective f) : StrictAnti f :=
-  Continuous.strictMono_of_inj_boundedOrder (δ := δᵒᵈ) (continuous_toDual.comp hf_c) hf
-    (OrderDual.toDual.injective.comp hf_i)
+    (hf_c : Continuous f) (hf : f ⊤ ≤ f ⊥) (hf_i : Injective f) : StrictAnti f := by
+  unsealing_newtype OrderDual =>
+    exact hf_c.strictMono_of_inj_boundedOrder (δ := δᵒᵈ) hf hf_i
 
 theorem Continuous.strictMono_of_inj_boundedOrder' [BoundedOrder α] {f : α → δ}
     (hf_c : Continuous f) (hf_i : Injective f) : StrictMono f ∨ StrictAnti f :=

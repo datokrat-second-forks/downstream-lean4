@@ -122,19 +122,19 @@ set_option backward.isDefEq.respectTransparency false in
 theorem sInf_apply (s : Set (Colex ((i : ι) → α i))) (i : ι) :
     sInf s i = ⨅ e : {e ∈ s | ∀ j > i, e j = sInf s j}, e.1 i := by
   unsealing_newtype OrderDual =>
-    exact Lex.sInf_apply (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) s i
+    exact Lex.sInf_apply (ι := ιᵒᵈ) s i
 
 set_option backward.isDefEq.respectTransparency false in
 theorem sInf_apply_le {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
     (he : e ∈ s) (h : ∀ j > i, e j = sInf s j) : sInf s i ≤ e i := by
   unsealing_newtype OrderDual =>
-    exact Lex.sInf_apply_le (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) he h
+    exact Lex.sInf_apply_le (ι := ιᵒᵈ) he h
 
 set_option backward.isDefEq.respectTransparency false in
 theorem le_sInf_apply {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
     (h : ∀ f ∈ s, (∀ j > i, f j = sInf s j) → e i ≤ f i) : e i ≤ sInf s i := by
   unsealing_newtype OrderDual =>
-    exact Lex.le_sInf_apply (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) h
+    exact Lex.le_sInf_apply (ι := ιᵒᵈ) h
 
 -- TODO: figure out how to use `to_dual` here
 
@@ -149,28 +149,28 @@ set_option backward.isDefEq.respectTransparency false in
 theorem sSup_apply (s : Set (Colex ((i : ι) → α i))) (i : ι) :
     sSup s i = ⨆ e : {e ∈ s | ∀ j > i, e j = sSup s j}, e.1 i := by
   unsealing_newtype OrderDual =>
-    exact Lex.sSup_apply (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) s i
+    exact Lex.sSup_apply (ι := ιᵒᵈ) s i
 
 set_option backward.isDefEq.respectTransparency false in
 theorem le_sSup_apply {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
     (he : e ∈ s) (h : ∀ j > i, e j = sSup s j) : e i ≤ sSup s i := by
   unsealing_newtype OrderDual =>
-    exact Lex.le_sSup_apply (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) he h
+    exact Lex.le_sSup_apply (ι := ιᵒᵈ) he h
 
 set_option backward.isDefEq.respectTransparency false in
 theorem sSup_apply_le {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
     (h : ∀ f ∈ s, (∀ j > i, f j = sSup s j) → f i ≤ e i) : sSup s i ≤ e i := by
   unsealing_newtype OrderDual =>
-    exact Lex.sSup_apply_le (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i)) h
+    exact Lex.sSup_apply_le (ι := ιᵒᵈ) h
 
 set_option backward.isDefEq.respectTransparency false in
 noncomputable instance completeLattice : CompleteLattice (Colex ((i : ι) → α i)) where
   isLUB_sSup _ := by
     unsealing_newtype OrderDual =>
-      exact Lex.isLUB_sSup (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i))
+      exact Lex.isLUB_sSup (ι := ιᵒᵈ)
   isGLB_sInf _ := by
     unsealing_newtype OrderDual =>
-      exact Lex.isGLB_sInf (ι := ιᵒᵈ) (α := fun i ↦ α (OrderDual.ofDual i))
+      exact Lex.isGLB_sInf (ι := ιᵒᵈ)
 
 noncomputable instance : CompleteLinearOrder (Colex ((i : ι) → α i)) where
   __ := linearOrder

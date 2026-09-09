@@ -48,27 +48,6 @@ universe u v w x y
 
 variable {α β γ δ : Type*} {ι : Sort y} {s t u : Set α}
 
-section DualBridge
-
-/-! The topology of `αᵒᵈ` is coinduced by `toDual`, which for a bijection is the same as being
-induced by it; so the Borel σ-algebra of `α` is the one of `αᵒᵈ` comapped along `toDual`.  This is
-what carries a `borel _ = generateFrom (range Ixx)` statement across the dual. -/
-
-private lemma induced_toDual (α : Type*) [t : TopologicalSpace α] :
-    TopologicalSpace.induced (OrderDual.toDual : α → αᵒᵈ) inferInstance = t := by
-  refine TopologicalSpace.ext_iff.2 fun s ↦
-    ⟨?_, fun hs ↦ ⟨⇑OrderDual.ofDual ⁻¹' s, hs, rfl⟩⟩
-  rintro ⟨u, hu, rfl⟩
-  exact hu
-
-private lemma borel_comap_toDual (α : Type*) [TopologicalSpace α] :
-    MeasurableSpace.comap (OrderDual.toDual : α → αᵒᵈ) (borel αᵒᵈ) = borel α := by
-  rw [← borel_comap (f := (OrderDual.toDual : α → αᵒᵈ))]
-  congr 1
-  exact induced_toDual α
-
-end DualBridge
-
 section OrderTopology
 
 variable (α)
@@ -96,13 +75,10 @@ theorem borel_eq_generateFrom_Iio : borel α = .generateFrom (range Iio) := by
     intro a
     exact GenerateMeasurable.basic _ isOpen_Iio
 
+set_option backward.isDefEq.respectTransparency false in
 theorem borel_eq_generateFrom_Ioi : borel α = .generateFrom (range Ioi) := by
-  rw [← borel_comap_toDual α, borel_eq_generateFrom_Iio αᵒᵈ, comap_generateFrom]
-  congr 1
-  ext s
-  simp only [Set.mem_image, Set.mem_range]
-  exact ⟨by rintro ⟨_, ⟨a, rfl⟩, rfl⟩; exact ⟨OrderDual.ofDual a, rfl⟩,
-    by rintro ⟨a, rfl⟩; exact ⟨Iio (OrderDual.toDual a), ⟨OrderDual.toDual a, rfl⟩, rfl⟩⟩
+  unsealing_newtype OrderDual =>
+    exact @borel_eq_generateFrom_Iio αᵒᵈ _ (by infer_instance : SecondCountableTopology α) _ _
 
 theorem borel_eq_generateFrom_Iic :
     borel α = MeasurableSpace.generateFrom (range Iic) := by

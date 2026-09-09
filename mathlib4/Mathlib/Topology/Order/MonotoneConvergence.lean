@@ -35,11 +35,6 @@ open scoped Topology
 variable {α β : Type*}
 
 open OrderDual in
-private lemma tendsto_ofDual_atTop {ι : Type*} [Preorder ι] :
-    Tendsto (ofDual : ιᵒᵈ → ι) atTop atBot :=
-  tendsto_atBot.2 fun b ↦ mem_of_superset (Ici_mem_atTop (toDual b)) fun _ hx ↦ hx
-
-open OrderDual in
 private lemma tendsto_subtype_ofDual [Preorder α] {s : Set αᵒᵈ} :
     Tendsto (fun y : s ↦ (⟨ofDual y.1, y.2⟩ : ↥(toDual ⁻¹' s))) atTop atBot :=
   tendsto_atBot.2 fun b ↦
@@ -97,11 +92,8 @@ instance (priority := 100) LinearOrder.supConvergenceClass [TopologicalSpace α]
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.infConvergenceClass [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] : InfConvergenceClass α := by
-  refine ⟨fun a s ha => tendsto_order.2 ⟨fun b hb => ?_, fun b hb => ?_⟩⟩
-  · exact Eventually.of_forall fun x => hb.trans_le (ha.1 x.2)
-  · rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩
-    lift c to s using hcs
-    exact (eventually_le_atBot c).mono fun x hx => lt_of_le_of_lt (show (x : α) ≤ c from hx) bca
+  unsealing_newtype OrderDual =>
+    exact show InfConvergenceClass αᵒᵈᵒᵈ from OrderDual.infConvergenceClass
 
 section
 
@@ -273,9 +265,8 @@ instance Pi.supConvergenceClass
 instance Pi.infConvergenceClass
     {ι : Type*} {α : ι → Type*} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, InfConvergenceClass (α i)] : InfConvergenceClass (∀ i, α i) := by
-  refine ⟨fun f s h => ?_⟩
-  simp only [isGLB_pi, ← range_domRestrict] at h
-  exact tendsto_pi_nhds.2 fun i => tendsto_atBot_isGLB ((monotone_eval _).domRestrict _) (h i)
+  unsealing_newtype OrderDual =>
+    exact show InfConvergenceClass (∀ i, (α i)ᵒᵈ)ᵒᵈ from OrderDual.infConvergenceClass
 
 instance Pi.supConvergenceClass' {ι : Type*} [Preorder α] [TopologicalSpace α]
     [SupConvergenceClass α] : SupConvergenceClass (ι → α) :=
@@ -342,12 +333,13 @@ theorem Monotone.ge_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedT
   haveI : Nonempty β := Nonempty.intro b
   _root_.ge_of_tendsto ha ((eventually_ge_atTop b).mono fun _ hxy => hf hxy)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem Monotone.le_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Preorder β] [IsCodirectedOrder β] {f : β → α} {a : α} (hf : Monotone f)
     (ha : Tendsto f atBot (𝓝 a)) (b : β) :
-    a ≤ f b :=
-  hf.dual.ge_of_tendsto ((continuous_toDual.tendsto _).comp (ha.comp tendsto_ofDual_atTop))
-    (OrderDual.toDual b)
+    a ≤ f b := by
+  unsealing_newtype OrderDual =>
+    exact hf.dual.ge_of_tendsto ha b
 
 theorem Antitone.le_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Preorder β] [IsDirectedOrder β] {f : β → α} {a : α} (hf : Antitone f)

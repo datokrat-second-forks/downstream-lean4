@@ -85,24 +85,9 @@ instance (priority := 100) isPredArchimedean_of_isSuccArchimedean [IsSuccArchime
       · rw [hn_eq]
         exact hn_lt_ne _ (Nat.lt_succ_self n)
 
-instance isSuccArchimedean_of_isPredArchimedean [IsPredArchimedean ι] : IsSuccArchimedean ι where
-  exists_succ_iterate_of_le {i j} hij := by
-    have h_exists := exists_pred_iterate_of_le hij
-    obtain ⟨n, hn_eq, hn_lt_ne⟩ : ∃ n, pred^[n] j = i ∧ ∀ m < n, pred^[m] j ≠ i :=
-      ⟨Nat.find h_exists, Nat.find_spec h_exists, fun m hmn ↦ Nat.find_min h_exists hmn⟩
-    refine ⟨n, ?_⟩
-    rw [← hn_eq]
-    cases n with
-    | zero => simp only [Function.iterate_zero, id]
-    | succ n =>
-      rw [succ_pred_iterate_of_not_isMin]
-      rw [Nat.succ_sub_succ_eq_sub, tsub_zero]
-      suffices pred^[n.succ] j < pred^[n] j from not_isMin_of_lt this
-      refine lt_of_le_of_ne ?_ ?_
-      · rw [Function.iterate_succ_apply']
-        exact pred_le _
-      · rw [hn_eq]
-        exact (hn_lt_ne _ (Nat.lt_succ_self n)).symm
+instance isSuccArchimedean_of_isPredArchimedean [IsPredArchimedean ι] : IsSuccArchimedean ι := by
+  unsealing_newtype OrderDual =>
+    exact inferInstanceAs (IsSuccArchimedean ιᵒᵈᵒᵈ)
 
 /-- In a linear `SuccOrder` that's also a `PredOrder`, `IsSuccArchimedean` and `IsPredArchimedean`
 are equivalent. -/

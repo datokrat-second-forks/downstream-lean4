@@ -79,15 +79,12 @@ theorem isLUB_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ upperBounds s) (
   rw [mem_closure_iff_clusterPt, ClusterPt, inf_comm] at hsf
   exact isLUB_of_mem_nhds hsa (mem_principal_self s)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem isGLB_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ lowerBounds s) (hsf : s ∈ f)
     [NeBot (f ⊓ 𝓝 a)] :
-    IsGLB s a :=
-  ⟨hsa, fun b hb =>
-    not_lt.1 fun hab =>
-      have : s ∩ { a | a < b } ∈ f ⊓ 𝓝 a := inter_mem_inf hsf (IsOpen.mem_nhds (isOpen_gt' _) hab)
-      let ⟨_x, ⟨hxs, hxb⟩⟩ := Filter.nonempty_of_mem this
-      have : b < b := lt_of_le_of_lt (hb hxs) hxb
-      lt_irrefl b this⟩
+    IsGLB s a := by
+  unsealing_newtype OrderDual =>
+    exact isLUB_of_mem_nhds (α := αᵒᵈ) hsa hsf
 
 theorem isGLB_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ lowerBounds s) (hsf : a ∈ closure s) :
     IsGLB s a := by
@@ -447,44 +444,36 @@ theorem exists_seq_tendsto_sInf {α : Type*} [ConditionallyCompleteLinearOrder �
   unsealing_newtype OrderDual =>
     exact exists_seq_tendsto_sSup (α := αᵒᵈ) hS hS'
 
+set_option backward.isDefEq.respectTransparency false in
 theorem Dense.exists_seq_strictAnti_tendsto_of_lt [DenselyOrdered α] [FirstCountableTopology α]
     {s : Set α} (hs : Dense s) {x y : α} (hy : x < y) :
     ∃ u : ℕ → α, StrictAnti u ∧ (∀ n, u n ∈ (Ioo x y ∩ s)) ∧ Tendsto u atTop (𝓝 x) := by
-  have hnonempty : (Ioo x y ∩ s).Nonempty := by
-    obtain ⟨z, hzs, hz⟩ := hs.exists_between hy
-    exact ⟨z, mem_inter hz hzs⟩
-  have hx : IsGLB (Ioo x y ∩ s) x := hs.isGLB_inter_iff isOpen_Ioo |>.mpr <| isGLB_Ioo hy
-  apply hx.exists_seq_strictAnti_tendsto_of_notMem (by simp) hnonempty |>.imp
-  simp_all
+  unsealing_newtype OrderDual =>
+    simpa using! hs.exists_seq_strictMono_tendsto_of_lt (α := αᵒᵈ) (OrderDual.toDual_lt_toDual.2 hy)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem Dense.exists_seq_strictAnti_tendsto [DenselyOrdered α] [NoMaxOrder α]
     [FirstCountableTopology α] {s : Set α} (hs : Dense s) (x : α) :
     ∃ u : ℕ → α, StrictAnti u ∧ (∀ n, u n ∈ (Ioi x ∩ s)) ∧ Tendsto u atTop (𝓝 x) := by
-  obtain ⟨y, hy⟩ := exists_gt x
-  apply hs.exists_seq_strictAnti_tendsto_of_lt (exists_gt x).choose_spec |>.imp
-  simp_all
+  unsealing_newtype OrderDual =>
+    exact hs.exists_seq_strictMono_tendsto (α := αᵒᵈ) x
 
+set_option backward.isDefEq.respectTransparency false in
 theorem DenseRange.exists_seq_strictAnti_tendsto_of_lt {β : Type*} [LinearOrder β]
     [DenselyOrdered α] [FirstCountableTopology α] {f : β → α} {x y : α} (hf : DenseRange f)
     (hmono : Monotone f) (hlt : x < y) :
     ∃ u : ℕ → β, StrictAnti u ∧ (∀ n, f (u n) ∈ Ioo x y) ∧ Tendsto (f ∘ u) atTop (𝓝 x) := by
-  rcases Dense.exists_seq_strictAnti_tendsto_of_lt hf hlt with ⟨u, hu, huxyf, hlim⟩
-  have huxy (n : ℕ) : u n ∈ Ioo x y := (huxyf n).1
-  have huf (n : ℕ) : u n ∈ range f := (huxyf n).2
-  choose v hv using huf
-  obtain rfl : f ∘ v = u := funext hv
-  exact ⟨v, fun a b hlt ↦ hmono.reflect_lt <| hu hlt, huxy, hlim⟩
+  unsealing_newtype OrderDual =>
+    simpa using! hf.exists_seq_strictMono_tendsto_of_lt (α := αᵒᵈ) (β := βᵒᵈ) hmono.dual
+      (OrderDual.toDual_lt_toDual.2 hlt)
 
+set_option backward.isDefEq.respectTransparency false in
 theorem DenseRange.exists_seq_strictAnti_tendsto {β : Type*} [LinearOrder β] [DenselyOrdered α]
     [NoMaxOrder α] [FirstCountableTopology α] {f : β → α} (hf : DenseRange f) (hmono : Monotone f)
     (x : α) :
     ∃ u : ℕ → β, StrictAnti u ∧ (∀ n, f (u n) ∈ Ioi x) ∧ Tendsto (f ∘ u) atTop (𝓝 x) := by
-  rcases Dense.exists_seq_strictAnti_tendsto hf x with ⟨u, hu, huxf, hlim⟩
-  have hux (n : ℕ) : u n ∈ Ioi x := (huxf n).1
-  have huf (n : ℕ) : u n ∈ range f := (huxf n).2
-  choose v hv using huf
-  obtain rfl : f ∘ v = u := funext hv
-  exact ⟨v, fun a b hlt ↦ hmono.reflect_lt <| hu hlt, hux, hlim⟩
+  unsealing_newtype OrderDual =>
+    exact hf.exists_seq_strictMono_tendsto (α := αᵒᵈ) (β := βᵒᵈ) hmono.dual x
 
 theorem eventually_le_const_iff_forall_gt_eventually_lt_const [FirstCountableTopology α]
     {l : Filter γ} [CountableInterFilter l] {f : γ → α} {a : α} :

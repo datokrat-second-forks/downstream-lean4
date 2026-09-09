@@ -42,40 +42,9 @@ class BoundedLENhdsClass (α : Type*) [Preorder α] [TopologicalSpace α] : Prop
 class BoundedGENhdsClass (α : Type*) [Preorder α] [TopologicalSpace α] : Prop where
   isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·)
 
-section DualBridge
-
-open OrderDual (toDual ofDual)
-
-private lemma isBounded_le_map_toDual {α : Type*} [Preorder α] {F : Filter α}
-    (h : F.IsBounded (· ≥ ·)) : (map toDual F).IsBounded (· ≤ ·) :=
-  let ⟨b, hb⟩ := h; ⟨toDual b, hb⟩
-
-private lemma isCobounded_le_map_toDual {α : Type*} [Preorder α] {F : Filter α}
-    (h : F.IsCobounded (· ≥ ·)) : (map toDual F).IsCobounded (· ≤ ·) :=
-  let ⟨b, hb⟩ := h; ⟨toDual b, fun a ha ↦ hb (ofDual a) ha⟩
-
+open OrderDual (toDual ofDual) in
 private lemma nhds_eq_map_toDual {α : Type*} [TopologicalSpace α] (a : αᵒᵈ) :
     𝓝 a = map toDual (𝓝 (ofDual a)) := nhds_toDual _
-
-private lemma clusterPt_map_toDual {α : Type*} [TopologicalSpace α] {F : Filter α} {x : α} :
-    ClusterPt (toDual x) (map toDual F) ↔ ClusterPt x F := by
-  rw [ClusterPt, ClusterPt, show 𝓝 (toDual x) = map toDual (𝓝 x) from nhds_toDual _,
-    ← Filter.map_inf OrderDual.toDual.injective, Filter.map_neBot_iff]
-
-private lemma limsSup_map_toDual {α : Type*} [ConditionallyCompleteLattice α] (F : Filter α) :
-    limsSup (map toDual F) = toDual F.limsInf := rfl
-
-private lemma limsInf_map_toDual {α : Type*} [ConditionallyCompleteLattice α] (F : Filter α) :
-    limsInf (map toDual F) = toDual F.limsSup := rfl
-
-private lemma liminf_toDual_comp_ofDual {α β : Type*} [ConditionallyCompleteLattice α] (u : β → α)
-    (F : Filter β) :
-    liminf (fun b ↦ toDual (u (ofDual b))) (map toDual F) = toDual (limsup u F) := rfl
-
-private lemma liminf_comp_ofDual {α β : Type*} [ConditionallyCompleteLattice α] (u : β → α)
-    (F : Filter β) : liminf (fun b ↦ u (ofDual b)) (map toDual F) = liminf u F := rfl
-
-end DualBridge
 
 section Preorder
 variable [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
@@ -155,11 +124,8 @@ instance : BoundedLENhdsClass αᵒᵈ :=
     exact ⟨OrderDual.toDual b, by rw [nhds_eq_map_toDual, Filter.eventually_map]; exact hb⟩⟩
 
 instance Prod.instBoundedGENhdsClass : BoundedGENhdsClass (α × β) := by
-  refine ⟨fun x ↦ ?_⟩
-  obtain ⟨a, ha⟩ := isBounded_ge_nhds x.1
-  obtain ⟨b, hb⟩ := isBounded_ge_nhds x.2
-  rw [← @Prod.mk.eta _ _ x, nhds_prod_eq]
-  exact ⟨(a, b), ha.prod_mk hb⟩
+  unsealing_newtype OrderDual =>
+    exact ⟨(Prod.instBoundedLENhdsClass (α := αᵒᵈ) (β := βᵒᵈ)).isBounded_le_nhds⟩
 
 instance Pi.instBoundedGENhdsClass [Finite ι] [∀ i, Preorder (π i)] [∀ i, TopologicalSpace (π i)]
     [∀ i, BoundedGENhdsClass (π i)] : BoundedGENhdsClass (∀ i, π i) := by
@@ -188,9 +154,9 @@ instance (priority := 100) BoundedLENhdsClass.of_closedIciTopology [LinearOrder 
 
 -- See note [lower instance priority]
 instance (priority := 100) BoundedGENhdsClass.of_closedIicTopology [LinearOrder α]
-    [TopologicalSpace α] [ClosedIicTopology α] : BoundedGENhdsClass α :=
-  ⟨fun a ↦ ((isBot_or_exists_lt a).elim fun h ↦ ⟨a, Eventually.of_forall h⟩) <|
-    Exists.imp fun _b ↦ eventually_ge_nhds⟩
+    [TopologicalSpace α] [ClosedIicTopology α] : BoundedGENhdsClass α := by
+  unsealing_newtype OrderDual =>
+    exact inferInstanceAs <| BoundedGENhdsClass αᵒᵈᵒᵈ
 
 section LiminfLimsup
 
@@ -231,13 +197,11 @@ theorem limsInf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝
       a = (𝓝 a).limsInf := (limsInf_nhds a).symm
       _ ≤ f.limsInf := limsInf_le_limsInf_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip)
 
+set_option backward.isDefEq.respectTransparency false in
 /-- If a filter is converging, its liminf coincides with its limit. -/
 theorem limsSup_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 a) : f.limsSup = a := by
-  have h2 : map OrderDual.toDual f ≤ 𝓝 (OrderDual.toDual a) := by
-    rw [show 𝓝 (OrderDual.toDual a) = map OrderDual.toDual (𝓝 a) from nhds_toDual _]
-    exact map_mono h
-  have h3 := limsInf_eq_of_le_nhds (α := αᵒᵈ) h2
-  rwa [limsInf_map_toDual, OrderDual.toDual_inj] at h3
+  unsealing_newtype OrderDual =>
+    exact limsInf_eq_of_le_nhds (α := αᵒᵈ) h
 
 /-- If a function has a limit, then its limsup coincides with its limit. -/
 theorem Filter.Tendsto.limsup_eq {f : Filter β} {u : β → α} {a : α} [NeBot f]
@@ -265,14 +229,13 @@ theorem ClusterPt.limsSup {f : Filter α} [NeBot f]
         exact frequently_lt_of_lt_limsSup hc hl |>.and_eventually <| lt_mem_sets_of_limsSup_lt hb hg
   · simp_all [ClusterPt, Filter.eq_top_of_neBot]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The `limsInf` of a filter `f` is a cluster point of `f`. -/
 theorem ClusterPt.limsInf {f : Filter α} [NeBot f]
     (hc : f.IsCobounded (· ≥ ·) := by isBoundedDefault)
     (hb : f.IsBounded (· ≥ ·) := by isBoundedDefault) : ClusterPt f.limsInf f := by
-  have h := ClusterPt.limsSup (α := αᵒᵈ) (f := Filter.map OrderDual.toDual f)
-    (isCobounded_le_map_toDual hc) (isBounded_le_map_toDual hb)
-  rw [limsSup_map_toDual] at h
-  exact clusterPt_map_toDual.1 h
+  unsealing_newtype OrderDual =>
+    exact ClusterPt.limsSup (α := αᵒᵈ) hc hb
 
 /-- Every cluster point `x` of a filter `f` is less than or equal to `f.limsSup`. -/
 theorem ClusterPt.le_limsSup {f : Filter α} {x : α} (hx : ClusterPt x f)
@@ -283,13 +246,13 @@ theorem ClusterPt.le_limsSup {f : Filter α} {x : α} (hx : ClusterPt x f)
   refine this ▸ limsSup_le_limsSup_of_le inf_le_right ?_ hb
   exact (IsBounded.mono inf_le_left (isBounded_ge_nhds x)).isCobounded_le
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Every cluster point `x` of a filter `f` is greater than or equal to `f.limsInf`. -/
 theorem ClusterPt.limsInf_le {f : Filter α} {x : α} (hx : ClusterPt x f)
     (hb : f.IsBounded (· ≥ ·) := by isBoundedDefault) :
     f.limsInf ≤ x := by
-  have h := ClusterPt.le_limsSup (α := αᵒᵈ) (x := OrderDual.toDual x)
-    (clusterPt_map_toDual.2 hx) (isBounded_le_map_toDual hb)
-  rwa [limsSup_map_toDual] at h
+  unsealing_newtype OrderDual =>
+    exact hx.le_limsSup (α := αᵒᵈ)
 
 /-- The `limsSup` of a filter `f` is the greatest cluster point of `f`. -/
 theorem isGreatest_clusterPt_limsSup {f : Filter α} [NeBot f]
@@ -610,6 +573,7 @@ theorem Antitone.map_limsup_of_continuousAt {f : R → S} (f_decr : Antitone f) 
     f (F.limsup a) = F.liminf (f ∘ a) :=
   f_decr.map_limsSup_of_continuousAt f_cont bdd_above cobdd
 
+set_option backward.isDefEq.respectTransparency false in
 /-- An antitone function between (conditionally) complete linear ordered spaces sends a
 `Filter.limsInf` to the `Filter.limsup` of the image if the function is continuous at the `limsInf`
 (and the filter is bounded from below and frequently bounded from above). -/
@@ -617,15 +581,9 @@ theorem Antitone.map_limsInf_of_continuousAt {F : Filter R} [NeBot F] {f : R →
     (f_decr : Antitone f) (f_cont : ContinuousAt f F.limsInf)
     (cobdd : F.IsCobounded (· ≥ ·) := by isBoundedDefault)
     (bdd_below : F.IsBounded (· ≥ ·) := by isBoundedDefault) : f F.limsInf = F.limsup f := by
-  have h := Antitone.map_limsSup_of_continuousAt (R := Rᵒᵈ) (S := Sᵒᵈ)
-    (F := map OrderDual.toDual F) (f := fun x ↦ OrderDual.toDual (f (OrderDual.ofDual x)))
-    (fun _ _ hxy ↦ f_decr hxy)
-    ((continuous_toDual.continuousAt).comp
-      (ContinuousAt.comp (g := f) (f := ⇑OrderDual.ofDual)
-        (x := OrderDual.toDual F.limsInf) f_cont continuous_ofDual.continuousAt))
-    (isBounded_le_map_toDual bdd_below) (isCobounded_le_map_toDual cobdd)
-  rw [liminf_toDual_comp_ofDual] at h
-  exact OrderDual.toDual_inj.1 h
+  unsealing_newtype OrderDual =>
+    exact Antitone.map_limsSup_of_continuousAt (R := Rᵒᵈ) (S := Sᵒᵈ)
+      f_decr.dual f_cont bdd_below cobdd
 
 /-- A continuous antitone function between (conditionally) complete linear ordered spaces sends a
 `Filter.liminf` to the `Filter.limsup` of the images (if the filter is bounded from below and
@@ -657,6 +615,7 @@ theorem Monotone.map_limsup_of_continuousAt {f : R → S} (f_incr : Monotone f) 
     f (F.limsup a) = F.limsup (f ∘ a) :=
   f_incr.map_limsSup_of_continuousAt f_cont bdd_above cobdd
 
+set_option backward.isDefEq.respectTransparency false in
 /-- A monotone function between (conditionally) complete linear ordered spaces sends a
 `Filter.limsInf` to the `Filter.liminf` of the image if the function is continuous at the `limsInf`
 (and the filter is bounded from below and frequently bounded from above). -/
@@ -664,12 +623,8 @@ theorem Monotone.map_limsInf_of_continuousAt {F : Filter R} [NeBot F] {f : R →
     (f_incr : Monotone f) (f_cont : ContinuousAt f F.limsInf)
     (cobdd : F.IsCobounded (· ≥ ·) := by isBoundedDefault)
     (bdd_below : F.IsBounded (· ≥ ·) := by isBoundedDefault) : f F.limsInf = F.liminf f := by
-  have h := Antitone.map_limsSup_of_continuousAt (R := Rᵒᵈ) (F := map OrderDual.toDual F)
-    (f := fun x ↦ f (OrderDual.ofDual x)) (fun _ _ hxy ↦ f_incr hxy)
-    (ContinuousAt.comp (g := f) (f := ⇑OrderDual.ofDual)
-      (x := OrderDual.toDual F.limsInf) f_cont continuous_ofDual.continuousAt)
-    (isBounded_le_map_toDual bdd_below) (isCobounded_le_map_toDual cobdd)
-  rwa [liminf_comp_ofDual] at h
+  unsealing_newtype OrderDual =>
+    exact Antitone.map_limsSup_of_continuousAt (R := Rᵒᵈ) f_incr.dual f_cont bdd_below cobdd
 
 /-- A continuous monotone function between (conditionally) complete linear ordered spaces sends a
 `Filter.liminf` to the `Filter.liminf` of the images (if the filter is bounded from below and

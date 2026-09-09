@@ -119,16 +119,11 @@ instance Lex.isStrictOrder [LinearOrder ι] [∀ a, PartialOrder (β a)] :
       ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
       ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩]
 
+set_option backward.isDefEq.respectTransparency.types false in
 instance Colex.isStrictOrder [LinearOrder ι] [∀ a, PartialOrder (β a)] :
-    IsStrictOrder (Colex (∀ i, β i)) (· < ·) where
-  irrefl := fun a ⟨k, _, hk₂⟩ => lt_irrefl (a k) hk₂
-  trans := by
-    rintro a b c ⟨N₁, lt_N₁, a_lt_b⟩ ⟨N₂, lt_N₂, b_lt_c⟩
-    rcases lt_trichotomy N₁ N₂ with (H | rfl | H)
-    exacts [⟨N₂, fun j hj => (lt_N₁ _ (H.trans hj)).trans (lt_N₂ _ hj),
-        (lt_N₁ _ H).symm ▸ b_lt_c⟩,
-      ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
-      ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ (H.trans hj)), lt_N₂ _ H ▸ a_lt_b⟩]
+    IsStrictOrder (Colex (∀ i, β i)) (· < ·) := by
+  unsealing_newtype OrderDual =>
+    exact Lex.isStrictOrder (ι := ιᵒᵈ)
 
 instance [LinearOrder ι] [∀ a, PartialOrder (β a)] : PartialOrder (Lex (∀ i, β i)) :=
   partialOrderOfSO (· < ·)
@@ -220,26 +215,26 @@ end Lex
 section Colex
 variable [WellFoundedGT ι]
 
+set_option backward.isDefEq.respectTransparency.types false in
 theorem toColex_monotone : Monotone (@toColex (∀ i, β i)) := by
   unsealing_newtype OrderDual =>
-    let : ∀ i : ιᵒᵈ, PartialOrder (β i) := fun i ↦ ‹∀ i : ι, PartialOrder (β i)› i
     exact toLex_monotone (ι := ιᵒᵈ)
 
+set_option backward.isDefEq.respectTransparency.types false in
 theorem toColex_strictMono : StrictMono (@toColex (∀ i, β i)) := by
   unsealing_newtype OrderDual =>
-    let : ∀ i : ιᵒᵈ, PartialOrder (β i) := fun i ↦ ‹∀ i : ι, PartialOrder (β i)› i
     exact toLex_strictMono (ι := ιᵒᵈ)
 
+set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 theorem lt_toColex_update_self_iff : toColex x < toColex (update x i a) ↔ x i < a := by
   unsealing_newtype OrderDual =>
-    let : ∀ i : ιᵒᵈ, PartialOrder (β i) := fun i ↦ ‹∀ i : ι, PartialOrder (β i)› i
     exact lt_toLex_update_self_iff (ι := ιᵒᵈ)
 
+set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 theorem toColex_update_lt_self_iff : toColex (update x i a) < toColex x ↔ a < x i := by
   unsealing_newtype OrderDual =>
-    let : ∀ i : ιᵒᵈ, PartialOrder (β i) := fun i ↦ ‹∀ i : ι, PartialOrder (β i)› i
     exact toLex_update_lt_self_iff (ι := ιᵒᵈ)
 
 set_option backward.isDefEq.respectTransparency false in
@@ -326,18 +321,9 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
-    DenselyOrdered (Colex (∀ i, β i)) :=
-  ⟨by
-    rintro _ a₂ ⟨i, h, hi⟩
-    obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
-    classical
-      refine ⟨Function.update a₂ _ a, ⟨i, fun j hj => ?_, ?_⟩, i, fun j hj => ?_, ?_⟩
-      · rw [h j hj]
-        dsimp only at hj
-        rw [Function.update_of_ne hj.ne' a]
-      · rwa [Function.update_self i a]
-      · rw [Function.update_of_ne hj.ne' a]
-      · rwa [Function.update_self i a]⟩
+    DenselyOrdered (Colex (∀ i, β i)) := by
+  unsealing_newtype OrderDual =>
+    exact inferInstanceAs (DenselyOrdered (Lex (∀ i : ιᵒᵈ, β (OrderDual.toDual i))))
 
 set_option backward.isDefEq.respectTransparency.types false in
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :

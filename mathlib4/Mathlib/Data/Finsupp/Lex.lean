@@ -250,9 +250,9 @@ instance Lex.isOrderedCancelAddMonoid
 
 instance Colex.isOrderedCancelAddMonoid
     [AddCommMonoid N] [PartialOrder N] [IsOrderedCancelAddMonoid N] :
-    IsOrderedCancelAddMonoid (Colex (α →₀ N)) where
-  add_le_add_left _ _ h _ := add_le_add_left (α := Colex (α → N)) h _
-  le_of_add_le_add_left _ _ _ := le_of_add_le_add_left (α := Colex (α → N))
+    IsOrderedCancelAddMonoid (Colex (α →₀ N)) := by
+  unsealing_newtype OrderDual =>
+    exact Lex.isOrderedCancelAddMonoid (α := αᵒᵈ)
 
 end OrderedAddMonoid
 
