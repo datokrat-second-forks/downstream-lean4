@@ -572,6 +572,9 @@ variable [Ring 𝕜] [PartialOrder α] [OrderBot α] [LocallyFiniteOrder α] [De
 O'Donnell. -/
 lemma moebius_inversion_bot (f g : α → 𝕜) (h : ∀ x, g x = ∑ y ∈ Iic x, f y) (x : α) :
     f x = ∑ y ∈ Iic x, mu 𝕜 y x * g y := by
+  -- We can't keep the old defeq-abuse proof since the definition of `Ici` changed.
+  -- We need `Ici (α := αᵒᵈ) =?= Iic (α := α)`, but the definition of
+  -- `OrderDual.instLocallyFiniteOrderBot` involves `Finset.map` now.
   have h' : ∀ y : αᵒᵈ, g (ofDual y) = ∑ z ∈ Ici y, f (ofDual z) := fun y ↦ by
     rw [h (ofDual y)]
     exact Finset.sum_equiv OrderDual.toDual
