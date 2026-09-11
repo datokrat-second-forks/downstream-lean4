@@ -385,12 +385,13 @@ variable [UniformSpace F] [IsUniformAddGroup F] [Module 𝕜 F]
   (𝕜' : Type*) [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜' 𝕜]
   [Module 𝕜' E] [IsScalarTower 𝕜' 𝕜 E] [Module 𝕜' F] [IsScalarTower 𝕜' 𝕜 F]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem isUniformEmbedding_restrictScalars :
     IsUniformEmbedding (restrictScalars 𝕜' : (E →L[𝕜] F) → (E →L[𝕜'] F)) := by
   rw [← isUniformEmbedding_toUniformOnFun.of_comp_iff]
-  convert! isUniformEmbedding_toUniformOnFun using 4 with s
-  exact ⟨fun h ↦ h.extend_scalars _, fun h ↦ h.restrict_scalars _⟩
+  have h𝔖 : {s : Set E | IsVonNBounded 𝕜 s} = {s | IsVonNBounded 𝕜' s} :=
+    Set.ext fun s ↦ ⟨fun h ↦ h.restrict_scalars _, fun h ↦ h.extend_scalars _⟩
+  exact (UniformOnFun.uniformEquivOfEq h𝔖).isUniformEmbedding.comp
+    isUniformEmbedding_toUniformOnFun
 
 theorem uniformContinuous_restrictScalars :
     UniformContinuous (restrictScalars 𝕜' : (E →L[𝕜] F) → (E →L[𝕜'] F)) :=

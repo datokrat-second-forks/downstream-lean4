@@ -121,7 +121,7 @@ instance instContinuousSemilinearMapClass [TopologicalSpace F] (𝔖 : Set (Set 
 instance instTopologicalSpace [TopologicalSpace F] [IsTopologicalAddGroup F] (𝔖 : Set (Set E)) :
     TopologicalSpace (E →SLᵤ[σ, 𝔖] F) :=
   (@UniformOnFun.topologicalSpace E F (IsTopologicalAddGroup.rightUniformSpace F) 𝔖).induced
-    (DFunLike.coe : (E →SLᵤ[σ, 𝔖] F) → (E →ᵤ[𝔖] F))
+    (UniformOnFun.ofFun 𝔖 ∘ (DFunLike.coe : (E →SLᵤ[σ, 𝔖] F) → E → F))
 
 theorem topologicalSpace_eq [UniformSpace F] [IsUniformAddGroup F] (𝔖 : Set (Set E)) :
     instTopologicalSpace σ F 𝔖 = TopologicalSpace.induced (UniformOnFun.ofFun 𝔖 ∘ DFunLike.coe)
@@ -157,7 +157,7 @@ theorem isUniformInducing_coeFn [UniformSpace F] [IsUniformAddGroup F] (𝔖 : S
 
 theorem isUniformEmbedding_coeFn [UniformSpace F] [IsUniformAddGroup F] (𝔖 : Set (Set E)) :
     IsUniformEmbedding (α := E →SLᵤ[σ, 𝔖] F) (UniformOnFun.ofFun 𝔖 ∘ DFunLike.coe) :=
-  ⟨isUniformInducing_coeFn .., DFunLike.coe_injective⟩
+  ⟨isUniformInducing_coeFn .., (UniformOnFun.ofFun 𝔖).injective.comp DFunLike.coe_injective⟩
 
 theorem isEmbedding_coeFn [UniformSpace F] [IsUniformAddGroup F] (𝔖 : Set (Set E)) :
     IsEmbedding (X := E →SLᵤ[σ, 𝔖] F) (Y := E →ᵤ[𝔖] F)
@@ -203,7 +203,7 @@ instance [TopologicalSpace F] [IsTopologicalAddGroup F] (𝔖 : Set (Set E)) :
 instance instIsUniformAddGroup [UniformSpace F] [IsUniformAddGroup F] (𝔖 : Set (Set E)) :
     IsUniformAddGroup (E →SLᵤ[σ, 𝔖] F) := by
   let φ : (E →SLᵤ[σ, 𝔖] F) →+ E →ᵤ[𝔖] F :=
-    ⟨⟨(DFunLike.coe : (E →SLᵤ[σ, 𝔖] F) → E →ᵤ[𝔖] F), rfl⟩, fun _ _ => rfl⟩
+    ⟨⟨UniformOnFun.ofFun 𝔖 ∘ (DFunLike.coe : (E →SLᵤ[σ, 𝔖] F) → E → F), rfl⟩, fun _ _ => rfl⟩
   exact (isUniformEmbedding_coeFn _ _ _).isUniformAddGroup φ
 
 instance instIsTopologicalAddGroup [TopologicalSpace F] [IsTopologicalAddGroup F]
@@ -280,7 +280,8 @@ theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [IsTopologicalAddGroup 
   let : UniformSpace F := IsTopologicalAddGroup.rightUniformSpace F
   have : IsUniformAddGroup F := isUniformAddGroup_of_addCommGroup
   rw [(isEmbedding_coeFn σ F 𝔖).isInducing.nhds_eq_comap]
-  exact (UniformOnFun.hasBasis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap DFunLike.coe
+  exact (UniformOnFun.hasBasis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap
+    (UniformOnFun.ofFun 𝔖 ∘ DFunLike.coe)
 
 theorem hasBasis_nhds_zero [TopologicalSpace F] [IsTopologicalAddGroup F]
     (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
@@ -399,18 +400,22 @@ theorem completeSpace [UniformSpace F] [IsUniformAddGroup F] [ContinuousSMul �
   apply IsClosed.isComplete
   have H₁ : IsClosed {f : E →ᵤ[𝔖] F | Continuous ((UniformOnFun.toFun 𝔖) f)} :=
     UniformOnFun.isClosed_setOfPred_continuous h𝔖
-  convert!
-    H₁.inter <|
-      (LinearMap.isClosed_range_coe E F σ).preimage
-        (UniformOnFun.uniformContinuous_toFun h𝔖U).continuous
-  exact ContinuousLinearMap.range_coeFn_eq
+  have H₂ : IsClosed (UniformOnFun.toFun 𝔖 ⁻¹'
+      ({f | Continuous f} ∩ range ((↑) : (E →ₛₗ[σ] F) → E → F))) :=
+    H₁.inter <| (LinearMap.isClosed_range_coe E F σ).preimage
+      (UniformOnFun.uniformContinuous_toFun h𝔖U).continuous
+  change IsClosed (range (UniformOnFun.ofFun 𝔖 ∘ ((⇑) : (E →SL[σ] F) → E → F)))
+  rwa [range_comp, (UniformOnFun.ofFun 𝔖).image_eq_preimage_symm,
+    ContinuousLinearMap.range_coeFn_eq]
 
 variable {𝔖₁ 𝔖₂ : Set (Set E)}
 
 theorem uniformSpace_mono [UniformSpace F] [IsUniformAddGroup F] (h : 𝔖₂ ⊆ 𝔖₁) :
     instUniformSpace σ F 𝔖₁ ≤ instUniformSpace σ F 𝔖₂ := by
   simp_rw [uniformSpace_eq]
-  exact UniformSpace.comap_mono (UniformOnFun.mono (le_refl _) h)
+  exact (UniformSpace.comap_mono <| uniformContinuous_iff_le_comap.mp <|
+    UniformOnFun.uniformContinuous_ofFun_toFun_of_subset F 𝔖₂ 𝔖₁ h).trans_eq
+    (UniformSpace.comap_comap ..).symm
 
 theorem topologicalSpace_mono [TopologicalSpace F] [IsTopologicalAddGroup F] (h : 𝔖₂ ⊆ 𝔖₁) :
     instTopologicalSpace σ F 𝔖₁ ≤ instTopologicalSpace σ F 𝔖₂ := by

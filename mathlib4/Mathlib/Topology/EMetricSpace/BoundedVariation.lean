@@ -267,16 +267,19 @@ Pointwise convergence on `s` is encoded here as uniform convergence on the famil
 singletons of elements of `s`.
 -/
 protected theorem lowerSemicontinuous (s : Set α) :
-    LowerSemicontinuous fun f : α →ᵤ[s.image singleton] M => eVariationOn f s := fun f ↦ by
-  apply @lowerSemicontinuous_aux _ _ _ _ (UniformOnFun α M (s.image singleton)) id (𝓝 f) f s _
+    LowerSemicontinuous fun f : α →ᵤ[s.image singleton] M =>
+      eVariationOn (UniformOnFun.toFun _ f) s := fun f ↦ by
+  apply @lowerSemicontinuous_aux _ _ _ _ (UniformOnFun α M (s.image singleton))
+    (UniformOnFun.toFun _) (𝓝 f) (UniformOnFun.toFun _ f) s _
   simpa only [UniformOnFun.tendsto_iff_tendstoUniformlyOn, mem_image, forall_exists_index, and_imp,
     forall_apply_eq_imp_iff₂, tendstoUniformlyOn_singleton_iff_tendsto] using! @tendsto_id _ (𝓝 f)
 
-set_option backward.isDefEq.respectTransparency false in
 /-- The map `(eVariationOn · s)` is lower semicontinuous for uniform convergence on `s`. -/
 theorem lowerSemicontinuous_uniformOn (s : Set α) :
-    LowerSemicontinuous fun f : α →ᵤ[{s}] M => eVariationOn f s := fun f ↦ by
-  apply @lowerSemicontinuous_aux _ _ _ _ (UniformOnFun α M {s}) id (𝓝 f) f s _
+    LowerSemicontinuous fun f : α →ᵤ[{s}] M =>
+      eVariationOn (UniformOnFun.toFun _ f) s := fun f ↦ by
+  apply @lowerSemicontinuous_aux _ _ _ _ (UniformOnFun α M {s})
+    (UniformOnFun.toFun _) (𝓝 f) (UniformOnFun.toFun _ f) s _
   have := @tendsto_id _ (𝓝 f)
   rw [UniformOnFun.tendsto_iff_tendstoUniformlyOn] at this
   simp_rw [← tendstoUniformlyOn_singleton_iff_tendsto]
