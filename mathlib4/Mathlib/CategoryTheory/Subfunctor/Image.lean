@@ -43,7 +43,6 @@ variable (F) in
 lemma range_id : range (𝟙 F) = ⊤ := by aesop
 
 set_option backward.defeqAttrib.useBackward true in
-set_option dsimp.resynthInstances false in
 @[simp]
 lemma range_ι (G : Subfunctor F) : range G.ι = G := by aesop
 
