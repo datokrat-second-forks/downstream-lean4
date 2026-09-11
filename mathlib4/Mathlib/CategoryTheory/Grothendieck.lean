@@ -320,6 +320,7 @@ def compAsSmallFunctorEquivalenceInverse :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+set_option dsimp.resynthInstances false in
 /-- The functor to build the equivalence `compAsSmallFunctorEquivalence`. -/
 @[simps]
 def compAsSmallFunctorEquivalenceFunctor :
@@ -341,6 +342,7 @@ def compAsSmallFunctorEquivalence :
   counitIso := Iso.refl _
   unitIso := Iso.refl _
 
+set_option dsimp.resynthInstances false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {F} in
@@ -374,6 +376,7 @@ def mapWhiskerRightAsSmallFunctor (α : F ⟶ G) :
 
 end
 
+set_option dsimp.resynthInstances false in
 /-- The Grothendieck construction as a functor from the functor category `E ⥤ Cat` to the
 over category `Over E`. -/
 def functor {E : Cat.{v, u}} : (E ⥤ Cat.{v, u}) ⥤ Over (T := Cat.{v, u}) E where
