@@ -12,15 +12,15 @@ public import Mathlib.RingTheory.Finiteness.Basic
 /-! # The `WithLp` type synonym
 
 `WithLp p V` is a copy of `V` with exactly the same vector space structure, but with the Lp norm
-instead of any existing norm on `V`; recall that by default `ι → R` and `R × R` are equipped with
-a norm defined as the supremum of the norms of their components.
+instead of any existing norm on `V`. For example, `R × R` has the supremum norm by default,
+whereas `WithLp p (R × R)` has the Lp norm. For dependent functions, use `PiLp p α`.
 
 This file defines the vector space structure for all types `V`; the norm structure is built for
 different specializations of `V` in downstream files.
 
 Note that this should not be used for infinite products, as in these cases the "right" Lp spaces is
-not the same as the direct product of the spaces. See the docstring in `Mathlib/Analysis/PiLp` for
-more details.
+not the same as the direct product of the spaces. See the docstring in
+`Mathlib/Analysis/Normed/Lp/PiLp` for more details.
 
 ## Main definitions
 
@@ -31,9 +31,9 @@ more details.
 
 ## Implementation notes
 
-The pattern here is the same one as is used by `Lex` for order structures; it avoids having a
-separate synonym for each type (`ProdLp`, `PiLp`, etc), and allows all the structure-copying code
-to be shared.
+The algebraic structures are transported from `V` through `WithLp.equiv`.
+The product and finitely supported Lp spaces use this wrapper. `PiLp` has its own structure
+with a dependent function field and uses the same transport pattern.
 
 TODO: is it safe to copy across the topology and uniform space structure too for all reasonable
 choices of `V`?
@@ -46,7 +46,7 @@ open scoped ENNReal
 
 /-- A type synonym for the given `V`, associated with the L`p` norm. Note that by default this just
 forgets the norm structure on `V`; it is up to downstream users to implement the L`p` norm (for
-instance, on `Prod` and finite `Pi` types). -/
+instance, on `Prod`). For finite dependent products, use `PiLp` instead. -/
 structure WithLp (p : ℝ≥0∞) (V : Type*) where
   /-- Converts an element of `V` to an element of `WithLp p V`. -/
   toLp (p) ::

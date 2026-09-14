@@ -12,7 +12,7 @@ public import Mathlib.LinearAlgebra.Determinant
 /-!
 # Matrices are isomorphic with linear maps between Lp spaces
 
-This file provides a `WithLp` version of `Matrix.toLin'`.
+This file provides a `PiLp` version of `Matrix.toLin'`.
 -/
 
 @[expose] public section
@@ -24,24 +24,24 @@ variable {m n o R : Type*}
 namespace Matrix
 variable [Fintype n] [DecidableEq n] [CommRing R] (p q r : ℝ≥0∞)
 
-open WithLp (toLp ofLp)
+open PiLp (toLp ofLp)
 
-/-- `Matrix.toLin'` adapted for `PiLp R _`. -/
-def toLpLin : Matrix m n R ≃ₗ[R] WithLp p (n → R) →ₗ[R] WithLp q (m → R) :=
+/-- `Matrix.toLin'` adapted for `PiLp` spaces over `R`. -/
+def toLpLin : Matrix m n R ≃ₗ[R] PiLp p (fun _ : n => R) →ₗ[R] PiLp q (fun _ : m => R) :=
   toLin' ≪≫ₗ
-    (WithLp.linearEquiv _ R (n → R)).symm.arrowCongr
-      (WithLp.linearEquiv _ R (m → R)).symm
+    (PiLp.linearEquiv _ R fun _ : n => R).symm.arrowCongr
+      (PiLp.linearEquiv _ R fun _ : m => R).symm
 
 @[simp]
 lemma toLpLin_toLp (A : Matrix m n R) (x : n → R) :
     toLpLin p q A (toLp _ x) = toLp _ (Matrix.toLin' A x) := rfl
 
 @[simp]
-theorem ofLp_toLpLin (A : Matrix m n R) (x : WithLp p (n → R)) :
+theorem ofLp_toLpLin (A : Matrix m n R) (x : PiLp p (fun _ : n => R)) :
     ofLp (toLpLin p q A x) = Matrix.toLin' A (ofLp x) :=
   rfl
 
-theorem toLpLin_apply (M : Matrix m n R) (v : WithLp p (n → R)) :
+theorem toLpLin_apply (M : Matrix m n R) (v : PiLp p (fun _ : n => R)) :
     toLpLin p q M v = toLp _ (M *ᵥ ofLp v) := rfl
 
 theorem toLpLin_eq_toLin [Finite m] :
@@ -69,13 +69,14 @@ theorem toLpLin_symm_id : (toLpLin p p).symm .id = (1 : Matrix n n R) :=
 
 /-- Note that applying this theorem needs an explicit choice of `q`. -/
 theorem toLpLin_symm_comp [Fintype o] [DecidableEq o]
-    (A : WithLp q (n → R) →ₗ[R] WithLp r (m → R)) (B : WithLp p (o → R) →ₗ[R] WithLp q (n → R)) :
+    (A : PiLp q (fun _ : n => R) →ₗ[R] PiLp r (fun _ : m => R))
+    (B : PiLp p (fun _ : o => R) →ₗ[R] PiLp q (fun _ : n => R)) :
     (toLpLin p r).symm (A ∘ₗ B) = (toLpLin q r).symm A * (toLpLin p q).symm B :=
   toLpLin p r |>.injective <| by simp [toLpLin_mul (q := q)]
 
-/-- `Matrix.toLinAlgEquiv'` adapted for `PiLp R _`. -/
+/-- `Matrix.toLinAlgEquiv'` adapted for `PiLp` spaces over `R`. -/
 @[simps!]
-def toLpLinAlgEquiv : Matrix n n R ≃ₐ[R] Module.End R (WithLp p (n → R)) :=
+def toLpLinAlgEquiv : Matrix n n R ≃ₐ[R] Module.End R (PiLp p (fun _ : n => R)) :=
   .ofLinearEquiv (toLpLin p p) (toLpLin_one p) (toLpLin_mul p p p)
 
 @[simp]
@@ -83,7 +84,7 @@ theorem toLpLin_pow (A : Matrix n n R) (k : ℕ) : toLpLin p p (A ^ k) = toLpLin
   map_pow (toLpLinAlgEquiv p) A k
 
 @[simp]
-theorem toLpLin_symm_pow (A : Module.End R (WithLp p (n → R))) (k : ℕ) :
+theorem toLpLin_symm_pow (A : Module.End R (PiLp p (fun _ : n => R))) (k : ℕ) :
     (toLpLin p p).symm (A ^ k) = (toLpLin p p).symm A ^ k :=
   map_pow (toLpLinAlgEquiv p).symm A k
 

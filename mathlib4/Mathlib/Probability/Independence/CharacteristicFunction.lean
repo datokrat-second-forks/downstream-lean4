@@ -236,7 +236,7 @@ variable [∀ i, InnerProductSpace ℝ (E i)]
 function is equal to the product of the characteristic functions. This is the version for Hilbert
 spaces, see `iIndepFun_iff_charFunDual_pi` for the Banach space version. -/
 lemma iIndepFun_iff_charFun_pi (hX : ∀ i, AEMeasurable (X i) P) :
-    iIndepFun X P ↔ ∀ t, charFun (P.map (fun ω ↦ toLp 2 (X · ω))) t =
+    iIndepFun X P ↔ ∀ t, charFun (P.map (fun ω ↦ PiLp.toLp 2 (X · ω))) t =
       ∏ i, charFun (P.map (X i)) (t i) := by
   rw [iIndepFun_iff_map_fun_eq_pi_map hX, ← charFun_eq_pi_iff,
     AEMeasurable.map_map_of_aemeasurable (by fun_prop) (by fun_prop), Function.comp_def]
@@ -257,10 +257,10 @@ lemma iIndepFun_iff_charFunDual_pi (hX : ∀ i, AEMeasurable (X i) P) :
 
 /-- A finite number of random variables are independent if and only if their joint characteristic
 function is equal to the product of the characteristic functions.
-This is `iIndepFun_iff_charFunDual_pi` for `WithLp`. See `iIndepFun_iff_charFun_pi` for the
+This is `iIndepFun_iff_charFunDual_pi` for `PiLp`. See `iIndepFun_iff_charFun_pi` for the
 Hilbert space version. -/
 lemma iIndepFun_iff_charFunDual_pi' (hX : ∀ i, AEMeasurable (X i) P) :
-    iIndepFun X P ↔ ∀ L, charFunDual (P.map (fun ω ↦ toLp p (X · ω))) L =
+    iIndepFun X P ↔ ∀ L, charFunDual (P.map (fun ω ↦ PiLp.toLp p (X · ω))) L =
       ∏ i, charFunDual (P.map (X i)) (L.comp
         ((PiLp.continuousLinearEquiv p ℝ E).symm.toContinuousLinearMap.comp (.single ℝ E i))) := by
   rw [iIndepFun_iff_map_fun_eq_pi_map hX, ← charFunDual_eq_pi_iff' p,

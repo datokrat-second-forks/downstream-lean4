@@ -37,7 +37,7 @@ covariance, Hilbert space, bilinear form
 
 @[expose] public section
 
-open MeasureTheory InnerProductSpace NormedSpace WithLp EuclideanSpace
+open MeasureTheory InnerProductSpace NormedSpace PiLp EuclideanSpace
 open scoped RealInnerProductSpace
 
 namespace ProbabilityTheory

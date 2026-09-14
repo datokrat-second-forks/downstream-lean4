@@ -86,10 +86,10 @@ theorem contDiff_piLp_apply {i : ι} :
 
 variable {p}
 
-lemma PiLp.contDiff_ofLp : ContDiff 𝕜 n (@ofLp p (Π i, E i)) :=
+lemma PiLp.contDiff_ofLp : ContDiff 𝕜 n (@ofLp p _ E) :=
   (continuousLinearEquiv p 𝕜 E).contDiff
 
-lemma PiLp.contDiff_toLp : ContDiff 𝕜 n (@toLp p (Π i, E i)) :=
+lemma PiLp.contDiff_toLp : ContDiff 𝕜 n (@toLp p _ E) :=
   (continuousLinearEquiv p 𝕜 E).symm.contDiff
 
 end PiLp

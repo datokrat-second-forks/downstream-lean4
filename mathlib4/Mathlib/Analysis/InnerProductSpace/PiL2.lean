@@ -65,7 +65,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 
 
 open Module Real Set Filter RCLike Submodule Function Uniformity Topology NNReal ENNReal
-  ComplexConjugate DirectSum WithLp
+  ComplexConjugate DirectSum PiLp
 
 noncomputable section
 
@@ -119,24 +119,24 @@ open Lean Meta Elab Term Macro TSyntax PrettyPrinter.Delaborator SubExpr
 open Mathlib.Tactic (subscriptTerm)
 
 /-- Notation for vectors in Lp space. `!₂[x, y, ...]` is a shorthand for
-`WithLp.toLp 2 ![x, y, ...]`, of type `EuclideanSpace _ (Fin _)`.
+`PiLp.toLp 2 ![x, y, ...]`, of type `EuclideanSpace _ (Fin _)`.
 
 This also works for other subscripts. -/
 syntax (name := PiLp.vecNotation) "!" noWs subscriptTerm noWs "[" term,* "]" : term
 macro_rules | `(!$p:subscript[$e:term,*]) => do
   -- override the `Fin n.succ` to a literal
   let n := e.getElems.size
-  `(WithLp.toLp $p (V := ∀ _ : Fin $(quote n), _) ![$e,*])
+  `(PiLp.toLp $p (α := fun _ : Fin $(quote n) => _) ![$e,*])
 
 /-- Unexpander for the `!₂[x, y, ...]` notation. -/
-@[app_delab WithLp.toLp]
+@[app_delab PiLp.toLp]
 meta def EuclideanSpace.delabVecNotation : Delab :=
-  whenNotPPOption getPPExplicit <| whenPPOption getPPNotation <| withOverApp 3 do
-    -- check that the `WithLp.toLp _` is present
+  whenNotPPOption getPPExplicit <| whenPPOption getPPNotation <| withOverApp 4 do
+    -- check that the `PiLp.toLp _` is present
     let p : Term ← withNaryArg 0 <| delab
     -- to be conservative, only allow subscripts which are numerals
     guard <| p matches `($_:num)
-    let `(![$elems,*]) ← withNaryArg 2 delab | failure
+    let `(![$elems,*]) ← withNaryArg 3 delab | failure
     `(!$p[$elems,*])
 
 end Notation
@@ -202,7 +202,7 @@ variable [Fintype ι]
 @[simp]
 theorem finrank_euclideanSpace :
     Module.finrank 𝕜 (EuclideanSpace 𝕜 ι) = Fintype.card ι := by
-  convert! (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)).finrank_eq
+  convert! (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜).finrank_eq
   simp
 
 theorem finrank_euclideanSpace_fin {n : ℕ} :
@@ -248,7 +248,7 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
   let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
   refine LinearEquiv.isometryOfInner ((e₂.symm.trans e₁).trans
-    (WithLp.linearEquiv 2 𝕜 (Π i, V i)).symm) ?_
+    (PiLp.linearEquiv 2 𝕜 fun i => V i).symm) ?_
   suffices ∀ (v w : PiLp 2 fun i => V i), ⟪v, w⟫ = ⟪e₂ (e₁.symm v), e₂ (e₁.symm w)⟫ by
     intro v₀ w₀
     simp only [LinearEquiv.trans_apply]
@@ -267,7 +267,9 @@ theorem DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply [DecidableE
   classical
     let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
     let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
-    suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
+    suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by
+      change e₂ (e₁.symm (ofLp w)) = _
+      simpa only [LinearEquiv.apply_symm_apply] using this (e₁.symm w)
     simp [e₁, e₂, DirectSum.coeLinearMap, DirectSum.toModule, DFinsupp.lsum,
       DFinsupp.sumAddHom_apply]
 
@@ -410,7 +412,7 @@ instance instFunLike : FunLike (OrthonormalBasis ι 𝕜 E) ι E where
   coe_injective b b' h := repr_injective <| LinearIsometryEquiv.toLinearEquiv_injective <|
     LinearEquiv.symm_bijective.injective <| LinearEquiv.toLinearMap_injective <| by
       classical
-        rw [← LinearMap.cancel_right (WithLp.linearEquiv 2 𝕜 (_ → 𝕜)).symm.surjective]
+        rw [← LinearMap.cancel_right (PiLp.linearEquiv 2 𝕜 _).symm.surjective]
         simp +instances only
         refine LinearMap.pi_ext fun i k => ?_
         have : k = k • (1 : 𝕜) := by rw [smul_eq_mul, mul_one]
@@ -478,14 +480,14 @@ lemma inner_eq_ite [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i j : ι) 
 
 /-- The `Basis ι 𝕜 E` underlying the `OrthonormalBasis` -/
 protected def toBasis (b : OrthonormalBasis ι 𝕜 E) : Basis ι 𝕜 E :=
-  Basis.ofEquivFun (b.repr.toLinearEquiv.trans (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)))
+  Basis.ofEquivFun (b.repr.toLinearEquiv.trans (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜))
 
 @[simp]
 protected theorem coe_toBasis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis : ι → E) = ⇑b := rfl
 
 @[simp]
 protected theorem coe_toBasis_repr (b : OrthonormalBasis ι 𝕜 E) :
-    b.toBasis.equivFun = b.repr.toLinearEquiv.trans (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)) :=
+    b.toBasis.equivFun = b.repr.toLinearEquiv.trans (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜) :=
   Basis.equivFun_ofEquivFun _
 
 @[simp]
@@ -602,7 +604,7 @@ protected theorem toBasis_map {G : Type*} [NormedAddCommGroup G] [InnerProductSp
 def _root_.Module.Basis.toOrthonormalBasis (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.ofRepr <|
-    LinearEquiv.isometryOfInner (v.equivFun.trans (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)).symm)
+    LinearEquiv.isometryOfInner (v.equivFun.trans (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜).symm)
       (by
         intro x y
         let p : EuclideanSpace 𝕜 ι := toLp 2 (v.equivFun x)
@@ -616,14 +618,14 @@ def _root_.Module.Basis.toOrthonormalBasis (v : Basis ι 𝕜 E) (hv : Orthonorm
 @[simp]
 theorem _root_.Module.Basis.coe_toOrthonormalBasis_repr (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     ((v.toOrthonormalBasis hv).repr : E → EuclideanSpace 𝕜 ι) =
-    v.equivFun.trans (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)).symm :=
+    v.equivFun.trans (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜).symm :=
   rfl
 
 @[simp]
 theorem _root_.Module.Basis.coe_toOrthonormalBasis_repr_symm
     (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) :
     ((v.toOrthonormalBasis hv).repr.symm : EuclideanSpace 𝕜 ι → E) =
-    (WithLp.linearEquiv 2 𝕜 (ι → 𝕜)).trans v.equivFun.symm :=
+    (PiLp.linearEquiv 2 𝕜 fun _ : ι => 𝕜).trans v.equivFun.symm :=
   rfl
 
 @[simp]
@@ -681,7 +683,7 @@ theorem _root_.Pi.orthonormalBasis.toBasis {η : Type*} [Fintype η] {ι : η �
     [∀ i, Fintype (ι i)] {𝕜 : Type*} [RCLike 𝕜] {E : η → Type*} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, InnerProductSpace 𝕜 (E i)] (B : ∀ i, OrthonormalBasis (ι i) 𝕜 (E i)) :
     (Pi.orthonormalBasis B).toBasis =
-      ((Pi.basis fun i : η ↦ (B i).toBasis).map (WithLp.linearEquiv 2 _ _).symm) := by ext; rfl
+      ((Pi.basis fun i : η ↦ (B i).toBasis).map (PiLp.linearEquiv 2 _ _).symm) := by ext; rfl
 
 @[simp]
 theorem _root_.Pi.orthonormalBasis_apply {η : Type*} [Fintype η] [DecidableEq η] {ι : η → Type*}

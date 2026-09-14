@@ -221,7 +221,7 @@ lemma prodMk [Finite ι] (hX : HasGaussianLaw (fun ω ↦ (X · ω)) P) (i j : �
   hX.map (.prod (.proj i) (.proj j))
 
 lemma toLp_pi [Finite ι] (p : ℝ≥0∞) [Fact (1 ≤ p)] (hX : HasGaussianLaw (fun ω ↦ (X · ω)) P) :
-    HasGaussianLaw (fun ω ↦ toLp p (X · ω)) P :=
+    HasGaussianLaw (fun ω ↦ PiLp.toLp p (X · ω)) P :=
   have := Fintype.ofFinite ι
   hX.map_equiv (PiLp.continuousLinearEquiv p ℝ E).symm
 

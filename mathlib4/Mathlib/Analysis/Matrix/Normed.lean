@@ -56,7 +56,7 @@ It is separated to avoid extraneous imports in this file.
 
 noncomputable section
 
-open WithLp
+open PiLp
 open scoped NNReal Matrix
 
 namespace Matrix

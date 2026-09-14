@@ -37,7 +37,7 @@ Once this is done,
 
 @[expose] public section
 
-open Set WithLp
+open Set PiLp
 open scoped Manifold Topology
 
 noncomputable section

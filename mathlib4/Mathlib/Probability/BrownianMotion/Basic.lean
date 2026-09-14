@@ -134,8 +134,8 @@ theorem IsGaussianProcess.isPreBrownianReal_of_covariance (h1 : IsGaussianProces
     IsPreBrownianReal X P where
   hasLaw I := by
     refine ⟨.of_eval fun _ ↦ h1.aemeasurable _, ?_⟩
-    apply (MeasurableEquiv.toLp 2 (_ → ℝ)).map_measurableEquiv_injective
-    rw [MeasurableEquiv.coe_toLp, ← PiLp.coe_symm_continuousLinearEquiv 2 ℝ]
+    apply (MeasurableEquiv.toPiLp 2 (fun _ => ℝ)).map_measurableEquiv_injective
+    rw [MeasurableEquiv.coe_toPiLp, ← PiLp.coe_symm_continuousLinearEquiv 2 ℝ]
     have := (h1.hasGaussianLaw I).isGaussian_map
     apply IsGaussian.ext
     · rw [integral_map, integral_map, integral_map]
@@ -143,7 +143,7 @@ theorem IsGaussianProcess.isPreBrownianReal_of_covariance (h1 : IsGaussianProces
         rw [ContinuousLinearEquiv.integral_comp_id_comm,
           ContinuousLinearEquiv.integral_comp_comm]
         simp only [PiLp.continuousLinearEquiv_symm_apply, integral_id_projectiveFamily,
-          WithLp.toLp_zero, WithLp.toLp_eq_zero]
+          PiLp.toLp_zero, PiLp.toLp_eq_zero]
         congr with i
         rw [eval_integral]
         · simpa using h2 _

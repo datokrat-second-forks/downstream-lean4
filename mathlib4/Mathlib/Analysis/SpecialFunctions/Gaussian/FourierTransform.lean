@@ -251,7 +251,7 @@ theorem integrable_cexp_neg_mul_sq_norm_add_of_euclideanSpace
     {ι : Type*} [Fintype ι] (hb : 0 < b.re) (c : ℂ) (w : EuclideanSpace ℝ ι) :
     Integrable (fun (v : EuclideanSpace ℝ ι) ↦ cexp (- b * ‖v‖ ^ 2 + c * ⟪w, v⟫)) := by
   rw [← (PiLp.volume_preserving_toLp ι).integrable_comp_emb
-    (MeasurableEquiv.toLp 2 _).measurableEmbedding]
+    (MeasurableEquiv.toPiLp 2 _).measurableEmbedding]
   simp only [neg_mul, Function.comp_def]
   convert! integrable_cexp_neg_mul_sum_add hb (fun i ↦ c * w i) using 3 with v
   simp only [EuclideanSpace.norm_eq, norm_eq_abs, sq_abs, PiLp.inner_apply, RCLike.inner_apply,
@@ -295,7 +295,7 @@ theorem integral_cexp_neg_mul_sq_norm_add_of_euclideanSpace
     ∫ v : EuclideanSpace ℝ ι, cexp (- b * ‖v‖ ^ 2 + c * ⟪w, v⟫) =
       (π / b) ^ (Fintype.card ι / 2 : ℂ) * cexp (c ^ 2 * ‖w‖ ^ 2 / (4 * b)) := by
   rw [← (PiLp.volume_preserving_toLp ι).integral_comp
-    (MeasurableEquiv.toLp 2 _).measurableEmbedding]
+    (MeasurableEquiv.toPiLp 2 _).measurableEmbedding]
   simp only [neg_mul]
   convert! integral_cexp_neg_mul_sum_add hb (fun i ↦ c * w i) using 5 with _x y
   · simp only [EuclideanSpace.norm_eq, norm_eq_abs, sq_abs, neg_mul, neg_inj, mul_eq_mul_left_iff]

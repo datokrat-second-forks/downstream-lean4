@@ -122,26 +122,26 @@ variable [Fintype ι]
 
 /-- The measure equivalence between `EuclideanSpace ℝ ι` and `ι → ℝ` is volume preserving. -/
 theorem EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp :
-    MeasurePreserving (MeasurableEquiv.toLp 2 (ι → ℝ)).symm := by
-  suffices volume = map (MeasurableEquiv.toLp 2 (ι → ℝ)) volume by
-    convert! ((MeasurableEquiv.toLp 2 (ι → ℝ)).measurable.measurePreserving _).symm
+    MeasurePreserving (MeasurableEquiv.toPiLp 2 fun _ : ι => ℝ).symm := by
+  suffices volume = map (MeasurableEquiv.toPiLp 2 fun _ : ι => ℝ) volume by
+    convert! ((MeasurableEquiv.toPiLp 2 fun _ : ι => ℝ).measurable.measurePreserving _).symm
   rw [← addHaarMeasure_eq_volume_pi, ← Basis.parallelepiped_basisFun, ← Basis.addHaar_def,
-    MeasurableEquiv.coe_toLp, ← PiLp.coe_symm_continuousLinearEquiv 2 ℝ, Basis.map_addHaar]
+    MeasurableEquiv.coe_toPiLp, ← PiLp.coe_symm_continuousLinearEquiv 2 ℝ, Basis.map_addHaar]
   exact (EuclideanSpace.basisFun _ _).addHaar_eq_volume.symm
 
 /-- A copy of `EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp`
 for the canonical spelling of the equivalence. -/
-theorem PiLp.volume_preserving_ofLp : MeasurePreserving (@ofLp 2 (ι → ℝ)) :=
+theorem PiLp.volume_preserving_ofLp : MeasurePreserving (@PiLp.ofLp 2 _ fun _ : ι => ℝ) :=
   EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp ι
 
 /-- The reverse direction of `EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp`, since
 `MeasurePreserving.symm` only works for `MeasurableEquiv`s. -/
-theorem PiLp.volume_preserving_toLp : MeasurePreserving (@toLp 2 (ι → ℝ)) :=
+theorem PiLp.volume_preserving_toLp : MeasurePreserving (@PiLp.toLp 2 _ fun _ : ι => ℝ) :=
   (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp ι).symm
 
 lemma volume_euclideanSpace_eq_dirac [IsEmpty ι] :
     (volume : Measure (EuclideanSpace ℝ ι)) = Measure.dirac 0 := by
-  rw [← (PiLp.volume_preserving_toLp ι).map_eq, volume_pi_eq_dirac 0, map_dirac, toLp_zero]
+  rw [← (PiLp.volume_preserving_toLp ι).map_eq, volume_pi_eq_dirac 0, map_dirac, PiLp.toLp_zero]
 
 end PiLp
 
@@ -169,21 +169,21 @@ variable [FiniteDimensional ℝ V]
 /-- Decompose `WithLp 2 (U × V) ≃ᵐ U × V` into a series of known measure-preserving equivalences -/
 private noncomputable def volumePreservingSymmMeasurableEquivToLpProdAux :
     WithLp 2 (U × V) ≃ᵐ U × V :=
-  ( -- WithLp 2 (U × V) ≃ₗᵢ[ℝ] WithLp 2 (WithLp 2 (Fin .. → ℝ) × WithLp 2 (Fin .. → ℝ)
+  ( -- WithLp 2 (U × V) ≃ₗᵢ[ℝ] WithLp 2 (EuclideanSpace ℝ (Fin ..) × EuclideanSpace ℝ (Fin ..))
     (LinearIsometryEquiv.withLpProdCongr 2
       (stdOrthonormalBasis ℝ U).repr
       (stdOrthonormalBasis ℝ V).repr).trans <|
-    -- .. ≃ₗᵢ[ℝ] WithLp 2 (Fin (finrank ℝ U) ⊕ Fin (finrank ℝ V) → ℝ)
+    -- .. ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Fin (finrank ℝ U) ⊕ Fin (finrank ℝ V))
     (PiLp.sumPiLpEquivProdLpPiLp 2 (fun _ ↦ ℝ)).symm
   ).toMeasurableEquiv.trans <|
   -- .. ≃ᵐ Fin (finrank ℝ U) ⊕ Fin (finrank ℝ V) → ℝ
-  (MeasurableEquiv.toLp 2 _).symm.trans <|
+  (MeasurableEquiv.toPiLp 2 _).symm.trans <|
   -- .. ≃ᵐ Fin (finrank ℝ U) → ℝ × Fin (finrank ℝ V) → ℝ
   (MeasurableEquiv.sumPiEquivProdPi (fun _ ↦ ℝ)).trans <|
   -- .. ≃ᵐ U × V
   (MeasurableEquiv.prodCongr
-    ((MeasurableEquiv.toLp 2 _).trans (stdOrthonormalBasis ℝ U).repr.symm.toMeasurableEquiv)
-    ((MeasurableEquiv.toLp 2 _).trans (stdOrthonormalBasis ℝ V).repr.symm.toMeasurableEquiv))
+    ((MeasurableEquiv.toPiLp 2 _).trans (stdOrthonormalBasis ℝ U).repr.symm.toMeasurableEquiv)
+    ((MeasurableEquiv.toPiLp 2 _).trans (stdOrthonormalBasis ℝ V).repr.symm.toMeasurableEquiv))
 
 /-- The measure equivalence between `WithLp 2 (U × V)` and `U × V` is volume preserving. -/
 theorem WithLp.volume_preserving_symm_measurableEquiv_toLp_prod :

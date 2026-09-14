@@ -115,6 +115,6 @@ theorem permMatrix_l2_opNorm_eq [Nonempty n] : ‖σ.permMatrix 𝕜‖ = 1 :=
   le_antisymm (permMatrix_l2_opNorm_le σ) <| by
     inhabit n
     simpa [EuclideanSpace.norm_eq, permMatrix_mulVec, ← Equiv.eq_symm_apply σ, apply_ite] using
-      (σ.permMatrix 𝕜).l2_opNorm_mulVec (WithLp.toLp _ (Pi.single default 1))
+      (σ.permMatrix 𝕜).l2_opNorm_mulVec (PiLp.toLp _ (Pi.single default 1))
 
 end Matrix

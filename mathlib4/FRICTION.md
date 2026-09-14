@@ -576,3 +576,109 @@ which the new proofs no longer do. The overrides that remain
 in these files are about `UniformFun` (still a plain definition), about `UniformSpace.comap`
 through `DFunLike.coe`, or about `UniformOnFun.comap_eq`, whose proof rewrites under
 `UniformSpace.comap` with `UniformFun.comap_eq` and still needs the alias unfolded there.
+
+# PiLp as a one-field structure
+
+This section records the migration of `PiLp p α` from `abbrev PiLp p α := WithLp p (∀ i, α i)`
+to its own one-field structure `structure PiLp (p) (α : ι → Type*) where toLp (p) :: ofLp : ∀ i, α i`,
+shaped exactly like `WithLp`. The transport API (`PiLp.equiv`, `PiLp.addEquiv`,
+`PiLp.linearEquiv`, the `toLp_*`/`ofLp_*` lemmas and the algebraic instances) is a copy of the
+`WithLp` one specialised to Pi types. The `WithLp` type and instances are unchanged;
+its documentation now directs users of dependent products to `PiLp`.
+
+## 23. Statements that spelled out the abbreviation
+
+Status: fixed by restating.
+
+- `PiLp.sumPiLpEquivProdLpPiLp` was stated between `WithLp p (Π i, α i)` and
+  `WithLp p (WithLp p (Π i, α (.inl i)) × WithLp p (Π i, α (.inr i)))`; it is now between
+  `PiLp p α` and `WithLp p (PiLp p (fun i => α (.inl i)) × PiLp p (fun i => α (.inr i)))`.
+- `Matrix.toLpLin` and its lemmas (`Analysis/Normed/Lp/Matrix.lean`) used `WithLp p (n → R)`
+  throughout for what the docstring calls "`PiLp R _`".
+- The `!₂[x, y, …]` macro and its delaborator in `PiL2.lean` produced and matched
+  `WithLp.toLp 2 ![…]`, so the notation silently stopped applying to `EuclideanSpace` elements.
+- The measurable-space structure of `PiLp` came for free from `WithLp.measurableSpace`;
+  `PiLp.measurableSpace`, `PiLp.measurable_ofLp/toLp` and `MeasurableEquiv.toPiLp` are new, and
+  `PiLp.borelSpace` now unfolds its own instance.
+
+## 24. `toLp`/`ofLp` are overloaded between `WithLp` and `PiLp`
+
+Status: worked around per file.
+
+Files that only deal with `PiLp`/`EuclideanSpace` had `open WithLp` for `toLp`, `ofLp` and
+their lemmas; they now need `open PiLp` instead (`LpEquiv.lean`, `PiL2.lean`, …). A file using
+both (`sumPiLpEquivProdLpPiLp`, `EuclideanSpace.sumEquivProd`) must qualify one side. With both
+namespaces open, an unqualified `toLp p x` elaborates by overload resolution on the expected
+type, but `rw [toLp_add]`/`simp [ofLp_add]` are ambiguous.
+
+## 25. A `by exact` that stopped seeing through `LinearIsometryEquiv.symm`
+
+Status: worked around with `change`.
+
+`DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply` closed with
+`exact this (e₁.symm w)`, relying on `(hV.isometryL2OfOrthogonalFamily hV').symm w` unfolding to
+`e₂ (e₁.symm (ofLp w))` (with `respectTransparency false`). After replacing
+`WithLp.linearEquiv 2 𝕜 (Π i, V i)` by the identically-shaped `PiLp.linearEquiv 2 𝕜 fun i => V i`
+in the definition, `exact` reports a type mismatch, while `change e₂ (e₁.symm (ofLp w)) = _`
+followed by the same `exact` succeeds. Not reduced to a minimal example.
+
+## 26. Mixed product and Pi APIs need different conversions
+
+Status: conversions made explicit at the affected sites.
+
+Characteristic functions and Gaussian laws have both product and dependent-product versions.
+The product versions still use `WithLp.toLp` and `MeasurableEquiv.toLp`.
+The dependent-product versions now use `PiLp.toLp` and `MeasurableEquiv.toPiLp`.
+Changing the open namespace for a whole mixed-use file would select the wrong conversion.
+The proofs still use the same integral and measure transport lemmas.
+
+The Euclidean mixed space of a number field has the same distinction:
+its outer product uses `WithLp`, and its real and complex coordinate spaces use `PiLp`.
+Its ring instances and linear equivalence now name these respective transports.
+
+## 27. The vector delaborator depends on the constructor's arity
+
+Status: fixed and covered by `MathlibTest/EuclideanSpace.lean`.
+
+`WithLp.toLp` has three arguments: `p`, the underlying type, and the value.
+`PiLp.toLp` has four: `p`, the index type, the dependent family, and the function.
+Changing only the delaborator registration leaves `!₂[...]` printing broken.
+The delaborator now uses `withOverApp 4` and reads the function with `withNaryArg 3`.
+The tests check empty vectors, numeric and variable subscripts, and a shadowed subscript variable.
+They also check dependent projection inference and the norm of `!₂[3, 4]`.
+
+The default printer also hides the index type in constant families:
+`PiLp 2 fun x => ℕ` does not tell the reader the dimension.
+`PiLp.delabPiLp` enables `pp.funBinderTypes` at the family argument, using the same
+per-position option mechanism as `delabLinearIndependent`.
+The displayed type of `!₂[1, 2, 3]` therefore includes `Fin 3`.
+
+## 28. Existing transparency overrides still matter
+
+Status: retained after checking their removal.
+
+Removing the overrides from `iSup_edist_ne_top_aux`, `norm_eq_of_L1`, and `edist_eq_of_L1`
+still makes their existing proofs fail on this toolchain.
+The first fails at `mod_cast`; the other two report that `simp` made no progress.
+Removing the override from `isometryL2OfOrthogonalFamily_symm_apply` leaves a goal about
+the direct-sum linear map after simplification.
+Thus, this migration does not by itself eliminate these four overrides.
+
+## 29. Transport finite generation without strengthening assumptions
+
+Status: the new instance preserves the generality of `WithLp.instModuleFinite`.
+
+The initial `PiLp.instModuleFinite` required a finite index type and finite generation of each factor.
+The existing transport only needs finite generation of the underlying function space.
+The instance now takes `[Module.Finite K (∀ i, α i)]` directly.
+Finite products still obtain this through the usual Pi instance.
+A regression test checks transport with no `[Finite ι]` assumption.
+
+## PiLp validation
+
+`lowprio schedule pilp-complete env LEAN_NUM_THREADS=2 lake build Mathlib MathlibTest Archive Counterexamples`
+followed by `lowprio waitfor pilp-complete` completed successfully: 9,444 jobs, no warnings or errors.
+The log is `/var/log/lowprio/pilp-complete.log`.
+This includes `MathlibTest.ImportAll` and the updated Euclidean-space tests.
+An earlier pass lost `ImportAll` to a watchdog kill (exit 137); the final pass needed no change
+to the memory cap or watchdog settings.

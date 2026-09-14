@@ -38,7 +38,7 @@ We also prove that independent Gaussian random variables are jointly Gaussian.
 Gaussian random variable
 -/
 
-open MeasureTheory WithLp Complex Finset ContinuousLinearMap InnerProductSpace
+open MeasureTheory PiLp Complex Finset ContinuousLinearMap InnerProductSpace
 open scoped ENNReal NNReal RealInnerProductSpace
 
 variable {Ω : Type*} {mΩ : MeasurableSpace Ω} {P : Measure Ω}

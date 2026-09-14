@@ -23,7 +23,7 @@ spectral theorem, diagonalization theorem -/
 
 @[expose] public section
 
-open WithLp
+open PiLp
 
 namespace Matrix
 
@@ -132,7 +132,7 @@ theorem conjStarAlgAut_star_eigenvectorUnitary :
     EuclideanSpace.basisFun_apply, PiLp.ofLp_single, ← mulVec_mulVec,
     eigenvectorUnitary_mulVec, ← mulVec_mulVec, mulVec_eigenvectorBasis,
     Matrix.diagonal_mulVec_single, mulVec_smul, star_eigenvectorUnitary_mulVec,
-    RCLike.real_smul_eq_coe_smul (K := 𝕜), WithLp.toLp_smul, PiLp.toLp_single,
+    RCLike.real_smul_eq_coe_smul (K := 𝕜), PiLp.toLp_smul, PiLp.toLp_single,
     Function.comp_apply, mul_one]
   apply PiLp.ext fun j ↦ ?_
   simp only [PiLp.smul_apply, PiLp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero]

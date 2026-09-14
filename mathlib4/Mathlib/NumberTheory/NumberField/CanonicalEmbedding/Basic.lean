@@ -818,8 +818,8 @@ protected abbrev mixedSpace :=
       (EuclideanSpace ℂ {w : InfinitePlace K // IsComplex w})))
 
 instance : Ring (euclidean.mixedSpace K) :=
-  have : Ring (EuclideanSpace ℝ {w : InfinitePlace K // IsReal w}) := (WithLp.equiv 2 _).ring
-  have : Ring (EuclideanSpace ℂ {w : InfinitePlace K // IsComplex w}) := (WithLp.equiv 2 _).ring
+  have : Ring (EuclideanSpace ℝ {w : InfinitePlace K // IsReal w}) := (PiLp.equiv 2 _).ring
+  have : Ring (EuclideanSpace ℂ {w : InfinitePlace K // IsComplex w}) := (PiLp.equiv 2 _).ring
   (WithLp.equiv 2 _).ring
 
 variable [NumberField K]
@@ -828,7 +828,7 @@ open scoped Classical in
 /-- The continuous linear equivalence between the Euclidean mixed space and the mixed space. -/
 def toMixed : (euclidean.mixedSpace K) ≃L[ℝ] (mixedSpace K) :=
   (WithLp.linearEquiv _ _ _).trans
-    ((WithLp.linearEquiv _ _ _).prodCongr (WithLp.linearEquiv _ _ _)) |>.toContinuousLinearEquiv
+    ((PiLp.linearEquiv _ _ _).prodCongr (PiLp.linearEquiv _ _ _)) |>.toContinuousLinearEquiv
 
 instance : Nontrivial (euclidean.mixedSpace K) := (toMixed K).toEquiv.nontrivial
 

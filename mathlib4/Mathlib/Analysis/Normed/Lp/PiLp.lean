@@ -74,34 +74,202 @@ the only remaining results are about `Lipschitz` and `Antilipschitz`.
 
 @[expose] public section
 
-open Module Real Set Filter Bornology NNReal ENNReal WithLp
+open Module Real Set Filter Bornology NNReal ENNReal
 
 open scoped Uniformity
 
 noncomputable section
 
-/-- A copy of a Pi type, on which we will put the `L^p` distance. Since the Pi type itself is
-already endowed with the `L^∞` distance, we need the type synonym to avoid confusing typeclass
-resolution. Also, we let it depend on `p`, to get a whole family of type on which we can put
-different distances. -/
-abbrev PiLp (p : ℝ≥0∞) {ι : Type*} (α : ι → Type*) : Type _ :=
-  WithLp p (∀ i : ι, α i)
+/-- A copy of a Pi type, on which we put the `L^p` distance. The separate type avoids conflicting
+with the `L^∞` distance on the Pi type and allows different choices of `p`.
+
+Use `PiLp.toLp` and `PiLp.ofLp` to move between `PiLp p α` and `∀ i, α i`.
+An element `x : PiLp p α` can be applied to an index as `x i`. -/
+structure PiLp (p : ℝ≥0∞) {ι : Type*} (α : ι → Type*) where
+  /-- Converts a function to an element of `PiLp p α`. -/
+  toLp (p) ::
+  /-- Converts an element of `PiLp p α` to a function. -/
+  ofLp : ∀ i, α i
+
+section Notation
+
+open Lean PrettyPrinter.Delaborator SubExpr
+
+/-- Keep the index type visible when the family is written as a lambda. -/
+@[app_delab PiLp]
+meta def PiLp.delabPiLp : Delab := withOverApp 3 do
+  let optionsPerPos ← withNaryArg 2 do
+    return (← read).optionsPerPos.setBool (← getPos) `pp.funBinderTypes true
+  withTheReader Context ({· with optionsPerPos}) delabApp
+
+/-- This prevents `toLp p x` being printed as `{ ofLp := x }` by `delabStructureInstance`. -/
+@[app_delab PiLp.toLp]
+meta def PiLp.delabToLp : Delab := delabApp
+
+end Notation
 
 /-The following should not be a `FunLike` instance because then the coercion `⇑` would get
-unfolded to `FunLike.coe` instead of `WithLp.equiv`. -/
+unfolded to `FunLike.coe` instead of `PiLp.ofLp`. -/
 instance (p : ℝ≥0∞) {ι : Type*} (α : ι → Type*) : CoeFun (PiLp p α) (fun _ ↦ (i : ι) → α i) where
-  coe := ofLp
+  coe := PiLp.ofLp
 
 instance (p : ℝ≥0∞) {ι : Type*} (α : ι → Type*) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
-  ⟨toLp p fun _ => default⟩
-
-@[ext]
-protected theorem PiLp.ext {p : ℝ≥0∞} {ι : Type*} {α : ι → Type*} {x y : PiLp p α}
-    (h : ∀ i, x i = y i) : x = y := ofLp_injective p <| funext h
+  ⟨PiLp.toLp p fun _ => default⟩
 
 namespace PiLp
 
+/-! ### Transport of the algebraic structure from `∀ i, α i`
+
+This mirrors the corresponding API of `WithLp`. -/
+
+section Transport
+variable (p : ℝ≥0∞) {ι : Type*} (K K' : Type*) (α : ι → Type*)
+
+/-- `PiLp.ofLp` and `PiLp.toLp` as an equivalence. -/
+@[simps]
+protected def equiv : PiLp p α ≃ (∀ i, α i) where
+  toFun := ofLp
+  invFun := toLp p
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+@[simp]
+lemma equiv_symm_apply : ⇑(PiLp.equiv p α).symm = toLp p := rfl
+
+instance instNontrivial [Nontrivial (∀ i, α i)] : Nontrivial (PiLp p α) :=
+  (PiLp.equiv p α).nontrivial
+instance instUnique [Unique (∀ i, α i)] : Unique (PiLp p α) := (PiLp.equiv p α).unique
+instance instDecidableEq [DecidableEq (∀ i, α i)] : DecidableEq (PiLp p α) :=
+  (PiLp.equiv p α).decidableEq
+
+instance instAddCommGroup [∀ i, AddCommGroup (α i)] : AddCommGroup (PiLp p α) :=
+  (PiLp.equiv p α).addCommGroup
+@[to_additive] instance instSMul [∀ i, SMul K (α i)] : SMul K (PiLp p α) :=
+  (PiLp.equiv p α).smul K
+@[to_additive] instance instMulAction [Monoid K] [∀ i, MulAction K (α i)] :
+    MulAction K (PiLp p α) :=
+  fast_instance% (PiLp.equiv p α).mulAction K
+
+variable {K α}
+
+lemma ofLp_toLp (x : ∀ i, α i) : ofLp (toLp p x) = x := rfl
+@[simp] lemma toLp_ofLp (x : PiLp p α) : toLp p (ofLp x) = x := rfl
+
+variable {p} in
+@[ext]
+protected theorem ext {x y : PiLp p α} (h : ∀ i, x i = y i) : x = y :=
+  (PiLp.equiv p α).injective <| funext h
+
+lemma ofLp_surjective : Function.Surjective (@ofLp p ι α) :=
+  Function.RightInverse.surjective <| ofLp_toLp _
+
+lemma toLp_surjective : Function.Surjective (@toLp p ι α) :=
+  Function.RightInverse.surjective <| toLp_ofLp _
+
+lemma ofLp_injective : Function.Injective (@ofLp p ι α) :=
+  Function.LeftInverse.injective <| toLp_ofLp _
+
+lemma toLp_injective : Function.Injective (@toLp p ι α) :=
+  Function.LeftInverse.injective <| ofLp_toLp _
+
+lemma ofLp_bijective : Function.Bijective (@ofLp p ι α) :=
+  ⟨ofLp_injective p, ofLp_surjective p⟩
+
+lemma toLp_bijective : Function.Bijective (@toLp p ι α) :=
+  ⟨toLp_injective p, toLp_surjective p⟩
+
+lemma toLp_apply (x : ∀ i, α i) (i : ι) : toLp p x i = x i := rfl
+
+section AddCommGroup
+variable [∀ i, AddCommGroup (α i)]
+
+@[simp] lemma toLp_zero : toLp p (0 : ∀ i, α i) = 0 := rfl
+@[simp] lemma ofLp_zero : ofLp (0 : PiLp p α) = 0 := rfl
+
+@[simp] lemma toLp_add (x y : ∀ i, α i) : toLp p (x + y) = toLp p x + toLp p y := rfl
+@[simp] lemma ofLp_add (x y : PiLp p α) : ofLp (x + y) = ofLp x + ofLp y := rfl
+
+@[simp] lemma toLp_sub (x y : ∀ i, α i) : toLp p (x - y) = toLp p x - toLp p y := rfl
+@[simp] lemma ofLp_sub (x y : PiLp p α) : ofLp (x - y) = ofLp x - ofLp y := rfl
+
+@[simp] lemma toLp_neg (x : ∀ i, α i) : toLp p (-x) = -toLp p x := rfl
+@[simp] lemma ofLp_neg (x : PiLp p α) : ofLp (-x) = -ofLp x := rfl
+
+@[simp] lemma toLp_eq_zero {x : ∀ i, α i} : toLp p x = 0 ↔ x = 0 := (toLp_injective p).eq_iff
+@[simp] lemma ofLp_eq_zero {x : PiLp p α} : ofLp x = 0 ↔ x = 0 := (ofLp_injective p).eq_iff
+
+end AddCommGroup
+
+@[simp] lemma toLp_smul [∀ i, SMul K (α i)] (c : K) (x : ∀ i, α i) :
+    toLp p (c • x) = c • (toLp p x) := rfl
+@[simp] lemma ofLp_smul [∀ i, SMul K (α i)] (c : K) (x : PiLp p α) :
+    ofLp (c • x) = c • ofLp x := rfl
+
+@[to_additive]
+instance instIsScalarTower [SMul K K'] [∀ i, SMul K (α i)] [∀ i, SMul K' (α i)]
+    [∀ i, IsScalarTower K K' (α i)] : IsScalarTower K K' (PiLp p α) :=
+  (PiLp.equiv p α).isScalarTower K K'
+
+@[to_additive]
+instance instSMulCommClass [∀ i, SMul K (α i)] [∀ i, SMul K' (α i)]
+    [∀ i, SMulCommClass K K' (α i)] : SMulCommClass K K' (PiLp p α) :=
+  (PiLp.equiv p α).smulCommClass K K'
+
+variable (K α)
+
+/-- `PiLp.equiv` as a group isomorphism. -/
+@[simps apply symm_apply]
+protected def addEquiv [∀ i, AddCommGroup (α i)] : PiLp p α ≃+ (∀ i, α i) where
+  toFun := ofLp
+  invFun := toLp p
+  map_add' := ofLp_add p
+
+lemma coe_addEquiv [∀ i, AddCommGroup (α i)] : ⇑(PiLp.addEquiv p α) = ofLp := rfl
+
+lemma coe_symm_addEquiv [∀ i, AddCommGroup (α i)] : ⇑(PiLp.addEquiv p α).symm = toLp p := rfl
+
+@[simp]
+lemma ofLp_sum [∀ i, AddCommGroup (α i)] {κ : Type*} (s : Finset κ) (f : κ → PiLp p α) :
+    (∑ i ∈ s, f i).ofLp = ∑ i ∈ s, (f i).ofLp :=
+  map_sum (PiLp.addEquiv _ _) _ _
+
+@[simp]
+lemma toLp_sum [∀ i, AddCommGroup (α i)] {κ : Type*} (s : Finset κ) (f : κ → ∀ i, α i) :
+    toLp p (∑ i ∈ s, f i) = ∑ i ∈ s, toLp p (f i) :=
+  map_sum (PiLp.addEquiv _ _).symm _ _
+
+instance instDistribMulAction [Monoid K] [∀ i, AddCommGroup (α i)]
+    [∀ i, DistribMulAction K (α i)] : DistribMulAction K (PiLp p α) :=
+  fast_instance% (PiLp.addEquiv p α).distribMulAction K
+instance instModule [Semiring K] [∀ i, AddCommGroup (α i)] [∀ i, Module K (α i)] :
+    Module K (PiLp p α) :=
+  fast_instance% (PiLp.addEquiv p α).module K
+
+/-- `PiLp.equiv` as a linear equivalence. -/
+@[simps apply symm_apply]
+protected def linearEquiv [Semiring K] [∀ i, AddCommGroup (α i)] [∀ i, Module K (α i)] :
+    PiLp p α ≃ₗ[K] ∀ i, α i where
+  __ := PiLp.addEquiv p α
+  map_smul' _ _ := rfl
+
+lemma coe_linearEquiv [Semiring K] [∀ i, AddCommGroup (α i)] [∀ i, Module K (α i)] :
+    ⇑(PiLp.linearEquiv p K α) = ofLp := rfl
+
+lemma coe_symm_linearEquiv [Semiring K] [∀ i, AddCommGroup (α i)] [∀ i, Module K (α i)] :
+    ⇑(PiLp.linearEquiv p K α).symm = toLp p := rfl
+
+@[simp]
+lemma toAddEquiv_linearEquiv [Semiring K] [∀ i, AddCommGroup (α i)] [∀ i, Module K (α i)] :
+    (PiLp.linearEquiv p K α).toAddEquiv = PiLp.addEquiv p α := rfl
+
+instance instModuleFinite [Semiring K] [∀ i, AddCommGroup (α i)]
+    [∀ i, Module K (α i)] [Module.Finite K (∀ i, α i)] : Module.Finite K (PiLp p α) :=
+  Module.Finite.equiv (PiLp.linearEquiv p K α).symm
+
+end Transport
+
 variable (p : ℝ≥0∞) (𝕜 : Type*) {ι : Type*} (α : ι → Type*) (β : ι → Type*)
+
 section
 /- Register simplification lemmas for the applications of `PiLp` elements, as the usual lemmas
 for Pi types will not trigger. -/
@@ -131,14 +299,12 @@ theorem neg_apply : (-x) i = -x i :=
   rfl
 
 variable (p) in
-/-- The projection on the `i`-th coordinate of `WithLp p (∀ i, α i)`, as a linear map. -/
+/-- The projection on the `i`-th coordinate of `PiLp p β`, as a linear map. -/
 @[simps!]
 def projₗ (i : ι) : PiLp p β →ₗ[𝕜] β i :=
-  (LinearMap.proj i : (∀ i, β i) →ₗ[𝕜] β i) ∘ₗ (WithLp.linearEquiv p 𝕜 (∀ i, β i)).toLinearMap
+  (LinearMap.proj i : (∀ i, β i) →ₗ[𝕜] β i) ∘ₗ (PiLp.linearEquiv p 𝕜 β).toLinearMap
 
 end
-
-lemma toLp_apply (x : ∀ i, α i) (i : ι) : toLp p x i = x i := rfl
 
 section Single
 variable [DecidableEq ι]
@@ -205,7 +371,7 @@ theorem linearIndependent_single [Semiring 𝕜] {η : Type*} {ιs : η → Type
     {Ms : η → Type*} [∀ i, AddCommGroup (Ms i)] [∀ i, Module 𝕜 (Ms i)] [DecidableEq η]
     (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent 𝕜 (v i)) :
     LinearIndependent 𝕜 fun ji : Σ j, ιs j ↦ single p ji.1 (v ji.1 ji.2) := by
-  suffices LinearIndependent 𝕜 ((WithLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
+  suffices LinearIndependent 𝕜 ((PiLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
       fun ji : Σ j, ιs j ↦ Pi.single ji.1 (v ji.1 ji.2)) by
     simpa
   rw [LinearMap.linearIndependent_iff_of_injOn _ (by simp)]
@@ -213,7 +379,7 @@ theorem linearIndependent_single [Semiring 𝕜] {η : Type*} {ιs : η → Type
 
 theorem linearIndependent_single_one [Ring 𝕜] :
     LinearIndependent 𝕜 (fun i : ι ↦ single p i (1 : 𝕜)) := by
-  suffices LinearIndependent 𝕜 ((WithLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
+  suffices LinearIndependent 𝕜 ((PiLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
       fun i : ι ↦ Pi.single i (1 : 𝕜)) by
     simpa
   rw [LinearMap.linearIndependent_iff_of_injOn _ (by simp)]
@@ -222,7 +388,7 @@ theorem linearIndependent_single_one [Ring 𝕜] :
 theorem linearIndependent_single_of_ne_zero [Ring 𝕜] [IsDomain 𝕜] {M : Type*}
     [AddCommGroup M] [Module 𝕜 M] [IsTorsionFree 𝕜 M] {v : ι → M} (hv : ∀ i, v i ≠ 0) :
     LinearIndependent 𝕜 fun i : ι ↦ single p i (v i) := by
-  suffices LinearIndependent 𝕜 ((WithLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
+  suffices LinearIndependent 𝕜 ((PiLp.linearEquiv p 𝕜 _).symm.toLinearMap ∘
       fun i : ι ↦ Pi.single i (v i)) by
     simpa
   rw [LinearMap.linearIndependent_iff_of_injOn _ (by simp)]
@@ -478,13 +644,13 @@ private theorem edist_apply_le_edist_aux (x y : PiLp p β) (i : ι) :
       _ ≤ (∑ i, edist (x i) (y i) ^ p.toReal) ^ (1 / p.toReal) := by
         grw [← Finset.single_le_sum (fun i _ => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)]
 
-private lemma lipschitzWith_ofLp_aux : LipschitzWith 1 (@ofLp p (∀ i, β i)) :=
+private lemma lipschitzWith_ofLp_aux : LipschitzWith 1 (@ofLp p _ β) :=
   .of_edist_le fun x y => by
     simp_rw [edist_pi_def, Finset.sup_le_iff, Finset.mem_univ, forall_true_left]
     exact edist_apply_le_edist_aux _ _
 
 private lemma antilipschitzWith_ofLp_aux :
-    AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@ofLp p (∀ i, β i)) := by
+    AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@ofLp p _ β) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
   · simp only [edist_eq_iSup, ENNReal.div_top, ENNReal.toReal_zero, NNReal.rpow_zero,
@@ -510,7 +676,7 @@ private lemma antilipschitzWith_ofLp_aux :
           (ENNReal.coe_natCast (Fintype.card ι)).symm
         rw [this, ENNReal.coe_rpow_of_nonneg _ nonneg]
 
-private lemma isUniformInducing_ofLp_aux : IsUniformInducing (@ofLp p (∀ i, β i)) :=
+private lemma isUniformInducing_ofLp_aux : IsUniformInducing (@ofLp p _ β) :=
     (antilipschitzWith_ofLp_aux p β).isUniformInducing
       (lipschitzWith_ofLp_aux p β).uniformContinuous
 
@@ -535,7 +701,7 @@ instance topologicalSpace [∀ i, TopologicalSpace (β i)] : TopologicalSpace (P
   Pi.topologicalSpace.induced ofLp
 
 @[fun_prop, continuity]
-theorem continuous_ofLp [∀ i, TopologicalSpace (β i)] : Continuous (@ofLp p (∀ i, β i)) :=
+theorem continuous_ofLp [∀ i, TopologicalSpace (β i)] : Continuous (@ofLp p _ β) :=
   continuous_induced_dom
 
 @[fun_prop, continuity]
@@ -543,16 +709,16 @@ protected lemma continuous_apply [∀ i, TopologicalSpace (β i)] (i : ι) :
     Continuous (fun f : PiLp p β ↦ f i) := (continuous_apply i).comp (continuous_ofLp p β)
 
 @[fun_prop, continuity]
-theorem continuous_toLp [∀ i, TopologicalSpace (β i)] : Continuous (@toLp p (∀ i, β i)) :=
+theorem continuous_toLp [∀ i, TopologicalSpace (β i)] : Continuous (@toLp p _ β) :=
   continuous_induced_rng.2 continuous_id
 
-/-- `WithLp.equiv` as a homeomorphism. -/
+/-- `PiLp.equiv` as a homeomorphism. -/
 def homeomorph [∀ i, TopologicalSpace (β i)] : PiLp p β ≃ₜ (Π i, β i) where
-  toEquiv := WithLp.equiv p (Π i, β i)
+  toEquiv := PiLp.equiv p β
 
 @[simp]
 lemma toEquiv_homeomorph [∀ i, TopologicalSpace (β i)] :
-    (homeomorph p β).toEquiv = WithLp.equiv p (Π i, β i) := rfl
+    (homeomorph p β).toEquiv = PiLp.equiv p β := rfl
 
 lemma isOpenMap_apply [∀ i, TopologicalSpace (β i)] (i : ι) :
     IsOpenMap (fun f : PiLp p β ↦ f i) := (isOpenMap_eval i).comp (homeomorph p β).isOpenMap
@@ -570,17 +736,17 @@ instance uniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
 
 @[fun_prop]
 lemma uniformContinuous_ofLp [∀ i, UniformSpace (β i)] :
-    UniformContinuous (@ofLp p (∀ i, β i)) :=
+    UniformContinuous (@ofLp p _ β) :=
   uniformContinuous_comap
 
 @[fun_prop]
 lemma uniformContinuous_toLp [∀ i, UniformSpace (β i)] :
-    UniformContinuous (@toLp p (∀ i, β i)) :=
+    UniformContinuous (@toLp p _ β) :=
   uniformContinuous_comap' uniformContinuous_id
 
-/-- `WithLp.equiv` as a uniform isomorphism. -/
+/-- `PiLp.equiv` as a uniform isomorphism. -/
 def uniformEquiv [∀ i, UniformSpace (β i)] : PiLp p β ≃ᵤ (Π i, β i) where
-  toEquiv := WithLp.equiv p (Π i, β i)
+  toEquiv := PiLp.equiv p β
   uniformContinuous_toFun := uniformContinuous_ofLp p β
   uniformContinuous_invFun := uniformContinuous_toLp p β
 
@@ -590,7 +756,7 @@ lemma toHomeomorph_uniformEquiv [∀ i, UniformSpace (β i)] :
 
 @[simp]
 lemma toEquiv_uniformEquiv [∀ i, UniformSpace (β i)] :
-    (uniformEquiv p β).toEquiv = WithLp.equiv p (Π i, β i) := rfl
+    (uniformEquiv p β).toEquiv = PiLp.equiv p β := rfl
 
 instance completeSpace [∀ i, UniformSpace (β i)] [∀ i, CompleteSpace (β i)] :
     CompleteSpace (PiLp p β) :=
@@ -656,23 +822,23 @@ theorem dist_apply_le [∀ i, PseudoMetricSpace (β i)] (x y : PiLp p β) (i : �
 end
 
 lemma lipschitzWith_ofLp [∀ i, PseudoEMetricSpace (β i)] :
-    LipschitzWith 1 (@ofLp p (∀ i, β i)) :=
+    LipschitzWith 1 (@ofLp p _ β) :=
   lipschitzWith_ofLp_aux p β
 
 lemma antilipschitzWith_toLp [∀ i, PseudoEMetricSpace (β i)] :
-    AntilipschitzWith 1 (@toLp p (∀ i, β i)) :=
+    AntilipschitzWith 1 (@toLp p _ β) :=
   (lipschitzWith_ofLp p β).to_rightInverse (ofLp_toLp p)
 
 theorem antilipschitzWith_ofLp [∀ i, PseudoEMetricSpace (β i)] :
-    AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@ofLp p (∀ i, β i)) :=
+    AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@ofLp p _ β) :=
   antilipschitzWith_ofLp_aux p β
 
 lemma lipschitzWith_toLp [∀ i, PseudoEMetricSpace (β i)] :
-    LipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@toLp p (∀ i, β i)) :=
+    LipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (@toLp p _ β) :=
   (antilipschitzWith_ofLp p β).to_rightInverse (ofLp_toLp p)
 
 lemma isometry_ofLp_infty [∀ i, PseudoEMetricSpace (β i)] :
-    Isometry (@ofLp ∞ (∀ i, β i)) :=
+    Isometry (@ofLp ∞ _ β) :=
   fun x y =>
   le_antisymm (by simpa only [ENNReal.coe_one, one_mul] using lipschitzWith_ofLp ∞ β x y)
     (by simpa only [ENNReal.div_top, ENNReal.toReal_zero, NNReal.rpow_zero, ENNReal.coe_one,
@@ -694,7 +860,7 @@ instance seminormedAddCommGroup [∀ i, SeminormedAddCommGroup (β i)] :
 
 omit [Fintype ι] in
 lemma isUniformInducing_toLp [Finite ι] [∀ i, PseudoEMetricSpace (β i)] :
-    IsUniformInducing (@toLp p (Π i, β i)) :=
+    IsUniformInducing (@toLp p _ β) :=
   have := Fintype.ofFinite ι
   (antilipschitzWith_toLp p β).isUniformInducing
     (lipschitzWith_toLp p β).uniformContinuous
@@ -835,7 +1001,7 @@ instance instNormSMulClass [SeminormedRing 𝕜] [∀ i, SeminormedAddCommGroup 
     NormSMulClass 𝕜 (PiLp p β) :=
   .of_nnnorm_smul fun c f => by
     rcases p.dichotomy with (rfl | hp)
-    · rw [← nnnorm_ofLp, ← nnnorm_ofLp, WithLp.ofLp_smul, nnnorm_smul]
+    · rw [← nnnorm_ofLp, ← nnnorm_ofLp, ofLp_smul, nnnorm_smul]
     · have hp0 : 0 < p.toReal := zero_lt_one.trans_le hp
       have hpt : p ≠ ⊤ := p.toReal_pos_iff_ne_top.mp hp0
       rw [nnnorm_eq_sum hpt, nnnorm_eq_sum hpt, one_div, NNReal.rpow_inv_eq_iff hp0.ne',
@@ -852,10 +1018,10 @@ variable {𝕜 p α}
 variable [Semiring 𝕜] [∀ i, SeminormedAddCommGroup (α i)] [∀ i, SeminormedAddCommGroup (β i)]
 variable [∀ i, Module 𝕜 (α i)] [∀ i, Module 𝕜 (β i)]
 
-/-- The canonical map `WithLp.equiv` between `PiLp ∞ β` and `Π i, β i` as a linear isometric
+/-- The canonical map `PiLp.equiv` between `PiLp ∞ β` and `Π i, β i` as a linear isometric
 equivalence. -/
 def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] (∀ i, β i) where
-  __ := WithLp.linearEquiv ∞ 𝕜 _
+  __ := PiLp.linearEquiv ∞ 𝕜 _
   norm_map' := norm_ofLp
 
 section piLpCongrLeft
@@ -868,8 +1034,9 @@ variable (E : Type*) [SeminormedAddCommGroup E] [Module 𝕜 E]
 functions. -/
 def _root_.LinearIsometryEquiv.piLpCongrLeft (e : ι ≃ ι') :
     (PiLp p fun _ : ι => E) ≃ₗᵢ[𝕜] PiLp p fun _ : ι' => E where
-  toLinearEquiv := (WithLp.linearEquiv p 𝕜 (ι → E)).trans
-    ((LinearEquiv.piCongrLeft' 𝕜 (fun _ : ι => E) e).trans (WithLp.linearEquiv p 𝕜 (ι' → E)).symm)
+  toLinearEquiv := (PiLp.linearEquiv p 𝕜 fun _ : ι => E).trans
+    ((LinearEquiv.piCongrLeft' 𝕜 (fun _ : ι => E) e).trans
+      (PiLp.linearEquiv p 𝕜 fun _ : ι' => E).symm)
   norm_map' x' := by
     rcases p.dichotomy with (rfl | h)
     · simp_rw [norm_eq_ciSup]
@@ -913,10 +1080,10 @@ This is the isometry version of `LinearEquiv.piCongrRight`. -/
 protected def _root_.LinearIsometryEquiv.piLpCongrRight (e : ∀ i, α i ≃ₗᵢ[𝕜] β i) :
     PiLp p α ≃ₗᵢ[𝕜] PiLp p β where
   toLinearEquiv :=
-    WithLp.linearEquiv _ _ _
+    PiLp.linearEquiv _ _ _
       ≪≫ₗ (LinearEquiv.piCongrRight fun i => (e i).toLinearEquiv)
-      ≪≫ₗ (WithLp.linearEquiv _ _ _).symm
-  norm_map' := (WithLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
+      ≪≫ₗ (PiLp.linearEquiv _ _ _).symm
+  norm_map' := (PiLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
     simp only [coe_symm_linearEquiv, LinearEquiv.trans_apply, coe_linearEquiv]
     obtain rfl | hp := p.dichotomy
     · simp_rw [PiLp.norm_toLp, Pi.norm_def, LinearEquiv.piCongrRight_apply,
@@ -959,12 +1126,12 @@ variable (𝕜) in
 def _root_.LinearIsometryEquiv.piLpCurry :
     PiLp p (fun i : Sigma _ => α i.1 i.2) ≃ₗᵢ[𝕜] PiLp p (fun i => PiLp p (α i)) where
   toLinearEquiv :=
-    WithLp.linearEquiv _ _ _
+    PiLp.linearEquiv _ _ _
       ≪≫ₗ LinearEquiv.piCurry 𝕜 α
-      ≪≫ₗ (LinearEquiv.piCongrRight fun _ => (WithLp.linearEquiv _ _ _).symm)
-      ≪≫ₗ (WithLp.linearEquiv _ _ _).symm
-  norm_map' := (WithLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
-    simp_rw [← coe_nnnorm, NNReal.coe_inj, WithLp.linearEquiv_symm_apply]
+      ≪≫ₗ (LinearEquiv.piCongrRight fun _ => (PiLp.linearEquiv _ _ _).symm)
+      ≪≫ₗ (PiLp.linearEquiv _ _ _).symm
+  norm_map' := (PiLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
+    simp_rw [← coe_nnnorm, NNReal.coe_inj, PiLp.linearEquiv_symm_apply]
     obtain rfl | hp := eq_or_ne p ⊤
     · simp [Pi.nnnorm_def, ← Finset.univ_sigma_univ, Finset.sup_sigma, Sigma.curry]
     · have : 0 < p.toReal := (toReal_pos_iff_ne_top _).mpr hp
@@ -992,15 +1159,15 @@ variable [∀ i, SeminormedAddCommGroup (α i)] [∀ i, Module 𝕜 (α i)]
 /-- `LinearEquiv.sumPiEquivProdPi` for `PiLp`, as an isometry. -/
 @[simps! +simpRhs]
 def sumPiLpEquivProdLpPiLp :
-    WithLp p (Π i, α i) ≃ₗᵢ[𝕜]
-      WithLp p (WithLp p (Π i, α (.inl i)) × WithLp p (Π i, α (.inr i))) where
+    PiLp p α ≃ₗᵢ[𝕜]
+      WithLp p (PiLp p (fun i => α (.inl i)) × PiLp p (fun i => α (.inr i))) where
   toLinearEquiv :=
-    WithLp.linearEquiv p _ _
+    PiLp.linearEquiv p _ _
       ≪≫ₗ LinearEquiv.sumPiEquivProdPi _ _ _ α
-      ≪≫ₗ LinearEquiv.prodCongr (WithLp.linearEquiv p _ _).symm
-        (WithLp.linearEquiv _ _ _).symm
+      ≪≫ₗ LinearEquiv.prodCongr (PiLp.linearEquiv p _ _).symm
+        (PiLp.linearEquiv _ _ _).symm
       ≪≫ₗ (WithLp.linearEquiv p _ _).symm
-  norm_map' := (WithLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
+  norm_map' := (PiLp.linearEquiv p 𝕜 _).symm.surjective.forall.2 fun x => by
     obtain rfl | hp := p.dichotomy
     · simp [← Finset.univ_disjSum_univ, Finset.sup_disjSum, Pi.norm_def]
     · have : 0 < p.toReal := by positivity
@@ -1138,10 +1305,10 @@ section
 
 variable [Semiring 𝕜] [∀ i, AddCommGroup (β i)] [∀ i, Module 𝕜 (β i)] [∀ i, TopologicalSpace (β i)]
 
-/-- `WithLp.linearEquiv` as a continuous linear equivalence. -/
+/-- `PiLp.linearEquiv` as a continuous linear equivalence. -/
 @[simps! apply symm_apply]
 def continuousLinearEquiv : PiLp p β ≃L[𝕜] ∀ i, β i where
-  toLinearEquiv := WithLp.linearEquiv _ _ _
+  toLinearEquiv := PiLp.linearEquiv _ _ _
   continuous_invFun := (by fun_prop : Continuous fun (a : Π i, β i) ↦ toLp p a)
 
 lemma coe_continuousLinearEquiv :
@@ -1178,28 +1345,28 @@ variable (ι)
 
 /-- A version of `Pi.basisFun` for `PiLp`. -/
 def basisFun : Basis ι 𝕜 (PiLp p fun _ : ι => 𝕜) :=
-  Basis.ofEquivFun (WithLp.linearEquiv p 𝕜 (ι → 𝕜))
+  Basis.ofEquivFun (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜)
 
 @[simp]
 theorem basisFun_apply [DecidableEq ι] (i) :
     basisFun p 𝕜 ι i = single p i 1 := by
-  simp_rw [basisFun, Basis.coe_ofEquivFun, WithLp.coe_symm_linearEquiv, toLp_single]
+  simp_rw [basisFun, Basis.coe_ofEquivFun, coe_symm_linearEquiv, toLp_single]
 
 @[simp]
 theorem basisFun_repr (x : PiLp p fun _ : ι => 𝕜) (i : ι) : (basisFun p 𝕜 ι).repr x i = x i :=
   rfl
 
 @[simp]
-theorem basisFun_equivFun : (basisFun p 𝕜 ι).equivFun = WithLp.linearEquiv p 𝕜 (ι → 𝕜) :=
+theorem basisFun_equivFun : (basisFun p 𝕜 ι).equivFun = PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜 :=
   Basis.equivFun_ofEquivFun _
 
 theorem basisFun_eq_pi_basisFun :
-    basisFun p 𝕜 ι = (Pi.basisFun 𝕜 ι).map (WithLp.linearEquiv p 𝕜 (ι → 𝕜)).symm :=
+    basisFun p 𝕜 ι = (Pi.basisFun 𝕜 ι).map (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜).symm :=
   rfl
 
 @[simp]
 theorem basisFun_map :
-    (basisFun p 𝕜 ι).map (WithLp.linearEquiv p 𝕜 (ι → 𝕜)) = Pi.basisFun 𝕜 ι := rfl
+    (basisFun p 𝕜 ι).map (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜) = Pi.basisFun 𝕜 ι := rfl
 
 end Basis
 
@@ -1210,9 +1377,9 @@ nonrec theorem basis_toMatrix_basisFun_mul [Fintype ι]
     (A : Matrix ι ι 𝕜) :
     b.toMatrix (PiLp.basisFun _ _ _) * A =
       Matrix.of fun i j => b.repr (toLp p (Aᵀ j)) i := by
-  have := basis_toMatrix_basisFun_mul (b.map (WithLp.linearEquiv _ 𝕜 _)) A
+  have := basis_toMatrix_basisFun_mul (b.map (PiLp.linearEquiv _ 𝕜 _)) A
   simp_rw [← PiLp.basisFun_map p, Basis.map_repr, LinearEquiv.trans_apply,
-    WithLp.linearEquiv_symm_apply, Basis.toMatrix_map, Function.comp_def, Basis.map_apply,
+    PiLp.linearEquiv_symm_apply, Basis.toMatrix_map, Function.comp_def, Basis.map_apply,
     LinearEquiv.symm_apply_apply] at this
   exact this
 
@@ -1303,7 +1470,7 @@ abbrev normedAddCommGroupToPi [∀ i, NormedAddCommGroup (α i)] :
   eq_of_dist_eq_zero {x y} h := by
     rw [dist_pseudoMetricSpaceToPi] at h
     apply eq_of_dist_eq_zero at h
-    exact WithLp.toLp_injective p h
+    exact toLp_injective p h
 
 end toPi
 

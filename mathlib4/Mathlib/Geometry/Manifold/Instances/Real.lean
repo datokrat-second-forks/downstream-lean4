@@ -49,7 +49,7 @@ typeclass. We provide it as `[Fact (x < y)]`.
 
 noncomputable section
 
-open Set Function WithLp
+open Set Function PiLp
 
 open scoped Manifold ContDiff ENNReal
 
@@ -183,10 +183,10 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [NeZero n] :
   map_source' x _ := x.property
   map_target' _ _ := mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ _ => by
-    rw [Subtype.mk_eq_mk, ← WithLp.equiv_symm_apply, Equiv.symm_apply_eq, update_eq_iff]
+    rw [Subtype.mk_eq_mk, ← PiLp.equiv_symm_apply, Equiv.symm_apply_eq, update_eq_iff]
     exact ⟨max_eq_left xprop, fun i _ => rfl⟩
   right_inv' _ hx := by
-    rw [Subtype.coe_mk, ← WithLp.equiv_symm_apply, Equiv.symm_apply_eq, update_eq_iff]
+    rw [Subtype.coe_mk, ← PiLp.equiv_symm_apply, Equiv.symm_apply_eq, update_eq_iff]
     exact ⟨max_eq_left hx, fun _ _ => rfl⟩
   source_eq := rfl
   convex_range' := by
@@ -307,7 +307,7 @@ def IccLeftChart (x y : ℝ) [h : Fact (x < y)] :
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
     simp only [mem_ofPred_eq, mem_Icc] at hz h'z
-    simp only [Fin.isValue, sub_add_cancel, hz, inf_of_le_left]
+    simp only [sub_add_cancel, hz, inf_of_le_left]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
@@ -386,7 +386,7 @@ def IccRightChart (x y : ℝ) [h : Fact (x < y)] :
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
     simp only [mem_ofPred_eq, mem_Icc] at hz h'z
-    simp only [Fin.isValue, sub_eq_add_neg, neg_add_rev, neg_neg,
+    simp only [sub_eq_add_neg, neg_add_rev, neg_neg,
       add_neg_cancel_comm_assoc, hz, sup_of_le_left]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z

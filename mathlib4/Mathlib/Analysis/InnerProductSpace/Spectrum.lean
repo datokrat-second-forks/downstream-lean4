@@ -75,7 +75,7 @@ local notation "⟪" x ", " y "⟫" => inner 𝕜 x y
 
 open scoped ComplexConjugate
 
-open Module End WithLp
+open Module End PiLp
 
 namespace LinearMap
 

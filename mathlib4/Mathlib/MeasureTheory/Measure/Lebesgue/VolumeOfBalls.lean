@@ -145,7 +145,7 @@ end general_case
 
 section LpSpace
 
-open Real Fintype ENNReal Module MeasureTheory MeasureTheory.Measure WithLp
+open Real Fintype ENNReal Module MeasureTheory MeasureTheory.Measure PiLp
 
 variable (ι : Type*) [Fintype ι] {p : ℝ}
 

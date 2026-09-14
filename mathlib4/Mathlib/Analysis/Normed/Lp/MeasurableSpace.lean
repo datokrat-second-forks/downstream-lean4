@@ -9,10 +9,10 @@ public import Mathlib.Analysis.Normed.Lp.PiLp
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
-# Measurable space structure on `WithLp`
+# Measurable space structure on `WithLp` and `PiLp`
 
 If `X` is a measurable space, we set the measurable space structure on `WithLp p X` to be the
-same as the one on `X`.
+same as the one on `X`, and likewise for `PiLp p X` and `∀ i, X i`.
 -/
 
 @[expose] public section
@@ -46,12 +46,25 @@ end WithLp
 
 namespace PiLp
 
-variable {ι : Type*} {X : ι → Type*} [Countable ι] [∀ i, MeasurableSpace (X i)]
+variable {ι : Type*} (X : ι → Type*) [∀ i, MeasurableSpace (X i)]
+
+instance measurableSpace : MeasurableSpace (PiLp p X) :=
+  MeasurableSpace.comap ofLp inferInstance
+
+@[fun_prop]
+lemma measurable_ofLp : Measurable (@ofLp p _ X) := comap_measurable _
+
+@[fun_prop]
+lemma measurable_toLp : Measurable (@toLp p _ X) := fun s hs ↦ by
+  obtain ⟨t, ht, rfl⟩ := hs
+  simpa [Set.preimage_preimage]
+
+variable {X} [Countable ι]
     [∀ i, TopologicalSpace (X i)] [∀ i, BorelSpace (X i)] [∀ i, SecondCountableTopology (X i)]
 
 instance borelSpace : BorelSpace (PiLp p X) where
   measurable_eq := by
-    rw [topologicalSpace, borel_comap, WithLp.measurableSpace,
+    rw [topologicalSpace, borel_comap, measurableSpace,
       BorelSpace.measurable_eq (α := Π i, X i)]
 
 end PiLp
@@ -74,5 +87,24 @@ lemma toLp_apply (x : X) : MeasurableEquiv.toLp p X x = WithLp.toLp p x := rfl
 @[simp]
 lemma toLp_symm_apply (x : WithLp p X) :
     (MeasurableEquiv.toLp p X).symm x = WithLp.ofLp x := rfl
+
+variable {ι : Type*} (Y : ι → Type*) [∀ i, MeasurableSpace (Y i)]
+
+/-- The map from `∀ i, Y i` to `PiLp p Y` as a measurable equivalence. -/
+protected def toPiLp : (∀ i, Y i) ≃ᵐ PiLp p Y where
+  toEquiv := (PiLp.equiv p Y).symm
+  measurable_toFun := PiLp.measurable_toLp p Y
+  measurable_invFun := PiLp.measurable_ofLp p Y
+
+lemma coe_toPiLp : ⇑(MeasurableEquiv.toPiLp p Y) = PiLp.toLp p := rfl
+
+lemma coe_toPiLp_symm : ⇑(MeasurableEquiv.toPiLp p Y).symm = PiLp.ofLp := rfl
+
+@[simp]
+lemma toPiLp_apply (x : ∀ i, Y i) : MeasurableEquiv.toPiLp p Y x = PiLp.toLp p x := rfl
+
+@[simp]
+lemma toPiLp_symm_apply (x : PiLp p Y) :
+    (MeasurableEquiv.toPiLp p Y).symm x = PiLp.ofLp x := rfl
 
 end MeasurableEquiv

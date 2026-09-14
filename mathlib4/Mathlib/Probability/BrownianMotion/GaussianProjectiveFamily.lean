@@ -45,7 +45,7 @@ Brownian motion, covariance matrix, projective family
 @[expose] public section
 
 
-open MeasureTheory NormedSpace Set WithLp
+open MeasureTheory NormedSpace Set PiLp
 open scoped ENNReal NNReal
 
 namespace ProbabilityTheory.BrownianReal
@@ -79,7 +79,7 @@ Note that we build a measure over `I → ℝ` rather than `EuclideanSpace I ℝ`
 we want to extend this family to a measure over `ℝ≥0 → ℝ` through the Kolmogorov's extension
 theorem, which is phrased in this language. -/
 noncomputable def projectiveFamily (I : Finset ℝ≥0) : Measure (I → ℝ) :=
-  multivariateGaussian 0 (covMatrix I) |>.map (MeasurableEquiv.toLp 2 (I → ℝ)).symm
+  multivariateGaussian 0 (covMatrix I) |>.map (MeasurableEquiv.toPiLp 2 (fun _ : I => ℝ)).symm
 
 /-- Up to a measurable equivalence, `projectiveFamily I` is the centered multivariate Gaussian
 with covariance matrix `covMatrix I`. -/
@@ -97,7 +97,7 @@ lemma measurePreserving_toLp_projectiveFamily (I : Finset ℝ≥0) :
   measurable := by fun_prop
   map_eq := by
     rw [projectiveFamily, Measure.map_map]
-    · simp [← MeasurableEquiv.coe_toLp]
+    · simp [← MeasurableEquiv.coe_toPiLp]
     all_goals fun_prop
 
 lemma integral_projectiveFamily {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -123,7 +123,7 @@ lemma variance_projectiveFamily (I : Finset ℝ≥0) (f : (I → ℝ) → ℝ) :
 instance isGaussian_projectiveFamily (I : Finset ℝ≥0) :
     IsGaussian (projectiveFamily I) := by
   rw [projectiveFamily,
-    show ⇑(MeasurableEquiv.toLp 2 (I → ℝ)).symm = ⇑(EuclideanSpace.equiv I ℝ) from rfl]
+    show ⇑(MeasurableEquiv.toPiLp 2 (fun _ : I => ℝ)).symm = ⇑(EuclideanSpace.equiv I ℝ) from rfl]
   infer_instance
 
 @[simp]
@@ -195,7 +195,8 @@ lemma isProjectiveMeasureFamily_projectiveFamily :
   intro I J hJI
   nth_rw 2 [projectiveFamily]
   rw [Measure.map_map]
-  · have : (Finset.restrict₂ (π := fun _ ↦ ℝ) hJI ∘ (MeasurableEquiv.toLp 2 (I → ℝ)).symm) =
+  · have : (Finset.restrict₂ (π := fun _ ↦ ℝ) hJI ∘
+        (MeasurableEquiv.toPiLp 2 (fun _ : I => ℝ)).symm) =
         ofLp ∘ (EuclideanSpace.restrict₂ hJI) := by ext; simp
     rw [this, ((measurePreserving_ofLp_multivariateGaussian J).comp
         (measurePreserving_restrict₂_multivariateGaussian (posSemidef_covMatrix I) hJI)).map_eq]

@@ -40,7 +40,7 @@ multivariate Gaussian distribution
 @[expose] public section
 
 
-open MeasureTheory Matrix WithLp Module Complex
+open MeasureTheory Matrix PiLp Module Complex
 open scoped RealInnerProductSpace MatrixOrder Matrix.Norms.L2Operator
 
 namespace ProbabilityTheory

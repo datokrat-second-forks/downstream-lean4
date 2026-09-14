@@ -25,7 +25,7 @@ from `RCLike.innerProductSpace`.
 
 public section
 
-open Finset Function WithLp
+open Finset Function PiLp
 open scoped BigOperators ComplexConjugate ComplexOrder InnerProductSpace
 
 variable {ι κ 𝕜 : Type*} {E : ι → Type*} [Fintype ι]
@@ -139,7 +139,7 @@ lemma linearIndependent_of_ne_zero_of_wInner_one_eq_zero {f : κ → ι → 𝕜
     (hinner : Pairwise fun k₁ k₂ ↦ ⟪f k₁, f k₂⟫_[𝕜] = 0) : LinearIndependent 𝕜 f := by
   simp_rw [wInner_one_eq_inner] at hinner
   have := linearIndependent_of_ne_zero_of_inner_eq_zero ?_ hinner
-  exacts [(WithLp.linearEquiv 2 𝕜 (ι → 𝕜)).symm.toLinearMap.linearIndependent_iff_of_injOn
+  exacts [(PiLp.linearEquiv 2 𝕜 fun _ : ι ↦ 𝕜).symm.toLinearMap.linearIndependent_iff_of_injOn
     (toLp_injective 2).injOn |>.1 this, fun i ↦ (toLp_eq_zero 2).ne.2 (hf i)]
 
 lemma linearIndependent_of_ne_zero_of_wInner_cWeight_eq_zero {f : κ → ι → 𝕜} (hf : ∀ k, f k ≠ 0)

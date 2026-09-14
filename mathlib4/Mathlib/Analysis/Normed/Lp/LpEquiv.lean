@@ -40,7 +40,7 @@ the subtype of `PreLp` satisfying `Memℓp`.
 
 @[expose] public section
 
-open WithLp
+open PiLp
 
 open scoped ENNReal
 

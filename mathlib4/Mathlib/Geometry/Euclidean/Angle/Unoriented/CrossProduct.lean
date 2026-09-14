@@ -18,7 +18,7 @@ cross-product of two real vectors with their individual norms.
 
 public section
 
-open Matrix Real WithLp
+open Matrix Real PiLp
 
 namespace InnerProductGeometry
 

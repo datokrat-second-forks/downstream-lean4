@@ -50,7 +50,7 @@ integer points on that sphere and map them onto `ℕ` in a way that preserves ar
 assert_not_exists IsConformalMap Conformal
 
 open Nat hiding log
-open Finset Metric Real WithLp
+open Finset Metric Real PiLp
 open scoped Pointwise
 
 /-- The frontier of a closed strictly convex set only contains trivial arithmetic progressions.

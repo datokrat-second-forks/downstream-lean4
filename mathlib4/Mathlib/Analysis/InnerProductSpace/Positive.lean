@@ -579,4 +579,4 @@ theorem Matrix.posSemidef_iff_eq_sum_vecMulVec {n : Type*} [Finite n] {M : Matri
   simp_rw [eq_comm, ← LinearEquiv.symm_apply_eq, coe_toContinuousLinearMap_symm,
     ContinuousLinearMap.toLinearMap_sum, map_sum, symm_toEuclideanLin_rankOne, eq_comm]
   exact ⟨fun ⟨m, u, hu⟩ ↦ ⟨m, fun i ↦ (u i).ofLp, hu⟩,
-    fun ⟨m, u, hu⟩ ↦ ⟨m, fun i ↦ WithLp.toLp 2 (u i), hu⟩⟩
+    fun ⟨m, u, hu⟩ ↦ ⟨m, fun i ↦ PiLp.toLp 2 (u i), hu⟩⟩
