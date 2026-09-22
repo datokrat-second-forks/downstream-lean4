@@ -486,6 +486,8 @@ def endRingEquiv (M : TopModuleCat R) :
     End M ≃+* (M →L[R] M) where
   toFun := TopModuleCat.Hom.hom
   invFun := TopModuleCat.ofHom
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_mul' _ _ := rfl
   map_add' _ _ := rfl
 

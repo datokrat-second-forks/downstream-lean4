@@ -79,7 +79,7 @@ public def generateSuggestions (loc : SubExpr.GoalsLocation) (parentDecl? : Opti
   loc.mvarId.withContext do
   -- TODO: instead of just putting `✝` after inaccessible names,
   -- we should figure out how to use `rename_i` to actually refer to shadowed local variables.
-  let lctx := (← getLCtx).sanitizeNames.run' { options := (← getOptions) }
+  let lctx := (← getLCtx).sanitizeNames.run' { options := (← getOptions) } |>.run
   Meta.withLCtx' lctx do
   trackingComputation "click_suggestions" do
   let (fvarId?, pos) ← match loc.loc with

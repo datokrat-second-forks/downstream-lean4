@@ -92,6 +92,8 @@ def equivUnitsEnd : Perm α ≃* Units (Function.End α) where
   invFun u :=
     ⟨(u : Function.End α), (↑u⁻¹ : Function.End α), congr_fun u.inv_val, congr_fun u.val_inv⟩
   map_mul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Lift a monoid homomorphism `f : G →* Function.End α` to a monoid homomorphism
 `f : G →* Equiv.Perm α`. -/
@@ -447,6 +449,7 @@ def ofSubtype : Perm (Subtype p) →* Perm α where
 theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p (f x) ↔ p x) (h₂ : ∀ x, f x ≠ x → p x) :
     ofSubtype (subtypePerm f h₁) = f :=
   Equiv.ext fun x => by
+    change ofSubtype (subtypePerm f h₁) x = f x
     by_cases hx : p x
     · exact (subtypePerm f h₁).extendDomain_apply_subtype _ hx
     · rw [ofSubtype, MonoidHom.coe_mk, OneHom.coe_mk,
@@ -532,6 +535,7 @@ theorem swap_mul_self (i j : α) : swap i j * swap i j = 1 :=
 
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equiv.ext fun z => by
+    change (swap x y * f) z = (f * swap (f⁻¹ x) (f⁻¹ y)) z
     simp only [Perm.mul_apply, swap_apply_def]; split_ifs <;> simp_all [eq_symm_apply]
 
 theorem mul_swap_eq_swap_mul (f : Perm α) (x y : α) : f * swap x y = swap (f x) (f y) * f := by

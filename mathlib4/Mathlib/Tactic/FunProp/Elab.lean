@@ -113,7 +113,7 @@ def funPropTac : Tactic
       let s := {
         morTheorems        := morTheoremsExt.getState env
         transitionTheorems := transitionTheoremsExt.getState env }
-      let (r?, s) ← funProp goalType ctx |>.run s
+      let (r?, s) ← (ReaderT.run (funProp goalType) ctx).run s
       if let some r := r? then
         goal.assign r.proof
       else

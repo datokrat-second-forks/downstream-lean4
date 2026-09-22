@@ -385,6 +385,8 @@ def representableByEquiv {F : Cᵒᵖ ⥤ Type v₁} {Y : C} :
   invFun e :=
     { homEquiv := (e.app _).toEquiv
       homEquiv_comp := fun {X X'} f g ↦ by apply e.hom.naturality_apply }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 /-- `yoneda.obj X` is represented by `X`. -/
 protected def RepresentableBy.yoneda (X : C) : (yoneda.obj X).RepresentableBy X :=
@@ -411,6 +413,8 @@ def corepresentableByEquiv {F : C ⥤ Type v₁} {X : C} :
   invFun e :=
     { homEquiv := (e.app _).toEquiv
       homEquiv_comp := fun {X X'} f g ↦ by apply e.hom.naturality_apply }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 /-- `coyoneda.obj X` is represented by `X`. -/
 protected def CorepresentableBy.coyoneda (X : Cᵒᵖ) :
@@ -475,6 +479,8 @@ def representableByUliftFunctorEquiv {F : Cᵒᵖ ⥤ Type v} {X : C} :
   invFun R :=
     { homEquiv {Y} := R.homEquiv.trans Equiv.ulift.symm
       homEquiv_comp f g := by simp [R.homEquiv_comp] }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -488,6 +494,8 @@ def corepresentableByUliftFunctorEquiv {F : C ⥤ Type v} {X : C} :
   invFun R :=
     { homEquiv {Y} := R.homEquiv.trans Equiv.ulift.symm
       homEquiv_comp f g := by simp [R.homEquiv_comp] }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 /-- Version of `representableByEquiv` with more general universe assumptions. -/
 @[simps]
@@ -500,6 +508,8 @@ def RepresentableBy.equivUliftYonedaIso (F : Cᵒᵖ ⥤ Type (max w v₁)) (X :
   invFun e :=
     { homEquiv {X} := Equiv.ulift.symm.trans (equivEquivIso.symm (e.app _))
       homEquiv_comp {X Y} f g := congr($(e.hom.naturality f.op) ⟨g⟩) }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 /-- Version of `corepresentableByEquiv` with more general universe assumptions. -/
 @[simps]
@@ -512,6 +522,8 @@ def CorepresentableBy.equivUliftCoyonedaIso (F : C ⥤ Type (max w v₁)) (X : C
   invFun e :=
     { homEquiv {X} := Equiv.ulift.symm.trans (equivEquivIso.symm (e.app _))
       homEquiv_comp {X Y} f g := congr($(e.hom.naturality f) ⟨g⟩) }
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 
 /-- A functor `F : Cᵒᵖ ⥤ Type v` is representable if there is an object `Y` with a structure
 `F.RepresentableBy Y`, i.e. there is a natural bijection `(X ⟶ Y) ≃ F.obj (op X)`,
@@ -1273,6 +1285,7 @@ def Functor.sectionsEquivHom (F : C ⥤ Type u₂) (X : Type u₂) [Unique X] :
     ext _ (x : X)
     rw [Unique.eq_default x]
     rfl
+  left_inv _ := by ext; rfl
 
 lemma Functor.sectionsEquivHom_naturality {F G : C ⥤ Type u₂} (f : F ⟶ G) (X : Type u₂)
     [Unique X] (x : F.sections) :

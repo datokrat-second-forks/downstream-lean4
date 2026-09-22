@@ -34,6 +34,7 @@ set_option backward.privateInPublic true in
 private def typeToCatObjectsAdjHomEquiv : (typeToCat.obj X ⟶ C) ≃ (X ⟶ Cat.objects.obj C) where
   toFun F := ↾fun x ↦ F.toFunctor.obj ⟨x⟩
   invFun f := (Discrete.functor f).toCatHom
+  right_inv _ := rfl
   left_inv F := Hom.ext <| Functor.ext (fun _ ↦ rfl) (fun ⟨_⟩ ⟨_⟩ f => by
     obtain rfl := Discrete.eq_of_hom f
     simp)

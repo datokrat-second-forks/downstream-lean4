@@ -49,5 +49,7 @@ def pathEquiv {x y : X} : X.Path x y ≃ _root_.Path x y where
     { hom := ofHom (p.toContinuousMap.comp (toContinuousMap TopCat.I.homeomorph))
       hom₀ := p.source'
       hom₁ := p.target' }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end TopCat

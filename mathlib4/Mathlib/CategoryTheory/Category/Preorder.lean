@@ -206,6 +206,8 @@ abbrev toFunctor (f : X →o Y) : X ⥤ Y := f.monotone.functor
 def equivFunctor : (X →o Y) ≃ (X ⥤ Y) where
   toFun := toFunctor
   invFun F := F.toOrderHom
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The categorical equivalence between the category of monotone functions `X →o Y` and the category
 of functors `X ⥤ Y`, where `X` and `Y` are preorder categories. -/

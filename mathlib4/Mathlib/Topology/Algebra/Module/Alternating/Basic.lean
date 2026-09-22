@@ -286,6 +286,7 @@ def ofSubsingleton [Subsingleton ι] (i : ι) :
     { AlternatingMap.ofSubsingleton R M N i f with
       toContinuousMultilinearMap := ContinuousMultilinearMap.ofSubsingleton R M N i f }
   invFun f := (ContinuousMultilinearMap.ofSubsingleton R M N i).symm f.1
+  left_inv _ := rfl
   right_inv _ := toContinuousMultilinearMap_injective <|
     (ContinuousMultilinearMap.ofSubsingleton R M N i).apply_symm_apply _
 
@@ -375,6 +376,8 @@ def piEquiv {ι' : Type*} {N : ι' → Type*} [∀ i, AddCommMonoid (N i)] [∀ 
     [∀ i, Module R (N i)] : (∀ i, M [⋀^ι]→L[R] N i) ≃ M [⋀^ι]→L[R] ∀ i, N i where
   toFun := pi
   invFun f i := (ContinuousLinearMap.proj i : _ →L[R] N i).compContinuousAlternatingMap f
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- In the specific case of continuous alternating maps on spaces indexed by `Fin (n+1)`, where one
 can build an element of `Π(i : Fin (n+1)), M i` using `cons`, one can express directly the

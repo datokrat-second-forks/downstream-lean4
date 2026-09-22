@@ -149,5 +149,6 @@ def OrderIso.isIdempotentElemMulZeroAddOne :
   invFun a := ⟨a.1.1, (IsIdempotentElem.of_mul_add a.2.1 a.2.2).1⟩
   right_inv a := Subtype.ext <| Prod.ext rfl <| sub_eq_of_eq_add <| a.2.2.symm.trans (add_comm ..)
   map_rel_iff' := Iff.rfl
+  left_inv _ := rfl
 
 end CommRing

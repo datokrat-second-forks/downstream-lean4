@@ -71,6 +71,8 @@ def ofConjAct : ConjAct G ≃* G where
   toFun := id
   invFun := id
   map_mul' := fun _ _ => rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret `g : G` as an element of `ConjAct G`. -/
 def toConjAct : G ≃* ConjAct G :=
@@ -298,6 +300,8 @@ def unitsCentralizerEquiv (x : Mˣ) :
       change _ • _ = _
       simp only [ConjAct.smul_def, ConjAct.ofConjAct_toConjAct, mul_inv_eq_iff_eq_mul]
       exact Units.ext <| (u.1.2 x <| Set.mem_singleton _).symm⟩
-    map_mul' := map_mul _ }
+    map_mul' := map_mul _
+    left_inv _ := Subtype.ext (Units.ext rfl)
+    right_inv _ := Units.ext (Subtype.ext rfl) }
 
 end Units

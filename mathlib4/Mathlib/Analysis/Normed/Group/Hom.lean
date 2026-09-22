@@ -800,6 +800,7 @@ def liftEquiv :
       NormedAddGroupHom V₁ (f.equalizer g) where
   toFun φ := lift φ φ.prop
   invFun ψ := ⟨(ι f g).comp ψ, by rw [← comp_assoc, ← comp_assoc, comp_ι_eq]⟩
+  right_inv _ := rfl
   left_inv φ := by simp
 
 /-- Given `φ : NormedAddGroupHom V₁ V₂` and `ψ : NormedAddGroupHom W₁ W₂` such that

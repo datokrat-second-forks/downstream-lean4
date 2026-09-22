@@ -124,6 +124,8 @@ nonrec def lift' : (α →* β) ≃ (WithZero α →*₀ β) where
         | (_ : α), 0 => (mul_zero _).symm
         | (_ : α), (_ : α) => map_mul f _ _ }
   invFun F := F.toMonoidHom.comp coeMonoidHom
+  left_inv _ := rfl
+  right_inv _ := by ext; rfl
 
 lemma lift'_zero (f : α →* β) : lift' f (0 : WithZero α) = 0 := rfl
 
@@ -297,13 +299,14 @@ def unitsWithZeroEquiv : (WithZero α)ˣ ≃* α where
   invFun a := Units.mk0 a coe_ne_zero
   left_inv _ := Units.ext <| by simp only [coe_unzero, Units.mk0_val]
   map_mul' _ _ := coe_inj.mp <| by simp only [Units.val_mul, coe_unzero, coe_mul]
+  right_inv _ := rfl
 
 instance [Nontrivial α] : Nontrivial (WithZero α)ˣ :=
   unitsWithZeroEquiv.toEquiv.surjective.nontrivial
 
 theorem coe_unitsWithZeroEquiv_eq_units_val (γ : (WithZero α)ˣ) :
-    ↑(unitsWithZeroEquiv γ) = γ.val := by
-  simp only [WithZero.unitsWithZeroEquiv, MulEquiv.coe_mk, Equiv.coe_fn_mk, WithZero.coe_unzero]
+    ↑(unitsWithZeroEquiv γ) = γ.val :=
+  coe_unzero γ.ne_zero
 
 /-- Any group with zero is isomorphic to adjoining `0` to the units of itself. -/
 @[simps]

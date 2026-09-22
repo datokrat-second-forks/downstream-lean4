@@ -205,6 +205,8 @@ lemma hom_surjective :
 def homEquiv : (A ⟶ B) ≃ (A.ρ.IntertwiningMap B.ρ) where
   toFun := Hom.hom
   invFun := ofHom
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 instance : Add (A ⟶ B) where add f g := ofHom (f.hom + g.hom)
 
@@ -784,6 +786,7 @@ def tensorHomEquiv (A B C : Rep.{u} k G) : (A ⊗ B ⟶ C) ≃ (B ⟶ (Rep.ihom 
   invFun f := Rep.ofHom ⟨TensorProduct.uncurry (.id k) _ _ _
     f.hom.toLinearMap.flip, fun g ↦ TensorProduct.ext' fun x y => by
     simpa using LinearMap.ext_iff.1 (hom_comm_apply f g y) (A.ρ g x)⟩
+  right_inv _ := by ext; rfl
   left_inv _ := Rep.Hom.ext <| Representation.IntertwiningMap.ext <|
     TensorProduct.ext' fun _ _ => rfl
 

@@ -124,6 +124,8 @@ def prodEquiv [Module S M₂] [Module S M₃] [SMulCommClass R S M₂] [SMulComm
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 section
 
@@ -582,6 +584,7 @@ def sndEquiv : Submodule.snd R M M₂ ≃ₗ[R] M₂ where
   map_add' := by simp
   map_smul' := by simp
   left_inv x := by aesop (add norm simp Submodule.snd)
+  right_inv _ := rfl
 
 theorem snd_map_fst : (Submodule.snd R M M₂).map (LinearMap.fst R M M₂) = ⊥ := by
   aesop (add simp snd)

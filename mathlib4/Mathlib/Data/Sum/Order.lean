@@ -345,6 +345,8 @@ def toLexRelIsoLT [LT α] [LT β] :
   toFun := toLex
   invFun := ofLex
   map_rel_iff' := .rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem toLexRelIsoLT_coe [LT α] [LT β] : ⇑(toLexRelIsoLT (α := α) (β := β)) = toLex :=
@@ -360,6 +362,8 @@ def toLexRelIsoLE [LE α] [LE β] :
   toFun := toLex
   invFun := ofLex
   map_rel_iff' := .rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem toLexRelIsoLE_coe [LE α] [LE β] : ⇑(toLexRelIsoLE (α := α) (β := β)) = toLex :=

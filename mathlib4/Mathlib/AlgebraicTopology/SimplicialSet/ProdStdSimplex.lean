@@ -52,6 +52,7 @@ def objEquiv {n : ℕ} :
       stdSimplex.objEquiv.symm
       (SimplexCategory.Hom.mk (OrderHom.snd.comp f))⟩
   left_inv := fun ⟨x, y⟩ ↦ by simp
+  right_inv _ := rfl
 
 @[simp]
 lemma objEquiv_apply_symm_apply {n : ℕ} (f : (Fin (n + 1) →o Fin (p + 1) × Fin (q + 1))) :
@@ -85,7 +86,9 @@ of `ULift (Fin (p + 1) × Fin (q + 1))`. -/
 def isoNerve : Δ[p] ⊗ Δ[q] ≅ nerve (ULift.{u} (Fin (p + 1) × Fin (q + 1))) :=
   NatIso.ofComponents (fun ⟨⟨d⟩⟩ ↦ Equiv.toIso (objEquiv.trans
       { toFun f := (ULift.orderIso.symm.monotone.comp f.monotone).functor
-        invFun s := ULift.orderIso.toOrderEmbedding.toOrderHom.comp ⟨_, s.monotone⟩ }))
+        invFun s := ULift.orderIso.toOrderEmbedding.toOrderHom.comp ⟨_, s.monotone⟩
+        left_inv _ := rfl
+        right_inv _ := by aesop }))
 
 lemma nonDegenerate_iff_injective_objEquiv {n : ℕ} (z : (Δ[p] ⊗ Δ[q] : SSet.{u}) _⦋n⦌) :
     z ∈ (Δ[p] ⊗ Δ[q]).nonDegenerate n ↔ Function.Injective (objEquiv z) := by

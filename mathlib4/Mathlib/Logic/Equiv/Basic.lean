@@ -46,6 +46,7 @@ def piOptionEquivProd {α} {β : Option α → Type*} :
   toFun f := (f none, fun a => f (some a))
   invFun x a := Option.casesOn a x.fst x.snd
   left_inv f := funext fun a => by cases a <;> rfl
+  right_inv _ := rfl
 
 section subtypeCongr
 
@@ -404,6 +405,7 @@ def piEquivSubtypeSigma (ι) (π : ι → Type*) :
     (∀ i, π i) ≃ { f : ι → Σ i, π i // ∀ i, (f i).1 = i } where
   toFun := fun f => ⟨fun i => ⟨i, f i⟩, fun _ => rfl⟩
   invFun := fun f i => by rw [← f.2 i]; exact (f.1 i).2
+  left_inv _ := rfl
   right_inv := fun ⟨f, hf⟩ =>
     Subtype.ext <| funext fun i =>
       Sigma.eq (hf i).symm <| eq_of_heq <| rec_heq_of_heq _ <| by simp
@@ -984,6 +986,8 @@ theorem piCongrFiberwise_symm_apply {γ₁ : α → Type*} {γ₂ : β → Type*
     (∀ i : {i // i ∈ s}, W i) ≃ (∀ i : {i // i ∈ t}, W i) where
   toFun f i := f ⟨i, h ▸ i.2⟩
   invFun f i := f ⟨i, h.symm ▸ i.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 lemma eq_conj {α α' β β' : Sort*} (ε₁ : α ≃ α') (ε₂ : β' ≃ β)
     (f : α → β) (f' : α' → β') : ε₂.symm ∘ f ∘ ε₁.symm = f' ↔ f = ε₂ ∘ f' ∘ ε₁ := by

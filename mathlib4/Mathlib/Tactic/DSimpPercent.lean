@@ -60,6 +60,6 @@ def dsimpPercentElaborator : TermElab := fun stx expectedType => do
       mkExpectedTypeHint e (← dsimp (← inferType e))
     else
       dsimp e
-  go { elaborator := .anonymous } |>.run' { goals := [fresh.mvarId!] }
+  go.run { elaborator := .anonymous } |>.run' { goals := [fresh.mvarId!] }
 
 end Mathlib.Tactic

@@ -49,13 +49,13 @@ variable {M : Type u → Type v} {α β ω ρ σ : Type u}
 
 instance [MonadWriter ω M] : MonadWriter ω (ReaderT ρ M) where
   tell w := (tell w : M _)
-  listen x r := listen <| x r
-  pass x r := pass <| x r
+  listen x := .mk fun r => listen <| x.run r
+  pass x := .mk fun r => pass <| x.run r
 
 instance [Monad M] [MonadWriter ω M] : MonadWriter ω (StateT σ M) where
   tell w := (tell w : M _)
-  listen x s := (fun ((a, w), s) ↦ ((a, s), w)) <$> listen (x s)
-  pass x s := pass <| (fun ((a, f), s) ↦ ((a, s), f)) <$> (x s)
+  listen x := .mk fun s => (fun ((a, w), s) ↦ ((a, s), w)) <$> listen (x.run s)
+  pass x := .mk fun s => pass <| (fun ((a, f), s) ↦ ((a, s), f)) <$> (x.run s)
 
 namespace WriterT
 

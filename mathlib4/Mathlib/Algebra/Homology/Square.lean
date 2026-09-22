@@ -39,6 +39,7 @@ noncomputable def isPushoutEquivIsColimitCokernelCofork :
   Equiv.trans
     { toFun := fun h ↦ h.isColimit
       invFun := fun h ↦ IsPushout.mk _ h
+      left_inv _ := Subsingleton.elim _ _
       right_inv := fun _ ↦ Subsingleton.elim _ _ }
     sq.commSq.isColimitEquivIsColimitCokernelCofork
 
@@ -60,6 +61,7 @@ noncomputable def isPullbackEquivIsLimitKernelFork :
   Equiv.trans
     { toFun := fun h ↦ h.isLimit
       invFun := fun h ↦ IsPullback.mk _ h
+      left_inv _ := Subsingleton.elim _ _
       right_inv := fun _ ↦ Subsingleton.elim _ _ }
     sq.commSq.isLimitEquivIsLimitKernelFork
 

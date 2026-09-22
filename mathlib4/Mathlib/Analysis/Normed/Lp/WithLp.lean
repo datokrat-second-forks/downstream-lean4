@@ -191,6 +191,8 @@ variable (K V)
 protected def addEquiv [AddCommGroup V] : WithLp p V ≃+ V where
   toFun := ofLp
   invFun := toLp p
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_add' := ofLp_add p
 
 lemma coe_addEquiv [AddCommGroup V] : ⇑(WithLp.addEquiv p V) = ofLp := rfl

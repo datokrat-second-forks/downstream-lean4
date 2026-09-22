@@ -173,7 +173,7 @@ def deriveFunctor (m : MVarId) : TermElabM Unit := do
     let e := e.replaceFVar ad (mkAppN (.const n' (levels.map Level.param)) vars.toArray)
     let e' ← mkLambdaFVars vars.toArray e
     let t' ← mkForallFVars vars.toArray t
-    addPreDefinitions docCtx
+    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := levels
@@ -187,7 +187,7 @@ def deriveFunctor (m : MVarId) : TermElabM Unit := do
           declName := n'
           type := t'
           value := e'
-          termination := .none }] {}
+          termination := .none }]
   m.assign (mkAppN (mkConst n' (levels.map Level.param)) vars.toArray)
 
 /-- Similar to `mkInstanceName`, but for a `Expr` type. -/
@@ -241,7 +241,7 @@ def mkOneInstance (n cls : Name) (tac : MVarId → TermElabM Unit)
     let instN ← m'.withContext do
       let type ← m'.getType >>= instantiateMVars
       mkInstanceNameForTypeExpr type
-    addPreDefinitions docCtx
+    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := decl.levelParams
@@ -258,7 +258,7 @@ def mkOneInstance (n cls : Name) (tac : MVarId → TermElabM Unit)
           declName := instN
           type := tgt
           value := val
-          termination := .none }] {}
+          termination := .none }]
 
 /-- Make the new deriving handler depends on other deriving handlers. -/
 def higherOrderDeriveHandler (cls : Name) (tac : MVarId → TermElabM Unit)
@@ -421,7 +421,7 @@ def deriveTraversable (m : MVarId) : TermElabM Unit := do
     let e := e.replaceFVar ad (mkAppN (.const n' (levels.map Level.param)) vars.toArray)
     let e' ← mkLambdaFVars vars.toArray e
     let t' ← mkForallFVars vars.toArray t
-    addPreDefinitions docCtx
+    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := levels
@@ -432,7 +432,7 @@ def deriveTraversable (m : MVarId) : TermElabM Unit := do
           declName := n'
           type := t'
           value := e'
-          termination := .none }] {}
+          termination := .none }]
   m.assign (mkAppN (mkConst n' (levels.map Level.param)) vars.toArray)
 
 /-- The deriving handler for `Traversable`. -/

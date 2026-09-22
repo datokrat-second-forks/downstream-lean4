@@ -340,7 +340,7 @@ def existsAndEqCore (e : Expr) : MetaM Simp.Step := do
     let some u := f.constLevels![0]? | unreachable!
     have α : Q(Sort $u) := α; have p : Q($α → Prop) := p
     let some (a : Q($α)) := xs[0]? | return .continue
-    let some path ← findEqPath a body | return .continue
+    let some path ← (findEqPath a body).run | return .continue
     let (fvars, lctx, newBody, a') ← findEq a body path
     let newBody := newBody.replaceFVar a a'
     withLCtx' lctx do

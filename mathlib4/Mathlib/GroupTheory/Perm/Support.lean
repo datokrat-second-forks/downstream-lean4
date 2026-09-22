@@ -323,7 +323,7 @@ lemma ofSubtype_eq_iff {g c : Equiv.Perm α} {s : Finset α}
     ofSubtype (g.subtypePerm hg) = c ↔
       c.support ≤ s ∧
       ∀ (hc' : ∀ x, c x ∈ s ↔ x ∈ s), c.subtypePerm hc' = g.subtypePerm hg := by
-  simp only [Equiv.ext_iff, subtypePerm_apply, Subtype.mk.injEq, Subtype.forall]
+  simp only [Equiv.ext_iff, Equiv.toFun_as_coe, subtypePerm_apply, Subtype.mk.injEq, Subtype.forall]
   constructor
   · intro h
     constructor

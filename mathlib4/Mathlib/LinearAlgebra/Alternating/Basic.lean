@@ -387,6 +387,7 @@ def ofSubsingleton [Subsingleton ι] (i : ι) : (M →ₗ[R] N) ≃ (M [⋀^ι]�
   invFun f := (MultilinearMap.ofSubsingleton R M N i).symm f
   right_inv _ := coe_multilinearMap_injective <|
     (MultilinearMap.ofSubsingleton R M N i).apply_symm_apply _
+  left_inv _ := rfl
 
 variable (ι) {N}
 
@@ -933,3 +934,4 @@ def AlternatingMap.constLinearEquivOfIsEmpty [IsEmpty ι] : N'' ≃ₗ[R'] (M'' 
   map_smul' _ _ := rfl
   invFun f := f 0
   right_inv f := ext fun _ => AlternatingMap.congr_arg f <| Subsingleton.elim _ _
+  left_inv _ := rfl

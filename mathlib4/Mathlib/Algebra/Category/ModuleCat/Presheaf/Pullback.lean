@@ -72,12 +72,16 @@ noncomputable def pushforwardCompCoyonedaFreeYonedaCorepresentableBy (X : C) :
       ((free R).obj (yoneda.obj (F.obj X))) where
   homEquiv {M} := freeYonedaEquiv.trans
     (freeYonedaEquiv (M := (pushforward φ).obj M)).symm
-  homEquiv_comp {M N} g f := freeYonedaEquiv.injective (by
-    dsimp
-    erw [Equiv.apply_symm_apply, freeYonedaEquiv_comp]
-    conv_rhs => erw [freeYonedaEquiv_comp]
-    erw [Equiv.apply_symm_apply]
-    rfl)
+  homEquiv_comp {M N} g f := by
+    let eM := freeYonedaEquiv (M := (pushforward φ).obj M) (X := X)
+    let eN := freeYonedaEquiv (M := (pushforward φ).obj N) (X := X)
+    apply eN.injective
+    change eN (eN.symm (freeYonedaEquiv (M := N) (f ≫ g))) =
+      eN (eM.symm (freeYonedaEquiv (M := M) f) ≫ (pushforward φ).map g)
+    refine (eN.apply_symm_apply _).trans ?_
+    refine (freeYonedaEquiv_comp f g).trans ?_
+    refine (congrArg (fun x => g.app _ x) (eM.apply_symm_apply _).symm).trans ?_
+    exact (freeYonedaEquiv_comp _ ((pushforward φ).map g)).symm
 
 lemma pullbackObjIsDefined_free_yoneda (X : C) :
     pullbackObjIsDefined φ ((free S).obj (yoneda.obj X)) :=

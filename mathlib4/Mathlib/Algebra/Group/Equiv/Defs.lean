@@ -433,6 +433,8 @@ end trans
 def symmEquiv (P Q : Type*) [Mul P] [Mul Q] : (P ≃* Q) ≃ (Q ≃* P) where
   toFun := .symm
   invFun := .symm
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end Mul
 

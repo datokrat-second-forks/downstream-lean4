@@ -142,6 +142,8 @@ variable (ι R M N) in
 @[simps] def flipEquiv : RootPairing ι R N M ≃ RootPairing ι R M N where
   toFun P := P.flip
   invFun P := P.flip
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 instance [P.IsRootSystem] : P.flip.IsRootSystem where
   span_root_eq_top := IsRootSystem.span_coroot_eq_top

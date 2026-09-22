@@ -193,6 +193,8 @@ variable [CommMonoid M]
   toFun := toHomUnits
   invFun f := (Units.coeHom _).comp f
   map_mul' := by simp
+  left_inv _ := rfl
+  right_inv _ := by ext; rfl
 
 end MonoidHom
 

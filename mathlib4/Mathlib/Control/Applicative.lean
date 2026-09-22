@@ -109,14 +109,16 @@ instance instLawfulApplicativeComp : LawfulApplicative (Comp F G) where
   seq_assoc := Comp.seq_assoc
 
 theorem applicative_id_comp {F} [AF : Applicative F] [LawfulApplicative F] :
-    @instApplicativeComp Id F _ _ = AF :=
-  @Applicative.ext F _ _ (instLawfulApplicativeComp (F := Id)) _
-    (fun _ => rfl) (fun _ _ => rfl)
+    HEq (@instApplicativeComp Id F _ _) AF := by
+  unsealing_newtype Id =>
+    exact heq_of_eq <| @Applicative.ext F _ _ (instLawfulApplicativeComp (F := Id)) _
+      (fun _ => rfl) (fun _ _ => rfl)
 
 theorem applicative_comp_id {F} [AF : Applicative F] [LawfulApplicative F] :
-    @Comp.instApplicativeComp F Id _ _ = AF :=
-  @Applicative.ext F _ _ (instLawfulApplicativeComp (G := Id)) _
-    (fun _ => rfl) (fun f x => show id <$> f <*> x = f <*> x by rw [id_map])
+    HEq (@Comp.instApplicativeComp F Id _ _) AF := by
+  unsealing_newtype Id =>
+    exact heq_of_eq <| @Applicative.ext F _ _ (instLawfulApplicativeComp (G := Id)) _
+      (fun _ => rfl) (fun f x => show id <$> f <*> x = f <*> x by rw [id_map])
 
 open CommApplicative
 

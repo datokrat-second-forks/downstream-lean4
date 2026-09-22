@@ -43,6 +43,8 @@ lemma Finite.sigma {s : Set α} {t : ∀ i, Set (β i)} (hs : s.Finite) (ht : �
   exact (Set.univ.sigma fun i : s ↦ t i).toFinite.of_equiv _ {
     toFun := fun x ↦ ⟨⟨x.1.1, x.1.2⟩, ⟨x.1.1.2, x.2.2⟩⟩
     invFun := fun x ↦ ⟨⟨⟨x.1.1, x.2.1⟩, x.1.2⟩, ⟨Set.mem_univ _, x.2.2⟩⟩
+    left_inv _ := rfl
+    right_inv _ := rfl
   }
 
 end Set

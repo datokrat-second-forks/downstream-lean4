@@ -57,6 +57,8 @@ variable [Finite α]
 def Equiv.lpPiLp : lp E p ≃ PiLp p E where
   toFun f := toLp p ⇑f
   invFun f := ⟨ofLp f, Memℓp.all f⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 theorem coe_equiv_lpPiLp (f : lp E p) : Equiv.lpPiLp f = ⇑f :=
   rfl
@@ -125,6 +127,8 @@ section NormedAddCommGroup
 noncomputable def AddEquiv.lpBCF : lp (fun _ : α ↦ E) ∞ ≃+ (α →ᵇ E) where
   toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_ciSup (memℓp_infty_iff.mp f.prop)
   invFun f := ⟨⇑f, f.bddAbove_range_norm_comp⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_add' _f _g := rfl
 
 

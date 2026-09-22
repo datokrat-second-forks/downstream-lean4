@@ -1056,6 +1056,8 @@ is the derivative of the extended chart at `x`, in its `mvfderiv` version. -/
 def tangentSpaceCastModel (x : M) : TangentSpace I x ≃L[𝕜] E where
   toFun v := v
   invFun v := v
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_add' x y := rfl
   map_smul' c x := rfl
 
@@ -1070,6 +1072,8 @@ makes sense mathematically when `x = y`. -/
 def tangentSpaceCast (x y : M) : TangentSpace I x ≃L[𝕜] TangentSpace I y where
   toFun v := v
   invFun v := v
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_add' x y := rfl
   map_smul' c x := rfl
 

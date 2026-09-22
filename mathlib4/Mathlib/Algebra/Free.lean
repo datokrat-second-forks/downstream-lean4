@@ -134,6 +134,8 @@ def lift : (α → β) ≃ (FreeMagma α →ₙ* β) where
   { toFun := liftAux f
     map_mul' := fun _ _ ↦ rfl }
   invFun F := F ∘ of
+  left_inv _ := rfl
+  right_inv _ := hom_ext rfl
 
 @[to_additive (attr := simp)]
 theorem lift_of (x) : lift f (of x) = f x := rfl
@@ -388,6 +390,8 @@ def lift : (α →ₙ* β) ≃ (AssocQuotient α →ₙ* β) where
       Quot.liftOn x f <| by rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [map_mul, mul_assoc]
     map_mul' := fun x y ↦ Quot.induction_on₂ x y (map_mul f) }
   invFun f := f.comp of
+  left_inv _ := rfl
+  right_inv _ := hom_ext rfl
 
 @[to_additive (attr := simp)]
 theorem lift_of (x : α) : lift f (of x) = f x := rfl
@@ -525,6 +529,8 @@ def lift : (α → β) ≃ (FreeSemigroup α →ₙ* β) where
     { toFun x := x.2.foldl (fun a b ↦ a * f b) (f x.1)
       map_mul' := by simp [← List.foldl_map, List.foldl_assoc] }
   invFun f := f ∘ of
+  left_inv _ := rfl
+  right_inv _ := hom_ext rfl
 
 @[to_additive]
 lemma lift_mk_eq_foldl {f : α → β} {x : α} {xs : List α} :

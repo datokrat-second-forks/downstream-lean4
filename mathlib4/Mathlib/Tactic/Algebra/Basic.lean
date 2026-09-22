@@ -436,14 +436,16 @@ automatically.
 -/
 elab (name := algebra) "algebra":tactic =>
   withMainContext do
-    liftMetaTactic1 (transformAtTarget (fun e _ ↦ preprocess e) "algebra" .silent · default)
+    liftMetaTactic1 fun g ↦
+      (transformAtTarget (fun e ↦ liftM (preprocess e)) "algebra" .silent g).run default
     let g ← getMainGoal
     AtomM.run .default (proveEq none g)
 
 @[tactic_alt algebra]
 elab (name := algebraWith) "algebra" " with " R:term : tactic =>
   withMainContext do
-    liftMetaTactic1 (transformAtTarget (fun e _ ↦ preprocess e) "algebra" .silent · default)
+    liftMetaTactic1 fun g ↦
+      (transformAtTarget (fun e ↦ liftM (preprocess e)) "algebra" .silent g).run default
     let ⟨u, R⟩ ← getLevelQ' (← elabTerm R none)
     let g ← getMainGoal
     AtomM.run .default (proveEq (some ⟨u, R⟩) g)

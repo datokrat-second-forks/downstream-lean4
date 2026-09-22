@@ -182,9 +182,10 @@ instance [LE R] : LE (MinTropical R) where le x y := untrop x ≤ untrop y
 theorem untrop_le_iff [LE R] {x y : MinTropical R} : untrop x ≤ untrop y ↔ x ≤ y :=
   Iff.rfl
 
-@[to_dual]
-instance [LE R] [DecidableLE R] : DecidableLE (MinTropical R) :=
-  inferInstanceAs <| DecidableLE R
+@[to_dual (reorder := a b)]
+instance instDecidableLE [LE R] [DecidableLE R] (a b : MinTropical R) :
+    Decidable (a ≤ b) :=
+  inferInstanceAs (Decidable (untrop a ≤ untrop b))
 
 @[to_dual]
 instance [LT R] : LT (MinTropical R) where lt x y := untrop x < untrop y
@@ -193,9 +194,10 @@ instance [LT R] : LT (MinTropical R) where lt x y := untrop x < untrop y
 theorem untrop_lt_iff [LT R] {x y : MinTropical R} : untrop x < untrop y ↔ x < y :=
   Iff.rfl
 
-@[to_dual]
-instance [LT R] [DecidableLT R] : DecidableLT (MinTropical R) :=
-  inferInstanceAs <| DecidableLT R
+@[to_dual (reorder := a b)]
+instance instDecidableLT [LT R] [DecidableLT R] (a b : MinTropical R) :
+    Decidable (a < b) :=
+  inferInstanceAs (Decidable (untrop a < untrop b))
 
 @[to_dual]
 instance [Preorder R] : Preorder (MinTropical R) where
@@ -405,6 +407,8 @@ def equivMaxTropical [LinearOrder R] [Add R] : MinTropical R ≃+* MaxTropical R
   invFun a := .trop (OrderDual.ofDual a.untrop)
   map_add' a b := by simp
   map_mul' a b := by simp
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[to_dual]
 instance [Zero R] : One (MinTropical R) :=

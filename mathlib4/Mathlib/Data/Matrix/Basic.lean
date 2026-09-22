@@ -649,6 +649,8 @@ def mopMatrix {α} [Mul α] [AddCommMonoid α] : Matrix m m αᵐᵒᵖ ≃+* (M
   invFun M := M.unop.transpose.map op
   map_mul' _ _ := unop_injective <| by ext; simp [mul_apply]
   map_add' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end RingEquiv
 

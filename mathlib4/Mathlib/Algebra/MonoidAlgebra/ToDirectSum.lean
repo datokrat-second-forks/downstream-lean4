@@ -230,6 +230,8 @@ def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, Dec
     AddMonoidAlgebra M ι ≃ ⨁ _ : ι, M where
   toFun := AddMonoidAlgebra.toDirectSum
   invFun := DirectSum.toAddMonoidAlgebra
+  left_inv := AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra
+  right_inv := DirectSum.toAddMonoidAlgebra_toDirectSum
 
 /-- The additive version of `AddMonoidAlgebra.addMonoidAlgebraEquivDirectSum`. -/
 @[simps! -fullyApplied]

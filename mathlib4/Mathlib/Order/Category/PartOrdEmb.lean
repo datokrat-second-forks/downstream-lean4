@@ -177,6 +177,8 @@ def orderIsoEquivIso {α β : PartOrdEmb.{u}} :
     (α ≅ β) ≃ (α ≃o β) where
   toFun := orderIsoOfIso
   invFun := Iso.mk
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 instance : (forget PartOrdEmb.{u}).ReflectsIsomorphisms where
   reflects {α β} f hf := by

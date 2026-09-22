@@ -48,6 +48,8 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
       continuous_toFun := continuous_induced_rng.2 <|
         (f : C(X, M)).continuous.prodMk <|
         MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).continuous }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[to_additive (attr := simp)]
 lemma unitsLift_apply_inv_apply (f : C(X, Mˣ)) (x : X) :

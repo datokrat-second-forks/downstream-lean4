@@ -26,6 +26,8 @@ def MulEquiv.piUnits : (Π i, M i)ˣ ≃* Π i, (M i)ˣ where
   toFun f i := ⟨f.val i, f.inv i, congr_fun f.val_inv i, congr_fun f.inv_val i⟩
   invFun f := ⟨(val <| f ·), (inv <| f ·), funext (val_inv <| f ·), funext (inv_val <| f ·)⟩
   map_mul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[to_additive]
 lemma Pi.isUnit_iff :

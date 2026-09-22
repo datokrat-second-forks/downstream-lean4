@@ -592,6 +592,7 @@ def currySumEquiv : ContinuousMultilinearMap 𝕜 (fun _ : ι ⊕ ι' => G) G' �
   LinearIsometryEquiv.ofBounds
     { toFun := currySum
       invFun := uncurrySum
+      right_inv _ := rfl
       map_add' := fun f g => by
         ext
         rfl
@@ -602,7 +603,7 @@ def currySumEquiv : ContinuousMultilinearMap 𝕜 (fun _ : ι ⊕ ι' => G) G' �
         ext m
         exact congr_arg f (Sum.elim_comp_inl_inr m) }
     (fun f => MultilinearMap.mkContinuousMultilinear_norm_le _ (norm_nonneg f) _) fun f => by
-      simp only [LinearEquiv.coe_symm_mk]
+      change ‖uncurrySum f‖ ≤ ‖f‖
       exact MultilinearMap.mkContinuous_norm_le _ (norm_nonneg f) _
 
 end

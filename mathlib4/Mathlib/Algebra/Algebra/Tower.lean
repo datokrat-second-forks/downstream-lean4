@@ -211,6 +211,8 @@ def extendScalarsOfSurjective (h : Function.Surjective (algebraMap R S)) :
     (A →ₐ[R] B) ≃ (A →ₐ[S] B) where
   toFun f := { f with commutes' := by simp [h.forall, ← IsScalarTower.algebraMap_apply] }
   invFun := restrictScalars R
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 lemma restrictScalars_extendScalarsOfSurjective (h : Function.Surjective (algebraMap R S))
@@ -301,6 +303,8 @@ def extendScalarsOfSurjective (h : Function.Surjective (algebraMap R S)) :
     (A ≃ₐ[R] B) ≃ A ≃ₐ[S] B where
   toFun f := { f with commutes' := (f.toAlgHom.extendScalarsOfSurjective h).commutes' }
   invFun := AlgEquiv.restrictScalars R
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp] lemma coe_extendScalarsOfSurjective (h : Function.Surjective (algebraMap R S))
     (f : A ≃ₐ[R] B) : ⇑(extendScalarsOfSurjective h f) = f := rfl

@@ -79,6 +79,7 @@ def nerveFunctor : Cat.{v, u} ⥤ SSet where
 def nerveEquiv {C : Type u} [Category.{v} C] : ComposableArrows C 0 ≃ C where
   toFun f := f.obj ⟨0, by lia⟩
   invFun f := ComposableArrows.mk₀ f
+  right_inv _ := rfl
   left_inv f := ComposableArrows.ext₀ rfl
 
 namespace nerve

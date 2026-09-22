@@ -71,5 +71,7 @@ def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.D
       map_lie' := fun {x y} => by
         rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_comm, sub_self,
           LinearMap.toFun_eq_coe, map_zero] }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end LieAlgebra

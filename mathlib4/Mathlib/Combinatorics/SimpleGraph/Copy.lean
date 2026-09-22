@@ -198,6 +198,8 @@ instance [Fintype {f : G →g H // Injective f}] : Fintype (G.Copy H) :=
   .ofEquiv {f : G →g H // Injective f} {
     toFun f := ⟨f.1, f.2⟩
     invFun f := ⟨f.1, f.2⟩
+    left_inv _ := rfl
+    right_inv _ := rfl
   }
 
 /-- A copy of `⊤` gives rise to an embedding of `⊤`. -/

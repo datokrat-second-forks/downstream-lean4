@@ -186,7 +186,9 @@ with the property that its composition with the canonical bilinear map `M → N 
 the given bilinear map `M → N → P`. -/
 def lift.equiv : (M →ₛₗ[σ₁₂] N →ₛₗ[σ₁₂] P₂) ≃ₗ[R₂] M ⊗[R] N →ₛₗ[σ₁₂] P₂ :=
   { uncurry σ₁₂ M N P₂ with
-    invFun := fun f => (mk R M N).compr₂ₛₗ f }
+    invFun := fun f => (mk R M N).compr₂ₛₗ f
+    left_inv _ := by ext; rfl
+    right_inv _ := by ext; rfl }
 
 @[simp]
 theorem lift.equiv_apply (f : M →ₛₗ[σ₁₂] N →ₛₗ[σ₁₂] P₂) (m : M) (n : N) :

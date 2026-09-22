@@ -40,6 +40,8 @@ def dualNumberEquiv : Quaternion (DualNumber R) ≃ₐ[R] DualNumber (Quaternion
     (⟨q.re.fst, q.imI.fst, q.imJ.fst, q.imK.fst⟩, ⟨q.re.snd, q.imI.snd, q.imJ.snd, q.imK.snd⟩)
   invFun d :=
     ⟨(d.fst.re, d.snd.re), (d.fst.imI, d.snd.imI), (d.fst.imJ, d.snd.imJ), (d.fst.imK, d.snd.imK)⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_mul' _ _ := by
     ext1; · rfl
     refine .trans ?_ (DualNumber.snd_mul _ _).symm

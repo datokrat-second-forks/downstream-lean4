@@ -23,7 +23,7 @@ We also define `Ring.inverse`, a globally defined function on any ring
 
 @[expose] public section
 
-assert_not_exists DenselyOrdered Equiv Subtype.restrict Multiplicative Ring
+assert_not_exists DenselyOrdered Equiv.Perm Subtype.restrict Multiplicative Ring
 
 variable {α M₀ G₀ : Type*}
 variable [MonoidWithZero M₀]

@@ -99,7 +99,9 @@ variable (p)
 /-- The top submodule of `M` is linearly equivalent to `M`. -/
 def ofTop (h : p = ⊤) : p ≃ₗ[R] M :=
   { p.subtype with
-    invFun := fun x => ⟨x, h.symm ▸ trivial⟩ }
+    invFun := fun x => ⟨x, h.symm ▸ trivial⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 @[simp]
 theorem ofTop_apply {h} (x : p) : ofTop p h x = x :=
@@ -218,7 +220,9 @@ def equivSubtypeMap (p : Submodule R M) (q : Submodule R p) : q ≃ₗ[R] q.map 
   { (p.subtype.domRestrict q).codRestrict _ (by rintro ⟨x, hx⟩; exact ⟨x, hx, rfl⟩) with
     invFun := by
       rintro ⟨x, hx⟩
-      refine ⟨⟨x, ?_⟩, ?_⟩ <;> rcases hx with ⟨⟨_, h⟩, _, rfl⟩ <;> assumption }
+      refine ⟨⟨x, ?_⟩, ?_⟩ <;> rcases hx with ⟨⟨_, h⟩, _, rfl⟩ <;> assumption
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 @[simp]
 theorem equivSubtypeMap_apply {p : Submodule R M} {q : Submodule R p} (x : q) :

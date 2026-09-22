@@ -443,6 +443,8 @@ variable (R) (S) in
 def equivNatAlgHom [Semiring R] [Semiring S] : (R →+* S) ≃ (R →ₐ[ℕ] S) where
   toFun := RingHom.toNatAlgHom
   invFun := AlgHom.toRingHom
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret a `RingHom` as a `ℤ`-algebra homomorphism. -/
 def toIntAlgHom [Ring R] [Ring S] (f : R →+* S) : R →ₐ[ℤ] S :=
@@ -465,6 +467,8 @@ variable (R) (S) in
 def equivIntAlgHom [Ring R] [Ring S] : (R →+* S) ≃ (R →ₐ[ℤ] S) where
   toFun := RingHom.toIntAlgHom
   invFun := AlgHom.toRingHom
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end RingHom
 

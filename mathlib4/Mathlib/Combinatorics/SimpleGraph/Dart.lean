@@ -55,7 +55,9 @@ theorem Dart.toProd_injective : Function.Injective (Dart.toProd : G.Dart → V �
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σ v, G.neighborSet v)
     { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩
-      invFun := fun d => ⟨d.fst, d.snd, d.adj⟩ }
+      invFun := fun d => ⟨d.fst, d.snd, d.adj⟩
+      left_inv _ := rfl
+      right_inv _ := rfl }
 
 /-- The edge associated to the dart. -/
 def Dart.edge (d : G.Dart) : Sym2 V := s(d.fst, d.snd)

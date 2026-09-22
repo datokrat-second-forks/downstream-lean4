@@ -295,7 +295,9 @@ lemma IsMeasurableRatCDF.stieltjesFunctionAux_eq (a : α) (r : ℚ) :
   refine Equiv.iInf_congr ?_ ?_
   · exact
       { toFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
-        invFun := fun t ↦ ⟨t.1, mod_cast t.2⟩ }
+        invFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
+        left_inv _ := rfl
+        right_inv _ := rfl }
   · intro t
     rfl
 

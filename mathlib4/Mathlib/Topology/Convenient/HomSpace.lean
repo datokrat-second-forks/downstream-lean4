@@ -106,6 +106,8 @@ def curryEquiv :
       prop := by
         simpa only [continuousGeneratedBy_iff_uncurry,
           continuousGeneratedBy_dom_prod_iff] using! g.prop }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 lemma curryEquiv_apply_apply (g : ContinuousMapGeneratedBy X (Y × Z) T) (y : Y) (z : Z) :

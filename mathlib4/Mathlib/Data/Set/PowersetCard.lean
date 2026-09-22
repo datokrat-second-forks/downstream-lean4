@@ -291,6 +291,7 @@ def prodEquiv : (n : ℕ) × (powersetCard α n) ≃ Finset α where
   toFun x := x.2
   invFun x := ⟨x.card, ⟨x, rfl⟩⟩
   left_inv x := by ext <;> simp
+  right_inv _ := rfl
 
 @[simp]
 lemma prodEquiv_apply (x : (n : ℕ) × (powersetCard α n)) : prodEquiv x = x.2 := rfl

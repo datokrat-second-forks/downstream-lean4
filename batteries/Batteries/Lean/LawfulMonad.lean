@@ -22,12 +22,22 @@ instance : LawfulMonad (ST σ) := .mk' _
   (bind_assoc := fun f g x => rfl)
 
 instance  : LawfulMonad (EST ε σ) := .mk' _
-  (id_map := fun x => funext fun v => by dsimp [Functor.map, EST.bind]; cases x v <;> rfl)
+  (id_map := fun x => congrArg EST.mk <| funext fun v => by cases x.run v <;> rfl)
   (pure_bind := fun x f => rfl)
-  (bind_assoc := fun f g x => funext fun v => by dsimp [Bind.bind, EST.bind]; cases f v <;> rfl)
+  (bind_assoc := fun f g x => congrArg EST.mk <| funext fun v => by
+    simp only [bind, EST.bind]
+    cases f.run v <;> rfl)
 
-instance : LawfulMonad (EIO ε) := inferInstanceAs <| LawfulMonad (EST _ _)
-instance : LawfulMonad BaseIO := inferInstanceAs <| LawfulMonad (ST _)
+instance : LawfulMonad (EIO ε) := .mk' _
+  (id_map := fun x => congrArg EIO.mk (id_map x.toEST))
+  (pure_bind := fun x f => congrArg EIO.mk (pure_bind x (fun a => (f a).toEST)))
+  (bind_assoc := fun x f g =>
+    congrArg EIO.mk (bind_assoc x.toEST (fun a => (f a).toEST) (fun b => (g b).toEST)))
+instance : LawfulMonad BaseIO := .mk' _
+  (id_map := fun x => congrArg BaseIO.mk (id_map x.toST))
+  (pure_bind := fun x f => congrArg BaseIO.mk (pure_bind x (fun a => (f a).toST)))
+  (bind_assoc := fun x f g =>
+    congrArg BaseIO.mk (bind_assoc x.toST (fun a => (f a).toST) (fun b => (g b).toST)))
 instance : LawfulMonad IO := inferInstanceAs <| LawfulMonad (EIO _)
 
 instance : LawfulMonad CoreM :=

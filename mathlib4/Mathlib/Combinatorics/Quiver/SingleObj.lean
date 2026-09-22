@@ -70,6 +70,8 @@ arrows types.
 def toPrefunctor : (α → β) ≃ SingleObj α ⥤q SingleObj β where
   toFun f := ⟨id, f⟩
   invFun f a := f.map (toHom a)
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 theorem toPrefunctor_id : toPrefunctor id = 𝟭q (SingleObj α) :=
   rfl

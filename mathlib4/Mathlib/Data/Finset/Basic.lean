@@ -660,6 +660,8 @@ lemma piFinsetUnion_right {ι} [DecidableEq ι] (α : ι → Type*) {s t : Finse
 def _root_.Finset.equivToSet (s : Finset α) : s ≃ (s : Set α) where
   toFun a := ⟨a.1, mem_coe.2 a.2⟩
   invFun a := ⟨a.1, mem_coe.1 a.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end Equiv
 

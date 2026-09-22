@@ -90,6 +90,8 @@ def opEquiv {W₁ W₂ : MorphismProperty C} {X Y : C} {f : X ⟶ Y} :
     MapFactorizationData W₁ W₂ f ≃ MapFactorizationData W₂.op W₁.op f.op where
   toFun φ := φ.op
   invFun φ := φ.unop
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end MapFactorizationData
 

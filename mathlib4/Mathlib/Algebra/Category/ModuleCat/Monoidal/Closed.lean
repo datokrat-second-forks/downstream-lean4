@@ -31,6 +31,7 @@ def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
       (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P) where
   toFun f := ofHom₂ <| LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).hom ≫ f).hom
   invFun f := (β_ M N).hom ≫ ofHom (TensorProduct.lift f.hom₂)
+  right_inv _ := by ext; rfl
   left_inv f := by
     ext : 1
     apply TensorProduct.ext'

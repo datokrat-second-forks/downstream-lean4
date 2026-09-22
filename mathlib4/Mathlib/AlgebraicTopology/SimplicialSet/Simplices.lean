@@ -172,6 +172,8 @@ lemma le_iff_nonempty_hom (x y : X.S) :
 def opEquiv : X.op.S ≃ X.S where
   toFun x := S.mk (opObjEquiv x.simplex)
   invFun y := S.mk (opObjEquiv.symm y.simplex)
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The bijection `X.S ≃ Y.S` on simplices of simplicial sets that
 is induced by an isomorphism `X ≅ Y`. -/

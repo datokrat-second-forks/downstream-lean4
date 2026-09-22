@@ -136,8 +136,9 @@ def transformAtLocation (m : Expr → ReaderT Simp.Context MetaM Simp.Result) (p
     (ctx : Simp.Context := default) :
     TacticM Unit :=
   withLocation loc
-    (liftMetaTactic1 ∘ (transformAtLocalDecl m proc ifUnchanged mayCloseGoalFromHyp · · ctx))
-    (liftMetaTactic1 (transformAtTarget m proc ifUnchanged · ctx))
+    (fun fvarId => liftMetaTactic1 fun goal =>
+      (transformAtLocalDecl m proc ifUnchanged mayCloseGoalFromHyp fvarId goal).run ctx)
+    (liftMetaTactic1 fun goal => (transformAtTarget m proc ifUnchanged goal).run ctx)
     fun _ ↦ throwError "`{proc}` made no progress anywhere"
 
 /-- Use the procedure `m` to transform at specified locations (hypotheses and/or goal).
@@ -153,8 +154,9 @@ def transformAtNondepPropLocation (m : Expr → ReaderT Simp.Context MetaM Simp.
     (ctx : Simp.Context := default) :
     TacticM Unit :=
   withNondepPropLocation loc
-    (liftMetaTactic1 ∘ (transformAtLocalDecl m proc ifUnchanged mayCloseGoalFromHyp · · ctx))
-    (liftMetaTactic1 (transformAtTarget m proc ifUnchanged · ctx))
+    (fun fvarId => liftMetaTactic1 fun goal =>
+      (transformAtLocalDecl m proc ifUnchanged mayCloseGoalFromHyp fvarId goal).run ctx)
+    (liftMetaTactic1 fun goal => (transformAtTarget m proc ifUnchanged goal).run ctx)
     fun _ ↦ throwError "`{proc}` made no progress anywhere"
 
 end Mathlib.Tactic

@@ -639,6 +639,8 @@ def isLimitEquivFanOfIsThin (c : Cone K) : IsLimit c ≃ IsLimit (Fan.mk c.pt c.
   toFun hc := Fan.IsLimit.mk _ (fun s ↦ hc.lift { pt := s.pt, π.app j := s.proj j })
     (by subsingleton) (by subsingleton)
   invFun h := { lift s := Fan.IsLimit.lift h s.π.app }
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
 
 end Thin
 

@@ -71,7 +71,7 @@ size of the examples. It allows failure to generate via the `Except` monad -/
 abbrev Gen (α : Type u) := RandT (ReaderT (ULift Nat) (Except GenError)) α
 
 instance instMonadLiftGen [MonadLiftT m (ReaderT (ULift Nat) (Except GenError))] : MonadLiftT (RandGT StdGen m) Gen where
-  monadLift := fun m => liftM ∘ m.run
+  monadLift := fun m => .mk (liftM ∘ m.run)
 
 instance instMonadErrorGen : MonadExcept GenError Gen := by infer_instance
 
@@ -84,7 +84,7 @@ namespace Gen
 @[inline]
 def up (x : Gen.{u} α) : Gen (ULift.{v} α) :=
   RandT.up
-    (λ m size ↦
+    (λ m ↦ .mk λ size ↦
       match m.run ⟨size.down⟩ with
       | .error (.genError s) => .error (.genError s)
       | .ok a => .ok ⟨a⟩) x
@@ -92,7 +92,7 @@ def up (x : Gen.{u} α) : Gen (ULift.{v} α) :=
 
 @[inline]
 def down (x : Gen (ULift.{v} α)) : Gen α :=
-  RandT.down (λ m size ↦
+  RandT.down (λ m ↦ .mk λ size ↦
       match m.run ⟨size.down⟩ with
       | .error e => .error e
       | .ok a => .ok a.down) x

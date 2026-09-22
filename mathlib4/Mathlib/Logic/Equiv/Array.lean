@@ -20,6 +20,8 @@ namespace Equiv
 def arrayEquivList (α : Type*) : Array α ≃ List α where
   toFun := Array.toList
   invFun := Array.mk
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end Equiv
 

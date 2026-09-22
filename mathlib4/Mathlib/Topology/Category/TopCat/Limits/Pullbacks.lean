@@ -150,6 +150,7 @@ def pullbackHomeoPreimage
     { p : X × Y // f p.1 = g p.2 } ≃ₜ f ⁻¹' Set.range g where
   toFun := fun x ↦ ⟨x.1.1, _, x.2.symm⟩
   invFun := fun x ↦ ⟨⟨x.1, Exists.choose x.2⟩, (Exists.choose_spec x.2).symm⟩
+  right_inv _ := rfl
   left_inv := by
     intro x
     ext <;> dsimp
@@ -333,7 +334,9 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat.{u}} (f : X ⟶ 
         invFun := fun x =>
           ⟨x, by
             rw [pullback_fst_range]
-            exact ⟨_, (H (Set.mem_range_self x)).choose_spec.symm⟩⟩ }
+            exact ⟨_, (H (Set.mem_range_self x)).choose_spec.symm⟩⟩
+        left_inv _ := rfl
+        right_inv _ := rfl }
   convert! (isoOfHomeo esto).isIso_hom
 
 theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat.{u}} {f : X ⟶ S} (hf : IsEmbedding f)
@@ -344,7 +347,9 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat.{u}} {f : X ⟶ S
         invFun := fun x =>
           ⟨x, by
             rw [pullback_snd_range]
-            exact ⟨_, (H (Set.mem_range_self x)).choose_spec⟩⟩ }
+            exact ⟨_, (H (Set.mem_range_self x)).choose_spec⟩⟩
+        left_inv _ := rfl
+        right_inv _ := rfl }
   convert! (isoOfHomeo esto).isIso_hom
 
 theorem pullback_snd_image_fst_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set X) :

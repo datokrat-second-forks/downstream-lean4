@@ -28,6 +28,8 @@ set_option backward.isDefEq.respectTransparency.types false in
 def Matrix.dualNumberEquiv : Matrix n n (DualNumber R) ≃ₐ[R] DualNumber (Matrix n n R) where
   toFun A := ⟨of fun i j => (A i j).fst, of fun i j => (A i j).snd⟩
   invFun d := of fun i j => (d.fst i j, d.snd i j)
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_mul' A B := by
     ext
     · dsimp [mul_apply]

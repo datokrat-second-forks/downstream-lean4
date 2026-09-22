@@ -245,7 +245,8 @@ lemma contravariant_sequence_exact₁' :
   apply Function.Exact.of_ladder_addEquiv_of_exact' (e₁ := Ext.homAddEquiv)
     (e₂ := Ext.homAddEquiv) (e₃ := Ext.homAddEquiv) (H := this)
   · ext; apply singleFunctor_map_comp_hom (C := C)
-  · ext; dsimp; apply preadditiveYoneda_homologySequenceδ_singleTriangle_apply
+  · ext x
+    exact preadditiveYoneda_homologySequenceδ_singleTriangle_apply hS x h
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Alternative formulation of `contravariant_sequence_exact₃` -/
@@ -261,7 +262,8 @@ lemma contravariant_sequence_exact₃' :
   rw [ShortComplex.ab_exact_iff_function_exact] at this ⊢
   apply Function.Exact.of_ladder_addEquiv_of_exact' (e₁ := Ext.homAddEquiv)
     (e₂ := Ext.homAddEquiv) (e₃ := Ext.homAddEquiv) (H := this)
-  · ext; dsimp; apply preadditiveYoneda_homologySequenceδ_singleTriangle_apply
+  · ext x
+    exact preadditiveYoneda_homologySequenceδ_singleTriangle_apply hS x h
   · ext; apply singleFunctor_map_comp_hom (C := C)
 
 open ComposableArrows

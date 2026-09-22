@@ -182,6 +182,8 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) :
     EnrichedCategory (Type v) C ≃ Category.{v} C where
   toFun _ := categoryOfEnrichedCategoryType C
   invFun _ := enrichedCategoryTypeOfCategory C
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 section
 
@@ -522,6 +524,8 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
       map := fun _ _ => ↾fun f => F.map f
       map_id := fun X => by ext ⟨⟩; exact F.map_id X
       map_comp := fun X Y Z => by ext ⟨f, g⟩; exact F.map_comp f g }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- We verify that the presheaf representing natural transformations
 between `Type v`-enriched functors is actually represented by

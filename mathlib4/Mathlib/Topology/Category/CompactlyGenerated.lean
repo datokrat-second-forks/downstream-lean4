@@ -114,5 +114,7 @@ of topological spaces. -/
 def isoEquivHomeo {X Y : CompactlyGenerated.{u, w}} : (X ≅ Y) ≃ (X ≃ₜ Y) where
   toFun := homeoOfIso
   invFun := isoOfHomeo
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end CompactlyGenerated

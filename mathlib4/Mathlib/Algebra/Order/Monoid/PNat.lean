@@ -22,3 +22,5 @@ def PNat.equivNonZeroDivisorsNat : ℕ+ ≃*o nonZeroDivisors ℕ where
   invFun x := ⟨x.val, by simp [Nat.pos_iff_ne_zero]⟩
   map_mul' := by simp
   map_le_map_iff' := by simp
+  left_inv _ := rfl
+  right_inv _ := rfl

@@ -1139,6 +1139,8 @@ theorem withLpProdComm_symm : (withLpProdComm p α β).symm = withLpProdComm p �
 def withLpProdAssoc : WithLp p (WithLp p (α × β) × γ) ≃ᵢ WithLp p (α × WithLp p (β × γ)) where
   toFun x := .toLp p (x.fst.fst, .toLp p (x.fst.snd, x.snd))
   invFun x := .toLp p (.toLp p (x.fst, x.snd.fst), x.snd.snd)
+  left_inv _ := rfl
+  right_inv _ := rfl
   isometry_toFun _ _ := by
     rcases p.trichotomy with rfl | rfl | hp
     · absurd hp.elim; simp

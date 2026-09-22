@@ -166,5 +166,7 @@ def equivUnits : (G ≃+c[a, a] G) ≃* (G →+c[a, a] G)ˣ where
     { toEquiv := Equiv.Perm.equivUnitsEnd.symm <| Units.map AddConstMap.toEnd u
       map_add_const' := u.1.2 }
   map_mul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end AddConstEquiv

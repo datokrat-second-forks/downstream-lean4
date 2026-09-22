@@ -61,7 +61,7 @@ def hasTag (attr : TagAttributeExtra) (env : Environment) (decl : Name) : Bool :
 /-- Get the list of declarations tagged with the tag attribute `attr`. -/
 def getDecls (attr : TagAttributeExtra) (env : Environment) : Array Name := Id.run do
   let decls := TagAttribute.getDecls.core <| attr.ext.toEnvExtension.getState env
-  attr.base.fold (·.push ·) decls
+  return attr.base.toHashSet.fold (·.push ·) decls
 
 end TagAttributeExtra
 

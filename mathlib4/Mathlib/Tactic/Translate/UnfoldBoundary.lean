@@ -54,7 +54,7 @@ def run {α} (b : UnfoldBoundaries) (x : SimpM α) : MetaM α :=
   withCanUnfoldPred (fun _ i => return !b.unfolds.contains i.name && !b.casts.contains i.name) do
   withTransparency .all do
   let ctx ← Simp.mkContext { Simp.neutralConfig with instances := true }
-  x (Simp.Methods.toMethodsRef { pre }) ctx |>.run' {}
+  (ReaderT.run (ReaderT.run x (Simp.Methods.toMethodsRef { pre })) ctx).run' {}
 where
   pre (e : Expr) : SimpM Simp.Step := do
     let .const c _ ← whnf e.getAppFn | return .continue
@@ -170,7 +170,7 @@ def UnfoldBoundaries.insert (b : UnfoldBoundaries) : UnfoldEntry → UnfoldBound
       { origin := .decl unfold, proof := mkConst unfold, rfl := false } }
   | .cast declName unfold refold unfold' refold' => { b with
     casts := b.casts.insert declName (unfold, refold)
-    insertionFuns := b.insertionFuns.insertMany [unfold, refold, unfold', refold'] }
+    insertionFuns := ⟨b.insertionFuns.toTreeSet.insertMany [unfold, refold, unfold', refold']⟩ }
 
 /-- Extensions for handling abstraction boundaries for definitions that shouldn't be unfolded. -/
 public abbrev UnfoldBoundaryExt := SimplePersistentEnvExtension UnfoldEntry UnfoldBoundaries

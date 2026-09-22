@@ -70,5 +70,7 @@ def equivSubtype : PrimeSpectrum R ≃o {I : Ideal R // I.IsPrime} where
   toFun I := ⟨I.asIdeal, I.2⟩
   invFun I := ⟨I, I.2⟩
   map_rel_iff' := .rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end PrimeSpectrum

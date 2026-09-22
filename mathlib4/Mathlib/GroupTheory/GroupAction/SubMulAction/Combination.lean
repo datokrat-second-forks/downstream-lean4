@@ -81,16 +81,16 @@ theorem addAction_faithful {G : Type*} [AddGroup G] [AddAction G α] {n : ℕ}
     AddAction.toPerm g = (1 : Perm (powersetCard α n)) ↔ AddAction.toPerm g = (1 : Perm α) := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · contrapose h with h
-    have : ∃ a, (g +ᵥ a : α) ≠ a := by simpa [Equiv.ext_iff] using h
+    have : ∃ a, (g +ᵥ a : α) ≠ a := by simpa [Perm.ext_iff] using h
     obtain ⟨a, ha⟩ := this
     obtain ⟨s, has, has'⟩ := exists_mem_notMem hn hα (Ne.symm ha)
-    rw [Equiv.ext_iff, not_forall]
+    rw [Perm.ext_iff, not_forall]
     use s
     contrapose has'
     simp only [AddAction.toPerm_apply, coe_one, id_eq] at has'
     rw [← has']
     simpa [← mem_coe_iff]
-  · simp only [Equiv.ext_iff, AddAction.toPerm_apply] at h ⊢
+  · simp only [Perm.ext_iff, AddAction.toPerm_apply] at h ⊢
     simp [Subtype.ext_iff, Finset.ext_iff, mem_vadd_finset, h]
 
 /-- If an additive group `G` acts faithfully on `α`,
@@ -109,16 +109,16 @@ theorem mulAction_faithful (hn : 1 ≤ n) (hα : n < ENat.card α) {g : G} :
     toPerm g = (1 : Perm (powersetCard α n)) ↔ toPerm g = (1 : Perm α) := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · contrapose h with h
-    have : ∃ a, (g • a : α) ≠ a := by simpa [Equiv.ext_iff] using h
+    have : ∃ a, (g • a : α) ≠ a := by simpa [Perm.ext_iff] using h
     obtain ⟨a, ha⟩ := this
     obtain ⟨s, has, has'⟩ := exists_mem_notMem hn hα (Ne.symm ha)
-    rw [Equiv.ext_iff, not_forall]
+    rw [Perm.ext_iff, not_forall]
     use s
     contrapose! has'
     simp only [toPerm_apply, coe_one, id_eq] at has'
     rw [← has']
     simpa only [coe_smul, smul_mem_smul_finset_iff, ← mem_coe_iff]
-  · simp only [Equiv.ext_iff, toPerm_apply] at h ⊢
+  · simp only [Perm.ext_iff, toPerm_apply] at h ⊢
     simp [Subtype.ext_iff, Finset.ext_iff, mem_smul_finset, h]
 
 /-- If a group `G` acts faithfully on `α`, then

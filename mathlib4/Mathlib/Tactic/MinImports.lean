@@ -229,7 +229,7 @@ def getAllImports (cmd id : Syntax) (dbg? : Bool := false) :
   -- We collect the implied declaration names, the `SyntaxNodeKinds` and the attributes.
   let ts ← getAllDependencies cmd id
   if dbg? then dbg_trace "{ts.toArray.qsort Name.lt}"
-  let mut hm : Std.HashMap Nat Name := {}
+  let mut hm : Std.HashMap ModuleIdx Name := {}
   for imp in env.header.moduleNames do
     hm := hm.insert ((env.getModuleIdx? imp).getD default) imp
   let mut fins : NameSet := {}

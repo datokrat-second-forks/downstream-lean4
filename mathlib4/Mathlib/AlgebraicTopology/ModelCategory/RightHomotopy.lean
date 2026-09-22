@@ -104,6 +104,8 @@ noncomputable def fullSubcategoryEquiv {P : ObjectProperty C} {X Y : P.FullSubca
     { h := P.homMk h.h
       h₀ := by ext; exact h.h₀
       h₁ := by ext; exact h.h₁ }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end RightHomotopy
 

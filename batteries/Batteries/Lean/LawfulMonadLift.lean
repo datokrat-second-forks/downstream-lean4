@@ -23,27 +23,22 @@ instance : LawfulMonadLift (ST σ) (EST ε σ) where
   monadLift_pure _ := rfl
   monadLift_bind _ _ := rfl
 
-instance : LawfulMonadLift BaseIO (EIO ε) :=
-  inferInstanceAs <| LawfulMonadLift (ST IO.RealWorld) (EST ε IO.RealWorld)
+instance : LawfulMonadLift BaseIO (EIO ε) where
+  monadLift_pure _ := rfl
+  monadLift_bind _ _ := rfl
 
 /-! ### `EIO.adapt` simp lemmas -/
 
 @[simp] theorem EIO.adapt_pure (f : ε₁ → ε₂) (a : α) :
     EIO.adapt f (pure a : EIO ε₁ α) = (pure a : EIO ε₂ α) := by rfl
 
-private theorem EIO.bind_eq_EST_bind (ma : EIO ε α) (f : α → EIO ε β) :
-    (ma >>= f) = EST.bind ma f := by rfl
-
-private theorem EIO.adapt_EST_bind (f : ε₁ → ε₂) (ma : EIO ε₁ α) (g : α → EIO ε₁ β) :
-    EIO.adapt f (EST.bind ma g) = EST.bind (EIO.adapt f ma) (fun a => EIO.adapt f (g a)) := by
-  funext s; simp only [EIO.adapt, EST.bind]; cases ma s <;> rfl
-
-set_option allowUnsafeReducibility true in
-attribute [implicit_reducible] EIO
-
 @[simp] theorem EIO.adapt_bind (f : ε₁ → ε₂) (ma : EIO ε₁ α) (g : α → EIO ε₁ β) :
     EIO.adapt f (ma >>= g) = EIO.adapt f ma >>= fun a => EIO.adapt f (g a) := by
-  simp only [EIO.bind_eq_EST_bind, EIO.adapt_EST_bind]
+  apply congrArg EIO.mk
+  apply congrArg EST.mk
+  funext s
+  simp only [EIO.adapt, bind, EST.bind]
+  cases ma.toEST.run s <;> rfl
 
 /-! ### `StateRefT'.lift` simp lemmas -/
 

@@ -196,11 +196,16 @@ instance lawfulFunctor : LawfulFunctor (Comp F G) where
   comp_map := Comp.comp_map
 
 theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] :
-    Comp.functor (G := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (G := Id)) _ fun _ _ _ _ => rfl
+    HEq (Comp.functor (F := F) (G := Id)) AF := by
+  unsealing_newtype Id =>
+    exact heq_of_eq <| @Functor.ext F _ AF (Comp.lawfulFunctor (G := Id)) _
+      fun _ _ _ _ => rfl
 
-theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : Comp.functor (F := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (F := Id)) _ fun _ _ _ _ => rfl
+theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] :
+    HEq (Comp.functor (F := Id) (G := F)) AF := by
+  unsealing_newtype Id =>
+    exact heq_of_eq <| @Functor.ext F _ AF (Comp.lawfulFunctor (F := Id)) _
+      fun _ _ _ _ => rfl
 
 end Comp
 

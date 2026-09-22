@@ -36,6 +36,8 @@ def AddEquiv.toMultiplicative [Add G] [Add H] :
     left_inv := f.left_inv
     right_inv := f.right_inv
     map_add' := map_mul f }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret `G ≃* H` as `Additive G ≃+ Additive H`. -/
 @[simps]
@@ -53,6 +55,8 @@ def MulEquiv.toAdditive [Mul G] [Mul H] :
     left_inv := f.left_inv
     right_inv := f.right_inv
     map_mul' := map_add f }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret `Additive G ≃+ H` as `G ≃* Multiplicative H`. -/
 @[simps]
@@ -70,6 +74,8 @@ def AddEquiv.toMultiplicativeRight [Mul G] [Add H] :
     left_inv := f.left_inv
     right_inv := f.right_inv
     map_add' := map_mul f }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret `G ≃* Multiplicative H` as `Additive G ≃+ H`. -/
 abbrev MulEquiv.toAdditiveLeft [Mul G] [Add H] :
@@ -92,6 +98,8 @@ def AddEquiv.toMultiplicativeLeft [Add G] [Mul H] :
     left_inv := f.left_inv
     right_inv := f.right_inv
     map_add' := map_mul f }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Reinterpret `Multiplicative G ≃* H` as `G ≃+ Additive H` as. -/
 abbrev MulEquiv.toAdditiveRight [Add G] [Mul H] :
@@ -140,6 +148,8 @@ def MulEquiv.piMultiplicative (K : ι → Type*) [∀ i, Add (K i)] :
   toFun x := fun i ↦ Multiplicative.ofAdd <| x.toAdd i
   invFun x := Multiplicative.ofAdd fun i ↦ (x i).toAdd
   map_mul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 variable (ι) (G) in
 /-- `Multiplicative (ι → G)` is equivalent to `ι → Multiplicative G`. -/
@@ -154,6 +164,8 @@ def AddEquiv.piAdditive (K : ι → Type*) [∀ i, Mul (K i)] :
   toFun x := fun i ↦ Additive.ofMul <| x.toMul i
   invFun x := Additive.ofMul fun i ↦ (x i).toMul
   map_add' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 variable (ι) (G) in
 /-- `Additive (ι → G)` is equivalent to `ι → Additive G`. -/
@@ -196,6 +208,8 @@ def MulEquiv.prodMultiplicative [Add G] [Add H] :
     Multiplicative.ofAdd x.toAdd.2)
   invFun := fun (x, y) ↦ Multiplicative.ofAdd (x.toAdd, y.toAdd)
   map_mul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- `Additive (G × H)` is equivalent to `Additive G × Additive H`. -/
 @[simps]
@@ -205,5 +219,7 @@ def AddEquiv.prodAdditive [Mul G] [Mul H] :
     Additive.ofMul x.toMul.2)
   invFun := fun (x, y) ↦ Additive.ofMul (x.toMul, y.toMul)
   map_add' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end

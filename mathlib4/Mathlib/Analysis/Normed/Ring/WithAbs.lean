@@ -55,7 +55,8 @@ section Semiring
 variable [Semiring R] (v : AbsoluteValue R S)
 
 instance : Semiring (WithAbs v) :=
-  fast_instance% Equiv.semiring { toFun := ofAbs, invFun := toAbs v }
+  fast_instance% Equiv.semiring
+    { toFun := ofAbs, invFun := toAbs v, left_inv _ := rfl, right_inv _ := rfl }
 
 lemma ofAbs_toAbs (x : R) : ofAbs (toAbs v x) = x := rfl
 @[simp] lemma toAbs_ofAbs (x : WithAbs v) : toAbs v (ofAbs x) = x := rfl
@@ -101,6 +102,8 @@ lemma toAbs_bijective : Function.Bijective (toAbs v) :=
 def equiv : WithAbs v ≃+* R where
   toFun := ofAbs
   invFun := toAbs v
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_mul' _ _ := rfl
   map_add' _ _ := rfl
 
@@ -215,7 +218,8 @@ theorem smul_left_def [SMul R T] (x : WithAbs v) (t : T) :
 instance [SMul R T] [FaithfulSMul R T] : FaithfulSMul (WithAbs v) T where
   eq_of_smul_eq_smul h := ofAbs_injective v <| FaithfulSMul.eq_of_smul_eq_smul h
 
-instance [SMul T R] : SMul T (WithAbs v) := Equiv.smul T { toFun := ofAbs, invFun := toAbs v }
+instance [SMul T R] : SMul T (WithAbs v) :=
+  Equiv.smul T { toFun := ofAbs, invFun := toAbs v, left_inv _ := rfl, right_inv _ := rfl }
 
 theorem smul_right_def [SMul T R] (t : T) (x : WithAbs v) :
     t • x = toAbs v (t • x.ofAbs) := rfl

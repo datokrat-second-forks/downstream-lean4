@@ -227,6 +227,8 @@ def rootsOfUnityEquivNthRoots : rootsOfUnity k R ≃ { x // x ∈ nthRoots k (1 
       rcases x with ⟨x, hx⟩; rw [mem_nthRoots <| NeZero.pos k] at hx
       simp only [← pow_succ, ← pow_succ', hx, tsub_add_cancel_of_le NeZero.one_le]
     simp only [mem_rootsOfUnity, Units.ext_iff, Units.val_pow_eq_pow_val, hx, Units.val_one]
+  left_inv _ := Subtype.ext (Units.ext rfl)
+  right_inv _ := rfl
 
 variable {k R}
 

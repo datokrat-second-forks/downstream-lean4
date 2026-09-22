@@ -94,7 +94,9 @@ lemma small_op_iff (P : ObjectProperty C) :
     ObjectProperty.Small.{w} P.op ↔ ObjectProperty.Small.{w} P :=
   small_congr
     { toFun x := ⟨x.1.unop, x.2⟩
-      invFun x := ⟨op x.1, x.2⟩}
+      invFun x := ⟨op x.1, x.2⟩
+      left_inv _ := rfl
+      right_inv _ := rfl }
 
 @[simp]
 lemma small_unop_iff (P : ObjectProperty Cᵒᵖ) :

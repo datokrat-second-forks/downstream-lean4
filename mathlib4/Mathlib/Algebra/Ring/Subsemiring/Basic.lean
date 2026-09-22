@@ -102,6 +102,8 @@ def topEquiv : (⊤ : Subsemiring R) ≃+* R where
   invFun r := ⟨r, Subsemiring.mem_top r⟩
   map_mul' := (⊤ : Subsemiring R).coe_mul
   map_add' := (⊤ : Subsemiring R).coe_add
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The preimage of a subsemiring along a ring homomorphism is a subsemiring. -/
 @[simps coe toSubmonoid]

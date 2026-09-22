@@ -301,6 +301,7 @@ then `piLT X i` is the limit of all `piLT X j` for `j < i`. -/
     set k := hi.mid (l.2.trans j.2)
     obtain le | le := le_total j ⟨k, k.2.2⟩
     exacts [congr_fun (f.2 le) l, (congr_fun (f.2 le) ⟨l, _⟩).symm]
+  left_inv _ := rfl
 
 theorem piLTLim_symm_apply {f} (k : Iio i) {l : Iio i} (hl : l.1 < k.1) :
     (piLTLim (X := X) hi).symm f l = f.1 k ⟨l, hl⟩ := by
@@ -430,12 +431,14 @@ theorem unique_pEquivOn (hs : IsLowerSet s) {e₁ e₂ : PEquivOn f equivSucc s}
   refine SuccOrder.prelimitRecOn i.1 (motive := fun i ↦ ∀ h : i ∈ s, e₁ ⟨i, h⟩ = e₂ ⟨i, h⟩)
     (fun i nmax ih hi ↦ ?_) (fun i lim ih hi ↦ ?_) i.2
   · ext x ⟨j, hj⟩
+    simp only [Equiv.toFun_as_coe]
     obtain rfl | hj := ((lt_succ_iff_of_not_isMax nmax).mp hj).eq_or_lt
     · exact (compat₁ _ nmax x).trans (compat₂ _ nmax x).symm
     have hi : i ∈ s := hs (le_succ i) hi
     rw [piLTProj_intro (f := e₁ _ x) (le_succ i) (by exact hj),
         ← nat₁ _ hi (by exact le_succ i), ih, nat₂ _ hi (by exact le_succ i)]
   · ext x j
+    simp only [Equiv.toFun_as_coe]
     have ⟨k, hjk, hki⟩ := lim.mid j.2
     have hk : k ∈ s := hs hki.le hi
     rw [piLTProj_intro (f := e₁ _ x) hki.le hjk, piLTProj_intro (f := e₂ _ x) hki.le hjk,

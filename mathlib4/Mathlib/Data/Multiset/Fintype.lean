@@ -171,6 +171,8 @@ def coeEquiv (m : Multiset α) : m ≃ m.toEnumFinset where
     ⟨x.1.1, x.1.2, by
       rw [← Multiset.mem_toEnumFinset]
       exact x.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem toEmbedding_coeEquiv_trans (m : Multiset α) :
@@ -244,6 +246,8 @@ If `s = t` then there's an equivalence between the appropriate types.
 def cast {s t : Multiset α} (h : s = t) : s ≃ t where
   toFun x := ⟨x.1, x.2.cast (by simp [h])⟩
   invFun x := ⟨x.1, x.2.cast (by simp [h])⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 instance : IsEmpty (0 : Multiset α) := Fintype.card_eq_zero_iff.mp (by simp)
 

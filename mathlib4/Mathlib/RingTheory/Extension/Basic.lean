@@ -417,6 +417,8 @@ lemma Cotangent.val_smul'' (r : R) (x : P.Cotangent) : (r • x).val = r • x.v
 def cotangentEquivCotangentKer : P.Cotangent ≃ₗ[P.Ring] P.ker.Cotangent where
   toFun := Cotangent.val
   invFun := Cotangent.of
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_add' x y := by simp
   map_smul' x y := by simp
 

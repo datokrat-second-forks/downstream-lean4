@@ -132,7 +132,7 @@ def foldSimpEntriesM [Monad m] (f : σ → SimpEntry → m σ) (init : σ)
 
 def foldSimpEntries (f : σ → SimpEntry → σ) (init : σ) (thms : SimpTheorems) :
     σ :=
-  Id.run $ foldSimpEntriesM f init thms
+  Id.run $ foldSimpEntriesM (fun s e => pure (f s e)) init thms
 
 def simpEntries (thms : SimpTheorems) : Array SimpEntry :=
   foldSimpEntries (thms := thms) (init := #[]) λ s thm => s.push thm

@@ -88,6 +88,8 @@ def subtypeOpEquiv (P : ObjectProperty C) :
     Subtype P.op ≃ Subtype P where
   toFun x := ⟨x.1.unop, x.2⟩
   invFun x := ⟨op x.1, x.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 lemma op_ofObj {ι : Type*} (X : ι → C) : (ofObj X).op = ofObj (fun i ↦ op (X i)) := by

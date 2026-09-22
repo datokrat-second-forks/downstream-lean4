@@ -144,7 +144,7 @@ flagging some line-breaking changes.
 -/
 partial
 def parallelScanAux (as : Array FormatError) (L M : String.Slice) : Array FormatError := Id.run do
-  if M.trimAscii.isEmpty then as else
+  if M.trimAscii.isEmpty then return as else
   -- We try as hard as possible to scan the strings one character at a time.
   -- However, single line comments introduced with `--` pretty-print differently than `/--`.
   -- So, we first look ahead for `/--`: the linter will later ignore doc-strings, so it does not
@@ -156,7 +156,7 @@ def parallelScanAux (as : Array FormatError) (L M : String.Slice) : Array Format
   -- original syntax, and for the same amount of characters in the pretty-printed one, since the
   -- pretty-printer *erases* the line break at the end of a single line comment.
   if let (some newL, some newM) := (L.dropPrefix? "/--", M.dropPrefix? "/--") then
-    parallelScanAux as newL newM
+    return parallelScanAux as newL newM
   else if L.startsWith "--" then
     let (pos, diff) := Id.run do
       let mut diff := 0
@@ -172,11 +172,11 @@ def parallelScanAux (as : Array FormatError) (L M : String.Slice) : Array Format
     -- This holds because we call this function with `M` being a pretty-printed version of `L`.
     -- If the pretty-printer changes in the future, this code may need to be adjusted.
     let newM := M.dropWhile (· != '-') |>.drop diff
-    parallelScanAux as newL.trimAsciiStart newM.trimAsciiStart
+    return parallelScanAux as newL.trimAsciiStart newM.trimAsciiStart
   else if let some newL := L.dropPrefix? "-/" then
     let newL := newL.trimAsciiStart
     let newM := M.drop 2 |>.trimAsciiStart
-    parallelScanAux as newL newM
+    return parallelScanAux as newL newM
   else
     let ls := L.drop 1
     let ms := M.drop 1
@@ -184,25 +184,25 @@ def parallelScanAux (as : Array FormatError) (L M : String.Slice) : Array Format
     match L.front with
     | ' ' =>
       if m.isWhitespace then
-        parallelScanAux as ls ms.trimAsciiStart
+        return parallelScanAux as ls ms.trimAsciiStart
       else
-        parallelScanAux (pushFormatError as (mkFormatError L.copy M.copy "extra space")) ls M
+        return parallelScanAux (pushFormatError as (mkFormatError L.copy M.copy "extra space")) ls M
     | '\n' =>
       if m.isWhitespace then
-        parallelScanAux as ls.trimAsciiStart ms.trimAsciiStart
+        return parallelScanAux as ls.trimAsciiStart ms.trimAsciiStart
       else
-        parallelScanAux
+        return parallelScanAux
           (pushFormatError as (mkFormatError L.copy M.copy "remove line break")) ls.trimAsciiStart M
     | l => -- `l` is not whitespace
       if l == m then
-        parallelScanAux as ls ms
+        return parallelScanAux as ls ms
       else if m.isWhitespace then
-        parallelScanAux
+        return parallelScanAux
           (pushFormatError as (mkFormatError L.copy M.copy "missing space")) L ms.trimAsciiStart
       else
         -- If this code is reached, then `L` and `M` differ by something other than whitespace.
         -- This should not happen in practice.
-        pushFormatError as (mkFormatError ls.copy ms.copy "Oh no! (Unreachable?)")
+        return pushFormatError as (mkFormatError ls.copy ms.copy "Oh no! (Unreachable?)")
 
 @[inherit_doc parallelScanAux]
 def parallelScan (src fmt : String) : Array FormatError :=

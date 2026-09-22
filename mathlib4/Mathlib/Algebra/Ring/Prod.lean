@@ -319,6 +319,7 @@ def prodZeroRing : R ≃+* R × S where
   map_add' := by simp
   map_mul' := by simp
   right_inv x := by cases x; simp [eq_iff_true_of_subsingleton]
+  left_inv _ := rfl
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
@@ -328,6 +329,7 @@ def zeroRingProd : R ≃+* S × R where
   map_add' := by simp
   map_mul' := by simp
   right_inv x := by cases x; simp [eq_iff_true_of_subsingleton]
+  left_inv _ := rfl
 
 end RingEquiv
 

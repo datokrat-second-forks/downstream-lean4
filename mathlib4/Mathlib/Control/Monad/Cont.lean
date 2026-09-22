@@ -196,9 +196,9 @@ instance {ε} [MonadCont m] [LawfulMonadCont m] : LawfulMonadCont (ExceptT ε m)
   callCC_bind_left := by
     intros
     simp only [callCC, ExceptT.callCC, ExceptT.goto_mkLabel, map_eq_bind_pure_comp, Function.comp,
-      ExceptT.run_bind, ExceptT.run_mk, bind_assoc, pure_bind, @callCC_bind_left m _]
+      ExceptT.run_bind, bind_assoc, pure_bind, @callCC_bind_left m _]
     ext; rfl
-  callCC_dummy := by intros; simp only [callCC, ExceptT.callCC, @callCC_dummy m _]; ext; rfl
+  callCC_dummy := by intros; simp only [callCC, ExceptT.callCC, @callCC_dummy m _]
 
 def OptionT.mkLabel {α β} : Label (Option.{u} α) m β → Label α (OptionT m) β
   | ⟨f⟩ => ⟨fun a => monadLift <| f (some a)⟩
@@ -277,12 +277,11 @@ instance {σ} [Monad m] [MonadCont m] [LawfulMonadCont m] : LawfulMonadCont (Sta
     simp only [callCC, StateT.callCC, StateT.run_bind, callCC_bind_right]; ext; rfl
   callCC_bind_left := by
     intros
-    simp only [callCC, StateT.callCC, StateT.goto_mkLabel, StateT.run_bind, StateT.run_mk,
+    simp only [callCC, StateT.callCC, StateT.goto_mkLabel, StateT.run_bind,
       callCC_bind_left]; ext; rfl
   callCC_dummy := by
     intros
     simp only [callCC, StateT.callCC, @callCC_dummy m _]
-    ext; rfl
 
 def ReaderT.mkLabel {α β} (ρ) : Label α m β → Label α (ReaderT ρ m) β
   | ⟨f⟩ => ⟨monadLift ∘ f⟩
@@ -304,7 +303,7 @@ instance {ρ} [Monad m] [MonadCont m] [LawfulMonadCont m] : LawfulMonadCont (Rea
     intros; simp only [callCC, ReaderT.callCC, ReaderT.goto_mkLabel, ReaderT.run_bind,
       ReaderT.run_monadLift, monadLift_self, callCC_bind_left]
     ext; rfl
-  callCC_dummy := by intros; simp only [callCC, ReaderT.callCC, @callCC_dummy m _]; ext; rfl
+  callCC_dummy := by intros; simp only [callCC, ReaderT.callCC, @callCC_dummy m _]
 
 /-- reduce the equivalence between two continuation passing monads to the equivalence between
 their underlying monad -/

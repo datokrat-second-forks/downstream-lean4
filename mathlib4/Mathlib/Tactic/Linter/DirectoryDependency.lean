@@ -141,7 +141,7 @@ def getAllLeft (r : NamePrefixRel) (n : Name) : NameSet := Id.run do
   for prefix_ in matchingPrefixes do
     let some rules := r.find? prefix_ | unreachable!
     allRules := allRules.append rules
-  allRules
+  return allRules
 
 end NamePrefixRel
 
@@ -661,11 +661,11 @@ def checkBlocklist (env : Environment) (mainModule : Name) (imports : Array Name
           msg := msg ++ m!"which is imported by {dep},\n"
         return some (msg ++ m!"which is imported by this module. \
           (Exceptions can be added to `overrideAllowedImportDirs`.)")
-      else none
+      else return none
     else
       return some m!"Internal error in `directoryDependency` linter: this module claims to depend \
       on a module starting with {n₂} but a module with that prefix was not found in the import graph."
-  | none => none
+  | none => return none
 
 @[inherit_doc Mathlib.Linter.linter.directoryDependency]
 public def directoryDependencyCheck (mainModule : Name) : CommandElabM (Array MessageData) := do

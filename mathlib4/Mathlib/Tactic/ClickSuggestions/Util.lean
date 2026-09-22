@@ -362,7 +362,7 @@ def mkSuggestion (tac : TSyntax `tactic) (html : Html) (isClosing := false) :
   let tac ← match (← read).onGoal with
     | some n => `(tactic| on_goal $(Syntax.mkNatLit (n + 1)) => $tac:tactic)
     | none => pure tac
-  let (range, newText) ← mkInsertion tac (← read)
+  let (range, newText) ← mkInsertion tac
   let buttonText := if isClosing then "[done] " else "[apply] "
   let button :=
     -- TODO: The hover on this button should be a `CodeWithInfos`, instead of a string.

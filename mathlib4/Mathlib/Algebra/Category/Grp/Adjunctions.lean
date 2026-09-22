@@ -186,7 +186,9 @@ def MonCat.units : MonCat.{u} ⥤ GrpCat.{u} where
 def GrpCat.forget₂MonAdj : forget₂ GrpCat MonCat ⊣ MonCat.units.{u} := Adjunction.mk' {
   homEquiv _ Y :=
     { toFun f := ofHom (MonoidHom.toHomUnits f.hom)
-      invFun f := MonCat.ofHom ((Units.coeHom Y).comp f.hom) }
+      invFun f := MonCat.ofHom ((Units.coeHom Y).comp f.hom)
+      left_inv _ := rfl
+      right_inv _ := GrpCat.ext fun _ => Units.ext rfl }
   unit :=
     { app X := ofHom (@toUnits X _)
       naturality _ _ _ := GrpCat.ext fun _ => Units.ext rfl }
@@ -210,7 +212,9 @@ def CommGrpCat.forget₂CommMonAdj : forget₂ CommGrpCat CommMonCat ⊣ CommMon
   Adjunction.mk' {
     homEquiv := fun _ Y ↦
       { toFun f := ofHom (MonoidHom.toHomUnits f.hom)
-        invFun f := CommMonCat.ofHom ((Units.coeHom Y).comp f.hom) }
+        invFun f := CommMonCat.ofHom ((Units.coeHom Y).comp f.hom)
+        left_inv _ := rfl
+        right_inv _ := CommGrpCat.ext fun _ => Units.ext rfl }
     unit.app X := ofHom toUnits.toMonoidHom
     -- `aesop` can find the following proof but it takes `0.5`s.
     unit.naturality _ _ _ := CommGrpCat.ext fun _ => Units.ext rfl

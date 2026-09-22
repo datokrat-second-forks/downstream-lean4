@@ -2,20 +2,20 @@ import Batteries.Tactic.Lint
 
 set_option linter.missingDocs false
 
-structure Equiv (α : Sort _) (β : Sort _) where
+structure TestEquiv (α : Sort _) (β : Sort _) where
   toFun : α → β
   invFun : β → α
 
-infixl:25 " ≃ " => Equiv
+local infixl:25 " ≃ₜ " => TestEquiv
 
-namespace Equiv
+namespace TestEquiv
 
-instance : CoeFun (α ≃ β) fun _ => α → β := ⟨toFun⟩
+instance : CoeFun (α ≃ₜ β) fun _ => α → β := ⟨toFun⟩
 
-protected def symm (e : α ≃ β) : β ≃ α := ⟨e.invFun, e.toFun⟩
+protected def symm (e : α ≃ₜ β) : β ≃ₜ α := ⟨e.invFun, e.toFun⟩
 
 def sumCompl {α : Type _} (p : α → Prop) [DecidablePred p] :
-    Sum { a // p a } { a // ¬p a } ≃ α where
+    Sum { a // p a } { a // ¬p a } ≃ₜ α where
   toFun := Sum.elim Subtype.val Subtype.val
   invFun a := if h : p a then Sum.inl ⟨a, h⟩ else Sum.inr ⟨a, h⟩
 
@@ -36,7 +36,7 @@ theorem foo_eq_id : foo = id := by
 theorem foo_eq_ite (n : Nat) : foo n = if n = n then n else 0 := by
   rfl
 
-end Equiv
+end TestEquiv
 
 namespace List
 
@@ -63,7 +63,7 @@ theorem eqToFun_comp_eq_self {β} {X : Type} {f : β → Type}
 
 @[simp]
 theorem eqToFun_comp_iso_hom_eq_self {β} {X : Type} {f : β → Type}
-    (z : ∀ b, X ≃ f b) {j j' : β} (w : j = j') :
+    (z : ∀ b, X ≃ₜ f b) {j j' : β} (w : j = j') :
     eqToFun (by simp [w]) ∘ (z j').toFun = (z j).toFun := by
   cases w; rfl
 

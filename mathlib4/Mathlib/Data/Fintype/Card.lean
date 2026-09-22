@@ -502,7 +502,9 @@ theorem Fintype.card_fin_lt_of_le {m n : ℕ} (h : m ≤ n) :
   conv_rhs => rw [← Fintype.card_fin m]
   apply Fintype.card_congr
   exact { toFun := fun ⟨⟨i, _⟩, hi⟩ ↦ ⟨i, hi⟩
-          invFun := fun ⟨i, hi⟩ ↦ ⟨⟨i, lt_of_lt_of_le hi h⟩, hi⟩ }
+          invFun := fun ⟨i, hi⟩ ↦ ⟨⟨i, lt_of_lt_of_le hi h⟩, hi⟩
+          left_inv _ := rfl
+          right_inv _ := rfl }
 
 theorem Finset.card_fin (n : ℕ) : #(univ : Finset (Fin n)) = n := by simp
 

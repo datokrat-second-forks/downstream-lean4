@@ -84,6 +84,8 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M where
   toFun := toLinearEquiv
   invFun := ofLinearEquiv
   map_mul' x y := by ext; rfl
+  left_inv _ := Units.ext rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem generalLinearEquiv_to_linearMap (f : GeneralLinearGroup R M) :

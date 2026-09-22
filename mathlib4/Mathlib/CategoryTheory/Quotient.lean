@@ -161,6 +161,8 @@ for the original category. -/
 def equiv {C : Type _} [Category* C] (r : HomRel C) : Quotient r ≃ C where
   toFun x := x.1
   invFun x := ⟨x⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 noncomputable section
 

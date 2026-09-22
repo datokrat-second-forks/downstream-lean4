@@ -43,6 +43,8 @@ def RelativeMorphism.botEquiv :
       (Subcomplex.isInitialBot.to _) ≃ (X ⟶ Y) where
   toFun f := f.map
   invFun f := { map := f }
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The type of homotopies between morphisms `X ⟶ Y` of simplicial sets.
 The data consists of a morphism `h : X ⊗ Δ[1] ⟶ Y` which induces

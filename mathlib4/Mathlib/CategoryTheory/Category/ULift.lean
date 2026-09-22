@@ -99,6 +99,8 @@ def ULiftHom.objUp {C} (A : C) : ULiftHom C :=
 def ULiftHom.objEquiv {C} : C ≃ ULiftHom C where
   toFun := ULiftHom.objUp
   invFun := ULiftHom.objDown
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem objDown_objUp {C} (A : C) : (ULiftHom.objUp A).objDown = A :=
@@ -205,5 +207,7 @@ def ULiftHomULiftCategory.equivCongrLeft.{v', u'}
     (C ⥤ D) ≃ (C ⥤ (ULiftHom.{v'} (ULift.{u'} D))) where
   toFun F := F ⋙ ULift.upFunctor ⋙ ULiftHom.up
   invFun F := F ⋙ ULiftHom.down ⋙ ULift.downFunctor
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end CategoryTheory

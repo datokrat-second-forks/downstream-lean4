@@ -191,7 +191,7 @@ and https://lean-lang.org/doc/reference/latest/The-Simplifier/Simp-Normal-Forms/
             let ldecl ← h.fvarId!.getDecl
             let mut name := ldecl.userName
             if name.hasMacroScopes then
-              name := sanitizeName name |>.run' { options := ← getOptions }
+              name := sanitizeName name |>.run' { options := ← getOptions } |>.run
             if ← isProp ldecl.type then
               -- improve the error message if the hypothesis isn't in `simp` normal form
               let ({ expr := hType', .. }, stats) ←

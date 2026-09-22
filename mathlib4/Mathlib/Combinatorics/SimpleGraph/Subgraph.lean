@@ -209,6 +209,8 @@ def spanningCoeEquivCoeOfSpanning (G' : Subgraph G) (h : G'.IsSpanning) :
     G'.spanningCoe ≃g G'.coe where
   toFun v := ⟨v, h v⟩
   invFun v := v
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_rel_iff' := Iff.rfl
 
 /-- A subgraph is called an *induced subgraph* if vertices of `G'` are adjacent if
@@ -245,6 +247,8 @@ def coeNeighborSetEquiv {G' : Subgraph G} (v : G'.verts) :
     G'.coe.neighborSet v ≃ G'.neighborSet v where
   toFun w := ⟨w, w.2⟩
   invFun w := ⟨⟨w, G'.edge_vert (G'.adj_symm w.2)⟩, w.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The edge set of `G'` consists of a subset of edges of `G`. -/
 def edgeSet (G' : Subgraph G) : Set (Sym2 V) := Sym2.fromRel G'.symm
@@ -447,6 +451,7 @@ theorem verts_iInf {f : ι → G.Subgraph} : (⨅ i, f i).verts = ⋂ i, (f i).v
 def topIso : (⊤ : G.Subgraph).coe ≃g G where
   toFun := (↑)
   invFun a := ⟨a, Set.mem_univ _⟩
+  right_inv _ := rfl
   left_inv _ := Subtype.eta ..
   map_rel_iff' := .rfl
 
@@ -1302,6 +1307,8 @@ def coeInduceIso (s : Set V) (h : s ⊆ G'.verts) :
     (G'.induce s).coe ≃g G'.coe.induce {v : G'.verts | ↑v ∈ s} where
   toFun := fun ⟨v, hv⟩ ↦ ⟨⟨v, h hv⟩, by simp at hv; aesop⟩
   invFun := fun ⟨v, hv⟩ ↦ ⟨v, hv⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_rel_iff' := by simp
 
 end Induce
@@ -1375,6 +1382,8 @@ def coeDeleteVertsIso (s : Set V) :
     (G'.deleteVerts s).coe ≃g G'.coe.induce {v : G'.verts | ↑v ∉ s} where
   toFun := fun ⟨v, hv⟩ ↦ ⟨⟨v, Set.mem_of_mem_inter_left hv⟩, by aesop⟩
   invFun := fun ⟨v, hv⟩ ↦ ⟨v, by simp_all⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
   map_rel_iff' := by simp
 
 end DeleteVerts

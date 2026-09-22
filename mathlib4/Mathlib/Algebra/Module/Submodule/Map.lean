@@ -280,6 +280,8 @@ def submoduleOfEquivOfLe {p q : Submodule R M} (h : p ≤ q) : p.submoduleOf q �
   invFun m := ⟨⟨m.1, h m.2⟩, m.2⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end submoduleOf
 

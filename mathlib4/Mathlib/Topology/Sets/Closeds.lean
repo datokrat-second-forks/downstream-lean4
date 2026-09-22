@@ -451,6 +451,8 @@ The equivalence between `IrreducibleCloseds α` and `{x : Set α // IsIrreducibl
 def equivSubtype : IrreducibleCloseds α ≃ { x : Set α // IsIrreducible x ∧ IsClosed x } where
   toFun a  := ⟨a.1, a.2, a.3⟩
   invFun a := ⟨a.1, a.2.1, a.2.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 set_option linter.style.whitespace false in -- manual alignment is not recognised
 /--
@@ -460,6 +462,8 @@ The equivalence between `IrreducibleCloseds α` and `{x : Set α // IsClosed x �
 def equivSubtype' : IrreducibleCloseds α ≃ { x : Set α // IsClosed x ∧ IsIrreducible x } where
   toFun a  := ⟨a.1, a.3, a.2⟩
   invFun a := ⟨a.1, a.2.2, a.2.1⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 variable (α) in
 /-- The equivalence `IrreducibleCloseds α ≃ { x : Set α // IsIrreducible x ∧ IsClosed x }` is an

@@ -138,6 +138,8 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
     { toFun := f
       zero_at_infty' := by simp }
   invFun f := f
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A continuous function on a compact space is automatically a continuous function vanishing at
 infinity. This is not an instance to avoid type class loops. -/

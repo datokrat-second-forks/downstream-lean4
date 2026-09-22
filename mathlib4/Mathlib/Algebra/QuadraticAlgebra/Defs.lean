@@ -52,6 +52,8 @@ namespace QuadraticAlgebra
 def equivProd (a b : R) : QuadraticAlgebra R a b ≃ R × R where
   toFun z := (z.re, z.im)
   invFun p := ⟨p.1, p.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem mk_eta {a b} (z : QuadraticAlgebra R a b) :

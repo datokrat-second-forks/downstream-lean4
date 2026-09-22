@@ -85,6 +85,8 @@ from a morphism in the original category. -/
 def homEquiv {X Y : InducedCategory D F} : (X ⟶ Y) ≃ (F X ⟶ F Y) where
   toFun f := f.hom
   invFun f := homMk f
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- Construct an isomorphism in the induced category
 from an isomorphism in the original category. -/

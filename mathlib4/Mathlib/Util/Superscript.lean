@@ -171,7 +171,7 @@ partial def scriptFnNoAntiquot (m : Mapping) (errorMsg : String) (p : ParserFn)
         .atom (alignInfo info) val
       | .ident info rawVal val preresolved =>
         .ident (alignInfo info) (alignSubstr rawVal) val preresolved
-    s.pushSyntax (alignSyntax s'.stxStack.back)
+    return s.pushSyntax (alignSyntax s'.stxStack.back)
   )
 
 /-- The super/subscript parser.

@@ -162,6 +162,8 @@ protected def swap (f : r →r s) : swap r →r swap s :=
 protected def swapEquiv : (r →r s) ≃ (swap r →r swap s) where
   toFun := RelHom.swap
   invFun := RelHom.swap
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A function is a relation homomorphism from the preimage relation of `s` to `s`. -/
 @[simps]
@@ -310,6 +312,8 @@ protected def swap (f : r ↪r s) : swap r ↪r swap s :=
 def swapEquiv : (r ↪r s) ≃ (swap r ↪r swap s) where
   toFun := RelEmbedding.swap
   invFun := RelEmbedding.swap
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem swap_apply (f : r ↪r s) (a : α) : f.swap a = f a := rfl
@@ -718,6 +722,8 @@ protected def swap (f : r ≃r s) : swap r ≃r swap s :=
 def swapEquiv : (r ≃r s) ≃ (swap r ≃r swap s) where
   toFun := RelIso.swap
   invFun := RelIso.swap
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A relation isomorphism is also a relation isomorphism between complemented relations. -/
 @[simps!]
@@ -729,6 +735,8 @@ protected def compl (f : r ≃r s) : rᶜ ≃r sᶜ :=
 def complEquiv : (r ≃r s) ≃ (rᶜ ≃r sᶜ) where
   toFun := RelIso.compl
   invFun f := ⟨f, not_iff_not.mp f.map_rel_iff⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 @[simp]
 theorem coe_fn_symm_mk (f o) : ((@RelIso.mk _ _ r s f @o).symm : β → α) = f.symm :=

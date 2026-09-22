@@ -371,7 +371,7 @@ abbrev ReplacementM :=
 corresponds to this translation. -/
 def ReplacementM.run {α} (dontTranslate allFVars : Array FVarId) (x : ReplacementM α) :
     MetaM (α × Option Nat) := do
-  let (a, relevantFVars) ← x dontTranslate |>.run |>.run {}
+  let (a, relevantFVars) ← ReaderT.run x dontTranslate |>.run |>.run {}
   return (a, allFVars.findIdx? relevantFVars.contains)
 
 /-- Implementation function for `shouldTranslate`.
@@ -423,7 +423,7 @@ private unsafe def shouldTranslateUnsafe (env : Environment) (t : TranslateData)
     `.sort 0` with `.sort _` here breaks some uses of `to_additive` on `MonCat`. -/
     | .sort 0            => throw e
     | _                  => pure ()
-  match ← (visit e).run' mkPtrSet with
+  match ← (visit e).run.run' mkPtrSet with
   | .error e => return some e
   | .ok () =>
     /- In the case that we do translate, we mark the visited free variables as relevant for

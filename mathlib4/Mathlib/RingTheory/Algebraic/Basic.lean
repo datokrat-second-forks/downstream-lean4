@@ -526,6 +526,8 @@ noncomputable def algEquivEquivAlgHom [IsTorsionFree K L] [Algebra.IsAlgebraic K
     (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
   toFun ϕ := ϕ.toAlgHom
   invFun ϕ := AlgEquiv.ofBijective ϕ (algHom_bijective ϕ)
+  left_inv _ := AlgEquiv.ext fun _ => rfl
+  right_inv _ := rfl
   map_mul' _ _ := rfl
 
 end Algebra.IsAlgebraic

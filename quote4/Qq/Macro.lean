@@ -63,7 +63,7 @@ abbrev UnquoteM := StateT UnquoteState MetaM
 abbrev QuoteM := ReaderT UnquoteState MetaM
 
 meta instance : MonadLift QuoteM UnquoteM where
-  monadLift k := do k (← get)
+  monadLift k := do k.run (← get)
 
 meta def determineLocalInstances (lctx : LocalContext) : MetaM LocalInstances := do
   let mut localInsts : LocalInstances := {}
@@ -523,7 +523,7 @@ scoped elab "ql(" l:level ")" : term => do
     let l ← elabLevel l
     let refdLevels := (CollectLevelParams.collect (← instantiateLevelMVars l) {}).params
     return (l, refdLevels)
-  quoteLevel l s
+  (quoteLevel l).run s
 
 /-- `a =QL b` says that the levels `a` and `b` are definitionally equal. -/
 scoped syntax atomic(level " =QL ") level : term
@@ -561,7 +561,7 @@ meta def Impl.macro (t : Syntax) (expectedType : Expr) : TermElabM Expr := do
 
   for (mvar, synth) in s.mvars.reverse do
     if ← synth.isAssigned then
-      let t ← synth.synth s
+      let t ← synth.synth.run s
       unless ← isDefEq mvar t do
         tryPostpone
         throwError "cannot assign metavariable ({mvar} : {← inferType mvar}) with {t}"
@@ -648,20 +648,20 @@ meta partial def floatExprAntiquot' [Monad m] [MonadQuotation m] (depth : Nat) :
 open TSyntax.Compat in
 meta def floatExprAntiquot [Monad m] [MonadQuotation m] (depth : Nat) :
     Term → StateT (Array $ Ident × Term × Term) m Term :=
-  fun t s => do
-    let (t, lifts) ← floatExprAntiquot' depth t (s.map fun (a,t,l) => (a,t,l))
+  fun t => .mk fun s => do
+    let (t, lifts) ← (floatExprAntiquot' depth t).run (s.map fun (a,t,l) => (a,t,l))
     return (t, lifts.map fun (a,t,l) => (a,t,l))
 
 macro_rules
   | `(Q($t0)) => do
-    let (t, lifts) ← floatExprAntiquot 0 t0 #[]
+    let (t, lifts) ← (floatExprAntiquot 0 t0).run #[]
     if lifts.isEmpty && t == t0 then Macro.throwUnsupported
     let mut t ← `(Q($t))
     for (a, ty, lift) in lifts do
       t ← `(let $a:ident : $ty := $lift; $t)
     pure t
   | `(q($t0)) => do
-    let (t, lifts) ← floatExprAntiquot 0 t0 #[]
+    let (t, lifts) ← (floatExprAntiquot 0 t0).run #[]
     if lifts.isEmpty && t == t0 then Macro.throwUnsupported
     let mut t ← `(q($t))
     for (a, ty, lift) in lifts do

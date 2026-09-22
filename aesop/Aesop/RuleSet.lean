@@ -145,7 +145,7 @@ def onBaseM [Monad m] (f : BaseRuleSet → m (BaseRuleSet × α))
 @[inline, always_inline]
 def onBase (f : BaseRuleSet → BaseRuleSet × α) (rs : GlobalRuleSet) :
     GlobalRuleSet × α :=
-  rs.onBaseM (m := Id) f
+  Id.run <| rs.onBaseM (fun rs => pure (f rs))
 
 @[inline, always_inline]
 def modifyBaseM [Monad m] (f : BaseRuleSet → m BaseRuleSet)
@@ -155,7 +155,7 @@ def modifyBaseM [Monad m] (f : BaseRuleSet → m BaseRuleSet)
 @[inline, always_inline]
 def modifyBase (f : BaseRuleSet → BaseRuleSet) (rs : GlobalRuleSet) :
     GlobalRuleSet :=
-  rs.modifyBaseM (m := Id) f
+  Id.run <| rs.modifyBaseM (fun rs => pure (f rs))
 
 end GlobalRuleSet
 
@@ -171,7 +171,7 @@ def onBaseM [Monad m] (f : BaseRuleSet → m (BaseRuleSet × α))
 @[inline, always_inline]
 def onBase (f : BaseRuleSet → (BaseRuleSet × α)) (rs : LocalRuleSet) :
     LocalRuleSet × α :=
-  rs.onBaseM (m := Id) f
+  Id.run <| rs.onBaseM (fun rs => pure (f rs))
 
 def modifyBaseM [Monad m] (f : BaseRuleSet → m BaseRuleSet) (rs : LocalRuleSet) :
     m LocalRuleSet :=
@@ -179,7 +179,7 @@ def modifyBaseM [Monad m] (f : BaseRuleSet → m BaseRuleSet) (rs : LocalRuleSet
 
 def modifyBase (f : BaseRuleSet → BaseRuleSet) (rs : LocalRuleSet) :
     LocalRuleSet :=
-  rs.modifyBaseM (m := Id) f
+  Id.run <| rs.modifyBaseM (fun rs => pure (f rs))
 
 end LocalRuleSet
 

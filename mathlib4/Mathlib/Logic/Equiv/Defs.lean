@@ -63,22 +63,6 @@ universe u v w z
 
 variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
-/-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
-structure Equiv (α β : Sort*) where
-  /-- The forward map of an equivalence.
-
-  Do NOT use directly. Use the coercion instead. -/
-  protected toFun : α → β
-  /-- The backward map of an equivalence.
-
-  Do NOT use `e.invFun` directly. Use the coercion of `e.symm` instead. -/
-  protected invFun : β → α
-  protected left_inv : LeftInverse invFun toFun := by intro; first | rfl | ext <;> rfl
-  protected right_inv : RightInverse invFun toFun := by intro; first | rfl | ext <;> rfl
-
-@[inherit_doc]
-infixl:25 " ≃ " => Equiv
-
 /-- Turn an element of a type `F` satisfying `EquivLike F α β` into an actual
 `Equiv`. This is declared as the default coercion from `F` to `α ≃ β`. -/
 @[coe]
@@ -120,7 +104,7 @@ theorem coe_fn_injective : @Function.Injective (α ≃ β) (α → β) (fun e =>
 protected theorem coe_inj {e₁ e₂ : α ≃ β} : (e₁ : α → β) = e₂ ↔ e₁ = e₂ :=
   @DFunLike.coe_fn_eq _ _ _ _ e₁ e₂
 
-@[ext, grind ext] theorem ext {f g : Equiv α β} (H : ∀ x, f x = g x) : f = g := DFunLike.ext f g H
+attribute [ext, grind ext] Equiv.ext
 
 protected theorem congr_arg {f : Equiv α β} {x x' : α} : x = x' → f x = f x' :=
   DFunLike.congr_arg f
@@ -136,14 +120,11 @@ protected theorem Perm.congr_arg {f : Equiv.Perm α} {x x' : α} : x = x' → f 
 protected theorem Perm.congr_fun {f g : Equiv.Perm α} (h : f = g) (x : α) : f x = g x :=
   Equiv.congr_fun h x
 
-/-- Any type is equivalent to itself. -/
-@[refl] protected def refl (α : Sort*) : α ≃ α := ⟨id, id, fun _ => rfl, fun _ => rfl⟩
+attribute [refl] Equiv.refl
 
 instance inhabited' : Inhabited (α ≃ α) := ⟨Equiv.refl α⟩
 
-/-- Inverse of an equivalence `e : α ≃ β`. -/
-@[symm, implicit_reducible]
-protected def symm (e : α ≃ β) : β ≃ α := ⟨e.invFun, e.toFun, e.right_inv, e.left_inv⟩
+attribute [symm] Equiv.symm
 
 /-- See Note [custom simps projection] -/
 def Simps.symm_apply (e : α ≃ β) : β → α := e.symm
@@ -157,10 +138,7 @@ theorem right_inv' (e : α ≃ β) : Function.RightInverse e.symm e := e.right_i
 
 @[simp] lemma symm_mk (f : α → β) (g hl hr) : (mk f g hl hr).symm = mk g f hr hl := rfl
 
-/-- Composition of equivalences `e₁ : α ≃ β` and `e₂ : β ≃ γ`. -/
-@[trans]
-protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
-  ⟨e₂ ∘ e₁, e₁.symm ∘ e₂.symm, e₂.left_inv.comp e₁.left_inv, e₂.right_inv.comp e₁.right_inv⟩
+attribute [trans] Equiv.trans
 
 @[simps]
 instance : Trans Equiv Equiv Equiv where
@@ -171,8 +149,10 @@ instance : Trans Equiv Equiv Equiv where
 def symmEquiv (α β : Sort*) : (α ≃ β) ≃ (β ≃ α) where
   toFun := .symm
   invFun := .symm
+  left_inv _ := rfl
+  right_inv _ := rfl
 
-@[simp, mfld_simps] theorem toFun_as_coe (e : α ≃ β) : e.toFun = e := rfl
+@[simp, mfld_simps, grind norm] theorem toFun_as_coe (e : α ≃ β) : e.toFun = e := rfl
 
 @[simp, mfld_simps] theorem invFun_as_coe (e : α ≃ β) : e.invFun = e.symm := rfl
 
@@ -273,8 +253,7 @@ theorem Perm.coe_subsingleton {α : Type*} [Subsingleton α] (e : Perm α) : (e 
 theorem symm_trans_apply (f : α ≃ β) (g : β ≃ γ) (a : γ) :
     (f.trans g).symm a = f.symm (g.symm a) := rfl
 
-@[simp, grind =]
-theorem symm_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).symm = g.symm.trans f.symm := rfl
+attribute [simp, grind =] Equiv.symm_trans
 
 theorem symm_symm_apply (f : α ≃ β) (b : α) : f.symm.symm b = f b := rfl
 
@@ -312,9 +291,7 @@ theorem symm_bijective : Function.Bijective (Equiv.symm : (α ≃ β) → β ≃
 
 @[simp] theorem refl_trans (e : α ≃ β) : (Equiv.refl α).trans e = e := by cases e; rfl
 
-@[simp] theorem symm_trans_self (e : α ≃ β) : e.symm.trans e = Equiv.refl β := by grind
-
-@[simp] theorem self_trans_symm (e : α ≃ β) : e.trans e.symm = Equiv.refl α := by grind
+attribute [simp] Equiv.symm_trans_self Equiv.self_trans_symm
 
 theorem trans_assoc {δ} (ab : α ≃ β) (bc : β ≃ γ) (cd : γ ≃ δ) :
     (ab.trans bc).trans cd = ab.trans (bc.trans cd) := by grind
@@ -541,6 +518,8 @@ theorem symm_eq_iff_trans_eq_refl {f : α ≃ β} {g : β ≃ α} :
 def punitEquivPUnit : PUnit.{v} ≃ PUnit.{w} where
   toFun _ := .unit
   invFun _ := .unit
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- `Prop` is noncomputably equivalent to `Bool`. -/
 noncomputable def propEquivBool : Prop ≃ Bool where
@@ -555,6 +534,8 @@ section
 def arrowPUnitEquivPUnit (α : Sort*) : (α → PUnit.{v}) ≃ PUnit.{w} where
   toFun _ := .unit
   invFun _ _ := .unit
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The equivalence `(∀ i, β i) ≃ β ⋆` when the domain of `β` only contains `⋆` -/
 @[simps (attr := grind =) -fullyApplied]
@@ -562,6 +543,7 @@ def piUnique [Unique α] (β : α → Sort*) : (∀ i, β i) ≃ β default wher
   toFun f := f default
   invFun := uniqueElim
   left_inv f := by ext i; cases Unique.eq_default i; rfl
+  right_inv _ := rfl
 
 /-- If `α` has a unique term, then the type of function `α → β` is equivalent to `β`. -/
 @[simps! (attr := grind =) -fullyApplied apply symm_apply]
@@ -578,6 +560,7 @@ def arrowPUnitOfIsEmpty (α β : Sort*) [IsEmpty α] : (α → β) ≃ PUnit.{u}
   toFun _ := PUnit.unit
   invFun _ := isEmptyElim
   left_inv _ := funext isEmptyElim
+  right_inv _ := rfl
 
 /-- The sort of maps from `Empty` is equivalent to `PUnit`. -/
 def emptyArrowEquivPUnit (α : Sort*) : (Empty → α) ≃ PUnit.{u} := arrowPUnitOfIsEmpty _ _
@@ -597,12 +580,16 @@ section
 def psigmaEquivSigma {α} (β : α → Type*) : (Σ' i, β i) ≃ Σ i, β i where
   toFun a := ⟨a.1, a.2⟩
   invFun a := ⟨a.1, a.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A `PSigma`-type is equivalent to the corresponding `Sigma`-type. -/
 @[simps (attr := grind =) apply symm_apply]
 def psigmaEquivSigmaPLift {α} (β : α → Sort*) : (Σ' i, β i) ≃ Σ i : PLift α, PLift (β i.down) where
   toFun a := ⟨PLift.up a.1, PLift.up a.2⟩
   invFun a := ⟨a.1.down, a.2.down⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A family of equivalences `Π a, β₁ a ≃ β₂ a` generates an equivalence between `Σ' a, β₁ a` and
 `Σ' a, β₂ a`. -/
@@ -652,6 +639,8 @@ theorem sigmaCongrRight_refl {α} {β : α → Type*} :
 def psigmaEquivSubtype {α : Type v} (P : α → Prop) : (Σ' i, P i) ≃ Subtype P where
   toFun x := ⟨x.1, x.2⟩
   invFun x := ⟨x.1, x.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- A `Sigma` with `PLift` fibers is equivalent to the subtype. -/
 def sigmaPLiftEquivSubtype {α : Type v} (P : α → Prop) : (Σ i, PLift (P i)) ≃ Subtype P :=
@@ -692,6 +681,8 @@ def functionSwap (α β : Sort*) (γ : α → β → Sort*) :
     ((a : α) → (b : β) → γ a b) ≃ ((b : β) → (a : α) → γ a b) where
   toFun := Function.swap
   invFun := Function.swap
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 theorem _root_.Function.swap_bijective {α β : Sort*} {γ : α → β → Sort*} :
     Function.Bijective (@Function.swap _ _ γ) :=
@@ -721,6 +712,8 @@ def sigmaCongr {α₁ α₂} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort 
 def sigmaEquivProd (α β : Type*) : (Σ _ : α, β) ≃ α × β where
   toFun a := ⟨a.1, a.2⟩
   invFun a := ⟨a.1, a.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- If each fiber of a `Sigma` type is equivalent to a fixed type, then the sigma type
 is equivalent to the product. -/
@@ -732,12 +725,16 @@ def sigmaAssoc {α : Type*} {β : α → Type*} (γ : ∀ a : α, β a → Type*
     (Σ ab : Σ a : α, β a, γ ab.1 ab.2) ≃ Σ a : α, Σ b : β a, γ a b where
   toFun x := ⟨x.1.1, ⟨x.1.2, x.2⟩⟩
   invFun x := ⟨⟨x.1, x.2.1⟩, x.2.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 /-- The dependent product of sorts is associative up to an equivalence. -/
 def pSigmaAssoc {α : Sort*} {β : α → Sort*} (γ : ∀ a : α, β a → Sort*) :
     (Σ' ab : Σ' a : α, β a, γ ab.1 ab.2) ≃ Σ' a : α, Σ' b : β a, γ a b where
   toFun x := ⟨x.1.1, ⟨x.1.2, x.2⟩⟩
   invFun x := ⟨⟨x.1, x.2.1⟩, x.2.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end
 
@@ -924,6 +921,7 @@ def sumIsLeft : {x : α ⊕ β // x.isLeft} ≃ α where
   toFun x := x.1.getLeft x.2
   invFun a := ⟨.inl a, Sum.isLeft_inl⟩
   left_inv | ⟨.inl _a, _⟩ => rfl
+  right_inv _ := rfl
 
 /-- The right summand of `α ⊕ β` is equivalent to `β`. -/
 @[simps (attr := grind =)]
@@ -931,6 +929,7 @@ def sumIsRight : {x : α ⊕ β // x.isRight} ≃ β where
   toFun x := x.1.getRight x.2
   invFun b := ⟨.inr b, Sum.isRight_inr⟩
   left_inv | ⟨.inr _b, _⟩ => rfl
+  right_inv _ := rfl
 
 variable (e : α ≃ β)
 

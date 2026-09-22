@@ -382,9 +382,9 @@ def prettyWithWhitespace (imps : Array (Import × Whitespace))
     let groups := imps.toList.splitBy fun (i₁,_) (i₂,_) =>
       i₁.isExported == i₂.isExported && i₁.importAll == i₂.importAll &&
         (!splitMeta || i₁.isMeta == i₂.isMeta)
-    f!"\n\n".joinSep (groups.map (f!"\n".joinSep ·))
+    return f!"\n\n".joinSep (groups.map (f!"\n".joinSep ·))
   else
-    f!"\n".joinSep imps.toList
+    return f!"\n".joinSep imps.toList
 
 /-- Formats the modified `imps` and attaches whitespace from the corresponding import in
 `sourceImps` when doing so is unambiguous. Ambiguity encountered while assigning nontrivial

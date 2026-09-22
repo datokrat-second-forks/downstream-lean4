@@ -190,7 +190,7 @@ def elabPat (pat : Term) (lctx : LocalContext) (localInsts : LocalInstances) (ty
     (levelNames : List Name) : TermElabM (Expr × Array LocalDecl × Array Name) :=
   withLCtx lctx localInsts do
     withLevelNames levelNames do
-          let (pat, patVars) ← getPatVars pat #[]
+          let (pat, patVars) ← (getPatVars pat).run #[]
           let pat ← Lean.Elab.Term.elabTerm pat ty
           let pat ← ensureHasType ty pat
           synthesizeSyntheticMVars (postpone := .no)
@@ -252,7 +252,7 @@ scoped elab "_qq_match" pat:term " ← " e:term " | " alt:term " in " body:term 
   have γ : Q(Type) := emr.returnType
   let inst ← synthInstanceQ q(Bind $m)
   let inst2 ← synthInstanceQ q(MonadLiftT MetaM $m)
-  have synthed : Q(Expr) := (← quoteExpr (← instantiateMVars pat) s)
+  have synthed : Q(Expr) := (← (quoteExpr (← instantiateMVars pat)).run s)
   let alt : Q($m $γ) := alt
   makeMatchCode q($inst2) inst oldPatVarDecls argLvlExpr argTyExpr synthed q($e') alt expectedType fun expectedType =>
     return Quoted.unsafeMk (← elabTerm body expectedType)
@@ -435,7 +435,7 @@ macro_rules
         -- is spliced into the match body via the `assert! (_qq_match ..); $rest` rule.
         -- This preserves outer `let mut` access and control-flow continuity for the
         -- common `let ~q(..) := .. | alt` form.
-        let (pat, lifts) ← floatExprAntiquot 0 pat #[]
+        let (pat, lifts) ← (floatExprAntiquot 0 pat).run #[]
         let t ← `(doSeqItem| assert! (_qq_match $pat := $rhs | $alt))
         let mut items := (← liftsToDoItems lifts).push t
         if let some body := body? then

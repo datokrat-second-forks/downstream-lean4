@@ -1370,6 +1370,8 @@ def toAddValuation : Valuation R Γ₀ ≃ AddValuation R (Additive Γ₀)ᵒᵈ
   .trans (congr
     { toFun := fun x ↦ .ofAdd <| .toDual <| .toDual <| .ofMul x
       invFun := fun x ↦ x.toAdd.ofDual.ofDual.toMul
+      left_inv _ := rfl
+      right_inv _ := rfl
       map_mul' := fun _x _y ↦ rfl
       map_le_map_iff' := .rfl }) (AddValuation.ofValuation (R := R) (Γ₀ := (Additive Γ₀)ᵒᵈ))
 
@@ -1379,6 +1381,8 @@ def ofAddValuation : AddValuation R (Additive Γ₀)ᵒᵈ ≃ Valuation R Γ₀
   AddValuation.toValuation.trans <| congr <|
     { toFun := fun x ↦ x.toAdd.ofDual.ofDual.toMul
       invFun := fun x ↦ .ofAdd <| .toDual <| .toDual <| .ofMul x
+      left_inv _ := rfl
+      right_inv _ := rfl
       map_mul' := fun _x _y ↦ rfl
       map_le_map_iff' := .rfl }
 
