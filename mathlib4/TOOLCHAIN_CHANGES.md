@@ -293,9 +293,11 @@ The helpers are now `equivCongr`, implemented by composing the generated represe
 DDR 010 and anomaly 005 describe the ownership conflict.
 
 Sealing `Id` makes identity-composition instance types different during ordinary elaboration.
-The functor and applicative identity lemmas now use `HEq`, with local unsealing in their proofs.
-The applicative lemmas have two traversal-law consumers; these use `eq_of_heq` within local unsealing.
-DDR 011 and anomaly 006 record the statement changes.
+The four identity-instance lemmas were initially changed to `HEq`; they are now replaced by explicit unitors.
+`Comp.leftUnitor` and `Comp.rightUnitor`, with their inverse maps, preserve `map`, `pure`, and `<*>`.
+The two traversal-law consumers use the bundled inverse unitors, naturality, and injectivity.
+These APIs keep `Id` sealed and need no casts or heterogeneous equality.
+DDR 011 and anomaly 006 record the migration.
 
 `Traversable Id` needs to convert `m β` into `m (Id β)`.
 Mapping `Id.mk` could add runtime work, so its implementation uses a proof-based cast instead.

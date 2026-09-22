@@ -113,7 +113,8 @@ See `/root/static/ofs-ddr/progress/mathlib-batch-05.md`.
 
 The user released the DDR 011 discussion pause and requested continued work.
 Apply explicit constructor-based unitors to the two traversal proofs, then resume the Mathlib port.
-The four instance-identity lemmas retain their HEq statements pending a separate API decision.
+The four instance-identity lemmas initially retained HEq statements.
+The user subsequently selected migration of all four to explicit unitors; see DDR 011 and the A006 migration report.
 Batch 06 repairs all 22 previous direct failures and applies the verified unitor proofs.
 Its completed full scan reports 20 direct failures and 6,831 blocked modules out of 8,526.
 See `/root/static/ofs-ddr/progress/mathlib-batch-06.md`.

@@ -24,7 +24,7 @@ Inspired by [The Essence of the Iterator Pattern][gibbons2009].
 @[expose] public section
 
 
-universe u
+universe u v
 
 open LawfulTraversable
 
@@ -38,43 +38,70 @@ attribute [simp] LawfulTraversable.id_traverse
 
 namespace ApplicativeTransformation
 
-variable (F : Type u → Type u) [Applicative F] [LawfulApplicative F]
+variable (F : Type u → Type v) [Applicative F] [LawfulApplicative F]
+
+/-- Remove the identity functor inside `F`. -/
+def rightUnitor : ApplicativeTransformation (Comp F Id) F where
+  app _ := Comp.rightUnitor F
+  preserves_pure' := Comp.rightUnitor_pure
+  preserves_seq' := Comp.rightUnitor_seq
 
 /-- Insert the identity functor inside `F`, the inverse of the right unitor. -/
 def rightUnitorInv : ApplicativeTransformation F (Comp F Id) where
-  app _ x := Comp.mk (Id.mk <$> x)
-  preserves_pure' x := by
-    apply Comp.ext
-    simp only [Comp.run_mk, Comp.run_pure, map_pure]
-    rfl
-  preserves_seq' f x := by
-    apply Comp.ext
-    simp only [Comp.run_mk, Comp.run_seq, map_map]
-    rw [map_seq, Applicative.map_seq_map]
-    rfl
+  app _ := Comp.rightUnitorInv F
+  preserves_pure' := Comp.rightUnitorInv_pure
+  preserves_seq' := Comp.rightUnitorInv_seq
+
+@[simp] theorem rightUnitor_apply {α} (x : Comp F Id α) :
+    rightUnitor F x = Id.run <$> x.run := rfl
 
 @[simp] theorem rightUnitorInv_apply {α} (x : F α) :
     rightUnitorInv F x = Comp.mk (Id.mk <$> x) := rfl
 
-theorem rightUnitorInv_injective {α} : Function.Injective (fun x : F α => rightUnitorInv F x) := by
-  intro x y h
-  have h := congrArg (fun z : Comp F Id α => Id.run <$> z.run) h
-  simpa [rightUnitorInv_apply, map_map, Function.comp_def] using h
+@[simp] theorem rightUnitor_rightUnitorInv {α} (x : F α) :
+    rightUnitor F (rightUnitorInv F x) = x :=
+  Comp.rightUnitor_rightUnitorInv x
 
+@[simp] theorem rightUnitorInv_rightUnitor {α} (x : Comp F Id α) :
+    rightUnitorInv F (rightUnitor F x) = x :=
+  Comp.rightUnitorInv_rightUnitor x
+
+theorem rightUnitorInv_injective {α} : Function.Injective (fun x : F α => rightUnitorInv F x) :=
+  Comp.rightUnitorInv_injective
+
+omit [LawfulApplicative F] in
+/-- Remove the identity functor outside `F`. -/
+def leftUnitor : ApplicativeTransformation (Comp Id F) F where
+  app _ := Comp.leftUnitor F
+  preserves_pure' := Comp.leftUnitor_pure
+  preserves_seq' := Comp.leftUnitor_seq
+
+omit [LawfulApplicative F] in
 /-- Insert the identity functor outside `F`, the inverse of the left unitor. -/
 def leftUnitorInv : ApplicativeTransformation F (Comp Id F) where
-  app _ x := Comp.mk (Id.mk x)
-  preserves_pure' _ := rfl
-  preserves_seq' _ _ := rfl
+  app _ := Comp.leftUnitorInv F
+  preserves_pure' := Comp.leftUnitorInv_pure
+  preserves_seq' := Comp.leftUnitorInv_seq
+
+omit [LawfulApplicative F] in
+@[simp] theorem leftUnitor_apply {α} (x : Comp Id F α) :
+    leftUnitor F x = x.run.run := rfl
 
 omit [LawfulApplicative F] in
 @[simp] theorem leftUnitorInv_apply {α} (x : F α) :
     leftUnitorInv F x = Comp.mk (Id.mk x) := rfl
 
 omit [LawfulApplicative F] in
-theorem leftUnitorInv_injective {α} : Function.Injective (fun x : F α => leftUnitorInv F x) := by
-  intro x y h
-  exact congrArg (fun z : Comp Id F α => z.run.run) h
+@[simp] theorem leftUnitor_leftUnitorInv {α} (x : F α) :
+    leftUnitor F (leftUnitorInv F x) = x := rfl
+
+omit [LawfulApplicative F] in
+@[simp] theorem leftUnitorInv_leftUnitor {α} (x : Comp Id F α) :
+    leftUnitorInv F (leftUnitor F x) = x := rfl
+
+omit [LawfulApplicative F] in
+theorem leftUnitorInv_injective {α} : Function.Injective (fun x : F α => leftUnitorInv F x) :=
+  Comp.leftUnitorInv_injective
 
 end ApplicativeTransformation
 
