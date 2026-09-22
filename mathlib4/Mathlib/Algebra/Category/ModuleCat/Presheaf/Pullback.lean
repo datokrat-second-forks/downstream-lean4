@@ -73,8 +73,8 @@ noncomputable def pushforwardCompCoyonedaFreeYonedaCorepresentableBy (X : C) :
   homEquiv {M} := freeYonedaEquiv.trans
     (freeYonedaEquiv (M := (pushforward φ).obj M)).symm
   homEquiv_comp {M N} g f := freeYonedaEquiv.injective (by
-    dsimp [Equiv.trans]
-    erw [Equiv.apply_symm_apply, freeYonedaEquiv_comp]
+    dsimp
+    erw [Equiv.apply_symm_apply, Equiv.toFun_as_coe, freeYonedaEquiv_comp]
     conv_rhs => erw [freeYonedaEquiv_comp]
     erw [Equiv.apply_symm_apply]
     rfl)

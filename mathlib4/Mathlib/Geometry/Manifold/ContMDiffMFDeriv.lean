@@ -399,7 +399,7 @@ bundles. -/
     TangentBundle (I.prod I') (M × M') ≃ (TangentBundle I M) × (TangentBundle I' M') where
   toFun p := (⟨p.1.1, p.2.1⟩, ⟨p.1.2, p.2.2⟩)
   invFun p := ⟨(p.1.1, p.2.1), (p.1.2, p.2.2)⟩
-  left_inv _ := rfl
+  left_inv p := by cases p; rfl
   right_inv _ := rfl
 
 lemma equivTangentBundleProd_eq_tangentMap_prod_tangentMap :
@@ -435,16 +435,14 @@ lemma contMDiff_equivTangentBundleProd_symm :
   product is the product of the derivatives), and writing down things.
   -/
   rintro ⟨a, b⟩
-  change CMDiffAt n (fun p : TangentBundle I M × TangentBundle I' M' ↦
-    (⟨(p.1.proj, p.2.proj), (p.1.snd, p.2.snd)⟩ :
-      TangentBundle (I.prod I') (M × M'))) (a, b)
   have U w w' : UniqueDiffWithinAt 𝕜 (Set.range (Prod.map I I')) (I w, I' w') := by
     simp only [range_prodMap]
     apply UniqueDiffWithinAt.prod
     · exact ModelWithCorners.uniqueDiffWithinAt_image I
     · exact ModelWithCorners.uniqueDiffWithinAt_image I'
   rw [contMDiffAt_totalSpace]
-  simp only [TangentBundle.trivializationAt_apply, mfld_simps]
+  simp only [equivTangentBundleProd, TangentBundle.trivializationAt_apply, mfld_simps,
+    Equiv.coe_fn_symm_mk]
   refine ⟨?_, (contMDiffAt_prod_module_iff _).2 ⟨?_, ?_⟩⟩
   · exact (contMDiffAt_proj (TangentSpace I)).prodMap (contMDiffAt_proj (TangentSpace I'))
   · /- check that the composition with the first projection in the target chart is smooth.
