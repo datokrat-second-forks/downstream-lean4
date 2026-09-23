@@ -112,8 +112,6 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   let iso : F⟮α⟯ ≃ₐ[F] E :=
     { toFun := fun e => e.val
       invFun := fun e => ⟨e, by rw [hα]; exact IntermediateField.mem_top⟩
-      left_inv _ := rfl
-      right_inv _ := rfl
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
@@ -125,7 +123,7 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   rw [← LinearEquiv.finrank_eq iso.toLinearEquiv]
   rw [← IntermediateField.AdjoinSimple.card_aut_eq_finrank F E H h_sep h_splits]
   apply Nat.card_congr
-  exact iso.symm.autCongr.toEquiv
+  exact Equiv.mk (fun ϕ => iso.trans (ϕ.trans iso.symm)) fun ϕ => iso.symm.trans (ϕ.trans iso)
 
 /-- A galois extension with finite galois group is finite dimensional.
 The dimension is then equal to the order of the galois group via `IsGalois.card_aut_eq_finrank`. -/
@@ -270,8 +268,6 @@ theorem fixingSubgroup_sup {K L : IntermediateField F E} :
 def fixingSubgroupEquiv : fixingSubgroup K ≃* Gal(E/K) where
   toFun ϕ := { AlgEquiv.toRingEquiv (ϕ : Gal(E/F)) with commutes' := ϕ.mem }
   invFun ϕ := ⟨ϕ.restrictScalars _, ϕ.commutes⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_mul' _ _ := by ext; rfl
 
 theorem fixingSubgroup_fixedField [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H := by
@@ -498,11 +494,7 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E]
   rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm,
     finrank_mul_finrank, ← h, one_mul, IntermediateField.finrank_fixedField_eq_card]
   apply Nat.card_congr
-  exact
-    { toFun := fun g => ⟨g, Subgroup.mem_top g⟩
-      invFun := (↑)
-      left_inv _ := rfl
-      right_inv _ := rfl }
+  exact { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := (↑) }
 
 variable {F} {E}
 variable {p : F[X]}

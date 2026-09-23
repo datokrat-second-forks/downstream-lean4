@@ -47,8 +47,6 @@ variable (R) (S) in
 def RingHom.equivRatAlgHom : (R →+* S) ≃ (R →ₐ[ℚ] S) where
   toFun := RingHom.toRatAlgHom
   invFun := AlgHom.toRingHom
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 namespace RingEquiv
 
@@ -88,8 +86,6 @@ variable (R) (S) in
 def RingEquiv.equivRatAlgEquiv : (R ≃+* S) ≃ (R ≃ₐ[ℚ] S) where
   toFun := RingEquiv.toRatAlgEquiv
   invFun := AlgEquiv.toRingEquiv
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 lemma RingEquiv.toRatAlgEquiv_injective :
     Function.Injective (RingEquiv.toRatAlgEquiv : (R ≃+* S) → _) :=

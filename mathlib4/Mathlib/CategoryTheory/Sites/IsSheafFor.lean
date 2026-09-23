@@ -888,9 +888,7 @@ lemma isSheafFor_pullback_iff (P : Cᵒᵖ ⥤ Type w) {X : C} (R : Sieve X)
       invFun s := ⟨fun i ↦ s.val i, fun i₁ i₂ W g₁ g₂ h ↦ by
         replace h := h =≫ inv f
         simp only [Category.assoc] at h
-        exact s.property _ _ _ _ _ h⟩
-      left_inv _ := rfl
-      right_inv _ := rfl }
+        exact s.property _ _ _ _ _ h⟩ }
   simp only [this, ← isSheafFor_iff_generate,
     isSheafFor_ofArrows_iff_bijective_toCompabible, ← e.bijective.of_comp_iff',
     ← Function.Bijective.of_comp_iff _ (P.mapIso (asIso f).symm.op).toEquiv.bijective]
@@ -922,9 +920,7 @@ lemma isSheafFor_over_map_op_comp_ofArrows_iff
         convert! this <;> cat_disch⟩
       invFun s := ⟨fun i ↦ s.val i, fun i₁ i₂ Z g₁ g₂ h ↦
         s.property i₁ i₂ _ ((Over.map p).map g₁) ((Over.map p).map g₂)
-          (by simp only [← Functor.map_comp, h])⟩
-      left_inv _ := rfl
-      right_inv _ := rfl }
+          (by simp only [← Functor.map_comp, h])⟩ }
   simp only [isSheafFor_ofArrows_iff_bijective_toCompabible,
     ← e.bijective.of_comp_iff']
   rfl

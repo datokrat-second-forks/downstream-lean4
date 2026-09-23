@@ -113,8 +113,6 @@ def h1CotangentEquivOfSurjective {R : Type u} {S : Type v} [CommRing R] [CommRin
   invFun x := ⟨x, by
     have : Subsingleton Ω[P.Ring⁄R] := subsingleton_of_surjective R P.Ring h
     exact Subsingleton.elim _ _⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- Given an extension `P : Extension R S`, this is the linear equivalence between
 the first homology of the naive cotangent complex of `S` over `P.Ring` and

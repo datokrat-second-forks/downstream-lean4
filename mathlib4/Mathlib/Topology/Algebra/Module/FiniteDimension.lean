@@ -307,7 +307,6 @@ variable [T2Space E] [FiniteDimensional 𝕜 E]
 def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' where
   toFun f := ⟨f, f.continuous_of_finiteDimensional⟩
   invFun := (↑)
-  left_inv _ := rfl
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   right_inv _ := ContinuousLinearMap.coe_injective rfl

@@ -334,8 +334,6 @@ def prodLIE : (E [⋀^ι]→L[𝕜] F) × (E [⋀^ι]→L[𝕜] G) ≃ₗᵢ[�
   toFun f := f.1.prod f.2
   invFun f := ((ContinuousLinearMap.fst 𝕜 F G).compContinuousAlternatingMap f,
     (ContinuousLinearMap.snd 𝕜 F G).compContinuousAlternatingMap f)
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   norm_map' f := opNorm_prod f.1 f.2

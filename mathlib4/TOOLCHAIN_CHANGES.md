@@ -374,3 +374,17 @@ Extensionality takes equality of both maps. The cancellation names are `trans_sy
 Production transport proofs use those names, and the redundant Mathlib-alignment test is removed.
 The mixed transport-congruence names and the StateRefT instance are unchanged.
 DDR 017 records this completed cleanup on the rebased branch.
+
+
+## Current toolchain (phase 6)
+
+The toolchain is `5529b7abe6` on `onefieldstructures-changes`.
+Core has no root `Equiv`, so the earlier `toFun_as_coe` normalization repairs (DDR 015, anomaly 014) are gone.
+278 Mathlib files are restored from the green base `37c5c33a37b`.
+The sections above on core Equiv alignment (DDRs 008, 012, 015; anomalies 001, 002, 013) are superseded by DDRs 017 and 018.
+New core API used downstream:
+- `NameMap.find?` replaces the deprecated `get?`, and `NameSet.union` replaces `append`/`merge`.
+- `NameMap.insertMany`, `toArray` and `ofArray`.
+- `FormatWithInfos` keys are `SubExpr.Pos`.
+- `ModuleIdx` derives `DecidableEq`.
+See `/root/static/ofs-ddr/progress/phase6-current-toolchain.md` for the package results and the open items.

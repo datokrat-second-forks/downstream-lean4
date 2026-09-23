@@ -252,6 +252,9 @@ theorem leftUnitorInv_injective : Function.Injective (leftUnitorInv F (α := α)
   intro x y h
   exact congrArg (leftUnitor F) h
 
+@[deprecated (since := "2026-09-23")] alias functor_comp_id := rightUnitor_map
+@[deprecated (since := "2026-09-23")] alias functor_id_comp := leftUnitor_map
+
 end Unitors
 
 end Comp

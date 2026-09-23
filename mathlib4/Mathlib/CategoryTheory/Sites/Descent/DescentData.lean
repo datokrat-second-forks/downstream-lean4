@@ -453,8 +453,6 @@ def subtypeCompatibleHomEquiv {M N : F.obj (.mk (op S))} :
         simpa [map_eq_pullHom (g.hom i₁) f₁.left Z.hom Z.hom (Over.w f₁) (Over.w f₁),
           map_eq_pullHom (g.hom i₂) f₂.left Z.hom Z.hom (Over.w f₂) (Over.w f₂),
           cancel_epi, cancel_mono] using g.comm Z.hom f₁.left f₂.left (Over.w f₁) (Over.w f₂) }
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 lemma subtypeCompatibleHomEquiv_toCompatible_presheafHomObjHomEquiv

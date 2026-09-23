@@ -132,8 +132,6 @@ def unitEquivUnitsInteger : S.unit K ≃* (S.integer K)ˣ where
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
         Eq.ge <| by
           rw [← map_mul, Units.val_mk0, Subtype.mk_eq_mk.mp x.val_inv, map_one]⟩
-  left_inv _ := Subtype.ext (Units.ext rfl)
-  right_inv _ := Units.ext rfl
   map_mul' _ _ := by ext; rfl
 
 end Set

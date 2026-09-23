@@ -109,7 +109,5 @@ def equivFin {m : ℕ} : BitVec m ≃+* Fin (2 ^ m) where
   invFun a := ofFin a
   map_mul' := toFin_mul
   map_add' := toFin_add
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end BitVec

@@ -571,8 +571,6 @@ def LinearMap.extendScalarsOfSurjectiveEquiv (h : Surjective (algebraMap R S)) :
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := f.restrictScalars S
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- If `R →+* S` is surjective, then `R`-linear maps are also `S`-linear. -/
 abbrev LinearMap.extendScalarsOfSurjective (h : Surjective (algebraMap R S))

@@ -775,8 +775,6 @@ def algHomUnitsEquiv (R S : Type*) [CommSemiring R] [Semiring S] [Algebra R S] :
       right_inv := (fun x ↦ show (↑(f * f⁻¹) : S →ₐ[R] S) x = x by rw [mul_inv_cancel]; rfl) }
   invFun := fun f ↦ ⟨f, f.symm, f.comp_symm, f.symm_comp⟩
   map_mul' := fun _ _ ↦ rfl
-  left_inv _ := Units.ext rfl
-  right_inv _ := rfl
 
 /-- See also `Finite.algHom` -/
 instance _root_.Finite.algEquiv [Finite (A₁ →ₐ[R] A₂)] : Finite (A₁ ≃ₐ[R] A₂) :=
@@ -818,8 +816,6 @@ variable (R) (S) in
 def equivNatAlgEquiv [Semiring R] [Semiring S] : (R ≃+* S) ≃ (R ≃ₐ[ℕ] S) where
   toFun := toNatAlgEquiv
   invFun := AlgEquiv.toRingEquiv
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 lemma toNatAlgEquiv_injective [Semiring R] [Semiring S] :
     Function.Injective (RingEquiv.toNatAlgEquiv : (R ≃+* S) → _) :=
@@ -848,8 +844,6 @@ variable (R) (S) in
 def equivIntAlgEquiv [Ring R] [Ring S] : (R ≃+* S) ≃ (R ≃ₐ[ℤ] S) where
   toFun := toIntAlgEquiv
   invFun := AlgEquiv.toRingEquiv
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 lemma toIntAlgEquiv_injective [Ring R] [Ring S] :
     Function.Injective (RingEquiv.toIntAlgEquiv : (R ≃+* S) → _) :=

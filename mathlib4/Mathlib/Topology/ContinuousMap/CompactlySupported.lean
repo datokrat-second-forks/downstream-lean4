@@ -126,8 +126,6 @@ def continuousMapEquiv [CompactSpace α] : C(α, β) ≃ C_c(α, β) where
     { toFun := f
       hasCompactSupport' := HasCompactSupport.of_compactSpace f }
   invFun f := f
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 variable {γ : Type*} [TopologicalSpace γ] [Zero γ]
 

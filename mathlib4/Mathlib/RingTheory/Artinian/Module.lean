@@ -558,8 +558,6 @@ theorem mem_minimalPrimes {I p : Ideal R} [hp : p.IsPrime] (hIp : I ≤ p) : p �
 def primeSpectrumEquivMaximalSpectrum : PrimeSpectrum R ≃ MaximalSpectrum R where
   toFun I := ⟨I.asIdeal, isPrime_iff_isMaximal I.asIdeal |>.mp I.isPrime⟩
   invFun I := ⟨I.asIdeal, isPrime_iff_isMaximal I.asIdeal |>.mpr I.isMaximal⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 lemma primeSpectrumEquivMaximalSpectrum_comp_asIdeal :
     MaximalSpectrum.asIdeal ∘ primeSpectrumEquivMaximalSpectrum =

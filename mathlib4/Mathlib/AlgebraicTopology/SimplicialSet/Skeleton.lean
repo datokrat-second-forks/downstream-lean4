@@ -464,7 +464,5 @@ def relativeCellComplexCellsEquiv : (relativeCellComplex X).Cells ≃ X.N where
     { j := s.dim
       hj := by simp
       k := { simplex := s.simplex, nonDegenerate := s.nonDegenerate, notMem := by simp } }
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end SSet

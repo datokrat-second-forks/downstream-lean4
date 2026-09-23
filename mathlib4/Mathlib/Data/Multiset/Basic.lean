@@ -167,7 +167,6 @@ def subsingletonEquiv [Subsingleton α] : List α ≃ Multiset α where
     (Quot.lift id) fun (a b : List α) (h : a ~ b) =>
       (List.ext_get h.length_eq) fun _ _ _ => Subsingleton.elim _ _
   right_inv m := Quot.inductionOn m fun _ => rfl
-  left_inv _ := rfl
 
 @[simp]
 theorem coe_subsingletonEquiv [Subsingleton α] :

@@ -428,8 +428,8 @@ def treeLayout (tree : Tree (Diagram β)) (name : Option Lean.Name := none) (con
     depthDir sibDir config.levelGap config.siblingAlign
   let withEdges := TreeLayout.drawEdges tree nodeNames state config.drawEdge composed
   match name with
-  | none => .scope withEdges
-  | some n => .named n withEdges
+  | none => return .scope withEdges
+  | some n => return .named n withEdges
 
 /--
 Lays out a proof tree with inference lines and optional rule labels.

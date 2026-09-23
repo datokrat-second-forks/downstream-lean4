@@ -156,8 +156,6 @@ theorem lt_def {v : Valuation R Γ₀} {a b : WithVal v} : a < b ↔ v a.ofVal <
 def equiv : WithVal v ≃+* R where
   toFun := ofVal
   invFun := toVal v
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_add' := ofVal_add v
   map_mul' := ofVal_mul v
 

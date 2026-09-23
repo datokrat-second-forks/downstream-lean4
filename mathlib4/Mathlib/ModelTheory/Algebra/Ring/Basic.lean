@@ -253,9 +253,7 @@ def languageEquivEquivRingEquiv {R S : Type*}
     { f with
       map_fun' := fun {n} f => by
         cases f <;> simp
-      map_rel' := fun {n} f => by cases f }
-    left_inv _ := rfl
-    right_inv _ := rfl }
+      map_rel' := fun {n} f => by cases f } }
 
 variable (R : Type*) [Language.ring.Structure R]
 

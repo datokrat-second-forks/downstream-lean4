@@ -437,7 +437,6 @@ def topEquiv : (⊤ : Submonoid M) ≃* M where
   invFun x := ⟨x, mem_top x⟩
   left_inv x := x.eta _
   map_mul' _ _ := rfl
-  right_inv _ := rfl
 
 @[to_additive (attr := simp)]
 theorem topEquiv_toMonoidHom : ((topEquiv : _ ≃* M) : _ →* M) = (⊤ : Submonoid M).subtype :=

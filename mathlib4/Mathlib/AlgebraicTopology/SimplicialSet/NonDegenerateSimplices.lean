@@ -176,8 +176,6 @@ def opEquiv : X.op.N ≃o X.N where
     (by simpa only [opObjEquiv_mem_nonDegenerate_iff] using x.nonDegenerate)
   invFun y := N.mk (opObjEquiv.symm y.simplex)
     (by simpa [← opObjEquiv_mem_nonDegenerate_iff] using y.nonDegenerate)
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_rel_iff' {x y} := by
     dsimp
     simp only [le_iff, Subcomplex.ofSimplex_le_iff, Subcomplex.mem_ofSimplex_obj_iff]

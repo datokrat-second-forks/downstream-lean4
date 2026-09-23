@@ -189,8 +189,6 @@ def piLocalizationToMaximalEquiv (h : ∀ I : Ideal R, I.IsPrime → I.IsMaximal
     PiLocalization R ≃+* MaximalSpectrum.PiLocalization R where
   __ := piLocalizationToMaximal R
   invFun := RingHom.pi fun I ↦ Pi.evalRingHom _ (⟨_, h _ I.2⟩ : MaximalSpectrum R)
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 theorem piLocalizationToMaximal_bijective (h : ∀ I : Ideal R, I.IsPrime → I.IsMaximal) :
     Function.Bijective (piLocalizationToMaximal R) :=

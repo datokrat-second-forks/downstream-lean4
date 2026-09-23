@@ -53,7 +53,6 @@ def MulticospanIndex.sectionsEquiv :
   invFun s :=
     { val := fun i ↦ s.val (.left i)
       property := fun r ↦ (s.property (.fst r)).trans (s.property (.snd r)).symm }
-  left_inv _ := rfl
   right_inv s := by
     ext (_ | r)
     · rfl

@@ -28,16 +28,8 @@ instance  : LawfulMonad (EST ε σ) := .mk' _
     simp only [bind, EST.bind]
     cases f.run v <;> rfl)
 
-instance : LawfulMonad (EIO ε) := .mk' _
-  (id_map := fun x => congrArg EIO.mk (id_map x.toEST))
-  (pure_bind := fun x f => congrArg EIO.mk (pure_bind x (fun a => (f a).toEST)))
-  (bind_assoc := fun x f g =>
-    congrArg EIO.mk (bind_assoc x.toEST (fun a => (f a).toEST) (fun b => (g b).toEST)))
-instance : LawfulMonad BaseIO := .mk' _
-  (id_map := fun x => congrArg BaseIO.mk (id_map x.toST))
-  (pure_bind := fun x f => congrArg BaseIO.mk (pure_bind x (fun a => (f a).toST)))
-  (bind_assoc := fun x f g =>
-    congrArg BaseIO.mk (bind_assoc x.toST (fun a => (f a).toST) (fun b => (g b).toST)))
+instance : LawfulMonad (EIO ε) := inferInstanceAs <| LawfulMonad (EST _ _)
+instance : LawfulMonad BaseIO := inferInstanceAs <| LawfulMonad (ST _)
 instance : LawfulMonad IO := inferInstanceAs <| LawfulMonad (EIO _)
 
 instance : LawfulMonad CoreM :=

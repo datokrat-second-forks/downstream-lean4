@@ -162,8 +162,6 @@ def semilinearMapAddEquiv {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f :
     { toFun := g
       map_add' := by simp
       map_smul' := g.hom.map_smul }
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_add' _ _ := rfl
 
 set_option backward.isDefEq.respectTransparency false in
@@ -535,8 +533,6 @@ def equiv (M : ModuleCat R) :
     (coextendScalars f).obj M ≃ₗ[S] ((restrictScalars f).obj (of _ S) →ₗ[R] M) where
   toFun f := f
   invFun f := f
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 

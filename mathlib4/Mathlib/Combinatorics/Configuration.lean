@@ -440,7 +440,6 @@ theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + or
   let ϕ : { q // q ≠ p } ≃ Σ l : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
     { toFun := fun q => ⟨⟨mkLine q.2, (mkLine_ax q.2).2⟩, q, (mkLine_ax q.2).1, q.2⟩
       invFun := fun lq => ⟨lq.2, lq.2.2.2⟩
-      left_inv _ := rfl
       right_inv := fun lq =>
         Sigma.subtype_ext
           (Subtype.ext

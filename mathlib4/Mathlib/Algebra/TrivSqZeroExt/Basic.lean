@@ -1056,9 +1056,7 @@ def liftEquivOfComm :
     toFun := fun f => ⟨(Algebra.ofId _ _, f.val), f.prop,
       fun r x => by simp [Algebra.smul_def, Algebra.ofId_apply],
       fun r x => by simp [Algebra.smul_def, Algebra.ofId_apply, Algebra.commutes]⟩
-    invFun := fun fg => ⟨fg.val.2, fg.prop.1⟩
-    left_inv _ := rfl
-    right_inv _ := by ext; simp }
+    invFun := fun fg => ⟨fg.val.2, fg.prop.1⟩ }
 
 section map
 

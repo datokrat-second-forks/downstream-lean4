@@ -149,7 +149,6 @@ noncomputable def pointedToTwoPFstForgetCompBipointedToPointedFstAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.hom.toFun ∘ Option.some, f.hom.map_fst⟩
           invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩
-          right_inv _ := rfl
           left_inv := fun f => by
             ext (_ | _) : 4
             · exact f.hom.map_snd.symm
@@ -163,7 +162,6 @@ noncomputable def pointedToTwoPSndForgetCompBipointedToPointedSndAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.hom.toFun ∘ Option.some, f.hom.map_snd⟩
           invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩
-          right_inv _ := rfl
           left_inv := fun f => by
             ext (_ | _) : 4
             · exact f.hom.map_fst.symm

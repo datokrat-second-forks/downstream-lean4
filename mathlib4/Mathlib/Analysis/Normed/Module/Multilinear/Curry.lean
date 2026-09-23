@@ -592,7 +592,6 @@ def currySumEquiv : ContinuousMultilinearMap 𝕜 (fun _ : ι ⊕ ι' => G) G' �
   LinearIsometryEquiv.ofBounds
     { toFun := currySum
       invFun := uncurrySum
-      right_inv f := by ext; rfl
       map_add' := fun f g => by
         ext
         rfl

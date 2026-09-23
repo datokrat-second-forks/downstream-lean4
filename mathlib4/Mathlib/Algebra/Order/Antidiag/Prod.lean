@@ -239,7 +239,6 @@ def sigmaMulAntidiagonalEquivProd [Mul A] [HasMulAntidiagonal A] :
     rintro ⟨n, ⟨k, l⟩, h⟩
     rw [mem_mulAntidiagonal] at h
     exact Sigma.subtype_ext h rfl
-  right_inv _ := rfl
 
 section
 

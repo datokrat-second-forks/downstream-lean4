@@ -568,7 +568,7 @@ where
 /-- Rename binder names in pi type. -/
 def renameBinderNames (data : GuessName.GuessNameData) (rename : NameMap Name)
     (src : Expr) : Expr :=
-  src.mapForallBinderNames fun n => (rename.get? n).getD <|
+  src.mapForallBinderNames fun n => (rename.find? n).getD <|
     match n with
     | .str p s => .str p <|
       let s' := GuessName.guessName data s

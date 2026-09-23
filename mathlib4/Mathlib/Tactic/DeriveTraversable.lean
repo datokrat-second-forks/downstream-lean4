@@ -173,7 +173,7 @@ def deriveFunctor (m : MVarId) : TermElabM Unit := do
     let e := e.replaceFVar ad (mkAppN (.const n' (levels.map Level.param)) vars.toArray)
     let e' ← mkLambdaFVars vars.toArray e
     let t' ← mkForallFVars vars.toArray t
-    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
+    addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := levels
@@ -241,7 +241,7 @@ def mkOneInstance (n cls : Name) (tac : MVarId → TermElabM Unit)
     let instN ← m'.withContext do
       let type ← m'.getType >>= instantiateMVars
       mkInstanceNameForTypeExpr type
-    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
+    addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := decl.levelParams
@@ -421,7 +421,7 @@ def deriveTraversable (m : MVarId) : TermElabM Unit := do
     let e := e.replaceFVar ad (mkAppN (.const n' (levels.map Level.param)) vars.toArray)
     let e' ← mkLambdaFVars vars.toArray e
     let t' ← mkForallFVars vars.toArray t
-    withReader (fun _ : Term.Context => {}) <| addPreDefinitions docCtx
+    addPreDefinitions docCtx
       #[{ ref := .missing
           kind := .def
           levelParams := levels

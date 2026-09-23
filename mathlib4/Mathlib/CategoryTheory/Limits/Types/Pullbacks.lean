@@ -113,7 +113,6 @@ noncomputable def isLimitEquivBijective :
   toFun h := (IsLimit.equivPullbackObj h).bijective
   invFun h := IsLimit.ofIsoLimit (Types.pullbackLimitCone f g).isLimit
     (Iso.symm (PullbackCone.ext (Equiv.ofBijective _ h).toIso))
-  right_inv _ := Subsingleton.elim _ _
   left_inv _ := Subsingleton.elim _ _
 
 end PullbackCone

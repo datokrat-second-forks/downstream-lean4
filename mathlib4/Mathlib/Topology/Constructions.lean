@@ -1403,8 +1403,6 @@ def ContinuousMap.uliftEquiv (X : Type u) (Y : Type v) [TopologicalSpace X] [Top
     C(ULift.{v} X, ULift.{u} Y) ≃ C(X, Y) where
   toFun f := ⟨ULift.down ∘ f ∘ ULift.up, by fun_prop⟩
   invFun f := ⟨ULift.up ∘ f ∘ ULift.down, by fun_prop⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end ULift
 

@@ -464,7 +464,6 @@ abbrev HomotopyGroup.Pi (n) (X : Type*) [TopologicalSpace X] (x : X) :=
 def genLoopHomeoOfIsEmpty (N x) [IsEmpty N] : Ω^ N X x ≃ₜ X where
   toFun f := f 0
   invFun y := ⟨ContinuousMap.const _ y, fun _ ⟨i, _⟩ ↦ isEmptyElim i⟩
-  right_inv _ := rfl
   left_inv f := by ext; exact congr_arg f (Subsingleton.elim _ _)
   continuous_invFun := ContinuousMap.const'.2.subtype_mk _
 
@@ -501,7 +500,6 @@ def genLoopEquivOfUnique (N) [Unique N] : Ω^ N X x ≃ Ω X x where
       by
       rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
       exacts [p.source, p.target]⟩
-  right_inv _ := rfl
   left_inv p := by ext y; exact congr_arg p (eq_const_of_unique y).symm
 
 /- TODO (?): deducing this from `homotopyGroupEquivFundamentalGroup` would require

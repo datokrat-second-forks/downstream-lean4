@@ -685,7 +685,6 @@ def toEnvelGroup.map {R : Type*} [Rack R] {G : Type*} [Group G] :
         | inv x ih_x =>
           have hm : ⟦x.inv⟧ = @Inv.inv (EnvelGroup R) _ ⟦x⟧ := rfl
           rw [hm, map_inv, map_inv, ih_x]
-  left_inv _ := rfl
 
 /-- Given a homomorphism from a rack to a group, it factors through the enveloping group.
 -/

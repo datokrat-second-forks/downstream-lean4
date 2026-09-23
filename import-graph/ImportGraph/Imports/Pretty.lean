@@ -306,7 +306,7 @@ def collectWithWhitespaceFromSource (newImps : Array Import)
     let mut totalLeading := ""
     -- Expect one trailing, but collect multiple for error reporting
     let mut trailings := #[]
-    let some existing := sourcesByName.get? newImp.module
+    let some existing := sourcesByName.find? newImp.module
       | impsWithWs := impsWithWs.push (newImp, .empty); continue
     for source@(ref, { leading, trailing }) in existing do
       if newImp == ref.toImport then

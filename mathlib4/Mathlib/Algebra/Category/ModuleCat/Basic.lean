@@ -193,8 +193,6 @@ lemma hom_inv_apply {M N : ModuleCat.{v} R} (e : M ≅ N) (x : N) : e.hom (e.inv
 def homEquiv {M N : ModuleCat.{v} R} : (M ⟶ N) ≃ (M →ₗ[R] N) where
   toFun := Hom.hom
   invFun := ofHom
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- The categorical equivalence between `ModuleCat` and `SemimoduleCat`.
 
@@ -472,8 +470,6 @@ variable (M N : ModuleCat.{v} R)
 @[simps!] def endRingEquiv : End M ≃+* (M →ₗ[R] M) where
   toFun := ModuleCat.Hom.hom
   invFun := ModuleCat.ofHom
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_mul' _ _ := rfl
   map_add' _ _ := rfl
 

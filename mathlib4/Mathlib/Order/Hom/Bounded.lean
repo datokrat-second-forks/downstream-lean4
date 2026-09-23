@@ -480,8 +480,6 @@ protected def dual :
     TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨f, f.map_top'⟩
   invFun f := ⟨f, f.map_bot'⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[to_dual (attr := simp)]
 theorem dual_id : TopHom.dual (TopHom.id α) = BotHom.id _ :=
@@ -516,8 +514,6 @@ protected def dual :
         βᵒᵈ where
   toFun f := ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
   invFun f := ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[simp]
 theorem dual_id : (BoundedOrderHom.id α).dual = BoundedOrderHom.id _ :=

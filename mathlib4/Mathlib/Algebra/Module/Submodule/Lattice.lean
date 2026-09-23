@@ -110,8 +110,6 @@ def botEquivPUnit : (⊥ : Submodule R M) ≃ₗ[R] PUnit.{v + 1} where
   invFun _ := 0
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
-  left_inv _ := Subsingleton.elim _ _
-  right_inv _ := Subsingleton.elim _ _
 
 theorem subsingleton_iff_eq_bot : Subsingleton p ↔ p = ⊥ := by
   rw [subsingleton_iff, Submodule.eq_bot_iff]
@@ -174,8 +172,6 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
   invFun x := ⟨x, mem_top⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-!
 ## Infima & suprema in a submodule
@@ -382,8 +378,6 @@ def AddSubmonoid.toNatSubmodule : AddSubmonoid M ≃o Submodule ℕ M where
   toFun S := { S with smul_mem' := fun r s hs ↦ show r • s ∈ S from nsmul_mem hs _ }
   invFun := Submodule.toAddSubmonoid
   map_rel_iff' := Iff.rfl
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[simp]
 theorem AddSubmonoid.toNatSubmodule_symm :
@@ -422,8 +416,6 @@ def AddSubgroup.toIntSubmodule : AddSubgroup M ≃o Submodule ℤ M where
   toFun S := { S with smul_mem' := fun _ _ hs ↦ S.zsmul_mem hs _ }
   invFun := Submodule.toAddSubgroup
   map_rel_iff' := Iff.rfl
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[simp]
 theorem AddSubgroup.toIntSubmodule_symm :

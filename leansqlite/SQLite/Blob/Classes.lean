@@ -50,6 +50,8 @@ exception. Deserializers should not modify the byte array.
 -/
 public abbrev Deserializer (α : Type u) := StateT Deserializer.State (Except String) α
 
+public instance : Inhabited (Deserializer α) := ⟨.mk fun _ => .error default⟩
+
 namespace Deserializer
 /--
 Runs a deserializer. Throws an exception if not all the data are consumed.
@@ -62,7 +64,7 @@ public def run (d : Deserializer α) (data : ByteArray) : Except String α := do
 /--
 Deserializes a single byte.
 -/
-public def byte : Deserializer UInt8 := fun
+public def byte : Deserializer UInt8 := .mk fun
   | { data, cursor, .. } =>
     if h : cursor = data.size then throw "No more data"
     else
@@ -71,7 +73,7 @@ public def byte : Deserializer UInt8 := fun
 /--
 Extracts the next byte without advancing the cursor.
 -/
-public def peekByte : Deserializer UInt8 := fun
+public def peekByte : Deserializer UInt8 := .mk fun
   | { data, cursor, .. } =>
     if h : cursor = data.size then throw "No more data"
     else
@@ -80,7 +82,7 @@ public def peekByte : Deserializer UInt8 := fun
 /--
 Deserializes {name}`n` bytes.
 -/
-public def nbytes (n : Nat) : Deserializer ByteArray := fun
+public def nbytes (n : Nat) : Deserializer ByteArray := .mk fun
   | { data, cursor, .. } =>
     if h : cursor + n > data.size then throw "No more data"
     else
@@ -170,7 +172,7 @@ public instance : ToBinary UInt16 where
     |>.push (n.toUInt8)
 
 public instance : FromBinary UInt16 where
-  deserializer
+  deserializer := .mk fun
   | { data, cursor, .. } =>
     if h : cursor ≥ data.size - 1 then throw "No more data"
     else
@@ -187,7 +189,7 @@ public instance : ToBinary UInt32 where
     |>.push (n.toUInt8)
 
 public instance : FromBinary UInt32 where
-  deserializer
+  deserializer := .mk fun
   | { data, cursor, .. } =>
     if h : cursor ≥ data.size - 3 then throw "No more data"
     else
@@ -210,7 +212,7 @@ public instance : ToBinary UInt64 where
     |>.push (n.toUInt8)
 
 public instance : FromBinary UInt64 where
-  deserializer
+  deserializer := .mk fun
   | { data, cursor, .. } =>
     if h : cursor ≥ data.size - 7 then throw "No more data"
     else

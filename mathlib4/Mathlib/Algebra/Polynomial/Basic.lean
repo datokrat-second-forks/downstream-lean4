@@ -332,8 +332,6 @@ def toFinsuppIso : R[X] ≃+* R[ℕ] where
   invFun := ofFinsupp
   map_mul' := toFinsupp_mul
   map_add' := toFinsupp_add
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 instance [DecidableEq R] : DecidableEq R[X] := (toFinsuppIso R).toEquiv.decidableEq
 

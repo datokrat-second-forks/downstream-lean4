@@ -148,8 +148,6 @@ synonym. -/
 def ofProd : L × M ≃ ofTwoCocycle c where
   toFun a := ⟨a⟩
   invFun a := a.carrier
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 -- transport instances along the equivalence
 instance : AddCommGroup (ofTwoCocycle c) := (ofProd c).symm.addCommGroup

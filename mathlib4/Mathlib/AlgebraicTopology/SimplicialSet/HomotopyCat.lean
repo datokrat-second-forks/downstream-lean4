@@ -557,8 +557,6 @@ def mk (x : X _⦋0⦌) : X.HomotopyCategory := Truncated.HomotopyCategory.mk x
 def objEquiv {X : SSet.{u}} : X.HomotopyCategory ≃ X _⦋0⦌ where
   toFun x := x.as.as
   invFun x := mk x
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- Induction principle for objects of the homotopy category of a simplicial set. -/
 @[elab_as_elim, cases_eliminator, induction_eliminator]

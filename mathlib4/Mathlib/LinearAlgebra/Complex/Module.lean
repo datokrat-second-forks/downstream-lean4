@@ -531,7 +531,6 @@ open scoped ComplexStarModule
 def Complex.selfAdjointEquiv : selfAdjoint ℂ ≃ₗ[ℝ] ℝ where
   toFun := fun z ↦ (z : ℂ).re
   invFun := fun x ↦ ⟨x, conj_ofReal x⟩
-  right_inv _ := rfl
   left_inv := fun z ↦ Subtype.ext <| conj_eq_iff_re.mp z.property.star_eq
   map_add' := by simp
   map_smul' := by simp

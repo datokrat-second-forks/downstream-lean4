@@ -571,8 +571,6 @@ def complEquiv : G ↪g H ≃ Gᶜ ↪g Hᶜ where
     obtain rfl | hvw := eq_or_ne v w
     · simp
     · simpa [hvw, not_iff_not] using f.map_adj_iff (v := v) (w := w)⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end Embedding
 

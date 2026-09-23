@@ -42,8 +42,6 @@ def compCoyonedaSectionsEquiv (F : J ⥤ C) (X : C) :
         rw [Category.id_comp]
         exact (s.property f).symm }
   invFun τ := ⟨τ.app, fun {j j'} f => by simpa using! (τ.naturality f).symm⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Sections of `F.op ⋙ yoneda.obj X` identify to natural
@@ -58,8 +56,6 @@ def opCompYonedaSectionsEquiv (F : J ⥤ C) (X : C) :
         rw [Category.comp_id]
         exact (s.property f.op) }
   invFun τ := ⟨fun j => τ.app j.unop, fun {j j'} f => by simp [τ.naturality f.unop]⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Sections of `F ⋙ yoneda.obj X` identify to natural
@@ -75,8 +71,6 @@ def compYonedaSectionsEquiv (F : J ⥤ Cᵒᵖ) (X : C) :
         exact Quiver.Hom.unop_inj (s.property f).symm }
   invFun τ := ⟨fun j => (τ.app j).unop,
     fun {j j'} f => Quiver.Hom.op_inj (by simpa using! (τ.naturality f).symm)⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end
 

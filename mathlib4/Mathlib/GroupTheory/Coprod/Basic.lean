@@ -458,7 +458,6 @@ def liftEquiv : (M →* P) × (N →* P) ≃ (M ∗ N →* P) where
   toFun fg := lift fg.1 fg.2
   invFun f := (f.comp inl, f.comp inr)
   right_inv _ := Eq.symm <| lift_unique rfl rfl
-  left_inv _ := rfl
 
 @[to_additive (attr := simp)]
 theorem mrange_lift (f : M →* P) (g : N →* P) :

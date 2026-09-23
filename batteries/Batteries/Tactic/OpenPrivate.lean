@@ -30,8 +30,6 @@ def Meta.collectPrivateIn [Monad m] [MonadEnv m] [MonadError m]
 def Environment.moduleIdxForModule? (env : Environment) (mod : Name) : Option ModuleIdx :=
   (env.allImportedModuleNames.idxOf? mod).map ModuleIdx.mk
 
-deriving instance DecidableEq for ModuleIdx
-
 /-- Get the list of declarations in a module (referenced by index). -/
 def Environment.declsInModuleIdx (env : Environment) (idx : ModuleIdx) : List Name :=
   env.const2ModIdx.fold (fun acc n i => if i = idx then n :: acc else acc) []

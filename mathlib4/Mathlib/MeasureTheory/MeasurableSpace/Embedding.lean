@@ -648,8 +648,6 @@ def ofInvolutive (f : α → α) (hf : Involutive f) (hf' : Measurable f) : α �
 protected def setOfPred {α : Type*} : (α → Prop) ≃ᵐ Set α where
   toFun p := {a | p a}
   invFun s a := a ∈ s
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[deprecated (since := "2026-07-09")]
 protected alias setOf := MeasurableEquiv.setOfPred

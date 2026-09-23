@@ -356,8 +356,6 @@ theorem toEmbedding_equivOfFiniteSelfEmbedding [Finite α] (e : α ↪ α) :
     (α ↪ α) ≃ (α ≃ α) where
   toFun e := e.equivOfFiniteSelfEmbedding
   invFun e := e.toEmbedding
-  left_inv _ := rfl
-  right_inv _ := Equiv.ext fun _ => rfl
 
 /-- A constructive embedding of a fintype `α` in another fintype `β` when `card α ≤ card β`. -/
 def truncOfCardLE [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]

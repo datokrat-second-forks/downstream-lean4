@@ -243,7 +243,6 @@ def obj₀Equiv {n : ℕ} : Δ[n] _⦋0⦌ ≃ Fin (n + 1) where
   toFun x := x 0
   invFun i := const _ i _
   left_inv x := by ext i : 1; fin_cases i; rfl
-  right_inv _ := rfl
 
 lemma δ_one_eq_const : stdSimplex.{u}.δ (1 : Fin 2) = SSet.const (obj₀Equiv.symm 0) := by
   decide
@@ -448,8 +447,7 @@ def isoNerve (n : ℕ) :
       invFun f :=
         SimplexCategory.Hom.mk
           (ULift.orderIso.toOrderEmbedding.toOrderHom.comp f.toOrderHom)
-      left_inv _ := by aesop
-      right_inv _ := by aesop }))
+      left_inv _ := by aesop }))
 
 @[simp]
 lemma isoNerve_hom_app_apply {n d : ℕ}
@@ -491,7 +489,6 @@ def nonDegenerateEquiv {n d : ℕ} :
   invFun s := ⟨objEquiv.symm (.mk s.toOrderHom), by
     simpa [mem_nonDegenerate_iff_strictMono] using! s.strictMono⟩
   left_inv _ := by aesop
-  right_inv _ := rfl
 
 instance (n : ℕ) : (Δ[n] : SSet.{u}).HasDimensionLE n where
   degenerate_eq_top i hi := by
@@ -509,9 +506,7 @@ def finSuccAboveOrderIsoFinset {n : ℕ} (i : Fin (n + 2)) :
     Fin (n + 1) ≃o ({i}ᶜ : Finset _) where
   toEquiv := (finSuccAboveEquiv (p := i)).trans
     { toFun := fun ⟨x, hx⟩ ↦ ⟨x, by simpa using hx⟩
-      invFun := fun ⟨x, hx⟩ ↦ ⟨x, by simpa using hx⟩
-      left_inv _ := rfl
-      right_inv _ := rfl }
+      invFun := fun ⟨x, hx⟩ ↦ ⟨x, by simpa using hx⟩ }
   map_rel_iff' := (Fin.succAboveOrderEmb i).map_rel_iff
 
 lemma face_singleton_compl {n : ℕ} (i : Fin (n + 2)) :

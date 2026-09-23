@@ -147,6 +147,9 @@ variable [LawfulApplicative F]
   apply rightUnitorInv_injective
   simp only [rightUnitorInv_seq, rightUnitorInv_rightUnitor]
 
+@[deprecated (since := "2026-09-23")] alias applicative_id_comp := leftUnitor_seq
+@[deprecated (since := "2026-09-23")] alias applicative_comp_id := rightUnitor_seq
+
 end Unitors
 
 open CommApplicative

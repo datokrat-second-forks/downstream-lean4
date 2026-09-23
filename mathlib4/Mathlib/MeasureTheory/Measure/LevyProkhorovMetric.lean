@@ -280,8 +280,6 @@ lemma toMeasure_injective {α : Type*} : (toMeasure : LevyProkhorov α → α).I
 def toMeasureEquiv {α : Type*} : LevyProkhorov α ≃ α where
   toFun := toMeasure
   invFun := ofMeasure
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- The Lévy-Prokhorov distance `levyProkhorovEDist` makes `Measure Ω` a pseudoemetric
 space. The instance is recorded on the type synonym `LevyProkhorov (Measure Ω) := Measure Ω`. -/

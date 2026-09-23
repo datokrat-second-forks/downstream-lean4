@@ -55,7 +55,6 @@ variable (σ R) in
 def isEmptyEquiv [IsEmpty σ] : MvPowerSeries σ R ≃ₐ[R] R where
   __ := constantCoeff
   invFun := C
-  right_inv _ := rfl
   left_inv _ := by ext x; simp [Subsingleton.eq_zero x]
   commutes' _ := rfl
 

@@ -269,8 +269,6 @@ set_option linter.style.whitespace false in -- manual alignment is not recognise
 def coeffAddEquiv : SkewMonoidAlgebra k G ≃+ (G →₀ k) where
   toFun    := coeff
   invFun   := ofCoeff
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_add' := coeff_add
 
 @[deprecated (since := "2026-07-04")] alias toFinsuppAddEquiv := coeffAddEquiv

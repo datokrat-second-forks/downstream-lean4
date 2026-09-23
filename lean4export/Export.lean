@@ -319,7 +319,7 @@ partial def dumpConstant (c : Name) : M Unit := do
         | _ => panic! "Expected a `ConstantInfo.ctorInfo`."
       modify fun st => { st with visitedConstants:= st.visitedConstants.insert indName }
       dumpDeps val.type
-      if let .some names := (← get).recursorMap.get? baseIndVal.name
+      if let .some names := (← get).recursorMap.find? baseIndVal.name
       then recursorNames := recursorNames.union names
       else assert! ctorVals.size == 0
 

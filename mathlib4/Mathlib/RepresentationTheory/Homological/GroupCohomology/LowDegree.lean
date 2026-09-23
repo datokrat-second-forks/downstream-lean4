@@ -347,9 +347,7 @@ def cocycles₁IsoOfIsTrivial [hA : A.IsTrivial] :
     map_smul' _ _ := rfl
     invFun f :=
       { val := f
-        property := mem_cocycles₁_of_addMonoidHom f }
-    left_inv _ := rfl
-    right_inv _ := rfl }
+        property := mem_cocycles₁_of_addMonoidHom f } }
 
 @[macro_inline]
 instance : FunLike (cocycles₂ A) (G × G) A := ⟨Subtype.val, Subtype.val_injective⟩

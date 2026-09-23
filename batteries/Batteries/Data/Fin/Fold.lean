@@ -115,7 +115,7 @@ theorem dfoldlM_eq_foldlM [Monad m] (f : (i : Fin n) → α → m α) (x : α) :
 /-! ### dfoldl -/
 
 @[simp] theorem dfoldl_zero (f : (i : Fin 0) → α i.castSucc → α i.succ) (x) :
-    dfoldl 0 α f x = x := by simp [dfoldl, pure]
+    dfoldl 0 α f x = x := by simp [dfoldl]
 
 theorem dfoldl_succ (f : (i : Fin (n+1)) → α i.castSucc → α i.succ) (x) :
     dfoldl (n+1) α f x = dfoldl n (α ∘ succ) (f ·.succ ·) (f 0 x) :=

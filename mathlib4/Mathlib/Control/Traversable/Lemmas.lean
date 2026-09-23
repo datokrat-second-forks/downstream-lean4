@@ -58,11 +58,11 @@ def rightUnitorInv : ApplicativeTransformation F (Comp F Id) where
 @[simp] theorem rightUnitorInv_apply {α} (x : F α) :
     rightUnitorInv F x = Comp.mk (Id.mk <$> x) := rfl
 
-@[simp] theorem rightUnitor_rightUnitorInv {α} (x : F α) :
+theorem rightUnitor_rightUnitorInv {α} (x : F α) :
     rightUnitor F (rightUnitorInv F x) = x :=
   Comp.rightUnitor_rightUnitorInv x
 
-@[simp] theorem rightUnitorInv_rightUnitor {α} (x : Comp F Id α) :
+theorem rightUnitorInv_rightUnitor {α} (x : Comp F Id α) :
     rightUnitorInv F (rightUnitor F x) = x :=
   Comp.rightUnitorInv_rightUnitor x
 

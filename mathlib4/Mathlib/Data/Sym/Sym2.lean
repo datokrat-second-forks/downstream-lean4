@@ -204,7 +204,6 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
       exacts [rfl, f.prop _ _]
   invFun F := ⟨fun a b ↦ F s(a, b), fun _ _ => congr_arg F eq_swap⟩
   right_inv _ := funext <| Sym2.ind fun _ _ => rfl
-  left_inv _ := rfl
 
 @[simp]
 theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a b : α) :
@@ -232,7 +231,6 @@ def lift₂ :
       constructor
       exacts [congr_arg₂ F eq_swap rfl, congr_arg₂ F rfl eq_swap]⟩
   right_inv _ := funext₂ fun a b => Sym2.inductionOn₂ a b fun _ _ _ _ => rfl
-  left_inv _ := rfl
 
 @[simp]
 theorem lift₂_mk

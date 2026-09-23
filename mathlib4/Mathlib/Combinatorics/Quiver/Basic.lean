@@ -67,8 +67,6 @@ def Hom.unop {V} [Quiver V] {X Y : Vᵒᵖ} (f : X ⟶ Y) : unop Y ⟶ unop X :=
 def Hom.opEquiv {V} [Quiver V] {X Y : V} : (X ⟶ Y) ≃ (Opposite.op Y ⟶ Opposite.op X) where
   toFun := Opposite.op
   invFun := Opposite.unop
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- To show that two Homs from the opposite category agree, it suffices to show they agree
 in the original category. -/

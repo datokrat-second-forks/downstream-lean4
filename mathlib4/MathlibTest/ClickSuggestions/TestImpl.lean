@@ -42,7 +42,7 @@ where
   getProps {Props} [RpcEncodable Props] (lazy : LazyEncodable Json) :
       CoreM Props := do
     let (json, state) := (lazy.run {}).run
-    match rpcDecode json state with
+    match ReaderT.run (rpcDecode json).run state |>.run with
     | .ok props => return props
     | .error e => throwError "An error occurred when looking at the HTML: {e}"
 /- Wait until the state has finished refreshing, and the return the final HTML.

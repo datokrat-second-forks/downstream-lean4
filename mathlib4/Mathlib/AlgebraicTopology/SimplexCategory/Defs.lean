@@ -138,8 +138,6 @@ def homEquivOrderHom {a b : SimplexCategory} :
     (a ⟶ b) ≃ (Fin (a.len + 1) →o Fin (b.len + 1)) where
   toFun := Hom.toOrderHom
   invFun := Hom.mk
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- Homs in `SimplexCategory` are equivalent to functors between finite linear orders. -/
 def homEquivFunctor {a b : SimplexCategory} :

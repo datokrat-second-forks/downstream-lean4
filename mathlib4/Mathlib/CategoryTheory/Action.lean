@@ -103,8 +103,6 @@ set_option backward.isDefEq.respectTransparency.types false in
 def stabilizerIsoEnd : stabilizerSubmonoid M x ≃* @End (ActionCategory M X) _ x where
   toFun f := Functor.Elements.homMk f
   invFun f := ⟨f.hom, f.map_val⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_mul' _ _ := rfl
 
 @[simp]

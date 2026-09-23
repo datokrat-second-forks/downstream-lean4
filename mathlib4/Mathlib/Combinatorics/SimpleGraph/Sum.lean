@@ -227,7 +227,6 @@ theorem Coloring.sum_sumLeft_sumRight (c : (G ⊕g H).Coloring γ) : c.sumLeft.s
 def Coloring.sumEquiv : (G ⊕g H).Coloring γ ≃ G.Coloring γ × H.Coloring γ where
   toFun c := ⟨c.sumLeft, c.sumRight⟩
   invFun p := p.1.sum p.2
-  right_inv _ := rfl
   left_inv c := by simp [sum_sumLeft_sumRight c]
 
 /-- Color `G ⊕g H` with `Fin (n + m)` given a coloring of `G` with `Fin n` and a coloring of `H`

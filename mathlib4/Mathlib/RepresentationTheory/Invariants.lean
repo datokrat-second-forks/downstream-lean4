@@ -116,8 +116,6 @@ def invariantsEquivIntertwiningMap : (linHom ρ σ).invariants ≃ₗ[k] Intertw
     { val := g.toLinearMap
       property := (mem_linHom_invariants_iff_isIntertwining g.toLinearMap).mpr
         { isIntertwining := g.isIntertwining } }
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 section
 
@@ -208,8 +206,6 @@ def invariantsEquivRepHom : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y wher
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨f.hom, fun g => (mem_invariants_iff_comm _ g).2 <| f.hom.2 g⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end Rep
 

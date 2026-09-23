@@ -110,9 +110,7 @@ def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
       { toFun := fun g =>
           { f := _
             h := g.prop }
-        invFun := fun f => ⟨f.f, f.h⟩
-        left_inv _ := rfl
-        right_inv _ := rfl }
+        invFun := fun f => ⟨f.f, f.h⟩ }
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Construct the adjunction to the comparison functor.

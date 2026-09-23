@@ -91,7 +91,6 @@ def continuousMapPresheafEquivOfTotallyDisconnectedSpace [TotallyDisconnectedSpa
     (continuousMapPresheaf T).obj (.op U) ≃ C(ConnectedComponents U, T) where
   toFun f := ⟨f.continuous.connectedComponentsLift, f.continuous.connectedComponentsLift_continuous⟩
   invFun f := .comp f ⟨ConnectedComponents.mk, ConnectedComponents.continuous_coe⟩
-  left_inv _ := rfl
   right_inv f := by
     apply ContinuousMap.coe_injective
     dsimp

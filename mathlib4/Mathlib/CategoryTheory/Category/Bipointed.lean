@@ -198,7 +198,6 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
           invFun := fun f => ⟨fun o => o.elim Y.toProd.2 f.toFun, f.map_point, rfl⟩
-          right_inv _ := rfl
           left_inv := fun f => by
             apply Bipointed.Hom.ext
             funext x
@@ -218,7 +217,6 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
           invFun := fun f => ⟨fun o => o.elim Y.toProd.1 f.toFun, rfl, f.map_point⟩
-          right_inv _ := rfl
           left_inv := fun f => by
             apply Bipointed.Hom.ext
             funext x

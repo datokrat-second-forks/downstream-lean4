@@ -190,8 +190,6 @@ lemma hom_inv_apply {M N : SemimoduleCat.{v} R} (e : M ≅ N) (x : N) : e.hom (e
 def homEquiv {M N : SemimoduleCat.{v} R} : (M ⟶ N) ≃ (M →ₗ[R] N) where
   toFun := Hom.hom
   invFun := ofHom
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end
 

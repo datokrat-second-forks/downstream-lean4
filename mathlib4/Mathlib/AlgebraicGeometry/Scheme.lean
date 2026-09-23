@@ -518,8 +518,6 @@ spectrum of `R`. -/
 def specOrderIsoPrimeSpectrum (R : CommRingCat) : Spec R ≃o (PrimeSpectrum R)ᵒᵈ where
   toFun x := .toDual x
   invFun x := OrderDual.ofDual x
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_rel_iff' {a b} := PrimeSpectrum.le_iff_specializes b a
 
 /-- `PrimeSpectrum R` with the inclusion order is order isomorphic to the dual of `Spec R`. -/
@@ -527,8 +525,6 @@ def specOrderIsoPrimeSpectrum (R : CommRingCat) : Spec R ≃o (PrimeSpectrum R)�
 def primeSpectrumOrderIsoSpec (R : Type u) [CommRing R] : PrimeSpectrum R ≃o (Spec ↧R)ᵒᵈ where
   toFun x := .toDual x
   invFun x := OrderDual.ofDual x
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_rel_iff' {a b} := (PrimeSpectrum.le_iff_specializes a b).symm
 
 section

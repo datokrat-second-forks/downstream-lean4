@@ -504,8 +504,6 @@ def unitGroupMulEquiv : A.unitGroup ≃* Aˣ where
       val_inv := Subtype.ext (by simp)
       inv_val := Subtype.ext (by simp) }
   invFun x := ⟨Units.map A.subtype.toMonoidHom x, A.valuation_unit x⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
   map_mul' a b := by ext; rfl
 
 @[simp]

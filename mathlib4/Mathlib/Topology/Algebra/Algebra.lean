@@ -487,8 +487,6 @@ set_option linter.style.whitespace false in -- manual alignment is not recognise
 def prodEquiv : (A →A[R] B) × (A →A[R] C) ≃ (A →A[R] B × C) where
   toFun f  := f.1.prod f.2
   invFun f := ⟨(fst _ _ _).comp f, (snd _ _ _).comp f⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 end prod
 

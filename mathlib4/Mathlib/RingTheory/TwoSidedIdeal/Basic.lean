@@ -110,8 +110,6 @@ def orderIsoRingCon : TwoSidedIdeal R ≃o RingCon R where
   invFun := ofRingCon
   map_rel_iff' {I J} := Iff.symm <| le_iff.trans ⟨fun h x y r => by rw [rel_iff] at r ⊢; exact h r,
     fun h x hx => by rw [SetLike.mem_coe, mem_iff] at hx ⊢; exact h hx⟩
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 lemma ringCon_injective : Function.Injective (TwoSidedIdeal.ringCon (R := R)) := by
   rintro ⟨x⟩ ⟨y⟩ rfl; rfl
@@ -257,12 +255,7 @@ Two-sided-ideals of `A` and that of `Aᵒᵖ` corresponds bijectively to each ot
 def opOrderIso : TwoSidedIdeal R ≃o TwoSidedIdeal Rᵐᵒᵖ where
   toFun := op
   invFun := unop
-  left_inv _ := rfl
-  right_inv _ := rfl
-  map_rel_iff' {I' J'} := by
-    change I'.op ≤ J'.op ↔ I' ≤ J'
-    rw [ringCon_le_iff, ringCon_le_iff]
-    exact RingCon.opOrderIso.map_rel_iff
+  map_rel_iff' {I' J'} := by simpa [ringCon_le_iff] using RingCon.opOrderIso.map_rel_iff
 
 end NonUnitalNonAssocRing
 

@@ -817,8 +817,6 @@ def uniformEquivUniformFun (h : univ ∈ 𝔖) : (α →ᵤ[𝔖] β) ≃ᵤ (α
     intro U hU
     filter_upwards [UniformOnFun.gen_mem_uniformity _ _ h hU] with f hf x using hf x (mem_univ _)
   uniformContinuous_invFun := uniformContinuous_ofUniformFun _ _
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 /-- If `𝔖` and `𝔗` are families of sets in `α`, then the identity map
 `(α →ᵤ[𝔗] β) → (α →ᵤ[𝔖] β)` is uniformly continuous if every `s ∈ 𝔖` is contained in a finite

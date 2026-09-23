@@ -163,12 +163,6 @@ def antidiagonalEquivFin (n : ℕ) : antidiagonal n ≃ Fin (n + 1) where
   invFun := fun ⟨i, h⟩ ↦ ⟨⟨i, n - i⟩, by
     rw [mem_antidiagonal, add_comm, Nat.sub_add_cancel]
     exact Nat.le_of_lt_succ h⟩
-  left_inv := by
-    rintro ⟨⟨i, j⟩, h⟩
-    apply Subtype.ext
-    change (i, n - i) = (i, j)
-    rw [← mem_antidiagonal.mp h, Nat.add_sub_cancel_left]
-  right_inv _ := rfl
 
 end Nat
 

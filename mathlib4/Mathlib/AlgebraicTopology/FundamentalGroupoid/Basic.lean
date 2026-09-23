@@ -250,8 +250,6 @@ namespace FundamentalGroupoid
 def equiv (X : Type*) : FundamentalGroupoid X ≃ X where
   toFun x := x.as
   invFun x := .mk x
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 @[simp]
 lemma isEmpty_iff (X : Type*) :

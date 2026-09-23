@@ -56,7 +56,7 @@ def formatToHtmlWithDoc (fmt : Format) (n : Name) : MetaM Html := do
   let tag := 0
   -- Hack: use `.ofCommandInfo` instead of `.ofTacticInfo` to avoid printing `n` and its type.
   -- Unfortunately, there is still a loose dangling ` : `.
-  let infos := .insert ∅ tag <| .ofCommandInfo
+  let infos := .insert ∅ ⟨tag⟩ <| .ofCommandInfo
     { elaborator := `ClickSuggestions, stx := .node .none n #[] }
   let tt := TaggedText.prettyTagged <| .tag tag fmt
   let ctx := {

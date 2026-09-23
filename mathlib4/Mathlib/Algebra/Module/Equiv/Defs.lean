@@ -147,7 +147,7 @@ theorem toEquiv_injective :
     (toEquiv (modM := modM) (modM₂ := modM₂) : (M ≃ₛₗ[σ] M₂) → M ≃ M₂).Injective :=
   fun ⟨⟨⟨_, _⟩, _⟩, _, _, _⟩ ⟨⟨⟨_, _⟩, _⟩, _, _, _⟩ h ↦
     (LinearEquiv.mk.injEq _ _ _ _ _ _ _ _).mpr
-      ⟨LinearMap.ext (congr_fun (congrArg Equiv.toFun h)), congrArg Equiv.invFun h⟩
+      ⟨LinearMap.ext (congr_fun (Equiv.mk.inj h).1), (Equiv.mk.inj h).2⟩
 
 @[simp]
 theorem toEquiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=
@@ -325,8 +325,6 @@ notation3:80 (name := transNotation) e₁:80 " ≪≫ₗ " e₂:81 =>
 def symmEquiv : (M ≃ₛₗ[σ] M₂) ≃ (M₂ ≃ₛₗ[σ'] M) where
   toFun := .symm
   invFun := .symm
-  left_inv _ := rfl
-  right_inv _ := rfl
 
 variable {e₁₂} {e₂₃}
 
