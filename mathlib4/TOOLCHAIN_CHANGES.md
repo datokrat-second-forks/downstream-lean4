@@ -321,3 +321,56 @@ Before ReaderT was sealed, partial elaboration could recover a witness by unfold
 The explicit lifting instance restores this capability without requiring an inhabitant of `α`.
 The full core build, a regression test with result type `Empty`, and existing ring and field_simp tests pass.
 See DDR 014 and anomaly 012 in `/root/static/ofs-ddr/`.
+
+## Equiv.trans and downstream proof inference
+
+Core `Equiv.trans` uses `e₂.toFun ∘ e₁.toFun` for its forward map.
+The former Mathlib definition used `e₂ ∘ e₁`, through Mathlib's function coercion.
+These bodies are definitionally equal, but they affect proof automation differently.
+
+In pullback naturality, the raw projection changes which occurrence a rewrite selects.
+The selected repair inserts `Equiv.toFun_as_coe` after cancellation; see anomaly 014 and DDR 015.
+
+In Ext exactness, the decisive composition occurs inside Yoneda's shift-sequence instance.
+A checked local clone with the old coercion-based forward map restores bare `apply` in both affected proofs.
+The raw forward map fails, regardless of which inverse-map form the clone uses.
+With coercions, structural comparison infers the category from matching `ShiftedHom.opEquiv` arguments.
+With raw projections, further unfolding gets stuck on `HasDerivedCategory ?C` before that successful assignment.
+Specifying `(C := C)` avoids this path; fixing only universe parameters does not.
+The earlier diagnostic about the unexposed Mathlib definition `Shrink` did not identify the cause.
+
+See `/root/static/ofs-ddr/anomalies/013-ext-theorem-argument-inference.md` for the controlled comparison and traces.
+The self-checking probe is `/root/static/ofs-ddr/evidence/ext-trans-inference-regression.lean`.
+These results isolate definition changes on the current compiler, not changes in the unification algorithm itself.
+
+A Mathlib-free reduction is now in `/root/lean4/onefieldstructures/src/Demo/CoercionCompositionInference.lean`.
+It checks successful wrapped-function inference, failed raw-projection inference, and repair by an explicit parameter.
+The further reduction removes all coercion machinery; explicit evaluation records retain the relevant class-projection behavior.
+Its trace reproduces the stuck typeclass dependency using only operations on natural numbers.
+
+
+## Rebased canonical equivalences and Mathlib integration
+
+The rebased toolchain is `bf4b35c7e0e349f6bdcf277a6d7ea487daae4d65`.
+Core uses `Lean.CanonicalEquivalence` and generated `.equivDef` declarations, without global equivalence notation.
+Mathlib again owns its original `Equiv`, notation, constructor defaults, and coercion-based operations.
+`Lean.CanonicalEquivalence.toEquiv` explicitly converts generated representation equivalences for the control library.
+The mathematical helpers regain their original names `ReaderT.equiv` and `StateT.equiv`.
+See DDR 018 for the conversion decision and its tests.
+
+The actual rebased history retains `b525d6acc2`, the former Mathlib-alignment commit under renamed core declarations.
+It also contains the StateRefT inhabitance fix as `72f640304d`.
+Some transport congruences use `canonicalCongr`; others still use `congr`.
+These are observations of the supplied toolchain. This downstream integration does not alter it.
+The separation lets Mathlib use its own API independently of those core choices.
+
+
+## Removal of retained canonical-equivalence alignment
+
+The rebase retained the old alignment as `b525d6acc2`.
+Current-toolchain commit `48b5962a10c978ec2f98c64b69d768c88f5aa570` removes its unnecessary API effects.
+`Lean.CanonicalEquivalence.refl`, `symm`, and `trans` are abbreviations again.
+Extensionality takes equality of both maps. The cancellation names are `trans_symm` and `symm_trans`.
+Production transport proofs use those names, and the redundant Mathlib-alignment test is removed.
+The mixed transport-congruence names and the StateRefT instance are unchanged.
+DDR 017 records this completed cleanup on the rebased branch.

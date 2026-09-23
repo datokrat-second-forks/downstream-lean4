@@ -427,7 +427,6 @@ def mk' (adj : CoreHomEquivUnitCounit F G) : F ⊣ G where
 
 lemma mk'_homEquiv (adj : CoreHomEquivUnitCounit F G) : (mk' adj).homEquiv = adj.homEquiv := by
   ext
-  simp only [Equiv.toFun_as_coe]
   rw [homEquiv_unit, adj.homEquiv_unit, mk'_unit]
 
 /-- Construct an adjunction between `F` and `G` out of a natural bijection between each

@@ -118,14 +118,14 @@ end ULiftable
 open ULift
 
 instance instULiftableId : ULiftable Id Id where
-  congr F := Id.equiv.symm.trans (F.trans Id.equiv)
+  congr F := Id.equivDef.toEquiv.symm.trans (F.trans Id.equivDef.toEquiv)
 
 /-- for specific state types, this function helps to create a uliftable instance -/
 @[instance_reducible]
 def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [ULiftable m m']
     (F : s ≃ s') : ULiftable (StateT s m) (StateT s' m') where
   congr G :=
-    StateT.equivCongr <| Equiv.piCongr F fun _ => ULiftable.congr <| Equiv.prodCongr G F
+    StateT.equiv <| Equiv.piCongr F fun _ => ULiftable.congr <| Equiv.prodCongr G F
 
 instance {m m'} [ULiftable m m'] : ULiftable (StateT s m) (StateT (ULift s) m') :=
   StateT.uliftable' Equiv.ulift.symm
@@ -138,7 +138,7 @@ instance StateT.instULiftableULiftULift {m m'} [ULiftable m m'] :
 @[instance_reducible]
 def ReaderT.uliftable' {m m'} [ULiftable m m'] (F : s ≃ s') :
     ULiftable (ReaderT s m) (ReaderT s' m') where
-  congr G := ReaderT.equivCongr <| Equiv.piCongr F fun _ => ULiftable.congr G
+  congr G := ReaderT.equiv <| Equiv.piCongr F fun _ => ULiftable.congr G
 
 instance {m m'} [ULiftable m m'] : ULiftable (ReaderT s m) (ReaderT (ULift s) m') :=
   ReaderT.uliftable' Equiv.ulift.symm

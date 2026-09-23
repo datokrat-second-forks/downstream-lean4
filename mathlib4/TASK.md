@@ -164,3 +164,14 @@ Batch 17 repairs the remaining 3 baseline failures. The full `lake build Mathlib
 The completed scan reports zero direct failures and zero blocked modules out of 8,526.
 The full `MathlibTest` target, accumulated-change review, and performance comparison remain open.
 See `/root/static/ofs-ddr/progress/mathlib-batch-17.md`.
+
+## Canonical equivalence separation after the rebase
+
+The user completed the toolchain rebase and requested a downstream rebuild.
+DDR 017 supersedes the earlier instruction to share core Equiv with Mathlib.
+Restore Mathlib's own Equiv and use explicit canonical-equivalence conversions where needed; see DDR 018.
+Preserve unrelated workspace edits and verify a complete Mathlib build on the rebased toolchain.
+
+The post-rebase integration passes the full library and selected equivalence/traversal tests (8,923 jobs).
+The completed scan reports zero directly failing and zero blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/canonical-rebase-mathlib.md` for the changes and build evidence.
