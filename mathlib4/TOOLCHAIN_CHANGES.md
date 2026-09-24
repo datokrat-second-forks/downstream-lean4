@@ -74,7 +74,8 @@ Consequently, an ordinary monadic implementation can often retain its existing `
 
 ## Instance transport
 
-`N.equiv` is reducible, macro-inlined, and registered with `@[transport]`.
+`N.equivDef : Lean.CanonicalEquivalence N ty` is reducible, macro-inlined, and registered with `@[transport]`.
+Like a simp or `eq_def` lemma, a canonical equivalence unfolds its left-hand side; instances move to the left-hand side along `invFun` (DDR 019).
 `inferInstanceAs` can transport an instance when definitional equality fails.
 `deriving` for a sealed definition also uses transport.
 See `src/Lean/Elab/BuiltinTerm.lean`, `src/Lean/Elab/Deriving/Basic.lean`, and `src/Lean/Meta/Transport.lean`.
@@ -378,7 +379,8 @@ DDR 017 records this completed cleanup on the rebased branch.
 
 ## Current toolchain (phase 6)
 
-The toolchain is `8885c9d7db` on `onefieldstructures-changes` (first ported at `5529b7abe6`).
+The toolchain is `9ab8af8e75` on `onefieldstructures-changes` (first ported at `5529b7abe6`).
+Since `9ab8af8e75`, canonical equivalences point from the sealed type to its representation (DDR 019), so explicit conversions such as `StateT.equiv` take `.symm` on the other side.
 Core has no root `Equiv`, so the earlier `toFun_as_coe` normalization repairs (DDR 015, anomaly 014) are gone.
 278 Mathlib files are restored from the green base `37c5c33a37b`.
 The sections above on core Equiv alignment (DDRs 008, 012, 015; anomalies 001, 002, 013) are superseded by DDRs 017 and 018.
