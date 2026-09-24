@@ -23,9 +23,8 @@ instance : LawfulMonadLift (ST σ) (EST ε σ) where
   monadLift_pure _ := rfl
   monadLift_bind _ _ := rfl
 
-instance : LawfulMonadLift BaseIO (EIO ε) where
-  monadLift_pure _ := rfl
-  monadLift_bind _ _ := rfl
+instance : LawfulMonadLift BaseIO (EIO ε) :=
+  inferInstanceAs <| LawfulMonadLift (ST IO.RealWorld) (EST ε IO.RealWorld)
 
 /-! ### `EIO.adapt` simp lemmas -/
 

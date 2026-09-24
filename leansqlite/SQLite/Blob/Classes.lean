@@ -50,8 +50,6 @@ exception. Deserializers should not modify the byte array.
 -/
 public abbrev Deserializer (α : Type u) := StateT Deserializer.State (Except String) α
 
-public instance : Inhabited (Deserializer α) := ⟨.mk fun _ => .error default⟩
-
 namespace Deserializer
 /--
 Runs a deserializer. Throws an exception if not all the data are consumed.

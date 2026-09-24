@@ -53,7 +53,7 @@ cross thread boundaries.
 -/
 @[always_inline]
 public def ofReaderTUnsafe (x : ReaderT PyThreadCtx m α) : PyThreadCtxT m α :=
- x
+ x.run
 
 unseal PyThreadCtxT in
 /--
@@ -64,7 +64,15 @@ cross thread boundaries.
 -/
 @[always_inline]
 public def toReaderTUnsafe (x : PyThreadCtxT m α) :  ReaderT PyThreadCtx m α :=
-  x
+  .mk x
+
+/-- Transports instances from {name}`ReaderT` to {name}`PyThreadCtxT`. -/
+@[transport, macro_inline]
+public abbrev equivReaderT : Lean.CanonicalEquivalence (ReaderT PyThreadCtx m α) (PyThreadCtxT m α) where
+  toFun := ofReaderTUnsafe
+  invFun := toReaderTUnsafe
+  left_inv _ := by unfold ofReaderTUnsafe toReaderTUnsafe; rfl
+  right_inv _ := by unfold ofReaderTUnsafe toReaderTUnsafe; rfl
 
 open Internal in
 /--
@@ -139,6 +147,16 @@ public API. Nevertheless, it is exposed due to the limitations of Lean's compile
 public def PyBaseIO :=
   PyThreadCtxT BaseIO
 
+unseal PyBaseIO in
+/-- Transports instances from {name}`PyThreadCtxT` to {name}`PyBaseIO`. -/
+@[transport, macro_inline]
+public abbrev Internal.Nerodia.PyBaseIO.equivPyThreadCtxT :
+    Lean.CanonicalEquivalence (PyThreadCtxT BaseIO α) (PyBaseIO α) where
+  toFun x := x
+  invFun x := x
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 public instance : Monad PyBaseIO := inferInstanceAs (Monad <| PyThreadCtxT BaseIO)
 public instance : MonadPy PyBaseIO := inferInstanceAs (MonadPy <| PyThreadCtxT BaseIO)
 
@@ -205,6 +223,16 @@ public API. Nevertheless, it is exposed due to the limitations of Lean's compile
 @[irreducible, expose] -- for codegen
 public def PyIO :=
   OptionT <| PyBaseIO
+
+unseal PyIO in
+/-- Transports instances from {name}`OptionT` to {name}`PyIO`. -/
+@[transport, macro_inline]
+public abbrev Internal.Nerodia.PyIO.equivOptionT :
+    Lean.CanonicalEquivalence (OptionT PyBaseIO α) (PyIO α) where
+  toFun x := x
+  invFun x := x
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 public instance : Monad PyIO := inferInstanceAs (Monad <| OptionT PyBaseIO)
 public instance : MonadPy PyIO := inferInstanceAs (MonadPy <| OptionT PyBaseIO)
