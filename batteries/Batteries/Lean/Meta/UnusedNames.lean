@@ -81,7 +81,7 @@ def getUnusedUserNameIndex (lctx : LocalContext) (suggestion : Name) :
     | .exactMatch => minSuffix := updateMinSuffix minSuffix 1
     | .noMatch => continue
     | .suffixMatch i => minSuffix := updateMinSuffix minSuffix (i + 1)
-  minSuffix
+  return minSuffix
 where
   /-- Auxiliary definition for `getUnusedUserNameIndex`. -/
   @[inline]

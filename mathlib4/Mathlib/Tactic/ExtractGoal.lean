@@ -179,7 +179,7 @@ def goalSignature (name : Name) (g : MVarId) : TermElabM (MessageData × Expr ×
     let (ts, _) ← ((Mathlib.Command.MinImports.getVisited name).run
         { context with snap? := none }).run
         { state with env, maxRecDepth := context.maxRecDepth }
-    let mut hm : Std.HashMap Nat Name := {}
+    let mut hm : Std.HashMap ModuleIdx Name := {}
     for imp in env.header.moduleNames do
       hm := hm.insert ((env.getModuleIdx? imp).getD default) imp
     let mut fins : NameSet := {}

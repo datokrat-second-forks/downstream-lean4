@@ -49,7 +49,7 @@ This is the dependent version of `Fin.foldrM`. -/
 This is the dependent version of `Fin.foldr`. -/
 @[inline] def dfoldr (n : Nat) (α : Fin (n + 1) → Type _)
     (f : ∀ (i : Fin n), α i.succ → α i.castSucc) (init : α (last n)) : α 0 :=
-  dfoldrM (m := Id) n α f init
+  Id.run <| dfoldrM n α (fun i a => pure (f i a)) init
 
 /-- Heterogeneous monadic fold over `Fin n` from left to right:
 ```
@@ -86,7 +86,7 @@ This is the dependent version of `Fin.foldlM`. -/
 This is the dependent version of `Fin.foldl`. -/
 @[inline] def dfoldl (n : Nat) (α : Fin (n + 1) → Type _)
     (f : ∀ (i : Fin n), α i.castSucc → α i.succ) (init : α 0) : α (last n) :=
-  dfoldlM (m := Id) n α f init
+  Id.run <| dfoldlM n α (fun i a => pure (f i a)) init
 
 /-- Sum of a tuple indexed by `Fin n`. -/
 @[inline] protected def sum [Zero α] [Add α] (x : Fin n → α) : α :=

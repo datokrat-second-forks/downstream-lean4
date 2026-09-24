@@ -315,7 +315,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] :
     (Σ' xs ys : List α, xs ~ ys ∧ ys.Nodup) → List (Σ' xs ys : List α, xs ~ ys ∧ ys.Nodup)
   | xs => do
     let k := xs.1.length
-    let n ← (sliceSizes k).force
+    let n ← (sliceSizes k).force.run
     let i ← List.finRange <| k / n
     pure <| Perm.slice (i * n) n xs
 

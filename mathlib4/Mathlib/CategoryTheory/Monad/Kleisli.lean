@@ -101,7 +101,7 @@ set_option backward.isDefEq.respectTransparency false in
 cf Lemma 5.2.11 of [Riehl][riehl2017]. -/
 def adj : toKleisli T ⊣ fromKleisli T :=
   Adjunction.mkOfHomEquiv
-    { homEquiv X Y := { toFun f := f.of, invFun f := .mk f }
+    { homEquiv X Y := { toFun f := f.of, invFun f := .mk f, left_inv _ := rfl, right_inv _ := rfl }
       homEquiv_naturality_left_symm := fun {X} {Y} {Z} f g => by
         ext
         simp [← T.η.naturality_assoc g] }
@@ -171,7 +171,7 @@ set_option backward.defeqAttrib.useBackward true in
 /-- The co-Kleisli adjunction which gives rise to the comonad `(U, ε_ U, δ_ U)`. -/
 def adj : fromCokleisli U ⊣ toCokleisli U :=
   Adjunction.mkOfHomEquiv
-    { homEquiv X Y := { toFun f := .mk f, invFun f := f.of }
+    { homEquiv X Y := { toFun f := .mk f, invFun f := f.of, left_inv _ := rfl, right_inv _ := rfl }
       homEquiv_naturality_right := fun {X} {Y} {_} f g => by cat_disch }
 
 set_option backward.defeqAttrib.useBackward true in

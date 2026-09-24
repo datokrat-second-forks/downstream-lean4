@@ -239,13 +239,14 @@ def twoHeadsArgs (e : Expr) : Name × Name × (Name ⊕ Name) × List Bool := Id
     | (na@``LT.lt, #[_, _, lhs, rhs]) => pure (na, lhs, rhs)
     | _ => return (.anonymous, .anonymous, .inl .anonymous, [])
   let (ndeg_or_deg_or_coeff, pol, and?) ← match lhs.getAppFnArgs with
-    | (na@``Polynomial.natDegree, #[_, _, pol])     => (na, pol, [rhs.isMVar])
-    | (na@``Polynomial.degree,    #[_, _, pol])     => (na, pol, [rhs.isMVar])
+    | (na@``Polynomial.natDegree, #[_, _, pol])     => pure (na, pol, [rhs.isMVar])
+    | (na@``Polynomial.degree,    #[_, _, pol])     => pure (na, pol, [rhs.isMVar])
     -- Since `Polynomial.coeff` returns a `Finsupp`, `coeff p n` is the `DFunLike.coe` of the
     -- `Finsupp` `coeff p` applied to `n`.
     | (``DFunLike.coe, #[_, _, _, _, cf, c]) =>
       match cf.getAppFnArgs with
-        | (``Polynomial.coeff, #[_, _, pol]) => (``Polynomial.coeff, pol, [rhs.isMVar, c.isMVar])
+        | (``Polynomial.coeff, #[_, _, pol]) =>
+          pure (``Polynomial.coeff, pol, [rhs.isMVar, c.isMVar])
         | _ => return (.anonymous, eq_or_le, .inl .anonymous, [])
     | _ => return (.anonymous, eq_or_le, .inl .anonymous, [])
   let head := match pol.numeral? with
@@ -261,7 +262,7 @@ def twoHeadsArgs (e : Expr) : Name × Name × (Name ⊕ Name) × List Bool := Id
         else
           .inl .anonymous
       | (na, _) => .inr na
-  (ndeg_or_deg_or_coeff, eq_or_le, head, and?)
+  return (ndeg_or_deg_or_coeff, eq_or_le, head, and?)
 
 /--
 `getCongrLemma (lhs_name, rel_name, Mvars?)` returns the name of a lemma that preprocesses
@@ -337,7 +338,7 @@ def dispatchLemma
           | _, _ => ``rfl
         if debug then
           dbg_trace f!"{lem.lastComponentAsString}\n{msg}"
-        lem
+        return lem
       match head with
         | .inl `zero => π ``natDegree_zero_le ``degree_zero_le ``coeff_zero
         | .inl `one  => π ``natDegree_one_le ``degree_one_le ``coeff_one

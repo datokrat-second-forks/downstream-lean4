@@ -123,9 +123,8 @@ theorem run'_seq (f : EStateM ε σ (α → β)) (x : EStateM ε σ α) (s : σ)
     | .ok x s => .ok x s
     | .error _ s' => x₂.run (restore s' (save s)) := by
   show (EStateM.orElse _ _).run _ = _
-  unfold EStateM.orElse
-  simp only [EStateM.run]
-  match x₁ s with | .ok _ _ => rfl | .error _ _ => simp
+  simp only [EStateM.orElse]
+  cases x₁.run s <;> rfl
 
 @[simp] theorem run'_orElse {δ} [h : Backtrackable δ σ] (x₁ x₂ : EStateM ε σ α) (s : σ) :
     (x₁ <|> x₂).run' s = match x₁.run s with
@@ -140,9 +139,8 @@ theorem run'_seq (f : EStateM ε σ (α → β)) (x : EStateM ε σ α) (s : σ)
     | .ok x s => .ok x s
     | .error e s' => (handler e).run (restore s' (save s)) := by
   show (EStateM.tryCatch _ _).run _ = _
-  unfold EStateM.tryCatch
-  simp only [EStateM.run]
-  cases body s <;> rfl
+  simp only [EStateM.tryCatch]
+  cases body.run s <;> rfl
 
 @[simp] theorem run'_tryCatch {δ} [h : Backtrackable δ σ]
     (body : EStateM ε σ α) (handler : ε → EStateM ε σ α) (s : σ) :
@@ -178,13 +176,9 @@ theorem run'_seq (f : EStateM ε σ (α → β)) (x : EStateM ε σ α) (s : σ)
 
 @[simp] theorem run_fromStateM (x : StateM σ α) (s : σ) :
     (fromStateM x : EStateM ε σ α).run s =
-    Result.ok (x.run s).1 (x.run s).2 := (rfl)
+    Result.ok (x.run s).run.1 (x.run s).run.2 := (rfl)
 
 @[simp] theorem run'_fromStateM (x : StateM σ α) (s : σ) :
-    (fromStateM x : EStateM ε σ α).run' s = some (x.run' s) := (rfl)
-
-@[ext] theorem ext {ε σ α} {x y : EStateM ε σ α} (h : ∀ s, x.run s = y.run s) : x = y := by
-  funext s
-  exact h s
+    (fromStateM x : EStateM ε σ α).run' s = some (x.run' s).run := (rfl)
 
 end EStateM

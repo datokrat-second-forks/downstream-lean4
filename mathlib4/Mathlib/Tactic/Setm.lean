@@ -53,7 +53,7 @@ def replaceWithLDecls (stx : Syntax) : SetMReplaceM Syntax :=
     let fvar ←
       if let `(?$n:ident) := stx then
         let name := n.getId
-        (← get).holes.get? name |>.getDM do
+        (← get).holes.find? name |>.getDM do
           createLDecl stx name
       else if let `(?_) := stx then
         let name ← mkFreshUserName `x

@@ -200,8 +200,7 @@ def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) 
 
 @[simp]
 theorem id_traverse [DecidableEq α] (s : Finset α) : traverse (pure : α → Id α) s = pure s := by
-  rw [traverse, Multiset.id_traverse]
-  exact s.val_toFinset
+  rw [traverse, Multiset.id_traverse, map_pure, s.val_toFinset]
 
 open scoped Classical in
 @[simp]

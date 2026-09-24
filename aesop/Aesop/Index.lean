@@ -91,7 +91,7 @@ def foldM [Monad m] (ri : Index α) (f : σ → Rule α → m σ) (init : σ) : 
 
 @[inline]
 def fold (ri : Index α) (f : σ → Rule α → σ) (init : σ) : σ :=
-  Id.run $ ri.foldM (init := init) f
+  Id.run $ ri.foldM (init := init) (fun s r => pure (f s r))
 
 -- May return duplicate `IndexMatchLocation`s.
 @[inline]

@@ -243,16 +243,16 @@ def parse?_errorContext (line : String) : Option ErrorContext := Id.run do
           | _ => none
         | _ => none
       match String.toNat? lineNumber with
-      | some n => err.map fun e ↦ (ErrorContext.mk e n path)
-      | _ => none
+      | some n => return err.map fun e ↦ (ErrorContext.mk e n path)
+      | _ => return none
     -- It would be nice to print an error on any line which doesn't match the above format,
     -- but is awkward to do so (this `def` is not in any IO monad). Hopefully, this is not necessary
     -- anyway as the style exceptions file is mostly automatically generated.
-    | _ => none
+    | _ => return none
 
 /-- Parse all style exceptions for a line of input.
 Return an array of all exceptions which could be parsed: invalid input is ignored. -/
-def parseStyleExceptions (lines : Array String) : Array ErrorContext := Id.run do
+def parseStyleExceptions (lines : Array String) : Array ErrorContext :=
   -- We treat all lines starting with "--" as a comment and ignore them.
   Array.filterMap (parse?_errorContext ·) (lines.filter (fun line ↦ !line.startsWith "--"))
 

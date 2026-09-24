@@ -141,8 +141,10 @@ Note: It is expensive to create two new `IO.Ref`s for every `MetaM` operation,
   /- For efficiency, we leave it up to the implementation of `act` to reset the states if needed -/
   -- mstate.modify fun s => { cache := s.cache }
   -- cstate.modify fun s => { env := s.env, cache := s.cache, ngen := s.ngen }
-  let mctx := { keyedConfig := Config.toConfigWithKey { transparency := .reducible } }
-  match ← (((act name constInfo) mctx mstate) cctx cstate).toBaseIO with
+  let mctx : Meta.Context :=
+    { keyedConfig := Config.toConfigWithKey { transparency := .reducible } }
+  match ← (ReaderT.run (ReaderT.run (ReaderT.run (ReaderT.run
+      (act name constInfo) mctx) mstate) cctx) cstate).toBaseIO with
   | .ok a =>
     return a.foldl (fun t (val, entries) =>
       entries.foldl (fun t (key, entry) => t.push key (entry, val)) t) tree

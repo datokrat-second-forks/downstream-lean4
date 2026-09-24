@@ -72,7 +72,7 @@ where
   /-- Iterate over the tags of a `Format` using `f`. -/
   goFmt (ppCtx : PPContext) (infos) (s : σ) : Format → m (ForInStep σ)
     | .tag n fmt => do
-      match infos.get? n with
+      match infos.get? ⟨n⟩ with
       | some (.ofTermInfo { expr, lctx .. })
       | some (.ofDelabTermInfo { expr, lctx .. }) => do
         /- When displaying interactive expressions, lean creates a `ctx : Elab.ContextInfo` from

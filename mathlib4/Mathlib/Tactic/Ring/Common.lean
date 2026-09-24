@@ -328,7 +328,7 @@ instance (u : Lean.Level) (α : Q(Type u)) (BaseType : Q($α) → Type) [∀ e, 
   compare := default
   add := default
   mul := default
-  cast _ _ _ _ _ _ := do return ⟨_, .zero (BaseType := BaseType) (sα := sα), default⟩
+  cast _ _ _ _ _ := do return ⟨_, .zero (BaseType := BaseType) (sα := sα), default⟩
   neg := default
   pow := default
   inv := default

@@ -12,7 +12,7 @@ open Lean Elab
 namespace Lean.Elab.Command
 
 @[inline] def CommandElabM.run (x : CommandElabM α) (ctx : Context) (s : State) : EIO Exception (α × State) :=
-  (x ctx).run s
+  (ReaderT.run x ctx).run s
 
 @[inline] def CommandElabM.run' (x : CommandElabM α) (ctx : Context) (s : State) : EIO Exception α :=
   Prod.fst <$> x.run ctx s
@@ -149,7 +149,7 @@ def runTermElabM (p : ProofSnapshot) (t : TermElabM α) : IO (α × ProofSnapsho
 
 /-- Run a `TacticM` monadic function in the current `ProofSnapshot`, updating the `Tactic.State`. -/
 def runTacticM (p : ProofSnapshot) (t : TacticM α) : IO (α × ProofSnapshot) := do
-  let ((a, tacticState), p') ← p.runTermElabM (t p.tacticContext |>.run p.tacticState)
+  let ((a, tacticState), p') ← p.runTermElabM (ReaderT.run t p.tacticContext |>.run p.tacticState)
   return (a, { p' with tacticState })
 
 /--

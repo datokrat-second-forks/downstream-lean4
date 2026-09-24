@@ -41,8 +41,8 @@ partial def getHtmlComponentProps {Props} [RpcEncodable Props] (html : Html) (c 
 where
   getProps {Props} [RpcEncodable Props] (lazy : LazyEncodable Json) :
       CoreM Props := do
-    let (json, state) := lazy.run {}
-    match rpcDecode json state with
+    let (json, state) := (lazy.run {}).run
+    match ReaderT.run (rpcDecode json).run state |>.run with
     | .ok props => return props
     | .error e => throwError "An error occurred when looking at the HTML: {e}"
 /- Wait until the state has finished refreshing, and the return the final HTML.
@@ -89,7 +89,7 @@ elab "click_test" onGoal?:(num)? hyp?:(ident)? pos?:(str)? "=>" expecteds:str+ :
   }
   (generateSuggestions { loc, mvarId := goal } none masterToken).run ctx |>.run (← IO.mkRef {})
   let props ← getHtmlComponentProps html MakeEditLink #[]
-  let suggested := props.flatMap (·.edit.edits.map (trimWhitespace ·.newText))
+  let suggested := props.flatMap (·.edit.edits.toArray.map (trimWhitespace ·.newText))
   for expected in expecteds do
     let expected := trimWhitespace expected
     unless suggested.contains expected do

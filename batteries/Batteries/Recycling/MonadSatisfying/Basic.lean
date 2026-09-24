@@ -160,8 +160,8 @@ protected theorem bind_pre [Monad m] [LawfulMonad m] {f : α → m β}
 
 end SatisfiesM
 
-@[simp] theorem SatisfiesM_Id_eq : SatisfiesM (m := Id) p x ↔ p x :=
-  ⟨fun ⟨y, eq⟩ => eq ▸ y.2, fun h => ⟨⟨_, h⟩, rfl⟩⟩
+@[simp] theorem SatisfiesM_Id_eq : SatisfiesM (m := Id) p x ↔ p x.run :=
+  ⟨fun ⟨y, eq⟩ => congrArg Id.run eq ▸ y.run.2, fun h => ⟨pure ⟨_, h⟩, rfl⟩⟩
 
 @[simp] theorem SatisfiesM_Option_eq : SatisfiesM (m := Option) p x ↔ ∀ a, x = some a → p a :=
   ⟨by revert x; intro | some _, ⟨some ⟨_, h⟩, rfl⟩, _, rfl => exact h,
@@ -181,39 +181,42 @@ theorem SatisfiesM_EStateM_eq :
     | .error e s' => simp [w] at h
   · intro w
     refine ⟨?_, ?_⟩
-    · intro s
+    · apply EStateM.mk
+      intro s
       match q : x.run s with
       | .ok a s' => exact .ok ⟨a, w s a s' q⟩ s'
       | .error e s' => exact .error e s'
     · ext s
-      rw [EStateM.run_map, EStateM.run]
-      split <;> simp_all
+      simp only [EStateM.run_map]
+      split <;> simp_all [EStateM.Result.map]
 
 theorem SatisfiesM_ReaderT_eq [Monad m] :
     SatisfiesM (m := ReaderT ρ m) p x ↔ ∀ s, SatisfiesM p (x.run s) :=
-  (exists_congr fun a => by exact ⟨fun eq _ => eq ▸ rfl, funext⟩).trans Classical.skolem.symm
+  ⟨fun ⟨a, h⟩ s => ⟨a.run s, congrArg (fun x => x.run s) h⟩,
+    fun h => ⟨.mk (fun s => Classical.choose (h s)),
+      ReaderT.ext (fun s => Classical.choose_spec (h s))⟩⟩
 
 theorem SatisfiesM_StateRefT_eq [Monad m] :
-    SatisfiesM (m := StateRefT' ω σ m) p x ↔ ∀ s, SatisfiesM p (x s) :=
+    SatisfiesM (m := StateRefT' ω σ m) p x ↔ ∀ s, SatisfiesM p (ReaderT.run x s) :=
   SatisfiesM_ReaderT_eq
 
 theorem SatisfiesM_StateT_eq [Monad m] [LawfulMonad m] :
     SatisfiesM (m := StateT ρ m) (α := α) p x ↔ ∀ s, SatisfiesM (m := m) (p ·.1) (x.run s) := by
-  change SatisfiesM (m := StateT ρ m) (α := α) p x ↔ ∀ s, SatisfiesM (m := m) (p ·.1) (x s)
   refine .trans ⟨fun ⟨f, eq⟩ => eq ▸ ?_, fun ⟨f, h⟩ => ?_⟩ Classical.skolem.symm
-  · refine ⟨fun s => (fun ⟨⟨a, h⟩, s'⟩ => ⟨⟨a, s'⟩, h⟩) <$> f s, fun s => ?_⟩
+  · refine ⟨fun s => (fun ⟨⟨a, h⟩, s'⟩ => ⟨⟨a, s'⟩, h⟩) <$> f.run s, fun s => ?_⟩
     rw [← comp_map, map_eq_pure_bind]; rfl
-  · refine ⟨fun s => (fun ⟨⟨a, s'⟩, h⟩ => ⟨⟨a, h⟩, s'⟩) <$> f s, funext fun s => ?_⟩
+  · refine ⟨.mk (fun s => (fun ⟨⟨a, s'⟩, h⟩ => ⟨⟨a, h⟩, s'⟩) <$> f s), StateT.ext fun s => ?_⟩
     show _ >>= _ = _; simp [← h]
 
 theorem SatisfiesM_ExceptT_eq [Monad m] [LawfulMonad m] :
     SatisfiesM (m := ExceptT ρ m) (α := α) p x ↔
       SatisfiesM (m := m) (∀ a, · = .ok a → p a) x.run := by
-  change _ ↔ SatisfiesM (m := m) (∀ a, · = .ok a → p a) x
-  refine ⟨fun ⟨f, eq⟩ => eq ▸ ?_, fun ⟨f, eq⟩ => eq ▸ ?_⟩
-  · exists (fun | .ok ⟨a, h⟩ => ⟨.ok a, fun | _, rfl => h⟩ | .error e => ⟨.error e, nofun⟩) <$> f
+  refine ⟨fun ⟨f, eq⟩ => eq ▸ ?_, fun ⟨f, eq⟩ => ?_⟩
+  · exists (fun | .ok ⟨a, h⟩ => ⟨.ok a, fun | _, rfl => h⟩ | .error e => ⟨.error e, nofun⟩) <$> f.run
     show _ = _ >>= _; rw [← comp_map, map_eq_pure_bind]; congr; funext a; cases a <;> rfl
-  · exists ((fun | ⟨.ok a, h⟩ => .ok ⟨a, h _ rfl⟩ | ⟨.error e, _⟩ => .error e) <$> f : m _)
+  · refine ⟨ExceptT.mk ((fun | ⟨.ok a, h⟩ => .ok ⟨a, h _ rfl⟩ | ⟨.error e, _⟩ => .error e) <$> f : m _), ?_⟩
+    apply ExceptT.ext
+    rw [← eq]
     show _ >>= _ = _; simp [← bind_pure_comp]; congr; funext ⟨a, h⟩; cases a <;> rfl
 
 /--
@@ -233,8 +236,8 @@ export MonadSatisfying (satisfying)
 namespace MonadSatisfying
 
 instance : MonadSatisfying Id where
-  satisfying {α p x} h := ⟨x, by obtain ⟨⟨_, h⟩, rfl⟩ := h; exact h⟩
-  val_eq {α p x} h := rfl
+  satisfying h := pure ⟨_, SatisfiesM_Id_eq.mp h⟩
+  val_eq _ := rfl
 
 instance : MonadSatisfying Option where
   satisfying {α p x?} h :=
@@ -255,12 +258,11 @@ instance : MonadSatisfying (Except ε) where
 instance [Monad m] [LawfulMonad m] [MonadSatisfying m] : MonadSatisfying (ReaderT ρ m) where
   satisfying {α p x} h :=
     have h' := SatisfiesM_ReaderT_eq.mp h
-    fun r => satisfying (h' r)
+    .mk fun r => satisfying (h' r)
   val_eq {α p x} h := by
     have h' := SatisfiesM_ReaderT_eq.mp h
     ext r
     rw [ReaderT.run_map, ← MonadSatisfying.val_eq (h' r)]
-    rfl
 
 instance [Monad m] [LawfulMonad m] [MonadSatisfying m] : MonadSatisfying (StateRefT' ω σ m) :=
   inferInstanceAs <| MonadSatisfying (ReaderT (ST.Ref ω σ) m)
@@ -268,12 +270,12 @@ instance [Monad m] [LawfulMonad m] [MonadSatisfying m] : MonadSatisfying (StateR
 instance [Monad m] [LawfulMonad m] [MonadSatisfying m] : MonadSatisfying (StateT ρ m) where
   satisfying {α p x} h :=
     have h' := SatisfiesM_StateT_eq.mp h
-    fun r => (fun ⟨⟨a, r'⟩, h⟩ => ⟨⟨a, h⟩, r'⟩) <$> satisfying (h' r)
+    .mk fun r => (fun ⟨⟨a, r'⟩, h⟩ => ⟨⟨a, h⟩, r'⟩) <$> satisfying (h' r)
   val_eq {α p x} h := by
     have h' := SatisfiesM_StateT_eq.mp h
     ext r
     rw [← MonadSatisfying.val_eq (h' r), StateT.run_map]
-    simp [StateT.run]
+    simp [Functor.map_map]
 
 instance [Monad m] [LawfulMonad m] [MonadSatisfying m] : MonadSatisfying (ExceptT ε m) where
   satisfying {α p x} h :=
@@ -288,12 +290,12 @@ set_option backward.isDefEq.respectTransparency.types false in
 instance : MonadSatisfying (EStateM ε σ) where
   satisfying {α p x} h :=
     have h' := SatisfiesM_EStateM_eq.mp h
-    fun s => match w : x.run s with
+    .mk fun s => match w : x.run s with
     | .ok a s' => .ok ⟨a, h' s a s' w⟩ s'
     | .error e s' => .error e s'
   val_eq {α p x} h := by
     ext s
-    rw [EStateM.run_map, EStateM.run]
-    split <;> simp_all
+    simp only [EStateM.run_map]
+    split <;> simp_all [EStateM.Result.map]
 
 end MonadSatisfying

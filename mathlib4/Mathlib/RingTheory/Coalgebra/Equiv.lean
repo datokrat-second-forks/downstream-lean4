@@ -82,7 +82,7 @@ def toEquiv : (A ≃ₗc[R] B) → A ≃ B := fun f => f.toLinearEquiv.toEquiv
 theorem toEquiv_injective : Function.Injective (toEquiv : (A ≃ₗc[R] B) → A ≃ B) :=
   fun ⟨_, _, _, _⟩ ⟨_, _, _, _⟩ h =>
     (CoalgEquiv.mk.injEq _ _ _ _ _ _ _ _).mpr
-      ⟨CoalgHom.ext (congr_fun (Equiv.mk.inj h).1), (Equiv.mk.inj h).2⟩
+      ⟨CoalgHom.ext (congr_fun (congrArg Equiv.toFun h)), (congrArg Equiv.invFun h)⟩
 
 @[simp]
 theorem toEquiv_inj {e₁ e₂ : A ≃ₗc[R] B} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=

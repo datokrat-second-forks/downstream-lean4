@@ -250,7 +250,7 @@ def compile (m : CommDiagM Unit) : Diagram β :=
   let initState : CommDiagState := {
     nextId := 0, nodes := #[], morphisms := #[], gridSpec := none
   }
-  let (_, st) := StateT.run m initState
+  let (_, st) := (StateT.run m initState).run
   let nodeLayer := buildNodeLayer st
   let arrowLayer := st.morphisms.foldl (init := Diagram.empty) fun acc morph =>
     Diagram.atop (buildArrow nodeLayer morph) acc

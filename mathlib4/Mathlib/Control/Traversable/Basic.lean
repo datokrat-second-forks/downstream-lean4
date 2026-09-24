@@ -236,14 +236,22 @@ class LawfulTraversable (t : Type u → Type u) [Traversable t] : Prop extends L
       (η : ApplicativeTransformation F G) {α β} (f : α → F β) (x : t α),
       η (traverse f x) = traverse (@η _ ∘ f) x
 
-instance : Traversable Id :=
-  ⟨id⟩
+instance : Traversable Id where
+  traverse {m} _ {α β} f x :=
+    cast (congrArg m (show β = Id β by unsealing_newtype Id => rfl)) (f x.run)
+
+/-- Traversing `Id` agrees with mapping its constructor over the result.
+The implementation uses a cast to avoid traversing that result merely to change its type. -/
+theorem Id.traverse_eq_map {m : Type u → Type u} [Applicative m] [LawfulApplicative m]
+    {α β : Type u} (f : α → m β) (x : Id α) : traverse f x = Id.mk <$> f x.run := by
+  unsealing_newtype Id =>
+    exact (id_map _).symm
 
 instance : LawfulTraversable Id where
-  id_traverse _ := rfl
-  comp_traverse _ _ _ := rfl
-  traverse_eq_map_id _ _ := rfl
-  naturality _ _ _ _ _ := rfl
+  id_traverse _ := by unsealing_newtype Id => rfl
+  comp_traverse _ _ _ := by unsealing_newtype Id => rfl
+  traverse_eq_map_id _ _ := by unsealing_newtype Id => rfl
+  naturality _ _ _ _ _ := by unsealing_newtype Id => rfl
 
 section
 

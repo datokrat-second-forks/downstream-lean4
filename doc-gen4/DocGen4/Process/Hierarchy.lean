@@ -58,21 +58,21 @@ partial def insert! (h : Hierarchy) (n : Name) : Hierarchy := Id.run do
   if getNumParts hn + 1 == getNumParts n then
     match cs.find Name.cmp n with
     | none =>
-      node hn h.isFile (cs.insert Name.cmp n <| empty n true)
-    | some (node _ true _) => h
+      return node hn h.isFile (cs.insert Name.cmp n <| empty n true)
+    | some (node _ true _) => return h
     | some (node _ false ccs) =>
         cs := cs.erase Name.cmp n
-        node hn h.isFile (cs.insert Name.cmp n <| node n true ccs)
+        return node hn h.isFile (cs.insert Name.cmp n <| node n true ccs)
   else
     let leveledName := getNLevels n (getNumParts hn + 1)
     match cs.find Name.cmp leveledName with
     | some nextLevel =>
       cs := cs.erase Name.cmp leveledName
       -- BUG?
-      node hn h.isFile <| cs.insert Name.cmp leveledName (nextLevel.insert! n)
+      return node hn h.isFile <| cs.insert Name.cmp leveledName (nextLevel.insert! n)
     | none =>
       let child := (insert! (empty leveledName false) n)
-      node hn h.isFile <| cs.insert Name.cmp leveledName child
+      return node hn h.isFile <| cs.insert Name.cmp leveledName child
 
 partial def fromArray (names : Array Name) : Hierarchy :=
   names.foldl insert! (empty anonymous false)

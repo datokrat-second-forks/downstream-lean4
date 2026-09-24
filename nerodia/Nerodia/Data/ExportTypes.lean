@@ -200,7 +200,17 @@ public API. Nevertheless, it is exposed due to the limitations of Lean's compile
 @[irreducible, expose] -- for codegen
 public def PyAttrInit :=
   CPyIO Py.Raw
-  deriving Nonempty
+
+unseal PyAttrInit in
+/-- Transports instances from {name}`CPyIO` to {name}`PyAttrInit`. -/
+@[transport, macro_inline]
+public abbrev Internal.PyAttrInit.equivCPyIO : Lean.CanonicalEquivalence PyAttrInit (CPyIO Py.Raw) where
+  toFun x := x
+  invFun x := x
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+deriving instance Nonempty for PyAttrInit
 
 unseal PyAttrInit in
 @[inline] public def PyAttrInit.ofCPyIO (x : CPyIO α) : PyAttrInit :=

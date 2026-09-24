@@ -80,12 +80,12 @@ def _root_.Lean.MVarId.wlog (goal : MVarId) (h : Option Name) (P : Expr)
   let fvars ← getFVarIdsAt goal xs
   let fvars := fvars.map Expr.fvar
   let lctx := (← goal.getDecl).lctx
-  let (revertedFVars, HType) ← liftMkBindingM fun ctx => (do
+  let (revertedFVars, HType) ← liftMkBindingM <| .mk fun ctx => (do
     let f ← collectForwardDeps lctx fvars
     let revertedFVars := filterOutImplementationDetails lctx (f.map Expr.fvarId!)
     let HType ← withFreshCache do
       mkAuxMVarType lctx (revertedFVars.map Expr.fvar) .natural HSuffix (usedLetOnly := false)
-    return (revertedFVars, HType))
+    return (revertedFVars, HType)).run
       { preserveOrder := false, quotContext := ctx.quotContext }
   /- Set up the goal which will suppose `h`; this begins as a goal with type H (hence HExpr), and h
   is obtained through `introNP` -/

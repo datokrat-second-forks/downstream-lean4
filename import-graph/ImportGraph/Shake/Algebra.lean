@@ -98,7 +98,7 @@ to `base` the composed prearrows `j [k⟩[imp⟩ ·` where composition is possib
 Note that this does *not* add the original collection of prearrows to `base`. -/
 @[inline] def Lean.Import.addAndThen (impTransDeps : Needs) (imp : Import)
     (base : Needs := ∅) : Needs := Id.run do
-  impTransDeps.addAndThen (NeedsKind.ofImport imp) base
+  return impTransDeps.addAndThen (NeedsKind.ofImport imp) base
 
 /-- Given an abstract import `[k⟩` and a collection of prearrows `j [k⟩ ·` (`Needs`), forms
 the composed prearrows `j [k'⟩[k⟩ ·` where composition is possible. -/
@@ -137,7 +137,7 @@ def Hierarchy.addAndThen {H} [Hierarchy H] (transDeps : H) (n : Needs)
   let mut composed := base
   for (k, i) in n.highToLow do
     composed := composed ∪ transDeps[i]! ≫ k
-  composed
+  return composed
 
 /-- Given a set of prearrows `i [k⟩ ·` and an import hierarchy, forms the compositions of arrows
 `j [k'⟩ i [k⟩ ·` where composition is possible. -/

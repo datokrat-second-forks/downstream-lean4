@@ -47,7 +47,7 @@ theorem dfoldrM_eq_foldrM [Monad m] [LawfulMonad m] (f : (i : Fin n) → α → 
   | succ n ih => simp only [dfoldrM_succ, foldrM_succ, Function.comp_def, ih]
 
 theorem dfoldr_eq_dfoldrM (f : (i : Fin n) → α i.succ → α i.castSucc) (x) :
-    dfoldr n α f x = dfoldrM (m:=Id) n α f x := rfl
+    dfoldr n α f x = (dfoldrM (m := Id) n α (fun i a => pure (f i a)) x).run := rfl
 
 /-! ### dfoldr -/
 
@@ -55,7 +55,8 @@ theorem dfoldr_eq_dfoldrM (f : (i : Fin n) → α i.succ → α i.castSucc) (x) 
     dfoldr 0 α f x = x := rfl
 
 theorem dfoldr_succ (f : (i : Fin (n+1)) → α i.succ → α i.castSucc) (x) :
-    dfoldr (n+1) α f x = f 0 (dfoldr n (α ∘ succ) (f ·.succ) x) := dfoldrM_succ ..
+    dfoldr (n+1) α f x = f 0 (dfoldr n (α ∘ succ) (f ·.succ) x) :=
+  congrArg Id.run (dfoldrM_succ (m := Id) (fun i a => pure (f i a)) x)
 
 set_option backward.isDefEq.respectTransparency false in
 theorem dfoldr_succ_last {n : Nat} {α : Fin (n+2) → Sort _}
@@ -114,10 +115,11 @@ theorem dfoldlM_eq_foldlM [Monad m] (f : (i : Fin n) → α → m α) (x : α) :
 /-! ### dfoldl -/
 
 @[simp] theorem dfoldl_zero (f : (i : Fin 0) → α i.castSucc → α i.succ) (x) :
-    dfoldl 0 α f x = x := by simp [dfoldl, pure]
+    dfoldl 0 α f x = x := by simp [dfoldl]
 
 theorem dfoldl_succ (f : (i : Fin (n+1)) → α i.castSucc → α i.succ) (x) :
-    dfoldl (n+1) α f x = dfoldl n (α ∘ succ) (f ·.succ ·) (f 0 x) := dfoldlM_succ ..
+    dfoldl (n+1) α f x = dfoldl n (α ∘ succ) (f ·.succ ·) (f 0 x) :=
+  congrArg Id.run (dfoldlM_succ (m := Id) (fun i a => pure (f i a)) x)
 
 set_option backward.isDefEq.respectTransparency false in
 theorem dfoldl_succ_last (f : (i : Fin (n+1)) → α i.castSucc → α i.succ) (x) :
@@ -128,7 +130,7 @@ theorem dfoldl_succ_last (f : (i : Fin (n+1)) → α i.castSucc → α i.succ) (
   | succ n ih => rw [dfoldl_succ, @ih (α ∘ succ) (f ·.succ ·), dfoldl_succ]; congr
 
 theorem dfoldl_eq_dfoldlM (f : (i : Fin n) → α i.castSucc → α i.succ) (x) :
-    dfoldl n α f x = dfoldlM (m := Id) n α f x := rfl
+    dfoldl n α f x = (dfoldlM (m := Id) n α (fun i a => pure (f i a)) x).run := rfl
 
 theorem dfoldl_eq_foldl (f : Fin n → α → α) (x : α) :
     dfoldl n (fun _ => α) f x = foldl n (fun x i => f i x) x := by

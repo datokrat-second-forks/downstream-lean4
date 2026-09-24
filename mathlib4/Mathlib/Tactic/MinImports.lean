@@ -76,7 +76,7 @@ partial def isInitImport : Name → Bool
 partial
 def getSyntaxNodeKinds : Syntax → NameSet
   | .node _ kind args =>
-    ((args.map getSyntaxNodeKinds).foldl (NameSet.append · ·) {}).insert kind
+    ((args.map getSyntaxNodeKinds).foldl (NameSet.union · ·) {}).insert kind
   | .ident _ _ nm _ => NameSet.empty.insert nm
   | _ => {}
 
@@ -108,7 +108,7 @@ def getId (stx : Syntax) : CommandElabM Syntax := do
 /-- `getIds stx` extracts all identifiers, collecting them in a `NameSet`. -/
 partial
 def getIds : Syntax → NameSet
-  | .node _ _ args => (args.map getIds).foldl (·.append ·) {}
+  | .node _ _ args => (args.map getIds).foldl (·.union ·) {}
   | .ident _ _ nm _ => NameSet.empty.insert nm
   | _ => {}
 
@@ -208,9 +208,9 @@ def getAllDependencies (cmd id : Syntax) :
   let nm ← getDeclName cmd
   -- We collect the implied declaration names, the `SyntaxNodeKinds` and the attributes.
   return (← getVisited nm)
-              |>.append (← getVisited id.getId)
-              |>.append (getSyntaxNodeKinds cmd)
-              |>.append (getAttrs env cmd)
+              |>.union (← getVisited id.getId)
+              |>.union (getSyntaxNodeKinds cmd)
+              |>.union (getAttrs env cmd)
 
 /-- `getAllImports cmd id` takes a `Syntax` input `cmd` and returns the `NameSet` of all the
 module names that are implied by
@@ -229,7 +229,7 @@ def getAllImports (cmd id : Syntax) (dbg? : Bool := false) :
   -- We collect the implied declaration names, the `SyntaxNodeKinds` and the attributes.
   let ts ← getAllDependencies cmd id
   if dbg? then dbg_trace "{ts.toArray.qsort Name.lt}"
-  let mut hm : Std.HashMap Nat Name := {}
+  let mut hm : Std.HashMap ModuleIdx Name := {}
   for imp in env.header.moduleNames do
     hm := hm.insert ((env.getModuleIdx? imp).getD default) imp
   let mut fins : NameSet := {}

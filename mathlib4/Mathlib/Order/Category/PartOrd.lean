@@ -193,7 +193,8 @@ def preordToPartOrdForgetAdjunction :
     preordToPartOrd.{u} ⊣ forget₂ PartOrd Preord :=
   Adjunction.mkOfHomEquiv
     { homEquiv _ _ :=
-        { toFun f := Preord.ofHom
+        { right_inv _ := rfl
+          toFun f := Preord.ofHom
             ⟨f ∘ toAntisymmetrization (· ≤ ·), f.hom.mono.comp toAntisymmetrization_mono⟩
           invFun f := PartOrd.ofHom
             ⟨fun a => Quotient.liftOn' a f (fun _ _ h => (AntisymmRel.image h f.hom.mono).eq),

@@ -195,12 +195,67 @@ instance lawfulFunctor : LawfulFunctor (Comp F G) where
   id_map := Comp.id_map
   comp_map := Comp.comp_map
 
-theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] :
-    Comp.functor (G := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (G := Id)) _ fun _ _ _ _ => rfl
+section Unitors
 
-theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : Comp.functor (F := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (F := Id)) _ fun _ _ _ _ => rfl
+variable (F : Type u → Type v)
+
+/-- Remove the identity functor inside `F`. -/
+def rightUnitor [Functor F] {α : Type u} (x : Comp F Id α) : F α := Id.run <$> x.run
+
+/-- Insert the identity functor inside `F` by mapping its constructor. -/
+def rightUnitorInv [Functor F] {α : Type u} (x : F α) : Comp F Id α := Comp.mk (Id.mk <$> x)
+
+/-- Remove the identity functor outside `F`. -/
+def leftUnitor {α : Type u} (x : Comp Id F α) : F α := x.run.run
+
+/-- Insert the identity functor outside `F` through its constructor. -/
+def leftUnitorInv {α : Type u} (x : F α) : Comp Id F α := Comp.mk (Id.mk x)
+
+variable {F} {α β : Type u}
+
+@[simp] theorem rightUnitor_rightUnitorInv [Functor F] [LawfulFunctor F] (x : F α) :
+    rightUnitor F (rightUnitorInv F x) = x := by
+  simp [rightUnitor, rightUnitorInv, map_map]
+
+@[simp] theorem rightUnitorInv_rightUnitor [Functor F] [LawfulFunctor F] (x : Comp F Id α) :
+    rightUnitorInv F (rightUnitor F x) = x := by
+  apply Comp.ext
+  simp [rightUnitor, rightUnitorInv, map_map]
+
+@[simp] theorem leftUnitor_leftUnitorInv (x : F α) : leftUnitor F (leftUnitorInv F x) = x := rfl
+
+@[simp] theorem leftUnitorInv_leftUnitor (x : Comp Id F α) :
+    leftUnitorInv F (leftUnitor F x) = x := rfl
+
+@[simp] theorem rightUnitor_map [Functor F] [LawfulFunctor F] (f : α → β) (x : Comp F Id α) :
+    rightUnitor F (f <$> x) = f <$> rightUnitor F x := by
+  simp [rightUnitor, map_map]
+
+@[simp] theorem rightUnitorInv_map [Functor F] [LawfulFunctor F] (f : α → β) (x : F α) :
+    rightUnitorInv F (f <$> x) = f <$> rightUnitorInv F x := by
+  apply Comp.ext
+  simp only [rightUnitorInv, Comp.run_mk, Comp.run_map, map_map]
+  rfl
+
+@[simp] theorem leftUnitor_map [Functor F] (f : α → β) (x : Comp Id F α) :
+    leftUnitor F (f <$> x) = f <$> leftUnitor F x := rfl
+
+@[simp] theorem leftUnitorInv_map [Functor F] (f : α → β) (x : F α) :
+    leftUnitorInv F (f <$> x) = f <$> leftUnitorInv F x := rfl
+
+theorem rightUnitorInv_injective [Functor F] [LawfulFunctor F] :
+    Function.Injective (rightUnitorInv F (α := α)) := by
+  intro x y h
+  simpa using congrArg (rightUnitor F) h
+
+theorem leftUnitorInv_injective : Function.Injective (leftUnitorInv F (α := α)) := by
+  intro x y h
+  exact congrArg (leftUnitor F) h
+
+@[deprecated (since := "2026-09-23")] alias functor_comp_id := rightUnitor_map
+@[deprecated (since := "2026-09-23")] alias functor_id_comp := leftUnitor_map
+
+end Unitors
 
 end Comp
 

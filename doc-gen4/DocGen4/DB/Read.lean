@@ -580,7 +580,7 @@ open Lean SQLite.Blob in
 private def ReadStmts.buildName2ModIdx (s : ReadStmts) (moduleNames : Array Name) : IO (Std.HashMap Name ModuleIdx) := do
   let modNameToIdx : Std.HashMap Name ModuleIdx :=
     moduleNames.foldl (init := {}) fun acc modName =>
-      acc.insert modName acc.size
+      acc.insert modName ⟨acc.size⟩
   let mut result : Std.HashMap Name ModuleIdx := {}
   while (← s.buildNameInfoStmt.step) do
     let name := (← s.buildNameInfoStmt.columnText 0).toName

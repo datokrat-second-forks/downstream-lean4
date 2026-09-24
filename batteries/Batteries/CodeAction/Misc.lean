@@ -397,7 +397,7 @@ def casesExpand : TacticCodeAction := fun _ snap ctx _ node => do
           for arg in args do
             str := str ++ if arg.hasNum || arg.isInternal then " _" else s!" {arg}"
           str := str ++ s!" => " ++ fallback
-        str
+        return str
       pure { eager with
         edit? := some <|.ofTextEdit doc.versionedIdentifier {
           range := ⟨startPos, endPos⟩

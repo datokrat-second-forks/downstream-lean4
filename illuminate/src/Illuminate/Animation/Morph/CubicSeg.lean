@@ -125,7 +125,7 @@ def arcToCubics (cur : Vec2) (rx ry xRotation : Float) (largeArc sweep : Bool)
       for i in List.range numSegs do
         let theta := ac.theta1 + i.toFloat * step
         result := result.push (arcSegmentToCubic ac.cx ac.cy rxF ryF cosPhi sinPhi theta step)
-      result
+      return result
 
 /-!
 # PathData normalization
@@ -181,7 +181,7 @@ def pathToCubics (pd : PathData) : NormalizedPath := Id.run do
       cur := subStart
   if segs.size > 0 then
     subpaths := subpaths.push { segments := segs, closed := false }
-  { subpaths }
+  return { subpaths }
 
 /-!
 # Arc-length computation and resampling
@@ -205,7 +205,7 @@ private def cumulativeLengths (segs : Array CubicSeg) : Array Float := Id.run do
   for seg in segs do
     acc := acc + seg.arcLength
     result := result.push acc
-  result
+  return result
 
 /--
 Finds the segment index and local parameter for a given arc-length distance.
@@ -225,7 +225,7 @@ private def findParam (cumLens : Array Float)
         let localDist := targetLen - cumStart
         let t := if segLen > 0 then Min.min (localDist / segLen) 1.0 |> Max.max 0.0 else 0.0
         return (i, t)
-    (cumLens.size - 1, 1.0)
+    return (cumLens.size - 1, 1.0)
 
 /--
 Resamples a segment array to {name}`count` segments at equal arc-length intervals.
@@ -296,7 +296,7 @@ def resampleToCount (segs : Array CubicSeg) (count : Nat) : Array CubicSeg :=
           segCumStart := cumLens[segIdx - 1]?.getD 0
           segLen := seg.arcLength
           tConsumed := 0.0
-    result
+    return result
 
 /--
 Equalizes segment counts between two arrays using arc-length resampling.
@@ -331,7 +331,7 @@ def alignRotation (a b : Array CubicSeg) : Nat := Id.run do
     if cost < bestCost then
       bestCost := cost
       bestOffset := offset
-  bestOffset
+  return bestOffset
 
 /-- Rotates an array by the given offset (cyclic shift). -/
 def rotateArray (arr : Array CubicSeg) (offset : Nat) : Array CubicSeg :=
@@ -354,7 +354,7 @@ private def alignCost (a b : Array CubicSeg) (offset : Nat) : Float := Id.run do
     let bi := (b[(i + offset) % n]?.getD default).p0
     let d := ai - bi
     cost := cost + d.x * d.x + d.y * d.y
-  cost
+  return cost
 
 /--
 Finds the best rotation offset and winding direction for alignment.
@@ -380,7 +380,7 @@ private def bestAlignment (a b : Array CubicSeg) : Nat × Bool := Id.run do
       bestCost := costRev
       bestOffset := offset
       bestReverse := true
-  (bestOffset, bestReverse)
+  return (bestOffset, bestReverse)
 
 /--
 Equalizes and aligns two segment arrays for interpolation.
@@ -412,7 +412,7 @@ def cubicsToPathData (segs : Array CubicSeg) (closed : Bool) : PathData :=
       cmds := cmds.push (.curveTo seg.c1 seg.c2 seg.p3)
     if closed then
       cmds := cmds.push .closePath
-    { commands := cmds }
+    return { commands := cmds }
 
 /-- Converts a {name}`NormalizedPath` back to a {name}`PathData`. -/
 def normalizedToPathData (np : NormalizedPath) : PathData := Id.run do
@@ -424,4 +424,4 @@ def normalizedToPathData (np : NormalizedPath) : PathData := Id.run do
         cmds := cmds.push (.curveTo seg.c1 seg.c2 seg.p3)
       if sub.closed then
         cmds := cmds.push .closePath
-  { commands := cmds }
+  return { commands := cmds }
