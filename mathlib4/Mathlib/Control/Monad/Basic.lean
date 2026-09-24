@@ -60,11 +60,11 @@ their respective function spaces -/
 def StateT.equiv {σ₁ α₁ : Type u₀} {σ₂ α₂ : Type u₁}
     {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁}
     (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ :=
-  StateT.equivDef.toEquiv.symm.trans (F.trans StateT.equivDef.toEquiv)
+  StateT.equivDef.toEquiv.trans (F.trans StateT.equivDef.toEquiv.symm)
 
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
 def ReaderT.equiv {ρ₁ α₁ : Type u₀} {ρ₂ α₂ : Type u₁}
     {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁}
     (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ :=
-  ReaderT.equivDef.toEquiv.symm.trans (F.trans ReaderT.equivDef.toEquiv)
+  ReaderT.equivDef.toEquiv.trans (F.trans ReaderT.equivDef.toEquiv.symm)

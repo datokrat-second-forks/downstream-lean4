@@ -204,7 +204,7 @@ public def PyAttrInit :=
 unseal PyAttrInit in
 /-- Transports instances from {name}`CPyIO` to {name}`PyAttrInit`. -/
 @[transport, macro_inline]
-public abbrev Internal.PyAttrInit.equivCPyIO : Lean.CanonicalEquivalence (CPyIO Py.Raw) PyAttrInit where
+public abbrev Internal.PyAttrInit.equivCPyIO : Lean.CanonicalEquivalence PyAttrInit (CPyIO Py.Raw) where
   toFun x := x
   invFun x := x
   left_inv _ := rfl

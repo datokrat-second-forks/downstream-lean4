@@ -44,7 +44,7 @@ example (e : Lean.CanonicalEquivalence α β) (x : β) :
 -- The generated name does not collide with a library-owned equivalence.
 newtype Wrapper := Nat with value
 
-def Wrapper.equiv : Nat ≃ Wrapper := Wrapper.equivDef.toEquiv
+def Wrapper.equiv : Nat ≃ Wrapper := Wrapper.equivDef.toEquiv.symm
 
 example (x : Nat) : Wrapper.equiv x = Wrapper.mk x := rfl
 example (x : Wrapper) : Wrapper.equiv.symm x = x.value := rfl

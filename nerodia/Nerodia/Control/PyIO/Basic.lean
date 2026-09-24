@@ -68,9 +68,9 @@ public def toReaderTUnsafe (x : PyThreadCtxT m α) :  ReaderT PyThreadCtx m α :
 
 /-- Transports instances from {name}`ReaderT` to {name}`PyThreadCtxT`. -/
 @[transport, macro_inline]
-public abbrev equivReaderT : Lean.CanonicalEquivalence (ReaderT PyThreadCtx m α) (PyThreadCtxT m α) where
-  toFun := ofReaderTUnsafe
-  invFun := toReaderTUnsafe
+public abbrev equivReaderT : Lean.CanonicalEquivalence (PyThreadCtxT m α) (ReaderT PyThreadCtx m α) where
+  toFun := toReaderTUnsafe
+  invFun := ofReaderTUnsafe
   left_inv _ := by unfold ofReaderTUnsafe toReaderTUnsafe; rfl
   right_inv _ := by unfold ofReaderTUnsafe toReaderTUnsafe; rfl
 
@@ -151,7 +151,7 @@ unseal PyBaseIO in
 /-- Transports instances from {name}`PyThreadCtxT` to {name}`PyBaseIO`. -/
 @[transport, macro_inline]
 public abbrev Internal.Nerodia.PyBaseIO.equivPyThreadCtxT :
-    Lean.CanonicalEquivalence (PyThreadCtxT BaseIO α) (PyBaseIO α) where
+    Lean.CanonicalEquivalence (PyBaseIO α) (PyThreadCtxT BaseIO α) where
   toFun x := x
   invFun x := x
   left_inv _ := rfl
@@ -228,7 +228,7 @@ unseal PyIO in
 /-- Transports instances from {name}`OptionT` to {name}`PyIO`. -/
 @[transport, macro_inline]
 public abbrev Internal.Nerodia.PyIO.equivOptionT :
-    Lean.CanonicalEquivalence (OptionT PyBaseIO α) (PyIO α) where
+    Lean.CanonicalEquivalence (PyIO α) (OptionT PyBaseIO α) where
   toFun x := x
   invFun x := x
   left_inv _ := rfl
