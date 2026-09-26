@@ -29,6 +29,6 @@ variable (R : Type*) [Semiring R] {ι : Type*} (M : ι → Type*) [∀ i : ι, A
 variable [∀ i : ι, Module R (M i)]
 
 instance Module.Free.directSum [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
-  Module.Free.dfinsupp R M
+  Module.Free.of_equiv (DirectSum.linearEquiv R M).symm
 
 end Semiring

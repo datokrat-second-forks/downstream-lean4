@@ -47,7 +47,8 @@ instance : SetLike.GradedMonoid fun i : ℕ ↦ ⋀[R]^i M :=
 
 theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebra.ι R M m = 0 := by
   rw [GradedAlgebra.ι_apply, DirectSum.of_mul_of]
-  exact DFinsupp.single_eq_zero.mpr (Subtype.ext <| ExteriorAlgebra.ι_sq_zero _)
+  exact (map_eq_zero_iff _ (DirectSum.of_injective _)).mpr <|
+    Subtype.ext <| ExteriorAlgebra.ι_sq_zero _
 
 /-- `ExteriorAlgebra.GradedAlgebra.ι` lifted to exterior algebra. This is
 primarily an auxiliary construction used to provide `ExteriorAlgebra.gradedAlgebra`. -/

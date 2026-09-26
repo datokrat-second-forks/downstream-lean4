@@ -27,4 +27,4 @@ instance Module.Finite.instDFinsupp : Module.Finite R (Π₀ (i : ι), M i) :=
   Module.Finite.equiv DFinsupp.linearEquivFunOnFintype.symm
 
 instance Module.Finite.instDirectSum : Module.Finite R (⨁ i, M i) :=
-  Module.Finite.instDFinsupp M
+  Module.Finite.equiv (DirectSum.linearEquiv R M).symm

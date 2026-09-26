@@ -179,6 +179,7 @@ See `/root/static/ofs-ddr/progress/canonical-rebase-mathlib.md` for the changes 
 ## Sealing `DirectSum` with `newtype` (started 2026-09-26)
 
 The user authorized an exception to "do not convert downstream definitions to `newtype`" for this task: `DirectSum` becomes a `newtype` over `Π₀ i, β i`.
+Status: ported; Mathlib, Archive, Counterexamples, Wanted and the tests build with `--wfail`. Progress report: `/root/static/ofs-ddr/progress/directsum-newtype.md`.
 Earlier alias ports along these lines are the TangentSpace and OrderDual branches. WithLp (`Mathlib/Analysis/Normed/Lp/WithLp.lean`) is the along-the-grain model for the API.
 The goal is a change that would convince Mathlib maintainers: consistent with Mathlib's existing definitions and style, no quick-and-dirty repairs.
 

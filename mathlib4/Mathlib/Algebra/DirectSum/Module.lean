@@ -6,6 +6,7 @@ Authors: Kenny Lau
 module
 
 public import Mathlib.Algebra.DirectSum.Basic
+public import Mathlib.Algebra.Module.TransferInstance
 public import Mathlib.LinearAlgebra.DFinsupp
 public import Mathlib.LinearAlgebra.Basis.Defs
 
@@ -56,10 +57,25 @@ instance [∀ i, Module Rᵐᵒᵖ (M i)] [∀ i, IsCentralScalar R (M i)] : IsC
 theorem smul_apply (b : R) (v : ⨁ i, M i) (i : ι) : (b • v) i = b • v i :=
   DFinsupp.smul_apply _ _ _
 
+variable (R M) in
+/-- `DirectSum.addEquiv` as a linear equivalence. -/
+@[simps apply symm_apply]
+protected def linearEquiv : (⨁ i, M i) ≃ₗ[R] Π₀ i, M i where
+  toFun := toDFinsupp
+  invFun := ofDFinsupp
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+lemma coe_linearEquiv : ⇑(DirectSum.linearEquiv R M) = toDFinsupp := rfl
+
+lemma coe_symm_linearEquiv : ⇑(DirectSum.linearEquiv R M).symm = ofDFinsupp := rfl
+
 variable (R) in
 /-- Coercion from a `DirectSum` to a pi type is a `LinearMap`. -/
 def coeFnLinearMap : (⨁ i, M i) →ₗ[R] ∀ i, M i :=
-  DFinsupp.coeFnLinearMap R
+  DFinsupp.coeFnLinearMap R ∘ₗ (DirectSum.linearEquiv R M).toLinearMap
 
 @[simp]
 lemma coeFnLinearMap_apply (v : ⨁ i, M i) : coeFnLinearMap R v = v :=
@@ -72,18 +88,20 @@ section DecidableEq
 variable [DecidableEq ι]
 
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
-def lmk : ∀ s : Finset ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
-  DFinsupp.lmk
+def lmk (s : Finset ι) : (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
+  (DirectSum.linearEquiv R M).symm.toLinearMap ∘ₗ DFinsupp.lmk s
 
 /-- Inclusion of each component into the direct sum. -/
-def lof : ∀ i : ι, M i →ₗ[R] ⨁ i, M i :=
-  DFinsupp.lsingle
+def lof (i : ι) : M i →ₗ[R] ⨁ i, M i :=
+  (DirectSum.linearEquiv R M).symm.toLinearMap ∘ₗ DFinsupp.lsingle i
 
 theorem lof_eq_of (i : ι) (b : M i) : lof R ι M i b = of M i b := rfl
 
 variable {ι M}
 
-theorem single_eq_lof (i : ι) (b : M i) : DFinsupp.single i b = lof R ι M i b := rfl
+theorem single_eq_lof (i : ι) (b : M i) :
+    ofDFinsupp (DFinsupp.single i b) = lof R ι M i b :=
+  rfl
 
 /-- Scalar multiplication commutes with direct sums. -/
 theorem mk_smul (s : Finset ι) (c : R) (x) : mk M s (c • x) = c • mk M s x :=
@@ -97,7 +115,7 @@ variable {R}
 
 theorem support_smul [∀ (i : ι) (x : M i), Decidable (x ≠ 0)] (c : R) (v : ⨁ i, M i) :
     (c • v).support ⊆ v.support :=
-  DFinsupp.support_smul _ _
+  DFinsupp.support_smul c v.toDFinsupp
 
 variable {N : Type u₁} [AddCommMonoid N] [Module R N]
 variable (φ : ∀ i, M i →ₗ[R] N)
@@ -105,7 +123,7 @@ variable (R ι N)
 
 /-- The linear map constructed using the universal property of the coproduct. -/
 def toModule : (⨁ i, M i) →ₗ[R] N :=
-  DFunLike.coe (DFinsupp.lsum ℕ) φ
+  DFunLike.coe (DFinsupp.lsum ℕ) φ ∘ₗ (DirectSum.linearEquiv R M).toLinearMap
 
 /-- Coproducts in the categories of modules and additive monoids commute with the forgetful functor
 from modules to additive monoids. -/
@@ -135,7 +153,8 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem linearMap_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄
     (H : ∀ i, ψ.comp (lof R ι M i) = ψ'.comp (lof R ι M i)) : ψ = ψ' :=
-  DFinsupp.lhom_ext' H
+  (LinearMap.cancel_right (g := (DirectSum.linearEquiv R M).symm.toLinearMap)
+    (DirectSum.linearEquiv R M).symm.surjective).1 <| DFinsupp.lhom_ext' H
 
 /-- The inclusion of a subset of the direct summands
 into a larger subset of the direct summands, as a linear map. -/
@@ -148,7 +167,7 @@ variable (ι M)
 between `⨁ i, M i` and `∀ i, M i`. -/
 @[simps! apply]
 def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
-  DFinsupp.linearEquivFunOnFintype
+  (DirectSum.linearEquiv R M).trans DFinsupp.linearEquivFunOnFintype
 
 variable {ι M}
 
@@ -160,7 +179,7 @@ theorem linearEquivFunOnFintype_lof [Fintype ι] (i : ι) (m : M i) :
 @[simp]
 theorem linearEquivFunOnFintype_symm_single [Fintype ι] (i : ι) (m : M i) :
     (linearEquivFunOnFintype R ι M).symm (Pi.single i m) = lof R ι M i m :=
-  DFinsupp.equivFunOnFintype_symm_single i m
+  congrArg ofDFinsupp <| DFinsupp.equivFunOnFintype_symm_single i m
 
 end DecidableEq
 
@@ -184,7 +203,7 @@ protected def lid (M : Type v) (ι : Type* := PUnit) [AddCommMonoid M] [Module R
 
 /-- The projection map onto one component, as a linear map. -/
 def component (i : ι) : (⨁ i, M i) →ₗ[R] M i :=
-  DFinsupp.lapply i
+  DFinsupp.lapply i ∘ₗ (DirectSum.linearEquiv R M).toLinearMap
 
 variable {ι M}
 
@@ -194,7 +213,7 @@ theorem apply_eq_component (f : ⨁ i, M i) (i : ι) : f i = component R ι M i 
 -- This is not useful as an `@[ext]` lemma as the `ext` tactic cannot infer `R`.
 theorem ext_component {f g : ⨁ i, M i} (h : ∀ i, component R ι M i f = component R ι M i g) :
     f = g :=
-  DFinsupp.ext h
+  ext h
 
 theorem ext_component_iff {f g : ⨁ i, M i} :
     f = g ↔ ∀ i, component R ι M i f = component R ι M i g :=
@@ -233,45 +252,54 @@ variable (f : ∀ i, M i →+ N i)
 
 lemma mker_map :
     AddMonoidHom.mker (map f) =
-      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mker (f i))).comap (coeFnAddMonoidHom M) :=
-  DFinsupp.mker_mapRangeAddMonoidHom f
+      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mker (f i))).comap (coeFnAddMonoidHom M) := by
+  ext x
+  rw [AddMonoidHom.mem_mker, ← toDFinsupp_eq_zero]
+  exact SetLike.ext_iff.1 (DFinsupp.mker_mapRangeAddMonoidHom f) x.toDFinsupp
 
 lemma mrange_map :
     AddMonoidHom.mrange (map f) =
-      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mrange (f i))).comap (coeFnAddMonoidHom N) :=
-  DFinsupp.mrange_mapRangeAddMonoidHom f
+      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mrange (f i))).comap
+        (coeFnAddMonoidHom N) := by
+  ext x
+  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.mrange_mapRangeAddMonoidHom f) x.toDFinsupp)
+  simp only [AddMonoidHom.mem_mrange]
+  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
+    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
 
 end
 
 variable (f : Π i, M i →ₗ[R] N i)
 
 /-- The linear map between direct sums induced by a family of linear maps. -/
-def lmap : (⨁ i, M i) →ₗ[R] ⨁ i, N i := DFinsupp.mapRange.linearMap f
+def lmap : (⨁ i, M i) →ₗ[R] ⨁ i, N i :=
+  (DirectSum.linearEquiv R N).symm.toLinearMap ∘ₗ DFinsupp.mapRange.linearMap f ∘ₗ
+    (DirectSum.linearEquiv R M).toLinearMap
 
 @[simp] theorem lmap_apply (x i) : lmap f x i = f i (x i) := rfl
 
 @[simp] lemma lmap_of [DecidableEq ι] (i : ι) (x : M i) :
     lmap f (of M i x) = of N i (f i x) :=
-  DFinsupp.mapRange_single (hf := fun _ => map_zero _)
+  congrArg ofDFinsupp <| DFinsupp.mapRange_single (hf := fun _ => map_zero _)
 
 @[simp] theorem lmap_lof [DecidableEq ι] (i) (x : M i) :
     lmap f (lof R _ _ _ x) = lof R _ _ _ (f i x) :=
-  DFinsupp.mapRange_single (hf := fun _ ↦ map_zero _)
+  congrArg ofDFinsupp <| DFinsupp.mapRange_single (hf := fun _ ↦ map_zero _)
 
 @[simp] lemma lmap_id :
     (lmap (fun i ↦ LinearMap.id (R := R) (M := M i))) = LinearMap.id :=
-  DFinsupp.mapRange.linearMap_id
+  LinearMap.ext fun _ ↦ ext fun _ ↦ rfl
 
 @[simp] lemma lmap_comp {K : ι → Type*} [∀ i, AddCommMonoid (K i)] [∀ i, Module R (K i)]
     (g : ∀ (i : ι), N i →ₗ[R] K i) :
     (lmap (fun i ↦ (g i) ∘ₗ (f i))) = (lmap g) ∘ₗ (lmap f) :=
-  DFinsupp.mapRange.linearMap_comp _ _
+  LinearMap.ext fun _ ↦ ext fun _ ↦ rfl
 
-theorem lmap_injective : Function.Injective (lmap f) ↔ ∀ i, Function.Injective (f i) := by
-  exact DFinsupp.mapRange_injective (hf := fun _ ↦ map_zero _)
+theorem lmap_injective : Function.Injective (lmap f) ↔ ∀ i, Function.Injective (f i) :=
+  map_injective fun i ↦ (f i).toAddMonoidHom
 
-theorem lmap_surjective : Function.Surjective (lmap f) ↔ (∀ i, Function.Surjective (f i)) := by
-  exact DFinsupp.mapRange_surjective (hf := fun _ ↦ map_zero _)
+theorem lmap_surjective : Function.Surjective (lmap f) ↔ (∀ i, Function.Surjective (f i)) :=
+  map_surjective fun i ↦ (f i).toAddMonoidHom
 
 lemma lmap_eq_iff (x y : ⨁ i, M i) :
     lmap f x = lmap f y ↔ ∀ i, f i (x i) = f i (y i) :=
@@ -286,13 +314,20 @@ lemma lmap_eq_map (x : ⨁ i, M i) : lmap f x = map (fun i => (f i).toAddMonoidH
 
 lemma ker_lmap :
     LinearMap.ker (lmap f) =
-      (Submodule.pi Set.univ (fun i ↦ LinearMap.ker (f i))).comap (DirectSum.coeFnLinearMap R) :=
-  DFinsupp.ker_mapRangeLinearMap f
+      (Submodule.pi Set.univ (fun i ↦ LinearMap.ker (f i))).comap (DirectSum.coeFnLinearMap R) := by
+  ext x
+  rw [LinearMap.mem_ker, ← toDFinsupp_eq_zero]
+  exact SetLike.ext_iff.1 (DFinsupp.ker_mapRangeLinearMap f) x.toDFinsupp
 
 lemma range_lmap :
     LinearMap.range (lmap f) =
-      (Submodule.pi Set.univ (fun i ↦ LinearMap.range (f i))).comap (DirectSum.coeFnLinearMap R) :=
-  DFinsupp.range_mapRangeLinearMap f
+      (Submodule.pi Set.univ (fun i ↦ LinearMap.range (f i))).comap
+        (DirectSum.coeFnLinearMap R) := by
+  ext x
+  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.range_mapRangeLinearMap f) x.toDFinsupp)
+  simp only [LinearMap.mem_range]
+  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
+    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
 
 end AddCommMonoid
 
@@ -301,13 +336,19 @@ variable {ι : Type v} {M : ι → Type w} {N : ι → Type*}
 
 lemma ker_map [∀ i, AddCommGroup (M i)] [∀ i, AddCommMonoid (N i)] (f : ∀ i, M i →+ N i) :
     (map f).ker =
-      (AddSubgroup.pi Set.univ (f · |>.ker)).comap (DirectSum.coeFnAddMonoidHom M) :=
-  DFinsupp.ker_mapRangeAddMonoidHom f
+      (AddSubgroup.pi Set.univ (f · |>.ker)).comap (DirectSum.coeFnAddMonoidHom M) := by
+  ext x
+  rw [AddMonoidHom.mem_ker, ← toDFinsupp_eq_zero]
+  exact SetLike.ext_iff.1 (DFinsupp.ker_mapRangeAddMonoidHom f) x.toDFinsupp
 
 lemma range_map [∀ i, AddCommGroup (M i)] [∀ i, AddCommGroup (N i)] (f : ∀ i, M i →+ N i) :
     (map f).range =
-      (AddSubgroup.pi Set.univ (f · |>.range)).comap (DirectSum.coeFnAddMonoidHom N) :=
-  DFinsupp.range_mapRangeAddMonoidHom f
+      (AddSubgroup.pi Set.univ (f · |>.range)).comap (DirectSum.coeFnAddMonoidHom N) := by
+  ext x
+  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.range_mapRangeAddMonoidHom f) x.toDFinsupp)
+  simp only [AddMonoidHom.mem_range]
+  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
+    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
 
 end AddCommGroup
 
@@ -319,7 +360,7 @@ variable {κ : Type*}
 
 /-- Reindexing terms of a direct sum is linear. -/
 def lequivCongrLeft (h : ι ≃ κ) : (⨁ i, M i) ≃ₗ[R] ⨁ k, M (h.symm k) :=
-  DFinsupp.domLCongr h
+  (DirectSum.linearEquiv R M).trans <| (DFinsupp.domLCongr h).trans (DirectSum.linearEquiv R _).symm
 
 @[simp]
 theorem lequivCongrLeft_apply (h : ι ≃ κ) (f : ⨁ i, M i) (k : κ) :
@@ -352,7 +393,7 @@ variable [DecidableEq ι] [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (
 
 /-- `curry` as a linear map. -/
 def sigmaLcurry : (⨁ i : Σ _, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
-  { sigmaCurry with map_smul' := fun r ↦ by convert! DFinsupp.sigmaCurry_smul (δ := δ) r }
+  { sigmaCurry with map_smul' r f := by ext i j; simp [smul_apply] }
 
 @[simp]
 theorem sigmaLcurry_apply (f : ⨁ i : Σ _, _, δ i.1 i.2) (i : ι) (j : α i) :
@@ -361,7 +402,7 @@ theorem sigmaLcurry_apply (f : ⨁ i : Σ _, _, δ i.1 i.2) (i : ι) (j : α i) 
 
 /-- `uncurry` as a linear map. -/
 def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σ _, _, δ i.1 i.2 :=
-  { sigmaUncurry with map_smul' := DFinsupp.sigmaUncurry_smul }
+  { sigmaUncurry with map_smul' r f := by ext ⟨i, j⟩; simp [smul_apply] }
 
 @[simp]
 theorem sigmaLuncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
@@ -370,7 +411,7 @@ theorem sigmaLuncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
 
 /-- `curryEquiv` as a linear equiv. -/
 def sigmaLcurryEquiv : (⨁ i : Σ _, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
-  DFinsupp.sigmaCurryLEquiv
+  { sigmaCurryEquiv, sigmaLcurry R with }
 
 end Sigma
 
@@ -382,7 +423,9 @@ variable {α : Option ι → Type w} [∀ i, AddCommMonoid (α i)] [∀ i, Modul
 `Option ι`. -/
 @[simps]
 noncomputable def lequivProdDirectSum : (⨁ i, α i) ≃ₗ[R] α none × ⨁ i, α (some i) :=
-  { addEquivProdDirectSum with map_smul' := DFinsupp.equivProdDFinsupp_smul }
+  { addEquivProdDirectSum with
+    map_smul' r f := congrArg (Prod.map id ofDFinsupp) <|
+      DFinsupp.equivProdDFinsupp_smul r f.toDFinsupp }
 
 end Option
 
@@ -402,13 +445,9 @@ indexed by `ι`. This is `DirectSum.coeAddMonoidHom` as a `LinearMap`. -/
 def coeLinearMap : (⨁ i, A i) →ₗ[R] M :=
   toModule R ι M fun i ↦ (A i).subtype
 
-set_option backward.isDefEq.respectTransparency false in
 theorem coeLinearMap_eq_dfinsuppSum [DecidableEq M] (x : DirectSum ι fun i => A i) :
-    coeLinearMap A x = DFinsupp.sum x fun i => (fun x : A i => ↑x) := by
-  simp only [coeLinearMap, toModule, DFinsupp.lsum, LinearEquiv.coe_mk, LinearMap.coe_mk,
-    AddHom.coe_mk]
-  rw [DFinsupp.sumAddHom_apply]
-  simp only [LinearMap.toAddMonoidHom_coe, Submodule.coe_subtype]
+    coeLinearMap A x = x.toDFinsupp.sum fun i => (fun x : A i => ↑x) :=
+  coeAddMonoidHom_eq_dfinsuppSum A x
 
 @[simp]
 theorem coeLinearMap_of (i : ι) (x : A i) : DirectSum.coeLinearMap A (of (fun i ↦ A i) i x) = x :=
@@ -422,7 +461,8 @@ theorem coeLinearMap_of (i : ι) (x : A i) : DirectSum.coeLinearMap A (of (fun i
 variable {A}
 
 theorem range_coeLinearMap : LinearMap.range (coeLinearMap A) = ⨆ i, A i :=
-  (Submodule.iSup_eq_range_dfinsupp_lsum _).symm
+  (LinearMap.range_comp_of_range_eq_top _ (LinearEquiv.range _)).trans
+    (Submodule.iSup_eq_range_dfinsupp_lsum _).symm
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -451,18 +491,18 @@ theorem IsInternal.ofBijective_coeLinearMap_of_mem_ne (h : IsInternal A)
 /-- If a direct sum of submodules is internal then the submodules span the module. -/
 theorem IsInternal.submodule_iSup_eq_top (h : IsInternal A) : iSup A = ⊤ := by
   rw [Submodule.iSup_eq_range_dfinsupp_lsum, LinearMap.range_eq_top]
-  exact Function.Bijective.surjective h
+  exact h.surjective.of_comp (g := toDFinsupp)
 
 /-- If a direct sum of submodules is internal then the submodules are independent. -/
 theorem IsInternal.submodule_iSupIndep (h : IsInternal A) : iSupIndep A :=
-  iSupIndep_of_dfinsupp_lsum_injective _ h.injective
+  iSupIndep_of_dfinsupp_lsum_injective _ (h.injective.comp ofDFinsupp_injective)
 
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
 noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type*}
     (v : ∀ i, Basis (α i) R (A i)) : Basis (Σ i, α i) R M where
   repr :=
-    ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h).symm ≪≫ₗ
+    ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h).symm ≪≫ₗ DirectSum.linearEquiv R _ ≪≫ₗ
         DFinsupp.mapRange.linearEquiv fun i ↦ (v i).repr) ≪≫ₗ
       (sigmaFinsuppLequivDFinsupp R).symm
 
@@ -509,10 +549,10 @@ variable {M : Type*} [AddCommGroup M] [Module R M]
 `iSupIndep.dfinsupp_lsum_injective` for details. -/
 theorem isInternal_submodule_of_iSupIndep_of_iSup_eq_top {A : ι → Submodule R M}
     (hi : iSupIndep A) (hs : iSup A = ⊤) : IsInternal A :=
-  ⟨hi.dfinsupp_lsum_injective,
+  ⟨hi.dfinsupp_lsum_injective.comp toDFinsupp_injective,
     -- Note: https://github.com/leanprover-community/mathlib4/pull/8386 had to specify value of `f`
-    (LinearMap.range_eq_top (f := DFinsupp.lsum _ _)).1 <|
-      (Submodule.iSup_eq_range_dfinsupp_lsum _).symm.trans hs⟩
+    ((LinearMap.range_eq_top (f := DFinsupp.lsum _ _)).1 <|
+      (Submodule.iSup_eq_range_dfinsupp_lsum _).symm.trans hs).comp toDFinsupp_surjective⟩
 
 /-- `iff` version of `DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top`,
 `DirectSum.IsInternal.iSupIndep`, and `DirectSum.IsInternal.submodule_iSup_eq_top`. -/
@@ -554,11 +594,11 @@ lemma isInternal_biSup_submodule_of_iSupIndep {A : ι → Submodule R M} (s : Se
 
 theorem IsInternal.addSubmonoid_iSupIndep {M : Type*} [AddCommMonoid M] {A : ι → AddSubmonoid M}
     (h : IsInternal A) : iSupIndep A :=
-  iSupIndep_of_dfinsuppSumAddHom_injective _ h.injective
+  iSupIndep_of_dfinsuppSumAddHom_injective _ (h.injective.comp ofDFinsupp_injective)
 
 theorem IsInternal.addSubgroup_iSupIndep {G : Type*} [AddCommGroup G] {A : ι → AddSubgroup G}
     (h : IsInternal A) : iSupIndep A :=
-  iSupIndep_of_dfinsuppSumAddHom_injective' _ h.injective
+  iSupIndep_of_dfinsuppSumAddHom_injective' _ (h.injective.comp ofDFinsupp_injective)
 
 end Ring
 

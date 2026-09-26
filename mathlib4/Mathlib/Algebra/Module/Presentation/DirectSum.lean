@@ -129,15 +129,13 @@ variable {N : Type v} [AddCommGroup N] [Module A N]
 of the module `N`. -/
 @[simps! G R relation]
 noncomputable def finsupp : Presentation A (ι →₀ N) :=
-  (directSum (fun (_ : ι) ↦ pres)).ofLinearEquiv (finsuppLequivDFinsupp _).symm
+  (directSum (fun (_ : ι) ↦ pres)).ofLinearEquiv
+    (DirectSum.linearEquiv A _ ≪≫ₗ (finsuppLequivDFinsupp _).symm)
 
 @[simp]
 lemma finsupp_var (i : ι) (g : pres.G) :
-    (finsupp pres ι).var ⟨i, g⟩ = Finsupp.single i (pres.var g) := by
-  apply (finsuppLequivDFinsupp A).injective
-  erw [(finsuppLequivDFinsupp A).apply_symm_apply]
-  rw [directSum_var, finsuppLequivDFinsupp_apply_apply, Finsupp.toDFinsupp_single]
-  rfl
+    (finsupp pres ι).var ⟨i, g⟩ = Finsupp.single i (pres.var g) :=
+  DFinsupp.toFinsupp_single i (pres.var g)
 
 end
 
