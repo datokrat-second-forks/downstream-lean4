@@ -188,6 +188,7 @@ Rules:
 - Mirror WithLp's API: the equivalence and its additive and linear versions, `ext_iff`, injectivity and surjectivity, and simp lemmas relating the two sides.
 - Obtain instances with the toolchain's transport: `deriving`, `inferInstanceAs`, `transport`. Do not use `Equiv.addCommMonoid`-style copies where transport can do it.
 - Add `@[transport]` congruences (`C.canonicalCongr`) whenever needed. Put them directly below the class declaration, as `equivDef` follows its type. Only tricky, nontrivial ones go to the matching `TransferInstance.lean`. Test each congruence, and test instance diamonds with `with_reducible_and_instances rfl`.
+- The user's unfolding rule for congruences: data must be glue, proofs are free. Data fields come from the per-operation congruences (`Add`/`Mul`/`Zero`/`One`/`Neg`/`Inv`/`Sub`/`Div`/`SMul.canonicalCongr`) or projections of the equivalence, in term mode; never `subst`/casts or non-reducible definitions such as `toEquiv` in data. Otherwise transport cannot unfold the instance and `linter.transport.unfold` warns. See DDR 023, "The unfolding rule".
 - Do not thin out the DFinsupp API where it is not meant only for `DirectSum`. Record significant decisions about it in DDRs.
 - Consumers are fixed bottom-up (`DirectSum/Basic`, then `Module`, `Ring`, `Algebra`, `Decomposition`, then graded algebras, Lie, tensor products). Prefer DirectSum-level lemmas to inserting `toDFinsupp`.
 - No separate measurement spike: run `blocked.py` after each rebuild while fixing, and record the counts in the progress report.

@@ -133,6 +133,14 @@ protected theorem subsingleton_unique' : ∀ h₁ h₂ : Unique α, h₁ = h₂
 instance subsingleton_unique : Subsingleton (Unique α) :=
   ⟨Unique.subsingleton_unique'⟩
 
+/-- `Unique` instances correspond along a canonical equivalence. -/
+@[transport] protected abbrev canonicalCongr {β : Sort*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Unique α) (Unique β) where
+  toFun i := ⟨⟨e.toFun default⟩, fun b ↦ (e.right_inv b).symm.trans (congrArg e.toFun (i.uniq _))⟩
+  invFun i := ⟨⟨e.invFun default⟩, fun a ↦ (e.left_inv a).symm.trans (congrArg e.invFun (i.uniq _))⟩
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+
 /-- Construct `Unique` from `Inhabited` and `Subsingleton`. Making this an instance would create
 a loop in the class inheritance graph. -/
 abbrev mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
