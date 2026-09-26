@@ -72,6 +72,25 @@ lemma coe_linearEquiv : ⇑(DirectSum.linearEquiv R M) = toDFinsupp := rfl
 
 lemma coe_symm_linearEquiv : ⇑(DirectSum.linearEquiv R M).symm = ofDFinsupp := rfl
 
+/-- A linear map between the underlying finitely supported functions, as a map between the
+direct sums. -/
+def ofDFinsuppLinearMap {κ : Type*} {N : κ → Type*} [∀ k, AddCommMonoid (N k)]
+    [∀ k, Module R (N k)] (f : (Π₀ i, M i) →ₗ[R] Π₀ k, N k) : (⨁ i, M i) →ₗ[R] ⨁ k, N k :=
+  (DirectSum.linearEquiv R N).symm.toLinearMap ∘ₗ f ∘ₗ (DirectSum.linearEquiv R M).toLinearMap
+
+lemma ker_ofDFinsuppLinearMap {κ : Type*} {N : κ → Type*} [∀ k, AddCommMonoid (N k)]
+    [∀ k, Module R (N k)] (f : (Π₀ i, M i) →ₗ[R] Π₀ k, N k) :
+    LinearMap.ker (ofDFinsuppLinearMap f) =
+      (LinearMap.ker f).comap (DirectSum.linearEquiv R M).toLinearMap :=
+  Submodule.ext fun _ ↦ ofDFinsupp_eq_zero
+
+lemma range_ofDFinsuppLinearMap {κ : Type*} {N : κ → Type*} [∀ k, AddCommMonoid (N k)]
+    [∀ k, Module R (N k)] (f : (Π₀ i, M i) →ₗ[R] Π₀ k, N k) :
+    LinearMap.range (ofDFinsuppLinearMap f) =
+      (LinearMap.range f).comap (DirectSum.linearEquiv R N).toLinearMap :=
+  Submodule.ext fun _ ↦
+    ofDFinsupp_surjective.exists.trans (exists_congr fun _ ↦ toDFinsupp_inj.symm)
+
 variable (R) in
 /-- Coercion from a `DirectSum` to a pi type is a `LinearMap`. -/
 def coeFnLinearMap : (⨁ i, M i) →ₗ[R] ∀ i, M i :=
@@ -252,20 +271,16 @@ variable (f : ∀ i, M i →+ N i)
 
 lemma mker_map :
     AddMonoidHom.mker (map f) =
-      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mker (f i))).comap (coeFnAddMonoidHom M) := by
-  ext x
-  rw [AddMonoidHom.mem_mker, ← toDFinsupp_eq_zero]
-  exact SetLike.ext_iff.1 (DFinsupp.mker_mapRangeAddMonoidHom f) x.toDFinsupp
+      (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mker (f i))).comap (coeFnAddMonoidHom M) :=
+  (mker_ofDFinsuppHom _).trans <|
+    congrArg (AddSubmonoid.comap _) (DFinsupp.mker_mapRangeAddMonoidHom f)
 
 lemma mrange_map :
     AddMonoidHom.mrange (map f) =
       (AddSubmonoid.pi Set.univ (fun i ↦ AddMonoidHom.mrange (f i))).comap
-        (coeFnAddMonoidHom N) := by
-  ext x
-  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.mrange_mapRangeAddMonoidHom f) x.toDFinsupp)
-  simp only [AddMonoidHom.mem_mrange]
-  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
-    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
+        (coeFnAddMonoidHom N) :=
+  (mrange_ofDFinsuppHom _).trans <|
+    congrArg (AddSubmonoid.comap _) (DFinsupp.mrange_mapRangeAddMonoidHom f)
 
 end
 
@@ -273,8 +288,7 @@ variable (f : Π i, M i →ₗ[R] N i)
 
 /-- The linear map between direct sums induced by a family of linear maps. -/
 def lmap : (⨁ i, M i) →ₗ[R] ⨁ i, N i :=
-  (DirectSum.linearEquiv R N).symm.toLinearMap ∘ₗ DFinsupp.mapRange.linearMap f ∘ₗ
-    (DirectSum.linearEquiv R M).toLinearMap
+  ofDFinsuppLinearMap (DFinsupp.mapRange.linearMap f)
 
 @[simp] theorem lmap_apply (x i) : lmap f x i = f i (x i) := rfl
 
@@ -314,41 +328,44 @@ lemma lmap_eq_map (x : ⨁ i, M i) : lmap f x = map (fun i => (f i).toAddMonoidH
 
 lemma ker_lmap :
     LinearMap.ker (lmap f) =
-      (Submodule.pi Set.univ (fun i ↦ LinearMap.ker (f i))).comap (DirectSum.coeFnLinearMap R) := by
-  ext x
-  rw [LinearMap.mem_ker, ← toDFinsupp_eq_zero]
-  exact SetLike.ext_iff.1 (DFinsupp.ker_mapRangeLinearMap f) x.toDFinsupp
+      (Submodule.pi Set.univ (fun i ↦ LinearMap.ker (f i))).comap (DirectSum.coeFnLinearMap R) :=
+  (ker_ofDFinsuppLinearMap _).trans <|
+    congrArg (Submodule.comap _) (DFinsupp.ker_mapRangeLinearMap f)
 
 lemma range_lmap :
     LinearMap.range (lmap f) =
       (Submodule.pi Set.univ (fun i ↦ LinearMap.range (f i))).comap
-        (DirectSum.coeFnLinearMap R) := by
-  ext x
-  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.range_mapRangeLinearMap f) x.toDFinsupp)
-  simp only [LinearMap.mem_range]
-  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
-    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
+        (DirectSum.coeFnLinearMap R) :=
+  (range_ofDFinsuppLinearMap _).trans <|
+    congrArg (Submodule.comap _) (DFinsupp.range_mapRangeLinearMap f)
 
 end AddCommMonoid
 
 section AddCommGroup
 variable {ι : Type v} {M : ι → Type w} {N : ι → Type*}
 
+lemma ker_ofDFinsuppHom [∀ i, AddCommGroup (M i)] {κ : Type*} {γ : κ → Type*}
+    [∀ k, AddCommMonoid (γ k)] (f : (Π₀ i, M i) →+ Π₀ k, γ k) :
+    (ofDFinsuppHom f).ker = f.ker.comap (DirectSum.addEquiv M).toAddMonoidHom :=
+  AddSubgroup.ext fun _ ↦ ofDFinsupp_eq_zero
+
+lemma range_ofDFinsuppHom [∀ i, AddCommGroup (M i)] {κ : Type*} {γ : κ → Type*}
+    [∀ k, AddCommGroup (γ k)] (f : (Π₀ i, M i) →+ Π₀ k, γ k) :
+    (ofDFinsuppHom f).range = f.range.comap (DirectSum.addEquiv γ).toAddMonoidHom :=
+  AddSubgroup.ext fun _ ↦
+    ofDFinsupp_surjective.exists.trans (exists_congr fun _ ↦ toDFinsupp_inj.symm)
+
 lemma ker_map [∀ i, AddCommGroup (M i)] [∀ i, AddCommMonoid (N i)] (f : ∀ i, M i →+ N i) :
     (map f).ker =
-      (AddSubgroup.pi Set.univ (f · |>.ker)).comap (DirectSum.coeFnAddMonoidHom M) := by
-  ext x
-  rw [AddMonoidHom.mem_ker, ← toDFinsupp_eq_zero]
-  exact SetLike.ext_iff.1 (DFinsupp.ker_mapRangeAddMonoidHom f) x.toDFinsupp
+      (AddSubgroup.pi Set.univ (f · |>.ker)).comap (DirectSum.coeFnAddMonoidHom M) :=
+  (ker_ofDFinsuppHom _).trans <|
+    congrArg (AddSubgroup.comap _) (DFinsupp.ker_mapRangeAddMonoidHom f)
 
 lemma range_map [∀ i, AddCommGroup (M i)] [∀ i, AddCommGroup (N i)] (f : ∀ i, M i →+ N i) :
     (map f).range =
-      (AddSubgroup.pi Set.univ (f · |>.range)).comap (DirectSum.coeFnAddMonoidHom N) := by
-  ext x
-  refine Iff.trans ?_ (SetLike.ext_iff.1 (DFinsupp.range_mapRangeAddMonoidHom f) x.toDFinsupp)
-  simp only [AddMonoidHom.mem_range]
-  exact ⟨fun ⟨a, ha⟩ ↦ ⟨a.toDFinsupp, congrArg toDFinsupp ha⟩,
-    fun ⟨b, hb⟩ ↦ ⟨ofDFinsupp b, congrArg ofDFinsupp hb⟩⟩
+      (AddSubgroup.pi Set.univ (f · |>.range)).comap (DirectSum.coeFnAddMonoidHom N) :=
+  (range_ofDFinsuppHom _).trans <|
+    congrArg (AddSubgroup.comap _) (DFinsupp.range_mapRangeAddMonoidHom f)
 
 end AddCommGroup
 
@@ -421,11 +438,13 @@ variable {α : Option ι → Type w} [∀ i, AddCommMonoid (α i)] [∀ i, Modul
 
 /-- Linear isomorphism obtained by separating the term of index `none` of a direct sum over
 `Option ι`. -/
-@[simps]
+@[simps!]
 noncomputable def lequivProdDirectSum : (⨁ i, α i) ≃ₗ[R] α none × ⨁ i, α (some i) :=
-  { addEquivProdDirectSum with
-    map_smul' r f := congrArg (Prod.map id ofDFinsupp) <|
-      DFinsupp.equivProdDFinsupp_smul r f.toDFinsupp }
+  (DirectSum.linearEquiv R α).trans <| LinearEquiv.trans
+    { DFinsupp.equivProdDFinsupp with
+      map_add' := DFinsupp.equivProdDFinsupp_add
+      map_smul' := DFinsupp.equivProdDFinsupp_smul }
+    ((LinearEquiv.refl R _).prodCongr (DirectSum.linearEquiv R _).symm)
 
 end Option
 

@@ -179,6 +179,31 @@ lemma coe_addEquiv : ⇑(DirectSum.addEquiv β) = toDFinsupp := rfl
 
 lemma coe_symm_addEquiv : ⇑(DirectSum.addEquiv β).symm = ofDFinsupp := rfl
 
+/-- An additive map between the underlying finitely supported functions, as a map between the
+direct sums. -/
+def ofDFinsuppHom {κ : Type*} {γ : κ → Type*} [∀ k, AddCommMonoid (γ k)]
+    (f : (Π₀ i, β i) →+ Π₀ k, γ k) : (⨁ i, β i) →+ ⨁ k, γ k :=
+  (DirectSum.addEquiv γ).symm.toAddMonoidHom.comp (f.comp (DirectSum.addEquiv β).toAddMonoidHom)
+
+@[simp]
+lemma toDFinsupp_ofDFinsuppHom {κ : Type*} {γ : κ → Type*} [∀ k, AddCommMonoid (γ k)]
+    (f : (Π₀ i, β i) →+ Π₀ k, γ k) (x : ⨁ i, β i) :
+    (ofDFinsuppHom f x).toDFinsupp = f x.toDFinsupp :=
+  rfl
+
+lemma mker_ofDFinsuppHom {κ : Type*} {γ : κ → Type*} [∀ k, AddCommMonoid (γ k)]
+    (f : (Π₀ i, β i) →+ Π₀ k, γ k) :
+    AddMonoidHom.mker (ofDFinsuppHom f) =
+      (AddMonoidHom.mker f).comap (DirectSum.addEquiv β).toAddMonoidHom :=
+  AddSubmonoid.ext fun _ ↦ ofDFinsupp_eq_zero
+
+lemma mrange_ofDFinsuppHom {κ : Type*} {γ : κ → Type*} [∀ k, AddCommMonoid (γ k)]
+    (f : (Π₀ i, β i) →+ Π₀ k, γ k) :
+    AddMonoidHom.mrange (ofDFinsuppHom f) =
+      (AddMonoidHom.mrange f).comap (DirectSum.addEquiv γ).toAddMonoidHom :=
+  AddSubmonoid.ext fun _ ↦
+    ofDFinsupp_surjective.exists.trans (exists_congr fun _ ↦ toDFinsupp_inj.symm)
+
 /-- The finite set of indices at which an element of the direct sum is nonzero. -/
 def support [DecidableEq ι] [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (x : ⨁ i, β i) :
     Finset ι :=
@@ -219,10 +244,9 @@ variable (β)
 
 /-- `mk β s x` is the element of `⨁ i, β i` that is zero outside `s`
 and has coefficient `x i` for `i` in `s`. -/
-def mk (s : Finset ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i where
-  toFun x := ofDFinsupp (DFinsupp.mk s x)
-  map_add' _ _ := congrArg ofDFinsupp DFinsupp.mk_add
-  map_zero' := congrArg ofDFinsupp DFinsupp.mk_zero
+def mk (s : Finset ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i :=
+  (DirectSum.addEquiv β).symm.toAddMonoidHom.comp
+    { toFun := DFinsupp.mk s, map_zero' := DFinsupp.mk_zero, map_add' _ _ := DFinsupp.mk_add }
 
 /-- `of i` is the natural inclusion map from `β i` to `⨁ i, β i`. -/
 def of (i : ι) : β i →+ ⨁ i, β i :=
@@ -421,9 +445,9 @@ variable {κ : Type*}
 /-- Reindexing terms of a direct sum: change indexing type from `ι` to `κ` along an equivalence
 `h : ι ≃ κ`. -/
 def equivCongrLeft (h : ι ≃ κ) : (⨁ i, β i) ≃+ ⨁ k, β (h.symm k) :=
-  { (DirectSum.equiv β).trans <| (DFinsupp.equivCongrLeft h).trans (DirectSum.equiv _).symm with
-    map_add' f g := congrArg ofDFinsupp <|
-      DFinsupp.comapDomain'_add _ h.right_inv f.toDFinsupp g.toDFinsupp }
+  (DirectSum.addEquiv β).trans <| AddEquiv.trans
+    { DFinsupp.equivCongrLeft h with map_add' := DFinsupp.comapDomain'_add _ h.right_inv }
+    (DirectSum.addEquiv _).symm
 
 @[simp]
 theorem equivCongrLeft_apply (h : ι ≃ κ) (f : ⨁ i, β i) (k : κ) :
@@ -456,14 +480,12 @@ section Sigma
 variable [DecidableEq ι] {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMonoid (δ i j)]
 
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`. -/
-def sigmaCurry : (⨁ i : Σ _i, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
-  toFun f := ofDFinsupp <|
-    (DFinsupp.sigmaCurry (δ := δ) f.toDFinsupp).mapRange (fun _ => ofDFinsupp) fun _ => rfl
-  map_zero' := congrArg ofDFinsupp <|
-    (congrArg _ DFinsupp.sigmaCurry_zero).trans (DFinsupp.mapRange_zero _ _)
-  map_add' f g := congrArg ofDFinsupp <|
-    (congrArg _ (DFinsupp.sigmaCurry_add f.toDFinsupp g.toDFinsupp)).trans <|
-      DFinsupp.mapRange_add _ _ (fun _ _ _ => rfl) _ _
+def sigmaCurry : (⨁ i : Σ _i, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j :=
+  ofDFinsuppHom <|
+    (DFinsupp.mapRange.addMonoidHom fun i ↦ (DirectSum.addEquiv (δ i)).symm.toAddMonoidHom).comp
+      { toFun := DFinsupp.sigmaCurry (δ := δ)
+        map_zero' := DFinsupp.sigmaCurry_zero
+        map_add' := DFinsupp.sigmaCurry_add }
 
 @[simp]
 theorem sigmaCurry_apply (f : ⨁ i : Σ _i, _, δ i.1 i.2) (i : ι) (j : α i) :
@@ -474,19 +496,18 @@ theorem sigmaCurry_apply (f : ⨁ i : Σ _i, _, δ i.1 i.2) (i : ι) (j : α i) 
 theorem sigmaCurry_of [∀ i : ι, DecidableEq (α i)] (k : (i : ι) × α i) (x : δ k.1 k.2) :
     sigmaCurry (of (fun k ↦ δ k.1 k.2) k x) =
       of (fun i' ↦ ⨁ (j' : α i'), δ i' j') k.1 (of (fun j' ↦ δ k.1 j') k.2 x) :=
-  congrArg ofDFinsupp <|
-    (congrArg _ (DFinsupp.sigmaCurry_single k x)).trans DFinsupp.mapRange_single
+  congrArg ofDFinsupp <| (congrArg _ (DFinsupp.sigmaCurry_single k x)).trans <|
+    DFinsupp.mapRange_single (hf := fun _ ↦ map_zero _)
 
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`. -/
-def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σ _i, _, δ i.1 i.2 where
-  toFun f := ofDFinsupp <| DFinsupp.sigmaUncurry <|
-    f.toDFinsupp.mapRange (fun _ => toDFinsupp) fun _ => rfl
-  map_zero' := congrArg ofDFinsupp <|
-    (congrArg _ (DFinsupp.mapRange_zero _ _)).trans DFinsupp.sigmaUncurry_zero
-  map_add' f g := congrArg ofDFinsupp <|
-    (congrArg _ (DFinsupp.mapRange_add _ _ (fun _ _ _ => rfl) f.toDFinsupp g.toDFinsupp)).trans <|
-      DFinsupp.sigmaUncurry_add _ _
+def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σ _i, _, δ i.1 i.2 :=
+  ofDFinsuppHom <|
+    AddMonoidHom.comp
+      { toFun := DFinsupp.sigmaUncurry (δ := δ)
+        map_zero' := DFinsupp.sigmaUncurry_zero
+        map_add' := DFinsupp.sigmaUncurry_add }
+      (DFinsupp.mapRange.addMonoidHom fun i ↦ (DirectSum.addEquiv (δ i)).toAddMonoidHom)
 
 @[simp]
 theorem sigmaUncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) :
@@ -597,10 +618,8 @@ variable {ι : Type*} {α : ι → Type*} {β : ι → Type*} [∀ i, AddCommMon
 variable [∀ i, AddCommMonoid (β i)] (f : ∀ (i : ι), α i →+ β i)
 
 /-- create a homomorphism from `⨁ i, α i` to `⨁ i, β i` by giving the component-wise map `f`. -/
-def map : (⨁ i, α i) →+ ⨁ i, β i where
-  toFun x := ofDFinsupp (DFinsupp.mapRange.addMonoidHom f x.toDFinsupp)
-  map_zero' := congrArg ofDFinsupp (map_zero _)
-  map_add' _ _ := congrArg ofDFinsupp (map_add _ _ _)
+def map : (⨁ i, α i) →+ ⨁ i, β i :=
+  ofDFinsuppHom (DFinsupp.mapRange.addMonoidHom f)
 
 @[simp] lemma toDFinsupp_map (x : ⨁ i, α i) :
     (map f x).toDFinsupp = DFinsupp.mapRange.addMonoidHom f x.toDFinsupp :=
@@ -645,6 +664,6 @@ end DirectSum
 and the corresponding finite product. -/
 def DirectSum.addEquivProd {ι : Type*} [Fintype ι] (G : ι → Type*) [(i : ι) → AddCommMonoid (G i)] :
     DirectSum ι G ≃+ ((i : ι) → G i) :=
-  ⟨(DirectSum.equiv G).trans DFinsupp.equivFunOnFintype, fun g h ↦ funext fun _ ↦ by
-    simp only [DFinsupp.equivFunOnFintype, Equiv.toFun_as_coe, Equiv.coe_trans, comp_apply,
-      DirectSum.equiv_apply, toDFinsupp_add, Equiv.coe_fn_mk, ← DFinsupp.add_apply, Pi.add_apply]⟩
+  (DirectSum.addEquiv G).trans ⟨DFinsupp.equivFunOnFintype, fun g h ↦ funext fun _ ↦ by
+    simp only [DFinsupp.equivFunOnFintype, Equiv.toFun_as_coe, Equiv.coe_fn_mk,
+      ← DFinsupp.add_apply, Pi.add_apply]⟩
