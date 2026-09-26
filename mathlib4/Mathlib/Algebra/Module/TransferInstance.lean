@@ -63,6 +63,22 @@ protected abbrev Module.canonicalCongr (e : Lean.CanonicalEquivalence α β) [i�
   right_inv _ := Module.ext' _ _ fun r x ↦
     show e.toFun (e.invFun (r • e.toFun (e.invFun x))) = r • x by rw [e.right_inv, e.right_inv]
 
+variable (R) in
+/-- A canonical equivalence is linear for the module structure transported along it. -/
+def Lean.CanonicalEquivalence.linearEquiv (e : Lean.CanonicalEquivalence α β) [AddCommMonoid β]
+    [_root_.Module R β] :
+    letI := (AddCommMonoid.canonicalCongr e).invFun ‹AddCommMonoid β›
+    letI := (_root_.Module.canonicalCongr e rfl).invFun ‹_root_.Module R β›
+    α ≃ₗ[R] β :=
+  letI := (AddCommMonoid.canonicalCongr e).invFun ‹AddCommMonoid β›
+  letI := (_root_.Module.canonicalCongr e rfl).invFun ‹_root_.Module R β›
+  { toFun := e.toFun
+    invFun := e.invFun
+    map_add' _ _ := e.right_inv _
+    map_smul' _ _ := e.right_inv _
+    left_inv := e.left_inv
+    right_inv := e.right_inv }
+
 variable [AddCommMonoid α] [AddCommMonoid β] [Module R β]
 
 namespace AddEquiv

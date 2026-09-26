@@ -312,6 +312,23 @@ theorem equiv [Module.Finite R M] (e : M ≃ₗ[R] N) : Module.Finite R N :=
 theorem equiv_iff (e : M ≃ₗ[R] N) : Module.Finite R M ↔ Module.Finite R N :=
   ⟨fun _ ↦ equiv e, fun _ ↦ equiv e.symm⟩
 
+/-- `Module.Finite` holds on both sides of a canonical equivalence, for the transported module
+structure. -/
+@[transport]
+protected abbrev canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [iβ : AddCommMonoid β] [mβ : Module R β] {iα : AddCommMonoid α}
+    (hi : iα = (AddCommMonoid.canonicalCongr e).invFun iβ) {mα : Module R α}
+    (hm : mα = (Module.canonicalCongr e hi).invFun mβ) :
+    Lean.CanonicalEquivalence (Module.Finite R α) (Module.Finite R β) := by
+  subst hm hi
+  letI := (AddCommMonoid.canonicalCongr e).invFun iβ
+  letI := (Module.canonicalCongr e rfl).invFun mβ
+  exact {
+    toFun _ := equiv (e.linearEquiv R)
+    invFun _ := equiv (e.linearEquiv R).symm
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 instance [Module.Finite R M] : Module.Finite R Mᵐᵒᵖ := equiv (MulOpposite.opLinearEquiv R)
 
 instance ulift [Module.Finite R M] : Module.Finite R (ULift M) := equiv ULift.moduleEquiv.symm

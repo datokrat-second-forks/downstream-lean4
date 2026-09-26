@@ -143,6 +143,23 @@ lemma iff_of_equiv {R R' M M'} [Semiring R] [AddCommMonoid M] [Module R M]
     Module.Free R M ↔ Module.Free R' M' :=
   ⟨fun _ ↦ of_equiv e₂, fun _ ↦ of_equiv e₂.symm⟩
 
+/-- `Module.Free` holds on both sides of a canonical equivalence, for the transported module
+structure. -/
+@[transport]
+protected abbrev canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [iβ : AddCommMonoid β] [mβ : Module R β] {iα : AddCommMonoid α}
+    (hi : iα = (AddCommMonoid.canonicalCongr e).invFun iβ) {mα : Module R α}
+    (hm : mα = (Module.canonicalCongr e hi).invFun mβ) :
+    Lean.CanonicalEquivalence (Module.Free R α) (Module.Free R β) := by
+  subst hm hi
+  letI := (AddCommMonoid.canonicalCongr e).invFun iβ
+  letI := (Module.canonicalCongr e rfl).invFun mβ
+  exact {
+    toFun _ := of_equiv (e.linearEquiv R)
+    invFun _ := of_equiv (e.linearEquiv R).symm
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 instance shrink [Small.{w} M] : Module.Free R (Shrink.{w} M) :=
   Module.Free.of_equiv (Shrink.linearEquiv R M).symm
 

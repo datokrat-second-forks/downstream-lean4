@@ -1,6 +1,8 @@
 import Mathlib.Algebra.Module.TransferInstance
 import Mathlib.Algebra.Group.Action.TransferInstance
 import Mathlib.Algebra.Group.Hom.Defs
+import Mathlib.LinearAlgebra.FreeModule.Basic
+import Mathlib.RingTheory.Finiteness.Basic
 
 /-!
 Tests for the `@[transport]` congruences of Mathlib's classes: each instance is transported without
@@ -47,6 +49,13 @@ instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar 
   inferInstanceAs (IsCentralScalar R M)
 #guard_msgs in
 instance [Unique M] : Unique (Wrap M) := inferInstanceAs (Unique M)
+#guard_msgs in
+instance [Semiring R] [AddCommMonoid M] [Module R M] [Module.Finite R M] :
+    Module.Finite R (Wrap M) :=
+  inferInstanceAs (Module.Finite R M)
+#guard_msgs in
+instance [Semiring R] [AddCommMonoid M] [Module R M] [Module.Free R M] : Module.Free R (Wrap M) :=
+  inferInstanceAs (Module.Free R M)
 
 example [AddCommMonoid M] (x y : Wrap M) : x + y = .mk (x.unwrap + y.unwrap) := by
   with_reducible_and_instances rfl
