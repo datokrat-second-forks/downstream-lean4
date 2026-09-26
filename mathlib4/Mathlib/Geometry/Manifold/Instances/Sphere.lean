@@ -494,7 +494,8 @@ theorem range_mvfderiv_subtypeVal {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : 
     (ne_zero_of_mem_unit_sphere (-v))).repr
   suffices
       (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ (↑)) ∘ U.symm) 0).range = (ℝ ∙ (v : E))ᗮ by
-    rw [← this]
+    rw [← this, LinearMap.range_comp_of_range_eq_top _
+      (LinearMap.range_eq_top_of_surjective _ (TangentSpace.equivModel (𝓡 n) v).surjective)]
     congr 3
     apply stereographic'_neg
   have :
@@ -518,11 +519,8 @@ theorem range_mvfderiv_subtypeVal {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : 
     rw [Submodule.neg_mem_iff]
     exact Submodule.mem_span_singleton_self (v : E)
 
-@[deprecated range_mvfderiv_subtypeVal +typeChanged (since := "2026-08-02")]
-theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
-    (mfderiv (𝓡 n) 𝓘(ℝ, E) ((↑) : sphere (0 : E) 1 → E) v : TangentSpace (𝓡 n) v →L[ℝ] E).range =
-      (ℝ ∙ (v : E))ᗮ := by
-  convert! range_mvfderiv_subtypeVal v
+@[deprecated range_mvfderiv_subtypeVal (since := "2026-08-02")]
+alias range_mfderiv_coe_sphere := range_mvfderiv_subtypeVal
 
 /-- Consider the differential of the inclusion of the sphere in `E` at the point `v` as a continuous
 linear map from `TangentSpace (𝓡 n) v` to `E`.  This map is injective. -/
@@ -534,8 +532,9 @@ theorem injective_mvfderiv_subtypeVal_sphere {n : ℕ} [Fact (finrank ℝ E = n 
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton
       (𝕜 := ℝ) n (ne_zero_of_mem_unit_sphere (-v))).repr
   suffices Injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ (↑)) ∘ U.symm) 0) by
+    rw [ContinuousLinearMap.coe_comp]
+    refine Function.Injective.comp ?_ (TangentSpace.equivModel (𝓡 n) v).injective
     convert! this using 3
-    congr 2
     apply stereographic'_neg (v := v)
   have : HasFDerivAt (stereoInvFunAux (-v : E) ∘ (Subtype.val : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) := by
@@ -549,10 +548,8 @@ theorem injective_mvfderiv_subtypeVal_sphere {n : ℕ} [Fact (finrank ℝ E = n 
   set_option backward.isDefEq.respectTransparency false in
   simpa [-Subtype.val_injective] using Subtype.val_injective
 
-@[deprecated injective_mvfderiv_subtypeVal_sphere +typeChanged (since := "2026-08-02")]
-theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
-    Injective (mfderiv (𝓡 n) 𝓘(ℝ, E) ((↑) : sphere (0 : E) 1 → E) v) := by
-  convert! injective_mvfderiv_subtypeVal_sphere v
+@[deprecated injective_mvfderiv_subtypeVal_sphere (since := "2026-08-02")]
+alias mfderiv_coe_sphere_injective := injective_mvfderiv_subtypeVal_sphere
 
 end ContMDiffManifold
 

@@ -41,6 +41,15 @@ protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.ne h⟩⟩
 
+/-- `Nontrivial` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Nontrivial.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Nontrivial α) (Nontrivial β) where
+  toFun _ := e.left_inv.injective.nontrivial
+  invFun _ := e.right_inv.injective.nontrivial
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}

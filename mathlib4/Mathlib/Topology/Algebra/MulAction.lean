@@ -193,6 +193,25 @@ lemma Topology.IsInducing.continuousSMul {N : Type*} [SMul N Y] [TopologicalSpac
     simpa only [hg.continuous_iff, Function.comp_def, hsmul]
       using (hf.comp continuous_fst).fun_smul <| hg.continuous.comp continuous_snd
 
+/-- `ContinuousSMul` holds on both sides of a canonical equivalence of the acted-on types, for the
+transported topology and action. -/
+@[to_additive (attr := transport) /-- `ContinuousVAdd` holds on both sides of a canonical
+equivalence of the acted-on types, for the transported topology and action. -/]
+protected abbrev ContinuousSMul.canonicalCongr {R α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [TopologicalSpace R] [tβ : TopologicalSpace β] [sβ : SMul R β] {tα : TopologicalSpace α}
+    {sα : SMul R α} (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hs : sα = (SMul.canonicalCongr e).invFun sβ) :
+    Lean.CanonicalEquivalence (ContinuousSMul R α) (ContinuousSMul R β) := by
+  subst ht hs
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  letI := (SMul.canonicalCongr e).invFun sβ
+  exact {
+    toFun _ := e.homeomorph.symm.isInducing.continuousSMul continuous_id
+      (congrArg e.invFun (congrArg (_ • ·) (e.right_inv _)).symm)
+    invFun _ := e.homeomorph.isInducing.continuousSMul continuous_id (e.right_inv _)
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 @[to_additive]
 instance SMulMemClass.continuousSMul {S : Type*} [SetLike S X] [SMulMemClass S M X] (s : S) :
     ContinuousSMul M s :=

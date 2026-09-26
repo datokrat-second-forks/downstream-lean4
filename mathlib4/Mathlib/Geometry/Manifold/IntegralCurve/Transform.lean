@@ -28,6 +28,8 @@ public section
 
 open Function Set
 
+open scoped Manifold
+
 variable
   {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {H : Type*} [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
@@ -41,11 +43,13 @@ section Translation
 lemma IsMIntegralCurveOn.comp_add (hγ : IsMIntegralCurveOn γ v s) (dt : ℝ) :
     IsMIntegralCurveOn (γ ∘ (· + dt)) v { t | t + dt ∈ s } := by
   intro t ht
-  rw [comp_apply, ← ContinuousLinearMap.comp_id (ContinuousLinearMap.smulRight 1 (v (γ (t + dt))))]
-  apply HasMFDerivWithinAt.comp t (hγ (t + dt) ht) _ subset_rfl
-  refine ⟨(continuous_add_const _).continuousWithinAt, ?_⟩
-  simp only [mfld_simps]
-  exact (hasFDerivWithinAt_id _ _).add_const _
+  have hadd : HasMFDerivWithinAt 𝓘(ℝ, ℝ) 𝓘(ℝ, ℝ) (· + dt) { t | t + dt ∈ s } t
+      ((NormedSpace.fromTangentSpace (t + dt)).symm.toContinuousLinearMap ∘L
+        ContinuousLinearMap.id ℝ ℝ ∘L (NormedSpace.fromTangentSpace t).toContinuousLinearMap) :=
+    hasMFDerivWithinAt_iff_hasFDerivWithinAt.2 ((hasFDerivWithinAt_id _ _).add_const _)
+  refine (HasMFDerivWithinAt.comp t (hγ (t + dt) ht) hadd subset_rfl).congr_mfderiv ?_
+  ext
+  simp
 
 lemma isMIntegralCurveOn_comp_add {dt : ℝ} :
     IsMIntegralCurveOn (γ ∘ (· + dt)) v { t | t + dt ∈ s } ↔ IsMIntegralCurveOn γ v s := by
@@ -105,14 +109,14 @@ section Scaling
 lemma IsMIntegralCurveOn.comp_mul (hγ : IsMIntegralCurveOn γ v s) (a : ℝ) :
     IsMIntegralCurveOn (γ ∘ (· * a)) (a • v) { t | t * a ∈ s } := by
   intro t ht
-  have : (1 : ℝ →L[ℝ] ℝ).smulRight (a • v (γ (t * a))) =
-      (1 : ℝ →L[ℝ] ℝ).smulRight (v (γ (t * a))) ∘SL (1 : ℝ →L[ℝ] ℝ).smulRight a := by
-    simp [ContinuousLinearMap.smulRight_comp_smulRight]
-  rw [comp_apply, Pi.smul_apply, this]
-  refine HasMFDerivWithinAt.comp t (hγ (t * a) ht)
-    ⟨(continuous_mul_const _).continuousWithinAt, ?_⟩ subset_rfl
-  simp only [mfld_simps]
-  exact HasFDerivWithinAt.mul_const' (hasFDerivWithinAt_id _ _) _
+  have hmul : HasMFDerivWithinAt 𝓘(ℝ, ℝ) 𝓘(ℝ, ℝ) (· * a) { t | t * a ∈ s } t
+      ((NormedSpace.fromTangentSpace (t * a)).symm.toContinuousLinearMap ∘L
+        (a • ContinuousLinearMap.id ℝ ℝ) ∘L
+          (NormedSpace.fromTangentSpace t).toContinuousLinearMap) :=
+    hasMFDerivWithinAt_iff_hasFDerivWithinAt.2 ((hasFDerivWithinAt_id _ _).mul_const a)
+  refine (HasMFDerivWithinAt.comp t (hγ (t * a) ht) hmul subset_rfl).congr_mfderiv ?_
+  ext
+  simp [smul_smul, mul_comm]
 
 lemma isMIntegralCurveOn_comp_mul_ne_zero {a : ℝ} (ha : a ≠ 0) :
     IsMIntegralCurveOn (γ ∘ (· * a)) (a • v) { t | t * a ∈ s } ↔ IsMIntegralCurveOn γ v s := by
@@ -160,7 +164,7 @@ open ContinuousLinearMap in
 is a global integral curve of `v`. -/
 lemma isMIntegralCurve_const {x : M} (h : v x = 0) : IsMIntegralCurve (fun _ ↦ x) v := by
   intro t
-  rw [h, smulRight_one_eq_toSpanSingleton, toSpanSingleton_zero]
+  rw [h, smulRight_zero]
   exact hasMFDerivAt_const ..
 
 end Scaling

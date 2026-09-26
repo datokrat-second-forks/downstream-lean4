@@ -3,6 +3,10 @@ import Mathlib.Algebra.Group.Action.TransferInstance
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.LinearAlgebra.FreeModule.Basic
 import Mathlib.RingTheory.Finiteness.Basic
+import Mathlib.Topology.Algebra.Group.Basic
+import Mathlib.Topology.Algebra.MulAction
+import Mathlib.Topology.Connected.PathConnected
+import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 Tests for the `@[transport]` congruences of Mathlib's classes: each instance is transported without
@@ -56,6 +60,31 @@ instance [Semiring R] [AddCommMonoid M] [Module R M] [Module.Finite R M] :
 #guard_msgs in
 instance [Semiring R] [AddCommMonoid M] [Module R M] [Module.Free R M] : Module.Free R (Wrap M) :=
   inferInstanceAs (Module.Free R M)
+#guard_msgs in
+instance [Nontrivial M] : Nontrivial (Wrap M) := inferInstanceAs (Nontrivial M)
+#guard_msgs in
+instance instTopologicalSpace [TopologicalSpace M] : TopologicalSpace (Wrap M) :=
+  inferInstanceAs (TopologicalSpace M)
+#guard_msgs in
+instance [TopologicalSpace M] [T2Space M] : T2Space (Wrap M) := inferInstanceAs (T2Space M)
+#guard_msgs in
+instance [TopologicalSpace M] [PathConnectedSpace M] : PathConnectedSpace (Wrap M) :=
+  inferInstanceAs (PathConnectedSpace M)
+#guard_msgs in
+instance [TopologicalSpace M] [AddCommGroup M] [IsTopologicalAddGroup M] :
+    IsTopologicalAddGroup (Wrap M) :=
+  inferInstanceAs (IsTopologicalAddGroup M)
+#guard_msgs in
+instance [TopologicalSpace M] [CommGroup M] [IsTopologicalGroup M] : IsTopologicalGroup (Wrap M) :=
+  inferInstanceAs (IsTopologicalGroup M)
+#guard_msgs in
+instance [TopologicalSpace R] [TopologicalSpace M] [SMul R M] [ContinuousSMul R M] :
+    ContinuousSMul R (Wrap M) :=
+  inferInstanceAs (ContinuousSMul R M)
+#guard_msgs in
+instance [TopologicalSpace M] [SMul R M] [ContinuousConstSMul R M] :
+    ContinuousConstSMul R (Wrap M) :=
+  inferInstanceAs (ContinuousConstSMul R M)
 
 example [AddCommMonoid M] (x y : Wrap M) : x + y = .mk (x.unwrap + y.unwrap) := by
   with_reducible_and_instances rfl
@@ -69,6 +98,9 @@ example [Semiring R] [AddCommMonoid M] [Module R M] (r : R) (x : Wrap M) :
     r • x = .mk (r • x.unwrap) := by
   with_reducible_and_instances rfl
 example [Unique M] : (default : Wrap M) = .mk default := by with_reducible_and_instances rfl
+example [TopologicalSpace M] (s : Set (Wrap M)) :
+    TopologicalSpace.IsOpen s ↔ TopologicalSpace.IsOpen (Wrap.mk ⁻¹' s) := by
+  with_reducible_and_instances rfl
 
 example [AddCommGroup M] :
     (AddCommGroup.toAddCommMonoid : AddCommMonoid (Wrap M)) = instAddCommMonoid := by

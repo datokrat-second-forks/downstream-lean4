@@ -60,7 +60,7 @@ is given by the image of `v` under left-multiplication by `g`. -/
 @[to_additive /-- The invariant vector field associated to a vector `v` in the Lie algebra. At a
 point `g`, it is given by the image of `v` under left-addition by `g`. -/]
 noncomputable def mulInvariantVectorField (v : GroupLieAlgebra I G) (g : G) : TangentSpace% g :=
-  mfderiv% (g * ·) (1 : G) v
+  TangentSpace.cast I (mul_one g) (mfderiv% (g * ·) (1 : G) v)
 
 set_option backward.isDefEq.respectTransparency false in
 @[to_additive]
@@ -101,21 +101,32 @@ variable [LieGroup I (minSmoothness 𝕜 3) G]
 
 @[to_additive (attr := simp)]
 lemma inverse_mfderiv_mul_left {g h : G} :
-    (mfderiv% (fun b ↦ g * b) h).inverse = mfderiv% (fun b ↦ g⁻¹ * b) (g * h) := by
+    (mfderiv% (fun b ↦ g * b) h).inverse =
+      (TangentSpace.cast I (inv_mul_cancel_left g h)).toContinuousLinearMap ∘L
+        mfderiv% (fun b ↦ g⁻¹ * b) (g * h) := by
   have M : minSmoothness 𝕜 3 ≠ 0 := lt_of_lt_of_le (by simp) le_minSmoothness |>.ne'
+  have hd (a b : G) : MDiffAt (fun x ↦ a * x) b :=
+    contMDiff_mul_left.contMDiffAt.mdifferentiableAt M
   have A : mfderiv% ((fun x ↦ g⁻¹ * x) ∘ (fun x ↦ g * x)) h =
-      ContinuousLinearMap.id _ _ := by
-    have : (fun x ↦ g⁻¹ * x) ∘ (fun x ↦ g * x) = id := by ext x; simp
-    rw [this, id_eq, mfderiv_id]
-  rw [mfderiv_comp (I' := I) _ (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)
-    (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)] at A
+      (TangentSpace.cast I (inv_mul_cancel_left g h).symm).toContinuousLinearMap := by
+    rw [mfderiv_congr (f' := id) (by ext x; simp), mfderiv_id, ContinuousLinearMap.comp_id]
+  rw [mfderiv_comp (I' := I) _ (hd _ _) (hd _ _)] at A
   have A' : mfderiv% ((fun x ↦ g * x) ∘ (fun x ↦ g⁻¹ * x)) (g * h) =
-      ContinuousLinearMap.id _ _ := by
-    have : (fun x ↦ g * x) ∘ (fun x ↦ g⁻¹ * x) = id := by ext x; simp
-    rw [this, id_eq, mfderiv_id]
-  rw [mfderiv_comp (I' := I) _ (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)
-    (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M), inv_mul_cancel_left g h] at A'
-  exact ContinuousLinearMap.inverse_eq A' A
+      (TangentSpace.cast I (mul_inv_cancel_left g (g * h)).symm).toContinuousLinearMap := by
+    rw [mfderiv_congr (f' := id) (by ext x; simp), mfderiv_id, ContinuousLinearMap.comp_id]
+  rw [mfderiv_comp (I' := I) _ (hd _ _) (hd _ _)] at A'
+  refine ContinuousLinearMap.inverse_eq ?_ ?_
+  · rw [mfderiv_congr_point (f := fun b ↦ g * b) (inv_mul_cancel_left g h).symm]
+    ext v
+    have := congr($A' v)
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+      TangentSpace.cast_cast, TangentSpace.cast_rfl, this, ContinuousLinearMap.id_apply]
+  · ext v
+    have := congr($A v)
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, this,
+      TangentSpace.cast_cast, TangentSpace.cast_rfl, ContinuousLinearMap.id_apply]
 
 /-- Invariant vector fields are invariant under pullbacks. -/
 @[to_additive /-- Invariant vector fields are invariant under pullbacks. -/]
@@ -123,23 +134,32 @@ lemma mpullback_mulInvariantVectorField (g : G) (v : GroupLieAlgebra I G) :
     mpullback I I (g * ·) (mulInvariantVectorField v) = mulInvariantVectorField v := by
   have M : minSmoothness 𝕜 3 ≠ 0 := lt_of_lt_of_le (by simp) le_minSmoothness |>.ne'
   ext h
+  have hd (a b : G) : MDiffAt (fun x ↦ a * x) b :=
+    contMDiff_mul_left.contMDiffAt.mdifferentiableAt M
   simp only [mpullback, inverse_mfderiv_mul_left, mulInvariantVectorField]
-  have D : (fun x ↦ h * x) = (fun b ↦ g⁻¹ * b) ∘ (fun x ↦ g * h * x) := by
+  have D : (fun b ↦ g⁻¹ * b) ∘ (fun x ↦ g * h * x) = (fun x ↦ h * x) := by
     ext x; simp only [comp_apply]; group
-  rw [D, mfderiv_comp (I' := I)]
-  · congr 2
-    simp
-  · exact contMDiff_mul_left.contMDiffAt.mdifferentiableAt M
-  · exact contMDiff_mul_left.contMDiffAt.mdifferentiableAt M
+  have chain := mfderiv_congr (I := I) (I' := I) (x := (1 : G)) D
+  rw [mfderiv_comp (I' := I) _ (hd _ _) (hd _ _),
+    mfderiv_congr_point (f := fun b ↦ g⁻¹ * b) (mul_one (g * h))] at chain
+  have := congr($chain v)
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+  replace this := congrArg (TangentSpace.cast I (show g⁻¹ * (g * h * 1) = h by group)) this
+  simp only [TangentSpace.cast_cast] at this
+  exact this
 
 set_option backward.isDefEq.respectTransparency false in
 @[to_additive]
 lemma mulInvariantVectorField_eq_mpullback (g : G) (V : Π (g : G), TangentSpace% g) :
     mulInvariantVectorField (V 1) g = mpullback I I (g⁻¹ * ·) V g := by
-  have A : 1 = g⁻¹ * g := by simp
-  simp only [mulInvariantVectorField, mpullback, inverse_mfderiv_mul_left]
-  congr
-  simp
+  simp only [mulInvariantVectorField, mpullback, inverse_mfderiv_mul_left,
+    ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe]
+  have key : ∀ a : G, a = g → ∀ p : G, p = 1 → ∀ hap : a * p = g,
+      TangentSpace.cast I (mul_one g) (mfderiv% (fun x ↦ g * x) 1 (V 1)) =
+        TangentSpace.cast I hap (mfderiv% (fun b ↦ a * b) p (V p)) := by
+    rintro a rfl p rfl hap
+    rfl
+  exact key g⁻¹⁻¹ (inv_inv g) (g⁻¹ * g) (inv_mul_cancel g) _
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -182,7 +202,10 @@ theorem contMDiff_mulInvariantVectorField (v : GroupLieAlgebra I G) :
   · simp [F₁, F₂, F₃, fg, fv]
   · simp only [comp_apply, tangentMap, F₃, F₂, F₁, fg, fv]
     rw [mfderiv_prod_eq_add_apply ((contMDiff_mul I (minSmoothness 𝕜 3)).mdifferentiableAt M)]
-    simp +instances [mulInvariantVectorField]
+    simp +instances only [equivTangentBundleProd_symm_apply_proj,
+      equivTangentBundleProd_symm_apply_snd, ContinuousLinearEquiv.apply_symm_apply,
+      map_zero, zero_add, mulInvariantVectorField]
+    exact TangentSpace.cast_heq I (mul_one g) _
 
 @[to_additive]
 theorem contMDiffAt_mulInvariantVectorField (v : GroupLieAlgebra I G) {g : G} :

@@ -42,3 +42,19 @@ def homeomorph [TopologicalSpace β] (e : α ≃ β) :
       rfl }
 
 end Equiv
+
+/-- A canonical equivalence is a homeomorphism for the topology transported along it. -/
+def Lean.CanonicalEquivalence.homeomorph (e : Lean.CanonicalEquivalence α β) [TopologicalSpace β] :
+    letI := (TopologicalSpace.canonicalCongr e).invFun ‹TopologicalSpace β›
+    α ≃ₜ β :=
+  letI := (TopologicalSpace.canonicalCongr e).invFun ‹TopologicalSpace β›
+  { toFun := e.toFun
+    invFun := e.invFun
+    left_inv := e.left_inv
+    right_inv := e.right_inv
+    continuous_toFun := ⟨fun s hs ↦ by
+      have : e.invFun ⁻¹' (e.toFun ⁻¹' s) = s := Set.ext fun y ↦ by
+        change e.toFun (e.invFun y) ∈ s ↔ y ∈ s; rw [e.right_inv y]
+      change IsOpen (e.invFun ⁻¹' (e.toFun ⁻¹' s))
+      rwa [this]⟩
+    continuous_invFun := ⟨fun _ hs ↦ hs⟩ }

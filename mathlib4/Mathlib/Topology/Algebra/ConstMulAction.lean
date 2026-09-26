@@ -12,6 +12,7 @@ public import Mathlib.GroupTheory.GroupAction.Defs
 public import Mathlib.Order.Filter.Pointwise
 public import Mathlib.Topology.Algebra.Constructions
 public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Topology.Homeomorph.TransferInstance
 
 /-!
 # Monoid actions continuous in the second variable
@@ -158,6 +159,26 @@ theorem Topology.IsInducing.continuousConstSMul {N β : Type*} [SMul N β] [Topo
     ContinuousConstSMul N β where
   continuous_const_smul c := by
     simpa only [Function.comp_def, hf, hg.continuous_iff] using hg.continuous.fun_const_smul (f c)
+
+/-- `ContinuousConstSMul` holds on both sides of a canonical equivalence of the acted-on types, for
+the transported topology and action. -/
+@[to_additive (attr := transport) /-- `ContinuousConstVAdd` holds on both sides of a canonical
+equivalence of the acted-on types, for the transported topology and action. -/]
+protected abbrev ContinuousConstSMul.canonicalCongr {R α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) [tβ : TopologicalSpace β] [sβ : SMul R β]
+    {tα : TopologicalSpace α} {sα : SMul R α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hs : sα = (SMul.canonicalCongr e).invFun sβ) :
+    Lean.CanonicalEquivalence (ContinuousConstSMul R α) (ContinuousConstSMul R β) := by
+  subst ht hs
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  letI := (SMul.canonicalCongr e).invFun sβ
+  exact {
+    toFun _ := e.homeomorph.symm.isInducing.continuousConstSMul id
+      (congrArg e.invFun (congrArg (_ • ·) (e.right_inv _)).symm)
+    invFun _ := e.homeomorph.isInducing.continuousConstSMul id (e.right_inv _)
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=

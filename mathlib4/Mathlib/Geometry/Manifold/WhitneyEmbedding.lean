@@ -7,6 +7,7 @@ module
 
 public import Mathlib.FieldTheory.Finiteness
 public import Mathlib.Geometry.Manifold.Diffeomorph
+public import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 public import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-!
@@ -78,31 +79,40 @@ theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
     ((ContinuousLinearMap.fst ℝ E ℝ).comp
             (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance)
               (f.ind x hx))).comp
-        (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) =
-      mfderiv% (chartAt H (f.c (f.ind x hx))) x := by
+        (mvfderiv I f.embeddingPiTangent x) =
+      mvfderiv I (extChartAt I (f.c (f.ind x hx))) x := by
   set L :=
     (ContinuousLinearMap.fst ℝ E ℝ).comp
       (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
-  have := L.hasMFDerivAt.comp x
+  have heq : (L ∘ f.embeddingPiTangent : M → E) =ᶠ[𝓝 x] extChartAt I (f.c (f.ind x hx)) := by
+    refine (f.eventuallyEq_one x hx).mono fun y hy => ?_
+    simp only [L, embeddingPiTangent_coe, ContinuousLinearMap.coe_comp, (· ∘ ·),
+      ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
+    rw [hy, Pi.one_apply, one_smul]
+  have h₁ := L.hasMFDerivAt.comp x
     (f.embeddingPiTangent.contMDiff.mdifferentiableAt (by simp)).hasMFDerivAt
-  convert! hasMFDerivAt_unique this _
-  refine (hasMFDerivAt_extChartAt (f.mem_chartAt_ind_source x hx)).congr_of_eventuallyEq ?_
-  refine (f.eventuallyEq_one x hx).mono fun y hy => ?_
-  simp only [L, embeddingPiTangent_coe, ContinuousLinearMap.coe_comp, (· ∘ ·),
-    ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
-  rw [hy, Pi.one_apply, one_smul]
-
-theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
-    (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x).ker = ⊥ := by
-  apply bot_unique
-  rw [← (mdifferentiable_chart (f.c (f.ind x hx))).ker_mfderiv_eq_bot
-      (f.mem_chartAt_ind_source x hx),
-    ← comp_embeddingPiTangent_mfderiv]
-  exact LinearMap.ker_le_ker_comp _ _
+  have h₂ := (hasMFDerivAt_extChartAt (f.mem_chartAt_ind_source x hx)).congr_of_eventuallyEq heq
+  have h := hasMFDerivAt_unique h₁ h₂
+  rw [mvfderiv, mvfderiv, (hasMFDerivAt_extChartAt (f.mem_chartAt_ind_source x hx)).mfderiv]
+  ext v
+  exact congrArg (NormedSpace.fromTangentSpace ((L ∘ f.embeddingPiTangent) x)) congr($h v)
 
 theorem embeddingPiTangent_injective_mfderiv (x : M) (hx : x ∈ s) :
-    Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
-  LinearMap.ker_eq_bot.1 (f.embeddingPiTangent_ker_mfderiv x hx)
+    Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) := by
+  have hchart : Injective (mvfderiv I (extChartAt I (f.c (f.ind x hx))) x) := by
+    rw [mvfderiv, (hasMFDerivAt_extChartAt (f.mem_chartAt_ind_source x hx)).mfderiv]
+    simp only [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
+    exact (NormedSpace.fromTangentSpace _).injective.comp
+      (((NormedSpace.fromTangentSpace _).symm.injective.comp
+        (TangentSpace.equivModel I _).injective).comp
+        ((mdifferentiable_chart (f.c (f.ind x hx))).mfderiv_injective
+          (f.mem_chartAt_ind_source x hx)))
+  rw [← comp_embeddingPiTangent_mfderiv f x hx] at hchart
+  exact fun v w h ↦ hchart (by simp only [mvfderiv, ContinuousLinearMap.comp_apply, h])
+
+theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
+    (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x).ker = ⊥ :=
+  LinearMap.ker_eq_bot.2 (f.embeddingPiTangent_injective_mfderiv x hx)
 
 /-- Baby version of the **Whitney weak embedding theorem**: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
@@ -122,7 +132,10 @@ public theorem exists_immersion_euclidean {ι : Type*} [Finite ι] (f : SmoothBu
   rw [mfderiv_comp _ eEF.differentiableAt.mdifferentiableAt
       (f.embeddingPiTangent.contMDiff.mdifferentiableAt (by simp)),
     eEF.mfderiv_eq]
-  exact eEF.injective.comp (f.embeddingPiTangent_injective_mfderiv _ trivial)
+  simp only [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
+  exact ((NormedSpace.fromTangentSpace _).symm.injective.comp
+    (eEF.injective.comp (NormedSpace.fromTangentSpace _).injective)).comp
+    (f.embeddingPiTangent_injective_mfderiv _ trivial)
 
 end SmoothBumpCovering
 
