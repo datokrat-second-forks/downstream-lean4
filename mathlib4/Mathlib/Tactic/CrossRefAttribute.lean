@@ -156,9 +156,9 @@ abbrev stacksTagKind : SyntaxNodeKind := `stacksTag
 
 /-- The main parser for Stacks Project Tags: it accepts any sequence of 4 digits or
 uppercase letters. -/
-def stacksTagFn : ParserFn := fun c s =>
+def stacksTagFn : ParserFn := .mk fun c s =>
   let i := s.pos
-  let s := takeWhileFn (fun c => c.isAlphanum) c s
+  let s := (takeWhileFn (fun c => c.isAlphanum)).toFn c s
   if s.hasError then
     s
   else if s.pos == i then
@@ -171,7 +171,7 @@ def stacksTagFn : ParserFn := fun c s =>
     else if tag.length != 4 then
       ParserState.mkUnexpectedError s "Stacks tags must be exactly 4 characters"
     else
-      mkNodeToken stacksTagKind i true c s
+      (mkNodeToken stacksTagKind i true).toFn c s
 
 @[inherit_doc stacksTagFn]
 def stacksTagNoAntiquot : Parser := {
@@ -189,9 +189,9 @@ def stacksTagParser : Parser :=
 abbrev wikidataIdKind : SyntaxNodeKind := `wikidataId
 
 /-- The main parser for Wikidata identifiers: it accepts `Q` followed by one or more digits. -/
-def wikidataIdFn : ParserFn := fun c s =>
+def wikidataIdFn : ParserFn := .mk fun c s =>
   let i := s.pos
-  let s := takeWhileFn (fun c => c.isAlphanum) c s
+  let s := (takeWhileFn (fun c => c.isAlphanum)).toFn c s
   if s.hasError then
     s
   else if s.pos == i then
@@ -201,7 +201,7 @@ def wikidataIdFn : ParserFn := fun c s =>
     match id.toList with
     | 'Q' :: rest@(_ :: _) =>
       if rest.all Char.isDigit then
-        mkNodeToken wikidataIdKind i true c s
+        (mkNodeToken wikidataIdKind i true).toFn c s
       else
         ParserState.mkUnexpectedError s
           "Wikidata ids must consist of the letter Q followed by digits."
@@ -227,9 +227,9 @@ abbrev lmfdbIdKind : SyntaxNodeKind := `lmfdbId
 
 /-- The main parser for LMFDB identifiers: it accepts lower case words with `.` in between.
 The words can also contain underscores and digits. -/
-def lmfdbIdFn : ParserFn := fun c s =>
+def lmfdbIdFn : ParserFn := .mk fun c s =>
   let i := s.pos
-  let s := takeWhileFn (fun c => c.isAlphanum || c == '.' || c == '_') c s
+  let s := (takeWhileFn (fun c => c.isAlphanum || c == '.' || c == '_')).toFn c s
   if s.hasError then
     s
   else if s.pos == i then
@@ -240,7 +240,7 @@ def lmfdbIdFn : ParserFn := fun c s =>
       ParserState.mkUnexpectedError s
         "LMFDB ids must consist only of lowercase letters, digits, periods, and underscores."
     else
-      mkNodeToken lmfdbIdKind i true c s
+      (mkNodeToken lmfdbIdKind i true).toFn c s
 
 @[inherit_doc lmfdbIdFn]
 def lmfdbIdNoAntiquot : Parser := {
@@ -260,9 +260,9 @@ abbrev pibaseIdKind : SyntaxNodeKind := `pibaseId
 
 /-- The main parser for π-Base identifiers: it accepts canonical property, space, and theorem
 identifiers, such as `P000001`, `S000023`, and `T000010`. -/
-def pibaseIdFn : ParserFn := fun c s =>
+def pibaseIdFn : ParserFn := .mk fun c s =>
   let i := s.pos
-  let s := takeWhileFn (fun c => c.isAlphanum) c s
+  let s := (takeWhileFn (fun c => c.isAlphanum)).toFn c s
   if s.hasError then
     s
   else if s.pos == i then
@@ -280,7 +280,7 @@ def pibaseIdFn : ParserFn := fun c s =>
         ParserState.mkUnexpectedError s
           "π-Base ids must consist of P, S, or T followed by six digits."
       else
-        mkNodeToken pibaseIdKind i true c s
+        (mkNodeToken pibaseIdKind i true).toFn c s
     | _ =>
       ParserState.mkUnexpectedError s
         "π-Base ids must consist of P, S, or T followed by six digits."
@@ -309,9 +309,9 @@ generally <chapter_no>.<section_no>.E<equation_no> (e.g. `5.4.E1`).
 See https://dlmf.nist.gov/help/cite for more details on the permalink format.
 Note that while underscores are not mentioned in the DLMF permalink table, they are
 supported and present in some actual links for equations. -/
-def dlmfIdFn : ParserFn := fun c s =>
+def dlmfIdFn : ParserFn := .mk fun c s =>
   let i := s.pos
-  let s := takeWhileFn (fun c => c.isAlphanum || c == '.' || c == '_') c s
+  let s := (takeWhileFn (fun c => c.isAlphanum || c == '.' || c == '_')).toFn c s
   if s.hasError then
     s
   else if s.pos == i then
@@ -323,7 +323,7 @@ def dlmfIdFn : ParserFn := fun c s =>
         "DLMF references must consist only of (lowercase) roman numerals, the letters E/T/F, \
          digits, periods, and underscores."
     else
-      mkNodeToken dlmfIdKind i true c s
+      (mkNodeToken dlmfIdKind i true).toFn c s
 
 @[inherit_doc dlmfIdFn]
 def dlmfIdNoAntiquot : Parser := {

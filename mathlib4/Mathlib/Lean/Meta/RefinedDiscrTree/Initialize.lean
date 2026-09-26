@@ -144,7 +144,7 @@ Note: It is expensive to create two new `IO.Ref`s for every `MetaM` operation,
   let mctx : Meta.Context :=
     { keyedConfig := Config.toConfigWithKey { transparency := .reducible } }
   match ← (ReaderT.run (ReaderT.run (ReaderT.run (ReaderT.run
-      (act name constInfo) mctx) mstate) cctx) cstate).toBaseIO with
+      (act name constInfo).toReaderT mctx) mstate).toReaderT cctx) cstate).toBaseIO with
   | .ok a =>
     return a.foldl (fun t (val, entries) =>
       entries.foldl (fun t (key, entry) => t.push key (entry, val)) t) tree

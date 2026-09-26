@@ -79,10 +79,11 @@ where
 def SectionState.insertResult (s : SectionState α) (res : Result α)
     (isDup : α → α → MetaM Bool) : MetaM (SectionState α) := do
   let { results, errors } := s
-  let results ← ReaderT.mk fun c₁ => ReaderT.mk fun c₂ =>
-    ReaderT.mk fun c₃ => ReaderT.mk fun c₄ =>
+  let results ← Meta.MetaM.mk <| ReaderT.mk fun c₁ => ReaderT.mk fun c₂ =>
+    Core.CoreM.mk <| ReaderT.mk fun c₃ => ReaderT.mk fun c₄ =>
     (ReaderT.run (ReaderT.run (ReaderT.run (ReaderT.run
-      (res.insertInArray results isDup) c₁) c₂) c₃) c₄).catchExceptions fun ex ↦ do
+      (res.insertInArray results isDup).toReaderT c₁) c₂).toReaderT c₃) c₄).catchExceptions
+      fun ex ↦ do
     if let .internal id _ := ex then
       if id == interruptExceptionId then
         return default

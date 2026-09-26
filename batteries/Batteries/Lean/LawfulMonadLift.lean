@@ -51,19 +51,25 @@ instance : LawfulMonadLift BaseIO (EIO ε) :=
 /-! ### `LawfulMonadLift IO CoreM` -/
 
 private theorem Core.run_liftIOCore (x : IO α) (r : Core.Context) :
-    ReaderT.run (Core.liftIOCore x) r =
+    ReaderT.run (Core.liftIOCore x).toReaderT r =
       (StateRefT'.lift
         (EIO.adapt
           (fun err => Exception.error r.ref (MessageData.ofFormat (format (toString err)))) x) :
         StateRefT' IO.RealWorld Core.State (EIO Exception) α) := by rfl
 
+private theorem Core.toReaderT_bind (x : CoreM α) (f : α → CoreM β) :
+    (x >>= f).toReaderT = x.toReaderT >>= fun a => (f a).toReaderT := rfl
+
 instance : LawfulMonadLift IO CoreM where
   monadLift_pure a := by
-    ext r
-    simp [MonadLift.monadLift, Core.run_liftIOCore]
+    show (.mk (Core.liftIOCore (pure a)).toReaderT : CoreM _) = .mk (pure a : CoreM _).toReaderT
+    congr 1
   monadLift_bind ma f := by
+    show (.mk (Core.liftIOCore (ma >>= f)).toReaderT : CoreM _) =
+      .mk (Core.liftIOCore ma >>= fun a => Core.liftIOCore (f a)).toReaderT
+    congr 1
     ext r
-    simp [MonadLift.monadLift, Core.run_liftIOCore]
+    simp [Core.run_liftIOCore, Core.toReaderT_bind]
 
 instance : LawfulMonadLiftT (EIO Exception) CommandElabM := inferInstance
 instance : LawfulMonadLiftT (EIO Exception) CoreM := inferInstance

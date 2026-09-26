@@ -107,6 +107,12 @@ instance {σ} : MonadSaveCtx (StateT σ m) n where
 instance {ω σ} [MonadLiftT (ST ω) m] : MonadSaveCtx (StateRefT' ω σ m) n where
   saveCtxM act := do liftM <| saveCtxM <| act.run' (← get)
 
+instance : MonadSaveCtx Lean.Core.CoreM (EIO Lean.Exception) where
+  saveCtxM act := .mk (saveCtxM act.toReaderT)
+
+instance : MonadSaveCtx Lean.Meta.MetaM (EIO Lean.Exception) where
+  saveCtxM act := .mk (saveCtxM act.toReaderT)
+
 end MonadSaveCtx
 
 instance : Lean.ToJson Unit where
