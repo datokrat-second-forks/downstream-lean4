@@ -175,3 +175,24 @@ Preserve unrelated workspace edits and verify a complete Mathlib build on the re
 The post-rebase integration passes the full library and selected equivalence/traversal tests (8,923 jobs).
 The completed scan reports zero directly failing and zero blocked modules out of 8,526.
 See `/root/static/ofs-ddr/progress/canonical-rebase-mathlib.md` for the changes and build evidence.
+
+## Sealing `DirectSum` with `newtype` (started 2026-09-26)
+
+The user authorized an exception to "do not convert downstream definitions to `newtype`" for this task: `DirectSum` becomes a `newtype` over `Π₀ i, β i`.
+Earlier alias ports along these lines are the TangentSpace and OrderDual branches. WithLp (`Mathlib/Analysis/Normed/Lp/WithLp.lean`) is the along-the-grain model for the API.
+The goal is a change that would convince Mathlib maintainers: consistent with Mathlib's existing definitions and style, no quick-and-dirty repairs.
+
+Rules:
+- Use `newtype`, not `structure`, so that proofs can use `unsealing_newtype` locally. Use it only as a last resort, with a DDR for each use.
+- Names: constructor `DirectSum.ofDFinsupp`, projection `DirectSum.toDFinsupp`, as in `Finsupp.toDFinsupp`. Mathlib's existing `DirectSum.mk` keeps its meaning.
+- Mirror WithLp's API: the equivalence and its additive and linear versions, `ext_iff`, injectivity and surjectivity, and simp lemmas relating the two sides.
+- Obtain instances with the toolchain's transport: `deriving`, `inferInstanceAs`, `transport`. Do not use `Equiv.addCommMonoid`-style copies where transport can do it.
+- Add `@[transport]` congruences (`C.canonicalCongr`) whenever needed. Put them directly below the class declaration, as `equivDef` follows its type. Only tricky, nontrivial ones go to the matching `TransferInstance.lean`. Test each congruence, and test instance diamonds with `with_reducible_and_instances rfl`.
+- Do not thin out the DFinsupp API where it is not meant only for `DirectSum`. Record significant decisions about it in DDRs.
+- Consumers are fixed bottom-up (`DirectSum/Basic`, then `Module`, `Ring`, `Algebra`, `Decomposition`, then graded algebras, Lie, tensor products). Prefer DirectSum-level lemmas to inserting `toDFinsupp`.
+- No separate measurement spike: run `blocked.py` after each rebuild while fixing, and record the counts in the progress report.
+
+Toolchain prerequisite (layer 2, `onefieldstructures-newtype-changes`, then replay layers 3–5 and regenerate stage0 per `reviews/plan.md`):
+- Decided by the user: structure-like syntax `newtype N ps where ctor :: proj : ty`, with doc comments on the constructor and projector, binder updates on the constructor (e.g. `toLp (p) ::`), constructor name defaulting to `mk`, and a trailing `deriving`. The old form `newtype N ps := ty with proj` is removed, not kept: layer 2 `fa32464038` (syntax plus its tests), layer 3 `3b7c73daa4` (its tests), and a layer-5 commit migrating the library's 50 seals and 18 test declarations.
+- The user suggested `alias structure …`; the assistant advised against it. Keyword cost is not the reason: `newtype` is itself a new keyword relative to `master`, and a keyword `alias` would only break plain identifiers named `alias` (none in core; Mathlib already has the keyword via Batteries), while `.alias` dot notation keeps working. The reasons are that `alias` is Batteries' command, so core would own only one form of it, that in Mathlib "alias" means definitional transparency, the opposite of a seal, and that the feature is already called `newtype`.
+- The `u_1`/`u_2` universe names seen in `#check` are display renaming (a plain `def` shows the same); `#print` shows the declared names. Nothing to fix.

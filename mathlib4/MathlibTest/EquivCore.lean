@@ -42,7 +42,7 @@ example (e : Lean.CanonicalEquivalence α β) (x : β) :
     e.toEquiv.symm x = e.invFun x := by simp
 
 -- The generated name does not collide with a library-owned equivalence.
-newtype Wrapper := Nat with value
+newtype Wrapper where value : Nat
 
 def Wrapper.equiv : Nat ≃ Wrapper := Wrapper.equivDef.toEquiv.symm
 
