@@ -191,7 +191,7 @@ The bornology on this type synonym is inherited without change.
 
 
 instance : Bornology αᵒᵈ :=
-  ‹Bornology α›
+  inferInstanceAs (Bornology α)
 
 instance [BoundedSpace α] : BoundedSpace αᵒᵈ :=
-  ‹BoundedSpace α›
+  inferInstanceAs (BoundedSpace α)

@@ -7,6 +7,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébas
 module
 
 public import Mathlib.Basic.ENNReal.Inv
+public import Mathlib.Topology.Homeomorph.TransferInstance
 public import Mathlib.Topology.UniformSpace.Basic
 public import Mathlib.Topology.UniformSpace.OfFun
 
@@ -55,6 +56,17 @@ class EDist (α : Type*) where
   edist : α → α → ℝ≥0∞
 
 export EDist (edist)
+
+/-- Extended distances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev EDist.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (EDist α) (EDist β) where
+  toFun i := ⟨fun x y ↦ i.edist (e.invFun x) (e.invFun y)⟩
+  invFun i := ⟨fun x y ↦ i.edist (e.toFun x) (e.toFun y)⟩
+  left_inv i := congrArg EDist.mk <| funext₂ fun x y ↦
+    congrArg₂ i.edist (e.left_inv x) (e.left_inv y)
+  right_inv i := congrArg EDist.mk <| funext₂ fun x y ↦
+    congrArg₂ i.edist (e.right_inv x) (e.right_inv y)
 
 namespace Metric
 
@@ -443,6 +455,74 @@ abbrev WeakPseudoEMetricSpace.IsInducing {α β : Type*} [e : TopologicalSpace �
     obtain ⟨u, hu, uy⟩ := m.topology_eq_on_restrict (f x) r
     rw [(isInducing_iff f).mp hf]
     exact ⟨f ⁻¹' u, isOpen_induced hu, by aesop (add simp [Set.ext_iff])⟩
+
+/-- Pseudo extended metric space structures correspond along a canonical equivalence, with the
+distance of `EDist.canonicalCongr` and the uniformity of `UniformSpace.canonicalCongr`. -/
+@[transport]
+protected abbrev PseudoEMetricSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (PseudoEMetricSpace α) (PseudoEMetricSpace β) where
+  toFun m :=
+    PseudoEMetricSpace.mk (toEDist := (EDist.canonicalCongr e).toFun m.toEDist)
+      (edist_self := fun x ↦ m.edist_self (e.invFun x))
+      (edist_comm := fun x y ↦ m.edist_comm (e.invFun x) (e.invFun y))
+      (edist_triangle := fun x y z ↦ m.edist_triangle (e.invFun x) (e.invFun y) (e.invFun z))
+      (toUniformSpace := (UniformSpace.canonicalCongr e).toFun m.toUniformSpace)
+      (uniformity_edist := (map_eq_comap_of_inverse (m := Prod.map e.toFun e.toFun)
+        (n := Prod.map e.invFun e.invFun) (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))
+        (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))).trans
+        ((@uniformity_basis_edist α m).comap (Prod.map e.invFun e.invFun)).eq_biInf)
+  invFun m :=
+    PseudoEMetricSpace.mk (toEDist := (EDist.canonicalCongr e).invFun m.toEDist)
+      (edist_self := fun x ↦ m.edist_self (e.toFun x))
+      (edist_comm := fun x y ↦ m.edist_comm (e.toFun x) (e.toFun y))
+      (edist_triangle := fun x y z ↦ m.edist_triangle (e.toFun x) (e.toFun y) (e.toFun z))
+      (toUniformSpace := (UniformSpace.canonicalCongr e).invFun m.toUniformSpace)
+      (uniformity_edist := (map_eq_comap_of_inverse (m := Prod.map e.invFun e.invFun)
+        (n := Prod.map e.toFun e.toFun) (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))
+        (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))).trans
+        ((@uniformity_basis_edist β m).comap (Prod.map e.toFun e.toFun)).eq_biInf)
+  left_inv m := PseudoEMetricSpace.ext ((EDist.canonicalCongr e).left_inv m.toEDist)
+  right_inv m := PseudoEMetricSpace.ext ((EDist.canonicalCongr e).right_inv m.toEDist)
+
+/-- Weak pseudo extended metric space structures correspond along a canonical equivalence, over the
+transported topology, with the distance of `EDist.canonicalCongr`. -/
+@[transport]
+protected abbrev WeakPseudoEMetricSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] {tα : TopologicalSpace α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ) :
+    Lean.CanonicalEquivalence (WeakPseudoEMetricSpace α) (WeakPseudoEMetricSpace β) where
+  toFun m :=
+    WeakPseudoEMetricSpace.mk (toEDist := (EDist.canonicalCongr e).toFun m.toEDist)
+      (edist_self := fun x ↦ m.edist_self (e.invFun x))
+      (edist_comm := fun x y ↦ m.edist_comm (e.invFun x) (e.invFun y))
+      (edist_triangle := fun x y z ↦ m.edist_triangle (e.invFun x) (e.invFun y) (e.invFun z))
+      (topology_le := by
+        subst ht
+        let := (TopologicalSpace.canonicalCongr e).invFun tβ
+        exact (WeakPseudoEMetricSpace.IsInducing (f := e.invFun)
+          e.homeomorph.symm.isInducing m).topology_le)
+      (topology_eq_on_restrict := by
+        subst ht
+        let := (TopologicalSpace.canonicalCongr e).invFun tβ
+        exact (WeakPseudoEMetricSpace.IsInducing (f := e.invFun)
+          e.homeomorph.symm.isInducing m).topology_eq_on_restrict)
+  invFun m :=
+    WeakPseudoEMetricSpace.mk (toEDist := (EDist.canonicalCongr e).invFun m.toEDist)
+      (edist_self := fun x ↦ m.edist_self (e.toFun x))
+      (edist_comm := fun x y ↦ m.edist_comm (e.toFun x) (e.toFun y))
+      (edist_triangle := fun x y z ↦ m.edist_triangle (e.toFun x) (e.toFun y) (e.toFun z))
+      (topology_le := by
+        subst ht
+        let := (TopologicalSpace.canonicalCongr e).invFun tβ
+        exact (WeakPseudoEMetricSpace.IsInducing (f := e.toFun)
+          e.homeomorph.isInducing m).topology_le)
+      (topology_eq_on_restrict := by
+        subst ht
+        let := (TopologicalSpace.canonicalCongr e).invFun tβ
+        exact (WeakPseudoEMetricSpace.IsInducing (f := e.toFun)
+          e.homeomorph.isInducing m).topology_eq_on_restrict)
+  left_inv m := WeakPseudoEMetricSpace.ext ((EDist.canonicalCongr e).left_inv m.toEDist)
+  right_inv m := WeakPseudoEMetricSpace.ext ((EDist.canonicalCongr e).right_inv m.toEDist)
 
 /-- Weak pseudo-emetric space instance on subsets of weak pseudo-emetric spaces -/
 instance {α : Type*} {p : α → Prop} [TopologicalSpace α] [WeakPseudoEMetricSpace α] :
@@ -879,6 +959,23 @@ abbrev EMetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) 
   { PseudoEMetricSpace.induced f m.toPseudoEMetricSpace with
     eq_of_edist_eq_zero := fun h => hf (edist_eq_zero.1 h) }
 
+/-- Extended metric space structures correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev EMetricSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (EMetricSpace α) (EMetricSpace β) where
+  toFun m :=
+    EMetricSpace.mk
+      (toPseudoEMetricSpace := (PseudoEMetricSpace.canonicalCongr e).toFun m.toPseudoEMetricSpace)
+      (eq_of_edist_eq_zero := fun {x y} h ↦
+        e.invFun_injective (m.eq_of_edist_eq_zero (x := e.invFun x) (y := e.invFun y) h))
+  invFun m :=
+    EMetricSpace.mk
+      (toPseudoEMetricSpace := (PseudoEMetricSpace.canonicalCongr e).invFun m.toPseudoEMetricSpace)
+      (eq_of_edist_eq_zero := fun {x y} h ↦
+        e.toFun_injective (m.eq_of_edist_eq_zero (x := e.toFun x) (y := e.toFun y) h))
+  left_inv m := EMetricSpace.ext ((EDist.canonicalCongr e).left_inv m.toEDist)
+  right_inv m := EMetricSpace.ext ((EDist.canonicalCongr e).right_inv m.toEDist)
+
 /-- EMetric space instance on subsets of emetric spaces -/
 instance {α : Type*} {p : α → Prop} [EMetricSpace α] : EMetricSpace (Subtype p) :=
   EMetricSpace.induced Subtype.val Subtype.coe_injective ‹_›
@@ -948,7 +1045,7 @@ section
 
 variable [EDist X]
 
-instance : EDist Xᵒᵈ := ‹EDist X›
+instance : EDist Xᵒᵈ := inferInstanceAs (EDist X)
 
 @[simp]
 theorem edist_toDual (a b : X) : edist (toDual a) (toDual b) = edist a b :=
@@ -971,6 +1068,28 @@ abbrev WeakEMetricSpace.induced
   { WeakPseudoEMetricSpace.IsInducing (f := f) {eq_induced := rfl} m.toWeakPseudoEMetricSpace with
     eq_of_edist_eq_zero := fun h => hf (m.eq_of_edist_eq_zero h) }
 
+/-- Weak extended metric space structures correspond along a canonical equivalence, over the
+transported topology. -/
+@[transport]
+protected abbrev WeakEMetricSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] {tα : TopologicalSpace α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ) :
+    Lean.CanonicalEquivalence (WeakEMetricSpace α) (WeakEMetricSpace β) where
+  toFun m :=
+    WeakEMetricSpace.mk
+      (toWeakPseudoEMetricSpace :=
+        (WeakPseudoEMetricSpace.canonicalCongr e ht).toFun m.toWeakPseudoEMetricSpace)
+      (eq_of_edist_eq_zero := fun {x y} h ↦
+        e.invFun_injective (m.eq_of_edist_eq_zero (x := e.invFun x) (y := e.invFun y) h))
+  invFun m :=
+    WeakEMetricSpace.mk
+      (toWeakPseudoEMetricSpace :=
+        (WeakPseudoEMetricSpace.canonicalCongr e ht).invFun m.toWeakPseudoEMetricSpace)
+      (eq_of_edist_eq_zero := fun {x y} h ↦
+        e.toFun_injective (m.eq_of_edist_eq_zero (x := e.toFun x) (y := e.toFun y) h))
+  left_inv m := WeakEMetricSpace.ext ((EDist.canonicalCongr e).left_inv m.toEDist)
+  right_inv m := WeakEMetricSpace.ext ((EDist.canonicalCongr e).right_inv m.toEDist)
+
 /-- `WeakEMetricSpace` instance on subsets of emetric spaces -/
 instance {α : Type*} {p : α → Prop} [TopologicalSpace α] [WeakEMetricSpace α] :
     WeakEMetricSpace (Subtype p) :=
@@ -979,10 +1098,10 @@ instance {α : Type*} {p : α → Prop} [TopologicalSpace α] [WeakEMetricSpace 
 end
 
 instance [TopologicalSpace X] [WeakPseudoEMetricSpace X] : WeakPseudoEMetricSpace Xᵒᵈ :=
-  ‹WeakPseudoEMetricSpace X›
+  inferInstanceAs (WeakPseudoEMetricSpace X)
 instance [TopologicalSpace X] [WeakEMetricSpace X] : WeakEMetricSpace Xᵒᵈ :=
-  ‹WeakEMetricSpace X›
+  inferInstanceAs (WeakEMetricSpace X)
 instance [PseudoEMetricSpace X] : PseudoEMetricSpace Xᵒᵈ :=
-  ‹PseudoEMetricSpace X›
+  inferInstanceAs (PseudoEMetricSpace X)
 instance [EMetricSpace X] : EMetricSpace Xᵒᵈ :=
-  ‹EMetricSpace X›
+  inferInstanceAs (EMetricSpace X)

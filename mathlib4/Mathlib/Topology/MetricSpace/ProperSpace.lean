@@ -42,6 +42,26 @@ class ProperSpace (α : Type u) [PseudoMetricSpace α] : Prop where
 export ProperSpace (isCompact_closedBall)
 attribute [compactness .] isCompact_closedBall
 
+/-- `ProperSpace` holds on both sides of a canonical equivalence, for the transported pseudometric
+space structure. -/
+@[transport]
+protected abbrev ProperSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β)
+    [mβ : PseudoMetricSpace β] {mα : PseudoMetricSpace α}
+    (hm : mα = (PseudoMetricSpace.canonicalCongr e).invFun mβ) :
+    Lean.CanonicalEquivalence (ProperSpace α) (ProperSpace β) := by
+  subst hm
+  letI := (PseudoMetricSpace.canonicalCongr e).invFun mβ
+  exact {
+    toFun _ := ⟨fun x r ↦ by
+      have h : closedBall x r = e.invFun ⁻¹' closedBall (e.invFun x) r := Set.ext fun y ↦ by
+        change dist y x ≤ r ↔ dist (e.toFun (e.invFun y)) (e.toFun (e.invFun x)) ≤ r
+        rw [e.toFun_invFun, e.toFun_invFun]
+      rw [h]
+      exact e.homeomorph.symm.isCompact_preimage.2 (isCompact_closedBall _ _)⟩
+    invFun _ := ⟨fun x r ↦ e.homeomorph.isCompact_preimage.2 (isCompact_closedBall (e.toFun x) r)⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 /-- In a proper pseudometric space, all spheres are compact. -/
 @[compactness .]
 theorem isCompact_sphere {α : Type*} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) :
@@ -148,4 +168,5 @@ end ProperSpace
 
 instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Additive X) := ‹ProperSpace X›
 instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Multiplicative X) := ‹ProperSpace X›
-instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace Xᵒᵈ := ‹ProperSpace X›
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace Xᵒᵈ :=
+  inferInstanceAs (ProperSpace X)

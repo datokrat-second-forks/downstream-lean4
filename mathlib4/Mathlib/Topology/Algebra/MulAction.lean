@@ -85,11 +85,13 @@ instance : ContinuousSMul (ULift M) X :=
 
 @[to_additive]
 instance OrderDual.instContinuousSMul_right : ContinuousSMul M Xᵒᵈ where
-  continuous_smul := continuous_smul (M := M) (X := X)
+  continuous_smul := continuous_toDual.comp
+    ((continuous_smul (M := M) (X := X)).comp (continuous_id.prodMap continuous_ofDual))
 
 @[to_additive]
 instance OrderDual.instContinuousSMul_left : ContinuousSMul Mᵒᵈ X where
-  continuous_smul := continuous_smul (M := M) (X := X)
+  continuous_smul := (continuous_smul (M := M) (X := X)).comp
+    (continuous_ofDual.prodMap continuous_id)
 
 @[to_additive]
 instance (priority := 100) ContinuousSMul.continuousConstSMul : ContinuousConstSMul M X where
@@ -193,22 +195,29 @@ lemma Topology.IsInducing.continuousSMul {N : Type*} [SMul N Y] [TopologicalSpac
     simpa only [hg.continuous_iff, Function.comp_def, hsmul]
       using (hf.comp continuous_fst).fun_smul <| hg.continuous.comp continuous_snd
 
-/-- `ContinuousSMul` holds on both sides of a canonical equivalence of the acted-on types, for the
-transported topology and action. -/
-@[to_additive (attr := transport) /-- `ContinuousVAdd` holds on both sides of a canonical
-equivalence of the acted-on types, for the transported topology and action. -/]
-protected abbrev ContinuousSMul.canonicalCongr {R α β : Type*} (e : Lean.CanonicalEquivalence α β)
-    [TopologicalSpace R] [tβ : TopologicalSpace β] [sβ : SMul R β] {tα : TopologicalSpace α}
-    {sα : SMul R α} (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
-    (hs : sα = (SMul.canonicalCongr e).invFun sβ) :
-    Lean.CanonicalEquivalence (ContinuousSMul R α) (ContinuousSMul R β) := by
-  subst ht hs
-  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
-  letI := (SMul.canonicalCongr e).invFun sβ
+/-- `ContinuousSMul` holds on both sides of canonical equivalences of the scalars and of the
+acted-on types, for the transported topologies and action. -/
+@[to_additive (attr := transport) /-- `ContinuousVAdd` holds on both sides of canonical
+equivalences of the acting and of the acted-on types, for the transported topologies and
+action. -/]
+protected abbrev ContinuousSMul.canonicalCongr {R R' α β : Type*}
+    (e₁ : Lean.CanonicalEquivalence R R') (e₂ : Lean.CanonicalEquivalence α β)
+    [tR' : TopologicalSpace R'] {tR : TopologicalSpace R}
+    (hR : tR = (TopologicalSpace.canonicalCongr e₁).invFun tR') [tβ : TopologicalSpace β]
+    [sβ : SMul R' β] {tα : TopologicalSpace α} {sα : SMul R α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e₂).invFun tβ)
+    (hs : sα = (SMul.canonicalCongr e₁ e₂).invFun sβ) :
+    Lean.CanonicalEquivalence (ContinuousSMul R α) (ContinuousSMul R' β) := by
+  subst hR ht hs
+  letI := (TopologicalSpace.canonicalCongr e₁).invFun tR'
+  letI := (TopologicalSpace.canonicalCongr e₂).invFun tβ
+  letI := (SMul.canonicalCongr e₁ e₂).invFun sβ
   exact {
-    toFun _ := e.homeomorph.symm.isInducing.continuousSMul continuous_id
-      (congrArg e.invFun (congrArg (_ • ·) (e.right_inv _)).symm)
-    invFun _ := e.homeomorph.isInducing.continuousSMul continuous_id (e.right_inv _)
+    toFun _ := e₂.homeomorph.symm.isInducing.continuousSMul e₁.homeomorph.symm.continuous
+      fun {c x} ↦ by
+        change e₂.invFun (c • x) = e₂.invFun (e₁.toFun (e₁.invFun c) • e₂.toFun (e₂.invFun x))
+        rw [e₁.toFun_invFun, e₂.toFun_invFun]
+    invFun _ := e₂.homeomorph.isInducing.continuousSMul e₁.homeomorph.continuous (e₂.right_inv _)
     left_inv _ := rfl
     right_inv _ := rfl }
 

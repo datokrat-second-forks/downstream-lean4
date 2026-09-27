@@ -238,12 +238,7 @@ structure for inner product spaces, but can be activated locally. -/
 @[instance_reducible]
 noncomputable def normedAddCommGroupTangentSpaceVectorSpace (x : E) :
     NormedAddCommGroup (TangentSpace% x) :=
-  { ((NormedSpace.fromTangentSpace x).toHomeomorph.isEmbedding).comapMetricSpace _,
-    (inferInstance : AddCommGroup (TangentSpace% x)) with
-    norm v := ‖NormedSpace.fromTangentSpace x v‖
-    dist_eq v w := by
-      change dist (NormedSpace.fromTangentSpace x v) (NormedSpace.fromTangentSpace x w) = _
-      rw [neg_add_eq_sub, dist_eq_norm', map_sub] }
+  inferInstanceAs (NormedAddCommGroup E)
 
 attribute [local instance] normedAddCommGroupTangentSpaceVectorSpace
 

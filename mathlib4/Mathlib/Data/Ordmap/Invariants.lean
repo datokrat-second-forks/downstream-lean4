@@ -124,6 +124,12 @@ theorem dual_dual : ∀ t : Ordnode α, dual (dual t) = t
 @[simp]
 theorem size_dual (t : Ordnode α) : size (dual t) = size t := by cases t <;> rfl
 
+/-! `map` -/
+
+
+@[simp]
+theorem size_map {β} (f : α → β) (t : Ordnode α) : size (map f t) = size t := by cases t <;> rfl
+
 /-! `Balanced` -/
 
 
@@ -175,6 +181,13 @@ theorem balancedSz_down {l r₁ r₂ : ℕ} (h₁ : r₁ ≤ r₂) (h₂ : l + r
 theorem Balanced.dual : ∀ {t : Ordnode α}, Balanced t → Balanced (dual t)
   | nil, _ => ⟨⟩
   | node _ l _ r, ⟨b, bl, br⟩ => ⟨by rw [size_dual, size_dual]; exact b.symm, br.dual, bl.dual⟩
+
+theorem Balanced.dual_iff {t : Ordnode α} : Balanced (.dual t) ↔ Balanced t :=
+  ⟨fun h => by rw [← dual_dual t]; exact h.dual, Balanced.dual⟩
+
+theorem Balanced.map_iff {β} {f : α → β} : ∀ {t : Ordnode α}, Balanced (map f t) ↔ Balanced t
+  | nil => Iff.rfl
+  | node _ _ _ _ => by simp only [map, Balanced, size_map, Balanced.map_iff]
 
 /-! ### `rotate` and `balance` -/
 
@@ -302,6 +315,73 @@ theorem dual_balanceR (l : Ordnode α) (x : α) (r : Ordnode α) :
     dual (balanceR l x r) = balanceL (dual r) x (dual l) := by
   rw [← dual_dual (balanceL _ _ _), dual_balanceL, dual_dual, dual_dual]
 
+section map
+
+variable {β : Type*} (f : α → β)
+
+theorem map_node' (l : Ordnode α) (x : α) (r : Ordnode α) :
+    map f (node' l x r) = node' (map f l) (f x) (map f r) := by simp [node', map]
+
+theorem map_node3L (l : Ordnode α) (x : α) (m : Ordnode α) (y : α) (r : Ordnode α) :
+    map f (node3L l x m y r) = node3L (map f l) (f x) (map f m) (f y) (map f r) := by
+  simp [node3L, map_node']
+
+theorem map_node4L (l : Ordnode α) (x : α) (m : Ordnode α) (y : α) (r : Ordnode α) :
+    map f (node4L l x m y r) = node4L (map f l) (f x) (map f m) (f y) (map f r) := by
+  cases m <;> simp [node4L, map, map_node', map_node3L]
+
+theorem map_rotateL (l : Ordnode α) (x : α) (r : Ordnode α) :
+    map f (rotateL l x r) = rotateL (map f l) (f x) (map f r) := by
+  cases r <;> simp [rotateL, map, map_node']; split_ifs <;> simp [map_node3L, map_node4L]
+
+theorem map_balanceL (l : Ordnode α) (x : α) (r : Ordnode α) :
+    map f (balanceL l x r) = balanceL (map f l) (f x) (map f r) := by
+  unfold balanceL
+  obtain - | ⟨rs, rl, rx, rr⟩ := r <;> obtain - | ⟨ls, ll, lx, lr⟩ := l <;> try rfl
+  all_goals
+    obtain - | ⟨lls, lll, llx, llr⟩ := ll <;> obtain - | ⟨lrs, lrl, lrx, lrr⟩ := lr <;>
+      dsimp only [map, id] <;> (try split_ifs) <;> simp [map, Ordnode.singleton]
+
+theorem map_dual : ∀ t : Ordnode α, map f (dual t) = dual (map f t)
+  | nil => rfl
+  | node s l x r => by rw [dual, map, map, dual, map_dual l, map_dual r]
+
+theorem map_balanceR (l : Ordnode α) (x : α) (r : Ordnode α) :
+    map f (balanceR l x r) = balanceR (map f l) (f x) (map f r) := by
+  rw [← dual_dual (balanceR _ _ _), dual_balanceR, map_dual, map_balanceL, dual_balanceL,
+    ← map_dual, ← map_dual, dual_dual, dual_dual]
+
+end map
+
+/-- `t` as a tree over `αᵒᵈ`. It compiles to a cast, see `toDual_eq_toDualImpl`. -/
+def toDual (t : Ordnode α) : Ordnode αᵒᵈ :=
+  t.map OrderDual.toDual
+
+/-- The implementation of `Ordnode.toDual`. -/
+def toDualImpl (t : Ordnode α) : Ordnode αᵒᵈ :=
+  cast (congrArg Ordnode (OrderDual.eq_def α)).symm t
+
+@[csimp]
+theorem toDual_eq_toDualImpl : @toDual = @toDualImpl := by
+  unsealing_newtype OrderDual =>
+    funext α t
+    change map id t = t
+    induction t with
+    | nil => rfl
+    | node _ l _ r ihl ihr => rw [map, ihl, ihr]; rfl
+
+theorem dual_insert [LE α] [@Std.Total α (· ≤ ·)] [DecidableLE α] (x : α) :
+    ∀ t : Ordnode α, (dual (Ordnode.insert x t)).toDual =
+      Ordnode.insert (OrderDual.toDual x) (dual t).toDual
+  | nil => rfl
+  | node _ l y r => by
+    have : cmpLE (OrderDual.toDual x) (OrderDual.toDual y) = cmpLE y x := rfl
+    simp only [toDual] at dual_insert ⊢
+    rw [Ordnode.insert, dual, map, Ordnode.insert, this, ← cmpLE_swap x y]
+    cases cmpLE x y <;>
+      simp [Ordering.swap, dual_balanceL, dual_balanceR, map_balanceL, map_balanceR, dual_insert,
+        dual, map]
+
 theorem Sized.node3L {l x m y r} (hl : @Sized α l) (hm : Sized m) (hr : Sized r) :
     Sized (node3L l x m y r) :=
   (hl.node' hm).node' hr
@@ -333,6 +413,10 @@ theorem Sized.dual : ∀ {t : Ordnode α}, Sized t → Sized (dual t)
 
 theorem Sized.dual_iff {t : Ordnode α} : Sized (.dual t) ↔ Sized t :=
   ⟨fun h => by rw [← dual_dual t]; exact h.dual, Sized.dual⟩
+
+theorem Sized.map_iff {β} {f : α → β} : ∀ {t : Ordnode α}, Sized (map f t) ↔ Sized t
+  | nil => Iff.rfl
+  | node _ _ _ _ => by simp only [map, Sized, size_map, Sized.map_iff]
 
 theorem Sized.rotateL {l x r} (hl : @Sized α l) (hr : Sized r) : Sized (rotateL l x r) := by
   cases r; · exact hl.node' hr
@@ -487,6 +571,10 @@ theorem findMin_dual : ∀ t : Ordnode α, findMin (dual t) = findMax t
 theorem findMax_dual (t : Ordnode α) : findMax (dual t) = findMin t := by
   rw [← findMin_dual, dual_dual]
 
+theorem findMax'_map {β} (f : α → β) : ∀ (x : α) (t), findMax' (f x) (map f t) = f (findMax' x t)
+  | _, nil => rfl
+  | _, node _ _ x r => findMax'_map f x r
+
 theorem dual_eraseMin : ∀ t : Ordnode α, dual (eraseMin t) = eraseMax (dual t)
   | nil => rfl
   | node _ nil _ _ => rfl
@@ -495,6 +583,12 @@ theorem dual_eraseMin : ∀ t : Ordnode α, dual (eraseMin t) = eraseMax (dual t
 
 theorem dual_eraseMax (t : Ordnode α) : dual (eraseMax t) = eraseMin (dual t) := by
   rw [← dual_dual (eraseMin _), dual_eraseMin, dual_dual]
+
+theorem map_eraseMax {β} (f : α → β) : ∀ t : Ordnode α, map f (eraseMax t) = eraseMax (map f t)
+  | nil => rfl
+  | node _ _ _ nil => rfl
+  | node _ l x (node sz l' y r') => by
+    rw [eraseMax, map_balanceL, map_eraseMax f (node sz l' y r')]; rfl
 
 theorem splitMin_eq :
     ∀ (s l) (x : α) (r), splitMin' l x r = (findMin' l x, eraseMin (node s l x r))
@@ -536,19 +630,6 @@ theorem merge_node {ls ll lx lr rs rl rx rr} :
       else if delta * rs < ls then balanceR ll lx (merge lr (node rs rl rx rr))
       else glue (node ls ll lx lr) (node rs rl rx rr) :=
   rfl
-
-/-! ### `insert` -/
-
-
-set_option backward.isDefEq.respectTransparency false in
-theorem dual_insert [LE α] [@Std.Total α (· ≤ ·)] [DecidableLE α] (x : α) :
-    ∀ t : Ordnode α, dual (Ordnode.insert x t) = @Ordnode.insert αᵒᵈ _ _ x (dual t)
-  | nil => rfl
-  | node _ l y r => by
-    have : @cmpLE αᵒᵈ _ _ x y = cmpLE y x := rfl
-    rw [Ordnode.insert, dual, Ordnode.insert, this, ← cmpLE_swap x y]
-    cases cmpLE x y <;>
-      simp [Ordering.swap, dual_balanceL, dual_balanceR, dual_insert]
 
 /-! ### `balance` properties -/
 
@@ -763,16 +844,14 @@ def Bounded : Ordnode α → WithBot α → WithTop α → Prop
   | nil, _, _ => True
   | node _ l x r, o₁, o₂ => Bounded l o₁ x ∧ Bounded r (↑x) o₂
 
-theorem Bounded.dual :
-    ∀ {t : Ordnode α} {o₁ o₂}, Bounded t o₁ o₂ → @Bounded αᵒᵈ _ (dual t) o₂ o₁
-  | nil, o₁, o₂, h => by cases o₁ <;> cases o₂ <;> trivial
-  | node _ _ _ _, _, _, ⟨ol, Or⟩ => ⟨Or.dual, ol.dual⟩
+theorem Bounded.dual_iff : ∀ {t : Ordnode α} {o₁ o₂}, Bounded t o₁ o₂ ↔
+    Bounded (dual t).toDual (WithTop.toDual o₂) (WithBot.toDual o₁)
+  | nil, o₁, o₂ => by cases o₁ <;> cases o₂ <;> exact .rfl
+  | node _ _ _ _, _, _ => and_comm.trans (and_congr Bounded.dual_iff Bounded.dual_iff)
 
-set_option backward.isDefEq.respectTransparency false in
-theorem Bounded.dual_iff {t : Ordnode α} {o₁ o₂} :
-    Bounded t o₁ o₂ ↔ @Bounded αᵒᵈ _ (.dual t) o₂ o₁ :=
-  ⟨Bounded.dual, fun h => by
-    have := Bounded.dual h; rwa [dual_dual, OrderDual.Preorder.dual_dual] at this⟩
+theorem Bounded.dual {t : Ordnode α} {o₁ o₂} (h : Bounded t o₁ o₂) :
+    Bounded (dual t).toDual (WithTop.toDual o₂) (WithBot.toDual o₁) :=
+  Bounded.dual_iff.1 h
 
 theorem Bounded.weak_left : ∀ {t : Ordnode α} {o₁ o₂}, Bounded t o₁ o₂ → Bounded t ⊥ o₂
   | nil, o₁, o₂, h => by cases o₂ <;> trivial

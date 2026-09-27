@@ -58,7 +58,30 @@ variable {α β γ δ : Type*} {ι : Sort*} {s t u : Set α}
   `MeasurableSet.iUnion` instead. -/
   measurableSet_iUnion : ∀ f : ℕ → Set α, (∀ i, MeasurableSet' (f i)) → MeasurableSet' (⋃ i, f i)
 
-instance [h : MeasurableSpace α] : MeasurableSpace αᵒᵈ := h
+/-- Measurable spaces correspond along a canonical equivalence: a set is measurable if its preimage
+is. -/
+@[transport] protected abbrev MeasurableSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (MeasurableSpace α) (MeasurableSpace β) where
+  toFun m :=
+    { MeasurableSet' s := m.MeasurableSet' (e.toFun ⁻¹' s)
+      measurableSet_empty := m.measurableSet_empty
+      measurableSet_compl _ := m.measurableSet_compl _
+      measurableSet_iUnion f hf :=
+        preimage_iUnion (f := e.toFun) (s := f) ▸ m.measurableSet_iUnion _ hf }
+  invFun m :=
+    { MeasurableSet' s := m.MeasurableSet' (e.invFun ⁻¹' s)
+      measurableSet_empty := m.measurableSet_empty
+      measurableSet_compl _ := m.measurableSet_compl _
+      measurableSet_iUnion f hf :=
+        preimage_iUnion (f := e.invFun) (s := f) ▸ m.measurableSet_iUnion _ hf }
+  left_inv := fun ⟨p, _, _, _⟩ ↦ by
+    dsimp only; congr; funext s; exact congrArg p <| Set.ext fun x ↦ by
+      change e.invFun (e.toFun x) ∈ s ↔ x ∈ s; rw [e.left_inv x]
+  right_inv := fun ⟨p, _, _, _⟩ ↦ by
+    dsimp only; congr; funext s; exact congrArg p <| Set.ext fun x ↦ by
+      change e.toFun (e.invFun x) ∈ s ↔ x ∈ s; rw [e.right_inv x]
+
+instance [MeasurableSpace α] : MeasurableSpace αᵒᵈ := inferInstanceAs (MeasurableSpace α)
 
 /-- `MeasurableSet s` means that `s` is measurable (in the ambient measure space on `α`) -/
 def MeasurableSet [MeasurableSpace α] (s : Set α) : Prop :=

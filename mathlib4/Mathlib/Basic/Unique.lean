@@ -221,6 +221,15 @@ def Surjective.uniqueOfSurjectiveConst (α : Type*) {β : Type*} (b : β)
 
 end Function
 
+/-- `Subsingleton` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Subsingleton.canonicalCongr {β : Sort*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Subsingleton α) (Subsingleton β) where
+  toFun _ := e.right_inv.injective.subsingleton
+  invFun _ := e.left_inv.injective.subsingleton
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 section Pi
 
 variable {ι : Sort*} {α : ι → Sort*}

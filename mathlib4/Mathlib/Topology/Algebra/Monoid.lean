@@ -57,7 +57,7 @@ variable [TopologicalSpace M] [Mul M] [SeparatelyContinuousMul M]
 
 @[to_additive]
 instance : SeparatelyContinuousMul Mᵒᵈ :=
-  ‹SeparatelyContinuousMul M›
+  inferInstanceAs (SeparatelyContinuousMul M)
 
 @[to_additive]
 instance : SeparatelyContinuousMul (ULift.{u} M) :=
@@ -79,7 +79,7 @@ variable [TopologicalSpace M] [Mul M] [ContinuousMul M]
 
 @[to_additive]
 instance : ContinuousMul Mᵒᵈ :=
-  ‹ContinuousMul M›
+  inferInstanceAs (ContinuousMul M)
 
 @[to_additive]
 instance : ContinuousMul (ULift.{u} M) := ⟨continuous_uliftUp.comp (by fun_prop)⟩

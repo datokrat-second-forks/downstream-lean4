@@ -293,6 +293,334 @@ protected abbrev field [Field L] (zero : f 0 = 0) (one : f 1 = 1)
 
 end Function.Injective
 
+/-! ### Transport -/
+
+section Transport
+
+variable {α β : Type*}
+
+/-- `NNRatCast` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev NNRatCast.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (NNRatCast α) (NNRatCast β) where
+  toFun i := ⟨fun q ↦ e.toFun (i.nnratCast q)⟩
+  invFun i := ⟨fun q ↦ e.invFun (i.nnratCast q)⟩
+  left_inv i := congrArg NNRatCast.mk <| funext fun q ↦ e.left_inv (i.nnratCast q)
+  right_inv i := congrArg NNRatCast.mk <| funext fun q ↦ e.right_inv (i.nnratCast q)
+
+/-- `RatCast` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev RatCast.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (RatCast α) (RatCast β) where
+  toFun i := ⟨fun q ↦ e.toFun (i.ratCast q)⟩
+  invFun i := ⟨fun q ↦ e.invFun (i.ratCast q)⟩
+  left_inv i := congrArg RatCast.mk <| funext fun q ↦ e.left_inv (i.ratCast q)
+  right_inv i := congrArg RatCast.mk <| funext fun q ↦ e.right_inv (i.ratCast q)
+
+theorem DivisionSemiring.ext ⦃a b : DivisionSemiring K⦄
+    (h_add : (letI := a; HAdd.hAdd : K → K → K) = (letI := b; HAdd.hAdd : K → K → K))
+    (h_mul : (letI := a; HMul.hMul : K → K → K) = (letI := b; HMul.hMul : K → K → K))
+    (h_inv : (letI := a; Inv.inv : K → K) = (letI := b; Inv.inv : K → K)) : a = b := by
+  have h := DivInvMonoid.ext (m₁ := a.toDivInvMonoid) (m₂ := b.toDivInvMonoid) h_mul h_inv
+  have hs := Semiring.ext (inst₁ := a.toSemiring) (inst₂ := b.toSemiring) h_add h_mul
+  clear h_add h_mul h_inv
+  revert h hs
+  obtain @⟨s, i, d, z, -, -, -, -, -, -, -, ⟨n⟩, hn, q, hq⟩ := a
+  obtain @⟨s', i', d', z', -, -, -, -, -, -, -, ⟨n'⟩, hn', q', hq'⟩ := b
+  intro h (rfl : s = s')
+  obtain rfl : i = i' := congrArg (·.toInv) h
+  obtain rfl : d = d' := congrArg (·.toDiv) h
+  obtain rfl : z = z' := congrArg (·.toZPow) h
+  obtain rfl : n = n' := funext fun q ↦ (hn q).trans (hn' q).symm
+  obtain rfl : q = q' := funext₂ fun q x ↦ (hq q x).trans (hq' q x).symm
+  rfl
+
+theorem DivisionRing.ext ⦃a b : DivisionRing K⦄
+    (h_add : (letI := a; HAdd.hAdd : K → K → K) = (letI := b; HAdd.hAdd : K → K → K))
+    (h_mul : (letI := a; HMul.hMul : K → K → K) = (letI := b; HMul.hMul : K → K → K))
+    (h_inv : (letI := a; Inv.inv : K → K) = (letI := b; Inv.inv : K → K)) : a = b := by
+  have h := DivInvMonoid.ext (m₁ := a.toDivInvMonoid) (m₂ := b.toDivInvMonoid) h_mul h_inv
+  have hs := Ring.ext (inst₁ := a.toRing) (inst₂ := b.toRing) h_add h_mul
+  clear h_add h_mul h_inv
+  revert h hs
+  obtain @⟨s, i, d, z, -, -, -, -, -, ⟨n⟩, ⟨r⟩, -, -, hn, q, hq, hr, p, hp⟩ := a
+  obtain @⟨s', i', d', z', -, -, -, -, -, ⟨n'⟩, ⟨r'⟩, -, -, hn', q', hq', hr', p', hp'⟩ := b
+  intro h (rfl : s = s')
+  obtain rfl : i = i' := congrArg (·.toInv) h
+  obtain rfl : d = d' := congrArg (·.toDiv) h
+  obtain rfl : z = z' := congrArg (·.toZPow) h
+  obtain rfl : n = n' := funext fun q ↦ (hn q).trans (hn' q).symm
+  obtain rfl : r = r' := funext fun q ↦ (hr q).trans (hr' q).symm
+  obtain rfl : q = q' := funext₂ fun q x ↦ (hq q x).trans (hq' q x).symm
+  obtain rfl : p = p' := funext₂ fun q x ↦ (hp q x).trans (hp' q x).symm
+  rfl
+
+theorem Semifield.ext ⦃a b : Semifield K⦄
+    (h_add : (letI := a; HAdd.hAdd : K → K → K) = (letI := b; HAdd.hAdd : K → K → K))
+    (h_mul : (letI := a; HMul.hMul : K → K → K) = (letI := b; HMul.hMul : K → K → K))
+    (h_inv : (letI := a; Inv.inv : K → K) = (letI := b; Inv.inv : K → K)) : a = b := by
+  have h := DivInvMonoid.ext (m₁ := a.toDivInvMonoid) (m₂ := b.toDivInvMonoid) h_mul h_inv
+  have hs := CommSemiring.ext (inst₁ := a.toCommSemiring) (inst₂ := b.toCommSemiring) h_add h_mul
+  clear h_add h_mul h_inv
+  revert h hs
+  obtain @⟨s, i, d, z, -, -, -, -, -, -, -, ⟨n⟩, hn, q, hq⟩ := a
+  obtain @⟨s', i', d', z', -, -, -, -, -, -, -, ⟨n'⟩, hn', q', hq'⟩ := b
+  intro h (rfl : s = s')
+  obtain rfl : i = i' := congrArg (·.toInv) h
+  obtain rfl : d = d' := congrArg (·.toDiv) h
+  obtain rfl : z = z' := congrArg (·.toZPow) h
+  obtain rfl : n = n' := funext fun q ↦ (hn q).trans (hn' q).symm
+  obtain rfl : q = q' := funext₂ fun q x ↦ (hq q x).trans (hq' q x).symm
+  rfl
+
+theorem Field.ext ⦃a b : Field K⦄
+    (h_add : (letI := a; HAdd.hAdd : K → K → K) = (letI := b; HAdd.hAdd : K → K → K))
+    (h_mul : (letI := a; HMul.hMul : K → K → K) = (letI := b; HMul.hMul : K → K → K))
+    (h_inv : (letI := a; Inv.inv : K → K) = (letI := b; Inv.inv : K → K)) : a = b := by
+  have h := DivInvMonoid.ext (m₁ := a.toDivInvMonoid) (m₂ := b.toDivInvMonoid) h_mul h_inv
+  have hs := CommRing.ext (inst₁ := a.toCommRing) (inst₂ := b.toCommRing) h_add h_mul
+  clear h_add h_mul h_inv
+  revert h hs
+  obtain @⟨s, i, d, z, -, -, -, -, -, ⟨n⟩, ⟨r⟩, -, -, hn, q, hq, hr, p, hp⟩ := a
+  obtain @⟨s', i', d', z', -, -, -, -, -, ⟨n'⟩, ⟨r'⟩, -, -, hn', q', hq', hr', p', hp'⟩ := b
+  intro h (rfl : s = s')
+  obtain rfl : i = i' := congrArg (·.toInv) h
+  obtain rfl : d = d' := congrArg (·.toDiv) h
+  obtain rfl : z = z' := congrArg (·.toZPow) h
+  obtain rfl : n = n' := funext fun q ↦ (hn q).trans (hn' q).symm
+  obtain rfl : r = r' := funext fun q ↦ (hr q).trans (hr' q).symm
+  obtain rfl : q = q' := funext₂ fun q x ↦ (hq q x).trans (hq' q x).symm
+  obtain rfl : p = p' := funext₂ fun q x ↦ (hp q x).trans (hp' q x).symm
+  rfl
+
+/-- `DivisionSemiring` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev DivisionSemiring.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (DivisionSemiring α) (DivisionSemiring β) where
+  toFun i :=
+    letI := (Zero.canonicalCongr e).toFun i.toZero
+    letI := (One.canonicalCongr e).toFun i.toOne
+    letI := (Add.canonicalCongr e).toFun i.toAdd
+    letI := (Mul.canonicalCongr e).toFun i.toMul
+    letI := (Inv.canonicalCongr e).toFun i.toInv
+    letI := (Div.canonicalCongr e).toFun i.toDiv
+    letI : SMul ℕ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℚ≥0 β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : Pow β ℕ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI : Pow β ℤ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).toFun i.toNatCast
+    letI := (NNRatCast.canonicalCongr e).toFun i.toNNRatCast
+    Function.Injective.divisionSemiring e.invFun e.right_inv.injective (e.left_inv _)
+      (e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      fun _ ↦ e.left_inv _
+  invFun i :=
+    letI := (Zero.canonicalCongr e).invFun i.toZero
+    letI := (One.canonicalCongr e).invFun i.toOne
+    letI := (Add.canonicalCongr e).invFun i.toAdd
+    letI := (Mul.canonicalCongr e).invFun i.toMul
+    letI := (Inv.canonicalCongr e).invFun i.toInv
+    letI := (Div.canonicalCongr e).invFun i.toDiv
+    letI : SMul ℕ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℚ≥0 α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : Pow α ℕ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI : Pow α ℤ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).invFun i.toNatCast
+    letI := (NNRatCast.canonicalCongr e).invFun i.toNNRatCast
+    Function.Injective.divisionSemiring e.toFun e.left_inv.injective (e.right_inv _)
+      (e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      fun _ ↦ e.right_inv _
+  left_inv _ := DivisionSemiring.ext
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· + ·) (e.left_inv x) (e.left_inv y)))
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y)))
+    (funext fun x ↦ (e.left_inv _).trans (congrArg (·⁻¹) (e.left_inv x)))
+  right_inv _ := DivisionSemiring.ext
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· + ·) (e.right_inv x) (e.right_inv y)))
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y)))
+    (funext fun x ↦ (e.right_inv _).trans (congrArg (·⁻¹) (e.right_inv x)))
+
+/-- `DivisionRing` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev DivisionRing.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (DivisionRing α) (DivisionRing β) where
+  toFun i :=
+    letI := (Zero.canonicalCongr e).toFun i.toZero
+    letI := (One.canonicalCongr e).toFun i.toOne
+    letI := (Add.canonicalCongr e).toFun i.toAdd
+    letI := (Mul.canonicalCongr e).toFun i.toMul
+    letI := (Neg.canonicalCongr e).toFun i.toNeg
+    letI := (Sub.canonicalCongr e).toFun i.toSub
+    letI := (Inv.canonicalCongr e).toFun i.toInv
+    letI := (Div.canonicalCongr e).toFun i.toDiv
+    letI : SMul ℕ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℤ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℚ≥0 β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : SMul ℚ β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : Pow β ℕ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI : Pow β ℤ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).toFun i.toNatCast
+    letI := (IntCast.canonicalCongr e).toFun i.toIntCast
+    letI := (NNRatCast.canonicalCongr e).toFun i.toNNRatCast
+    letI := (RatCast.canonicalCongr e).toFun i.toRatCast
+    Function.Injective.divisionRing e.invFun e.right_inv.injective (e.left_inv _) (e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) fun _ ↦ e.left_inv _
+  invFun i :=
+    letI := (Zero.canonicalCongr e).invFun i.toZero
+    letI := (One.canonicalCongr e).invFun i.toOne
+    letI := (Add.canonicalCongr e).invFun i.toAdd
+    letI := (Mul.canonicalCongr e).invFun i.toMul
+    letI := (Neg.canonicalCongr e).invFun i.toNeg
+    letI := (Sub.canonicalCongr e).invFun i.toSub
+    letI := (Inv.canonicalCongr e).invFun i.toInv
+    letI := (Div.canonicalCongr e).invFun i.toDiv
+    letI : SMul ℕ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℤ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℚ≥0 α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : SMul ℚ α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : Pow α ℕ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI : Pow α ℤ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).invFun i.toNatCast
+    letI := (IntCast.canonicalCongr e).invFun i.toIntCast
+    letI := (NNRatCast.canonicalCongr e).invFun i.toNNRatCast
+    letI := (RatCast.canonicalCongr e).invFun i.toRatCast
+    Function.Injective.divisionRing e.toFun e.left_inv.injective (e.right_inv _) (e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      fun _ ↦ e.right_inv _
+  left_inv _ := DivisionRing.ext
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· + ·) (e.left_inv x) (e.left_inv y)))
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y)))
+    (funext fun x ↦ (e.left_inv _).trans (congrArg (·⁻¹) (e.left_inv x)))
+  right_inv _ := DivisionRing.ext
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· + ·) (e.right_inv x) (e.right_inv y)))
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y)))
+    (funext fun x ↦ (e.right_inv _).trans (congrArg (·⁻¹) (e.right_inv x)))
+
+/-- `Semifield` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev Semifield.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Semifield α) (Semifield β) where
+  toFun i :=
+    letI := (Zero.canonicalCongr e).toFun i.toZero
+    letI := (One.canonicalCongr e).toFun i.toOne
+    letI := (Add.canonicalCongr e).toFun i.toAdd
+    letI := (Mul.canonicalCongr e).toFun i.toMul
+    letI := (Inv.canonicalCongr e).toFun i.toInv
+    letI := (Div.canonicalCongr e).toFun i.toDiv
+    letI : SMul ℕ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℚ≥0 β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : Pow β ℕ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI : Pow β ℤ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).toFun i.toNatCast
+    letI := (NNRatCast.canonicalCongr e).toFun i.toNNRatCast
+    Function.Injective.semifield e.invFun e.right_inv.injective (e.left_inv _) (e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      fun _ ↦ e.left_inv _
+  invFun i :=
+    letI := (Zero.canonicalCongr e).invFun i.toZero
+    letI := (One.canonicalCongr e).invFun i.toOne
+    letI := (Add.canonicalCongr e).invFun i.toAdd
+    letI := (Mul.canonicalCongr e).invFun i.toMul
+    letI := (Inv.canonicalCongr e).invFun i.toInv
+    letI := (Div.canonicalCongr e).invFun i.toDiv
+    letI : SMul ℕ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℚ≥0 α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : Pow α ℕ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI : Pow α ℤ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).invFun i.toNatCast
+    letI := (NNRatCast.canonicalCongr e).invFun i.toNNRatCast
+    Function.Injective.semifield e.toFun e.left_inv.injective (e.right_inv _) (e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      fun _ ↦ e.right_inv _
+  left_inv _ := Semifield.ext
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· + ·) (e.left_inv x) (e.left_inv y)))
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y)))
+    (funext fun x ↦ (e.left_inv _).trans (congrArg (·⁻¹) (e.left_inv x)))
+  right_inv _ := Semifield.ext
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· + ·) (e.right_inv x) (e.right_inv y)))
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y)))
+    (funext fun x ↦ (e.right_inv _).trans (congrArg (·⁻¹) (e.right_inv x)))
+
+/-- `Field` instances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev Field.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Field α) (Field β) where
+  toFun i :=
+    letI := (Zero.canonicalCongr e).toFun i.toZero
+    letI := (One.canonicalCongr e).toFun i.toOne
+    letI := (Add.canonicalCongr e).toFun i.toAdd
+    letI := (Mul.canonicalCongr e).toFun i.toMul
+    letI := (Neg.canonicalCongr e).toFun i.toNeg
+    letI := (Sub.canonicalCongr e).toFun i.toSub
+    letI := (Inv.canonicalCongr e).toFun i.toInv
+    letI := (Div.canonicalCongr e).toFun i.toDiv
+    letI : SMul ℕ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℤ β := ⟨fun n x ↦ e.toFun (n • e.invFun x)⟩
+    letI : SMul ℚ≥0 β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : SMul ℚ β := ⟨fun q x ↦ e.toFun (q • e.invFun x)⟩
+    letI : Pow β ℕ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI : Pow β ℤ := ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).toFun i.toNatCast
+    letI := (IntCast.canonicalCongr e).toFun i.toIntCast
+    letI := (NNRatCast.canonicalCongr e).toFun i.toNNRatCast
+    letI := (RatCast.canonicalCongr e).toFun i.toRatCast
+    Function.Injective.field e.invFun e.right_inv.injective (e.left_inv _) (e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
+      (fun _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) fun _ ↦ e.left_inv _
+  invFun i :=
+    letI := (Zero.canonicalCongr e).invFun i.toZero
+    letI := (One.canonicalCongr e).invFun i.toOne
+    letI := (Add.canonicalCongr e).invFun i.toAdd
+    letI := (Mul.canonicalCongr e).invFun i.toMul
+    letI := (Neg.canonicalCongr e).invFun i.toNeg
+    letI := (Sub.canonicalCongr e).invFun i.toSub
+    letI := (Inv.canonicalCongr e).invFun i.toInv
+    letI := (Div.canonicalCongr e).invFun i.toDiv
+    letI : SMul ℕ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℤ α := ⟨fun n x ↦ e.invFun (n • e.toFun x)⟩
+    letI : SMul ℚ≥0 α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : SMul ℚ α := ⟨fun q x ↦ e.invFun (q • e.toFun x)⟩
+    letI : Pow α ℕ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI : Pow α ℤ := ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
+    letI := (NatCast.canonicalCongr e).invFun i.toNatCast
+    letI := (IntCast.canonicalCongr e).invFun i.toIntCast
+    letI := (NNRatCast.canonicalCongr e).invFun i.toNNRatCast
+    letI := (RatCast.canonicalCongr e).invFun i.toRatCast
+    Function.Injective.field e.toFun e.left_inv.injective (e.right_inv _) (e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
+      (fun _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _)
+      fun _ ↦ e.right_inv _
+  left_inv _ := Field.ext
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· + ·) (e.left_inv x) (e.left_inv y)))
+    (funext₂ fun x y ↦ (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y)))
+    (funext fun x ↦ (e.left_inv _).trans (congrArg (·⁻¹) (e.left_inv x)))
+  right_inv _ := Field.ext
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· + ·) (e.right_inv x) (e.right_inv y)))
+    (funext₂ fun x y ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y)))
+    (funext fun x ↦ (e.right_inv _).trans (congrArg (·⁻¹) (e.right_inv x)))
+
+end Transport
+
 /-! ### Order dual -/
 
 namespace OrderDual

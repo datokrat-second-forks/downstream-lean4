@@ -62,6 +62,37 @@ theorem lipschitzWith_lipschitz_const_mul_edist [_i : LipschitzMul β] :
     LipschitzWith (LipschitzMul.C β) fun p : β × β => p.1 * p.2 :=
   Classical.choose_spec _i.lipschitz_mul
 
+/-- `LipschitzMul` holds on both sides of a canonical equivalence, for the transported
+pseudometric space structure and monoid. -/
+@[to_additive (attr := transport) /-- `LipschitzAdd` holds on both sides of a canonical
+equivalence, for the transported pseudometric space structure and additive monoid. -/]
+protected abbrev LipschitzMul.canonicalCongr {M N : Type*} (e : Lean.CanonicalEquivalence M N)
+    [mN : PseudoMetricSpace N] [iN : Monoid N] {mM : PseudoMetricSpace M} {iM : Monoid M}
+    (hm : mM = (PseudoMetricSpace.canonicalCongr e).invFun mN)
+    (hi : iM = (Monoid.canonicalCongr e).invFun iN) :
+    Lean.CanonicalEquivalence (LipschitzMul M) (LipschitzMul N) := by
+  subst hm hi
+  letI := (PseudoMetricSpace.canonicalCongr e).invFun mN
+  letI := (Monoid.canonicalCongr e).invFun iN
+  exact {
+    toFun _ := ⟨⟨LipschitzMul.C M, fun p q ↦ by
+      have h := lipschitzWith_lipschitz_const_mul_edist (β := M) (e.invFun p.1, e.invFun p.2)
+        (e.invFun q.1, e.invFun q.2)
+      change edist (e.toFun (e.invFun (e.toFun (e.invFun p.1) * e.toFun (e.invFun p.2))))
+          (e.toFun (e.invFun (e.toFun (e.invFun q.1) * e.toFun (e.invFun q.2)))) ≤
+        _ * max (edist (e.toFun (e.invFun p.1)) (e.toFun (e.invFun q.1)))
+          (edist (e.toFun (e.invFun p.2)) (e.toFun (e.invFun q.2))) at h
+      simp only [e.toFun_invFun] at h
+      exact h⟩⟩
+    invFun _ := ⟨⟨LipschitzMul.C N, fun p q ↦ by
+      change edist (e.toFun (e.invFun (e.toFun p.1 * e.toFun p.2)))
+        (e.toFun (e.invFun (e.toFun q.1 * e.toFun q.2))) ≤ _
+      rw [e.toFun_invFun, e.toFun_invFun]
+      exact lipschitzWith_lipschitz_const_mul_edist (e.toFun p.1, e.toFun p.2)
+        (e.toFun q.1, e.toFun q.2)⟩⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 variable [LipschitzMul β]
 
 @[to_additive]
@@ -277,7 +308,7 @@ instance [AddMonoid α] [LipschitzAdd α] : LipschitzMul (Multiplicative α) :=
 
 @[to_additive]
 instance [Monoid α] [LipschitzMul α] : LipschitzMul αᵒᵈ :=
-  ‹LipschitzMul α›
+  inferInstanceAs (LipschitzMul α)
 
 variable {ι : Type*} [Fintype ι]
 

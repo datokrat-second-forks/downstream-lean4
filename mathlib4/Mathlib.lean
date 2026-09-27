@@ -376,6 +376,7 @@ public import Mathlib.Algebra.Group.Action.Prod
 public import Mathlib.Algebra.Group.Action.Sigma
 public import Mathlib.Algebra.Group.Action.Sum
 public import Mathlib.Algebra.Group.Action.TransferInstance
+public import Mathlib.Algebra.Group.Action.Transport
 public import Mathlib.Algebra.Group.Action.TypeTags
 public import Mathlib.Algebra.Group.Action.Units
 public import Mathlib.Algebra.Group.AddChar
@@ -499,6 +500,7 @@ public import Mathlib.Algebra.Group.Subsemigroup.Operations
 public import Mathlib.Algebra.Group.Support
 public import Mathlib.Algebra.Group.Torsion
 public import Mathlib.Algebra.Group.TransferInstance
+public import Mathlib.Algebra.Group.Transport
 public import Mathlib.Algebra.Group.Translate
 public import Mathlib.Algebra.Group.TypeTags.Basic
 public import Mathlib.Algebra.Group.TypeTags.Finite
@@ -528,6 +530,7 @@ public import Mathlib.Algebra.GroupWithZero.Action.Pointwise.Set
 public import Mathlib.Algebra.GroupWithZero.Action.Prod
 public import Mathlib.Algebra.GroupWithZero.Action.Regular
 public import Mathlib.Algebra.GroupWithZero.Action.TransferInstance
+public import Mathlib.Algebra.GroupWithZero.Action.Transport
 public import Mathlib.Algebra.GroupWithZero.Action.Units
 public import Mathlib.Algebra.GroupWithZero.Associated
 public import Mathlib.Algebra.GroupWithZero.Basic
@@ -563,6 +566,7 @@ public import Mathlib.Algebra.GroupWithZero.Submonoid.Pointwise
 public import Mathlib.Algebra.GroupWithZero.Submonoid.Primal
 public import Mathlib.Algebra.GroupWithZero.Torsion
 public import Mathlib.Algebra.GroupWithZero.TransferInstance
+public import Mathlib.Algebra.GroupWithZero.Transport
 public import Mathlib.Algebra.GroupWithZero.ULift
 public import Mathlib.Algebra.GroupWithZero.Units.Basic
 public import Mathlib.Algebra.GroupWithZero.Units.Equiv
@@ -873,6 +877,7 @@ public import Mathlib.Algebra.Module.Torsion.Pi
 public import Mathlib.Algebra.Module.Torsion.PrimaryComponent
 public import Mathlib.Algebra.Module.Torsion.Prod
 public import Mathlib.Algebra.Module.TransferInstance
+public import Mathlib.Algebra.Module.Transport
 public import Mathlib.Algebra.Module.ULift
 public import Mathlib.Algebra.Module.ZLattice.Basic
 public import Mathlib.Algebra.Module.ZLattice.Covolume
@@ -1314,6 +1319,7 @@ public import Mathlib.Algebra.Ring.Subsemiring.Pointwise
 public import Mathlib.Algebra.Ring.SumsOfSquares
 public import Mathlib.Algebra.Ring.Torsion
 public import Mathlib.Algebra.Ring.TransferInstance
+public import Mathlib.Algebra.Ring.Transport
 public import Mathlib.Algebra.Ring.ULift
 public import Mathlib.Algebra.Ring.Units
 public import Mathlib.Algebra.Ring.WithZero

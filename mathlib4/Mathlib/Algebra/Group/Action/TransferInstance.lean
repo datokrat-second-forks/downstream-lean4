@@ -6,6 +6,7 @@ Authors: Johannes Hölzl
 module
 
 public import Mathlib.Algebra.Group.Action.Faithful
+public import Mathlib.Algebra.Group.Action.Transport
 public import Mathlib.Algebra.Group.Equiv.Defs
 public import Mathlib.Algebra.Group.TransferInstance
 public import Mathlib.Algebra.Group.InjSurj
@@ -90,60 +91,3 @@ protected lemma faithfulSMul (e : α ≃ β) [FaithfulSMul M β] :
       simpa [← e.forall_congr_right, smul_def] using eq_of_smul_eq_smul (α := β) }
 
 end Equiv
-
-variable {M N α β : Type*}
-
-/-- `SMulCommClass` holds on both sides of a canonical equivalence, for the transported actions. -/
-@[to_additive (attr := transport) /-- `VAddCommClass` holds on both sides of a canonical
-equivalence, for the transported actions. -/]
-protected abbrev SMulCommClass.canonicalCongr (e : Lean.CanonicalEquivalence α β)
-    [iM : SMul M β] [iN : SMul N β] {iM' : SMul M α} {iN' : SMul N α}
-    (hM : iM' = (SMul.canonicalCongr e).invFun iM) (hN : iN' = (SMul.canonicalCongr e).invFun iN) :
-    Lean.CanonicalEquivalence (SMulCommClass M N α) (SMulCommClass M N β) := by
-  subst hM hN
-  letI := (SMul.canonicalCongr e).invFun iM
-  letI := (SMul.canonicalCongr e).invFun iN
-  exact {
-    toFun _ := by
-      rw [← (SMul.canonicalCongr e).right_inv iM, ← (SMul.canonicalCongr e).right_inv iN]
-      exact e.toEquiv.symm.smulCommClass M N
-    invFun _ := e.toEquiv.smulCommClass M N
-    left_inv _ := rfl
-    right_inv _ := rfl }
-
-/-- `IsScalarTower` holds on both sides of a canonical equivalence, for the transported actions. -/
-@[to_additive (attr := transport) /-- `VAddAssocClass` holds on both sides of a canonical
-equivalence, for the transported actions. -/]
-protected abbrev IsScalarTower.canonicalCongr [SMul M N] (e : Lean.CanonicalEquivalence α β)
-    [iN : SMul N β] [iM : SMul M β] {iN' : SMul N α} {iM' : SMul M α}
-    (hN : iN' = (SMul.canonicalCongr e).invFun iN) (hM : iM' = (SMul.canonicalCongr e).invFun iM) :
-    Lean.CanonicalEquivalence (IsScalarTower M N α) (IsScalarTower M N β) := by
-  subst hM hN
-  letI := (SMul.canonicalCongr e).invFun iM
-  letI := (SMul.canonicalCongr e).invFun iN
-  exact {
-    toFun _ := by
-      rw [← (SMul.canonicalCongr e).right_inv iM, ← (SMul.canonicalCongr e).right_inv iN]
-      exact e.toEquiv.symm.isScalarTower M N
-    invFun _ := e.toEquiv.isScalarTower M N
-    left_inv _ := rfl
-    right_inv _ := rfl }
-
-/-- `IsCentralScalar` holds on both sides of a canonical equivalence, for the transported
-actions. -/
-@[to_additive (attr := transport) /-- `IsCentralVAdd` holds on both sides of a canonical
-equivalence, for the transported actions. -/]
-protected abbrev IsCentralScalar.canonicalCongr (e : Lean.CanonicalEquivalence α β)
-    [iM : SMul M β] [iM' : SMul Mᵐᵒᵖ β] {jM : SMul M α} {jM' : SMul Mᵐᵒᵖ α}
-    (hM : jM = (SMul.canonicalCongr e).invFun iM) (hM' : jM' = (SMul.canonicalCongr e).invFun iM') :
-    Lean.CanonicalEquivalence (IsCentralScalar M α) (IsCentralScalar M β) := by
-  subst hM hM'
-  letI := (SMul.canonicalCongr e).invFun iM
-  letI := (SMul.canonicalCongr e).invFun iM'
-  exact {
-    toFun _ := by
-      rw [← (SMul.canonicalCongr e).right_inv iM, ← (SMul.canonicalCongr e).right_inv iM']
-      exact e.toEquiv.symm.isCentralScalar M
-    invFun _ := e.toEquiv.isCentralScalar M
-    left_inv _ := rfl
-    right_inv _ := rfl }

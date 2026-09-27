@@ -6,6 +6,7 @@ Authors: Yaël Dillies
 module
 
 public import Mathlib.Algebra.Group.Action.Defs
+public import Mathlib.Algebra.Group.Action.Transport
 public import Mathlib.Algebra.Order.Group.Synonym
 
 /-!
@@ -33,27 +34,27 @@ instance [Monoid M] [MulAction M α] : MulAction M αᵒᵈ := inferInstanceAs <
 
 @[to_additive]
 instance [SMul M α] [SMul N α] [SMulCommClass M N α] : SMulCommClass Mᵒᵈ N α :=
-  ‹SMulCommClass M N α›
+  inferInstanceAs <| SMulCommClass M N α
 
 @[to_additive]
 instance [SMul M α] [SMul N α] [SMulCommClass M N α] : SMulCommClass M Nᵒᵈ α :=
-  ‹SMulCommClass M N α›
+  inferInstanceAs <| SMulCommClass M N α
 
 @[to_additive]
 instance [SMul M α] [SMul N α] [SMulCommClass M N α] : SMulCommClass M N αᵒᵈ :=
-  ‹SMulCommClass M N α›
+  inferInstanceAs <| SMulCommClass M N α
 
 @[to_additive]
 instance [SMul M N] [SMul M α] [SMul N α] [IsScalarTower M N α] : IsScalarTower Mᵒᵈ N α :=
-  ‹IsScalarTower M N α›
+  inferInstanceAs <| IsScalarTower M N α
 
 @[to_additive]
 instance [SMul M N] [SMul M α] [SMul N α] [IsScalarTower M N α] : IsScalarTower M Nᵒᵈ α :=
-  ‹IsScalarTower M N α›
+  inferInstanceAs <| IsScalarTower M N α
 
 @[to_additive]
 instance [SMul M N] [SMul M α] [SMul N α] [IsScalarTower M N α] : IsScalarTower M N αᵒᵈ :=
-  ‹IsScalarTower M N α›
+  inferInstanceAs <| IsScalarTower M N α
 
 end OrderDual
 

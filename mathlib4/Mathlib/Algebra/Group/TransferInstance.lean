@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Group.Equiv.Defs
 public import Mathlib.Algebra.Group.Ext
 public import Mathlib.Algebra.Group.InjSurj
+public import Mathlib.Algebra.Group.Transport
 public import Mathlib.Data.Fintype.Basic
 
 /-!
@@ -194,52 +195,6 @@ protected abbrev commGroup [CommGroup β] : CommGroup α := by
   apply e.injective.commGroup _ <;> intros <;> exact e.apply_symm_apply _
 
 end Equiv
-
-variable {α β : Type*}
-
-/-- `CommMonoid` instances correspond along a canonical equivalence. The operations are those of
-`Mul.canonicalCongr` and `One.canonicalCongr`, so that transport unfolds them. -/
-@[to_additive (attr := transport)
-  /-- `AddCommMonoid` instances correspond along a canonical equivalence. The operations are those
-  of `Add.canonicalCongr` and `Zero.canonicalCongr`, so that transport unfolds them. -/]
-protected abbrev CommMonoid.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
-    Lean.CanonicalEquivalence (CommMonoid α) (CommMonoid β) where
-  toFun i := @Function.Injective.commMonoid β α ((Mul.canonicalCongr e).toFun i.toMul)
-    ((One.canonicalCongr e).toFun i.toOne) ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩ i e.invFun
-    e.right_inv.injective (e.left_inv _) (fun _ _ ↦ e.left_inv _) fun _ _ ↦ e.left_inv _
-  invFun i := @Function.Injective.commMonoid α β ((Mul.canonicalCongr e).invFun i.toMul)
-    ((One.canonicalCongr e).invFun i.toOne) ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩ i e.toFun
-    e.left_inv.injective (e.right_inv _) (fun _ _ ↦ e.right_inv _) fun _ _ ↦ e.right_inv _
-  left_inv _ := CommMonoid.ext <| funext₂ fun x y ↦
-    (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y))
-  right_inv _ := CommMonoid.ext <| funext₂ fun x y ↦
-    (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y))
-
-/-- `CommGroup` instances correspond along a canonical equivalence. The operations are those of
-`Mul.canonicalCongr`, `One.canonicalCongr`, `Inv.canonicalCongr` and `Div.canonicalCongr`, so that
-transport unfolds them. -/
-@[to_additive (attr := transport)
-  /-- `AddCommGroup` instances correspond along a canonical equivalence. The operations are those
-  of `Add.canonicalCongr`, `Zero.canonicalCongr`, `Neg.canonicalCongr` and `Sub.canonicalCongr`, so
-  that transport unfolds them. -/]
-protected abbrev CommGroup.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
-    Lean.CanonicalEquivalence (CommGroup α) (CommGroup β) where
-  toFun i := @Function.Injective.commGroup β α ((Mul.canonicalCongr e).toFun i.toMul)
-    ((One.canonicalCongr e).toFun i.toOne) ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩
-    ((Inv.canonicalCongr e).toFun i.toInv) ((Div.canonicalCongr e).toFun i.toDiv)
-    ⟨fun x n ↦ e.toFun (e.invFun x ^ n)⟩ i e.invFun e.right_inv.injective (e.left_inv _)
-    (fun _ _ ↦ e.left_inv _) (fun _ ↦ e.left_inv _) (fun _ _ ↦ e.left_inv _)
-    (fun _ _ ↦ e.left_inv _) fun _ _ ↦ e.left_inv _
-  invFun i := @Function.Injective.commGroup α β ((Mul.canonicalCongr e).invFun i.toMul)
-    ((One.canonicalCongr e).invFun i.toOne) ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩
-    ((Inv.canonicalCongr e).invFun i.toInv) ((Div.canonicalCongr e).invFun i.toDiv)
-    ⟨fun x n ↦ e.invFun (e.toFun x ^ n)⟩ i e.toFun e.left_inv.injective (e.right_inv _)
-    (fun _ _ ↦ e.right_inv _) (fun _ ↦ e.right_inv _) (fun _ _ ↦ e.right_inv _)
-    (fun _ _ ↦ e.right_inv _) fun _ _ ↦ e.right_inv _
-  left_inv _ := CommGroup.ext <| funext₂ fun x y ↦
-    (e.left_inv _).trans (congrArg₂ (· * ·) (e.left_inv x) (e.left_inv y))
-  right_inv _ := CommGroup.ext <| funext₂ fun x y ↦
-    (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv y))
 
 namespace Finite
 

@@ -181,8 +181,9 @@ open OrderDual
 section Norm
 variable [Norm E]
 
-instance OrderDual.toNorm : Norm Eᵒᵈ where
-  norm x := ‖ofDual x‖
+-- was `where norm x := ‖ofDual x‖`, but `ofDual` is only implicit-reducible, so that norm did not
+-- agree with `SeminormedAddCommGroup.toNorm` at instance transparency (a diamond)
+instance OrderDual.toNorm : Norm Eᵒᵈ := inferInstanceAs (Norm E)
 
 @[simp] lemma norm_toDual (x : E) : ‖toDual x‖ = ‖x‖ := rfl
 
@@ -193,8 +194,8 @@ end Norm
 section NNNorm
 variable [NNNorm E]
 
-instance OrderDual.toNNNorm : NNNorm Eᵒᵈ where
-  nnnorm x := ‖ofDual x‖₊
+-- was `where nnnorm x := ‖ofDual x‖₊`; see `OrderDual.toNorm`
+instance OrderDual.toNNNorm : NNNorm Eᵒᵈ := inferInstanceAs (NNNorm E)
 
 @[simp] lemma nnnorm_toDual (x : E) : ‖toDual x‖₊ = ‖x‖₊ := rfl
 

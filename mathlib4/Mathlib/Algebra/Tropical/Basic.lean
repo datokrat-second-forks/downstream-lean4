@@ -408,7 +408,7 @@ def equivMaxTropical [LinearOrder R] [Add R] : MinTropical R ≃+* MaxTropical R
   map_add' a b := by simp
   map_mul' a b := by simp
   left_inv _ := rfl
-  right_inv _ := rfl
+  right_inv _ := by simp
 
 @[to_dual]
 instance [Zero R] : One (MinTropical R) :=

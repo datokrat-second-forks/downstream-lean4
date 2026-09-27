@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.GroupWithZero.Action.TransferInstance
 public import Mathlib.Algebra.Module.Equiv.Defs
 public import Mathlib.Algebra.Module.Torsion.Free
+public import Mathlib.Algebra.Module.Transport
 public import Mathlib.Algebra.NoZeroSMulDivisors.Defs
 
 /-!
@@ -39,45 +40,41 @@ protected lemma noZeroSMulDivisors [Zero α] [Zero β] [SMul R β] [NoZeroSMulDi
 
 end Equiv
 
-/-- `Module` instances correspond along a canonical equivalence, over the transported additive
-monoid. The action is that of `SMul.canonicalCongr`, so that transport unfolds it. -/
-@[transport]
-protected abbrev Module.canonicalCongr (e : Lean.CanonicalEquivalence α β) [iβ : AddCommMonoid β]
-    {iα : AddCommMonoid α} (hi : iα = (AddCommMonoid.canonicalCongr e).invFun iβ) :
-    Lean.CanonicalEquivalence (Module R α) (Module R β) where
-  toFun i := @Function.Injective.module R α β _ iα i iβ ((SMul.canonicalCongr e).toFun i.toSMul)
-    { toFun := e.invFun
-      map_zero' := by subst hi; rfl
-      map_add' x y := by
-        subst hi
-        change e.invFun (x + y) = e.invFun (e.toFun (e.invFun x) + e.toFun (e.invFun y))
-        rw [e.toFun_invFun, e.toFun_invFun] }
-    e.right_inv.injective fun _ _ ↦ e.left_inv _
-  invFun i := @Function.Injective.module R β α _ iβ i iα ((SMul.canonicalCongr e).invFun i.toSMul)
-    { toFun := e.toFun
-      map_zero' := by subst hi; exact e.right_inv _
-      map_add' _ _ := by subst hi; exact e.right_inv _ }
-    e.left_inv.injective fun _ _ ↦ e.right_inv _
-  left_inv _ := Module.ext' _ _ fun r x ↦
-    show e.invFun (e.toFun (r • e.invFun (e.toFun x))) = r • x by rw [e.left_inv, e.left_inv]
-  right_inv _ := Module.ext' _ _ fun r x ↦
-    show e.toFun (e.invFun (r • e.toFun (e.invFun x))) = r • x by rw [e.right_inv, e.right_inv]
-
-variable (R) in
-/-- A canonical equivalence is linear for the module structure transported along it. -/
-def Lean.CanonicalEquivalence.linearEquiv (e : Lean.CanonicalEquivalence α β) [AddCommMonoid β]
-    [_root_.Module R β] :
-    letI := (AddCommMonoid.canonicalCongr e).invFun ‹AddCommMonoid β›
-    letI := (_root_.Module.canonicalCongr e rfl).invFun ‹_root_.Module R β›
-    α ≃ₗ[R] β :=
-  letI := (AddCommMonoid.canonicalCongr e).invFun ‹AddCommMonoid β›
-  letI := (_root_.Module.canonicalCongr e rfl).invFun ‹_root_.Module R β›
+/-- A canonical equivalence is a ring isomorphism for the semiring structure transported along
+it. -/
+def Lean.CanonicalEquivalence.ringEquiv {S S' : Type*} (e : Lean.CanonicalEquivalence S S')
+    [Semiring S'] :
+    letI := (Semiring.canonicalCongr e).invFun ‹Semiring S'›
+    S ≃+* S' :=
+  letI := (Semiring.canonicalCongr e).invFun ‹Semiring S'›
   { toFun := e.toFun
     invFun := e.invFun
-    map_add' _ _ := e.right_inv _
-    map_smul' _ _ := e.right_inv _
     left_inv := e.left_inv
-    right_inv := e.right_inv }
+    right_inv := e.right_inv
+    map_mul' _ _ := e.right_inv _
+    map_add' _ _ := e.right_inv _ }
+
+/-- A canonical equivalence is semilinear over `Lean.CanonicalEquivalence.ringEquiv` for the module
+structure transported along it. -/
+def Lean.CanonicalEquivalence.semilinearEquiv {S S' : Type*} (e₁ : Lean.CanonicalEquivalence S S')
+    (e₂ : Lean.CanonicalEquivalence α β) [Semiring S'] [AddCommMonoid β] [_root_.Module S' β] :
+    letI := (Semiring.canonicalCongr e₁).invFun ‹Semiring S'›
+    letI := (AddCommMonoid.canonicalCongr e₂).invFun ‹AddCommMonoid β›
+    letI := (_root_.Module.canonicalCongr e₁ e₂ rfl rfl).invFun ‹_root_.Module S' β›
+    haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+    haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+    α ≃ₛₗ[(e₁.ringEquiv : S →+* S')] β :=
+  letI := (Semiring.canonicalCongr e₁).invFun ‹Semiring S'›
+  letI := (AddCommMonoid.canonicalCongr e₂).invFun ‹AddCommMonoid β›
+  letI := (_root_.Module.canonicalCongr e₁ e₂ rfl rfl).invFun ‹_root_.Module S' β›
+  haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+  haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+  { toFun := e₂.toFun
+    invFun := e₂.invFun
+    map_add' _ _ := e₂.right_inv _
+    map_smul' _ _ := e₂.right_inv _
+    left_inv := e₂.left_inv
+    right_inv := e₂.right_inv }
 
 variable [AddCommMonoid α] [AddCommMonoid β] [Module R β]
 

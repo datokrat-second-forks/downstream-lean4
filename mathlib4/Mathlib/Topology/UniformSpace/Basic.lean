@@ -563,7 +563,7 @@ instance ULift.uniformSpace [UniformSpace α] : UniformSpace (ULift α) :=
 
 /-- Uniform space structure on `αᵒᵈ`. -/
 instance OrderDual.instUniformSpace [UniformSpace α] : UniformSpace (αᵒᵈ) :=
-  ‹UniformSpace α›
+  inferInstanceAs (UniformSpace α)
 
 section UniformContinuousInfi
 

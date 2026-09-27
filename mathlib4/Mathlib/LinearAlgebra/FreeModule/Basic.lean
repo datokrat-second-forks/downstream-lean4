@@ -143,20 +143,24 @@ lemma iff_of_equiv {R R' M M'} [Semiring R] [AddCommMonoid M] [Module R M]
     Module.Free R M ↔ Module.Free R' M' :=
   ⟨fun _ ↦ of_equiv e₂, fun _ ↦ of_equiv e₂.symm⟩
 
-/-- `Module.Free` holds on both sides of a canonical equivalence, for the transported module
-structure. -/
+/-- `Module.Free` holds on both sides of canonical equivalences of the scalars and of the modules,
+for the transported semiring and module structures. -/
 @[transport]
-protected abbrev canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
-    [iβ : AddCommMonoid β] [mβ : Module R β] {iα : AddCommMonoid α}
-    (hi : iα = (AddCommMonoid.canonicalCongr e).invFun iβ) {mα : Module R α}
-    (hm : mα = (Module.canonicalCongr e hi).invFun mβ) :
-    Lean.CanonicalEquivalence (Module.Free R α) (Module.Free R β) := by
-  subst hm hi
-  letI := (AddCommMonoid.canonicalCongr e).invFun iβ
-  letI := (Module.canonicalCongr e rfl).invFun mβ
+protected abbrev canonicalCongr {S S' α β : Type*} (e₁ : Lean.CanonicalEquivalence S S')
+    (e₂ : Lean.CanonicalEquivalence α β) [iS' : Semiring S'] {iS : Semiring S}
+    (hS : iS = (Semiring.canonicalCongr e₁).invFun iS') [iβ : AddCommMonoid β]
+    {iα : AddCommMonoid α} (hα : iα = (AddCommMonoid.canonicalCongr e₂).invFun iβ)
+    [mβ : Module S' β] {mα : Module S α} (hm : mα = (Module.canonicalCongr e₁ e₂ hS hα).invFun mβ) :
+    Lean.CanonicalEquivalence (Module.Free S α) (Module.Free S' β) := by
+  subst hm hS hα
+  letI := (Semiring.canonicalCongr e₁).invFun iS'
+  letI := (AddCommMonoid.canonicalCongr e₂).invFun iβ
+  letI := (Module.canonicalCongr e₁ e₂ rfl rfl).invFun mβ
+  haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+  haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
   exact {
-    toFun _ := of_equiv (e.linearEquiv R)
-    invFun _ := of_equiv (e.linearEquiv R).symm
+    toFun _ := of_equiv (e₁.semilinearEquiv e₂)
+    invFun _ := of_equiv (e₁.semilinearEquiv e₂).symm
     left_inv _ := rfl
     right_inv _ := rfl }
 

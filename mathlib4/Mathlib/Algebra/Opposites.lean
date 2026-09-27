@@ -99,6 +99,16 @@ theorem op_comp_unop : (op : α → αᵐᵒᵖ) ∘ unop = id :=
 theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
   rfl
 
+/-- The opposites of canonically equivalent types are canonically equivalent. -/
+@[to_additive (attr := transport)
+  /-- The additive opposites of canonically equivalent types are canonically equivalent. -/]
+protected abbrev canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence αᵐᵒᵖ βᵐᵒᵖ where
+  toFun x := op (e.toFun (unop x))
+  invFun x := op (e.invFun (unop x))
+  left_inv x := congrArg op (e.left_inv (unop x))
+  right_inv x := congrArg op (e.right_inv (unop x))
+
 /-- A recursor for `MulOpposite`. Use as `induction x`. -/
 @[to_additive (attr := simp, elab_as_elim, induction_eliminator, cases_eliminator)
   /-- A recursor for `AddOpposite`. Use as `induction x`. -/]

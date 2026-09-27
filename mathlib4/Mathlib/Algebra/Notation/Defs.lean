@@ -55,16 +55,17 @@ class VAdd (G : Type u) (P : Type v) where
   but it is intended to be used for left actions. -/
   vadd : G → P → P
 
-/-- `VAdd` instances correspond along a canonical equivalence of the acted-on types. -/
-@[transport] protected abbrev VAdd.canonicalCongr {P P' G : Type*}
-    (e : Lean.CanonicalEquivalence P P') :
-    Lean.CanonicalEquivalence (VAdd G P) (VAdd G P') where
-  toFun i := ⟨fun g x ↦ e.toFun (i.vadd g (e.invFun x))⟩
-  invFun i := ⟨fun g x ↦ e.invFun (i.vadd g (e.toFun x))⟩
+/-- `VAdd` instances correspond along canonical equivalences of the scalars and of the acted-on
+types. -/
+@[transport] protected abbrev VAdd.canonicalCongr {G G' P P' : Type*}
+    (e₁ : Lean.CanonicalEquivalence G G') (e₂ : Lean.CanonicalEquivalence P P') :
+    Lean.CanonicalEquivalence (VAdd G P) (VAdd G' P') where
+  toFun i := ⟨fun g x ↦ e₂.toFun (i.vadd (e₁.invFun g) (e₂.invFun x))⟩
+  invFun i := ⟨fun g x ↦ e₂.invFun (i.vadd (e₁.toFun g) (e₂.toFun x))⟩
   left_inv i := congrArg VAdd.mk <| funext fun g ↦ funext fun x ↦
-    (e.left_inv _).trans (congrArg (i.vadd g) (e.left_inv x))
+    (e₂.left_inv _).trans (congr (congrArg i.vadd (e₁.left_inv g)) (e₂.left_inv x))
   right_inv i := congrArg VAdd.mk <| funext fun g ↦ funext fun x ↦
-    (e.right_inv _).trans (congrArg (i.vadd g) (e.right_inv x))
+    (e₂.right_inv _).trans (congr (congrArg i.vadd (e₁.right_inv g)) (e₂.right_inv x))
 
 /-- Type class for the `-ᵥ` notation. -/
 class VSub (G : outParam Type*) (P : Type*) where
