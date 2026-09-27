@@ -154,8 +154,10 @@ theorem toUniformOnFun_toFun (f : C(α, β)) :
     UniformOnFun.toFun _ f.toUniformOnFunIsCompact = f := rfl
 
 theorem range_toUniformOnFunIsCompact :
-    range (toUniformOnFunIsCompact) = {f : UniformOnFun α β {K | IsCompact K} | Continuous f} :=
-  Set.ext fun f ↦ ⟨fun g ↦ g.choose_spec ▸ g.choose.2, fun hf ↦ ⟨⟨f, hf⟩, rfl⟩⟩
+    range (toUniformOnFunIsCompact) =
+      {f : UniformOnFun α β {K | IsCompact K} | Continuous (UniformOnFun.toFun _ f)} :=
+  Set.ext fun f ↦ ⟨fun g ↦ g.choose_spec ▸ g.choose.2,
+    fun hf ↦ ⟨⟨UniformOnFun.toFun _ f, hf⟩, rfl⟩⟩
 
 open UniformSpace in
 /-- Uniform space structure on `C(α, β)`.
@@ -176,7 +178,7 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β) :=
 theorem isUniformEmbedding_toUniformOnFunIsCompact :
     IsUniformEmbedding (toUniformOnFunIsCompact : C(α, β) → α →ᵤ[{K | IsCompact K}] β) where
   comap_uniformity := rfl
-  injective := DFunLike.coe_injective
+  injective := (UniformOnFun.ofFun _).injective.comp DFunLike.coe_injective
 
 open UniformOnFun in
 /-- `f : X → C(α, β)` is continuous if any only if it is continuous when reinterpreted as a

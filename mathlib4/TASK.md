@@ -221,3 +221,13 @@ From 2026-09-26 evening (user asleep): make further design decisions autonomousl
 OrderDual decisions (user, 2026-09-26):
 - Raw constructor and projection: `toDual'` / `ofDual'`; `toDual`/`ofDual` stay the `Equiv`s.
 - Retry the three files parked on the old branch (`Ordmap/Invariants`, `CompleteLattice/PiLex`, `Category/BddOrd`); ask the user if one needs a design change.
+
+## Sealing `UniformOnFun` with `newtype` (started 2026-09-27)
+
+The user asked to port the earlier `UniformOnFun` seal onto this workspace, as its own commit after `OrderDual`. The DirectSum rules above apply (newtype, transport/deriving, `@[transport]` congruences below the class, the transport rule, the unfolding rule, DDRs, `blocked.py` counts in a progress report). The goal is a change that convinces Mathlib maintainers with high standards and stays along the grain.
+Earlier port without transport: commit `3d2b0fbc89b` on branch `adaptation-15066` of `/root/downstream` (toolchain `irredalias`), notes in that commit's `mathlib4/FRICTION.md`, "UniformOnFun as a `newtype`" (items 16–22). Orient on it, but it is not the standard: its algebraic instances were rebuilt with `Function.Injective.*` instead of transport.
+
+Decisions (user, 2026-09-27):
+- Only `UniformOnFun` (`α →ᵤ[𝔖] β`). `UniformFun` stays a plain definition. `PiLp` stays an `abbrev` over `WithLp`: every `PiLp` instance is keyed under `WithLp`, so `PiLp` is no barrier to instance search and has no definitional equality to seal.
+- Raw constructor and projection: `UniformOnFun.ofFun'` / `UniformOnFun.toFun'`; `ofFun 𝔖` / `toFun 𝔖` stay the `Equiv`s.
+- No `CoeFun`: elements are evaluated as `toFun 𝔖 f x`, as for `α →ᵤ β`.

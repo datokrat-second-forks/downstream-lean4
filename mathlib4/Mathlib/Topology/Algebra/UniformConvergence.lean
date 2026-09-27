@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Topology.Algebra.UniformMulAction
 public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Module.Transport
 public import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
 
 /-!
@@ -263,18 +264,18 @@ protected theorem UniformOnFun.hasBasis_nhds_one (𝔖 : Set <| Set α) (h𝔖�
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
-      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, toFun 𝔖 f x ∈ SV.2 } :=
   UniformOnFun.hasBasis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
 
 @[to_additive (attr := simp)]
 lemma UniformOnFun.ofFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
     ofFun 𝔖 (∏ i ∈ I, f i) = ∏ i ∈ I, ofFun 𝔖 (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' (ofFun 𝔖) fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
-lemma UniformOnFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
+lemma UniformOnFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α →ᵤ[𝔖] β} (I : Finset ι) :
     toFun 𝔖 (∏ i ∈ I, f i) = ∏ i ∈ I, toFun 𝔖 (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' (toFun 𝔖) fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
 lemma UniformFun.ofFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
