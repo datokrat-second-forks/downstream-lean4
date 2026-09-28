@@ -18,7 +18,7 @@ deriving instance Ord for Syntax.Range
 /-- Like `Lean.Syntax.updateLeading`, but preserves the starting position of the syntax if it
 exists (instead of setting it to `0`). See the docstring of `updateLeading` for more details. -/
 def Syntax.updateLeadingPreservingStart : Syntax → Syntax :=
-  fun stx => (replaceM updateLeadingAux stx).run' (stx.getPos?.getD 0)
+  fun stx => ((replaceM updateLeadingAux stx).run' (stx.getPos?.getD 0)).run
 
 /-- Like `Lean.TSyntax.updateLeading`, but preserves the starting position of the syntax if it
 exists (instead of setting it to `0`). See the docstring of `updateLeading` for more details. -/

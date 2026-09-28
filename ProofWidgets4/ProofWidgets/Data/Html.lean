@@ -62,10 +62,10 @@ def jsxTextForbidden : String := "{<>}$"
 /-- A plain text literal for JSX (notation for `Html.text`). -/
 def jsxText : Parser :=
   withAntiquot (mkAntiquot "jsxText" `ProofWidgets.Jsx.jsxText) {
-    fn := fun c s =>
+    fn := .mk fun c s =>
       let startPos := s.pos
-      let s := takeWhile1Fn (fun c => !jsxTextForbidden.contains c) "expected JSX text" c s
-      mkNodeToken `ProofWidgets.Jsx.jsxText startPos true c s }
+      let s := (takeWhile1Fn (fun c => !jsxTextForbidden.contains c) "expected JSX text").toFn c s
+      (mkNodeToken `ProofWidgets.Jsx.jsxText startPos true).toFn c s }
 
 def getJsxText : TSyntax ``jsxText → String
   | stx => stx.raw[0].getAtomVal

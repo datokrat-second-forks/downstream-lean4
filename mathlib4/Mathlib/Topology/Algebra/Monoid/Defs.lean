@@ -6,6 +6,7 @@ Authors: Johannes Hölzl
 module
 
 public import Mathlib.Topology.Constructions.SumProd
+public import Mathlib.Topology.Homeomorph.TransferInstance
 public import Mathlib.Algebra.Group.Basic
 
 /-!
@@ -65,6 +66,56 @@ class SeparatelyContinuousAdd (M : Type*) [TopologicalSpace M] [Add M] : Prop wh
 class SeparatelyContinuousMul (M : Type*) [TopologicalSpace M] [Mul M] : Prop where
   continuous_const_mul {a : M} : Continuous (a * ·)
   continuous_mul_const {a : M} : Continuous (· * a)
+
+/-- `ContinuousMul` holds on both sides of a canonical equivalence, for the transported topology
+and multiplication. -/
+@[to_additive (attr := transport) /-- `ContinuousAdd` holds on both sides of a canonical
+equivalence, for the transported topology and addition. -/]
+protected abbrev ContinuousMul.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] [mβ : Mul β] {tα : TopologicalSpace α} {mα : Mul α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hm : mα = (Mul.canonicalCongr e).invFun mβ) :
+    Lean.CanonicalEquivalence (ContinuousMul α) (ContinuousMul β) := by
+  subst ht hm
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  letI := (Mul.canonicalCongr e).invFun mβ
+  exact {
+    toFun h := ⟨(e.homeomorph.continuous.comp <| h.continuous_mul.comp <|
+      e.homeomorph.symm.continuous.prodMap e.homeomorph.symm.continuous).congr fun p ↦
+        (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv p.1) (e.right_inv p.2))⟩
+    invFun h := ⟨e.homeomorph.symm.continuous.comp <| h.continuous_mul.comp <|
+      e.homeomorph.continuous.prodMap e.homeomorph.continuous⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-- `SeparatelyContinuousMul` holds on both sides of a canonical equivalence, for the transported
+topology and multiplication. -/
+@[to_additive (attr := transport) /-- `SeparatelyContinuousAdd` holds on both sides of a canonical
+equivalence, for the transported topology and addition. -/]
+protected abbrev SeparatelyContinuousMul.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) [tβ : TopologicalSpace β] [mβ : Mul β]
+    {tα : TopologicalSpace α} {mα : Mul α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hm : mα = (Mul.canonicalCongr e).invFun mβ) :
+    Lean.CanonicalEquivalence (SeparatelyContinuousMul α) (SeparatelyContinuousMul β) := by
+  subst ht hm
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  letI := (Mul.canonicalCongr e).invFun mβ
+  exact {
+    toFun h :=
+      { continuous_const_mul {a} := (e.homeomorph.continuous.comp <|
+          (h.continuous_const_mul (a := e.invFun a)).comp e.homeomorph.symm.continuous).congr
+          fun x ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv a) (e.right_inv x))
+        continuous_mul_const {a} := (e.homeomorph.continuous.comp <|
+          (h.continuous_mul_const (a := e.invFun a)).comp e.homeomorph.symm.continuous).congr
+          fun x ↦ (e.right_inv _).trans (congrArg₂ (· * ·) (e.right_inv x) (e.right_inv a)) }
+    invFun h :=
+      { continuous_const_mul {a} := e.homeomorph.symm.continuous.comp <|
+          (h.continuous_const_mul (a := e.toFun a)).comp e.homeomorph.continuous
+        continuous_mul_const {a} := e.homeomorph.symm.continuous.comp <|
+          (h.continuous_mul_const (a := e.toFun a)).comp e.homeomorph.continuous }
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 section ContinuousMul
 

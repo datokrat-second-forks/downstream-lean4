@@ -30,8 +30,8 @@ the docstring.
 -/
 def getRecommendedSpellingText (env : Environment) (declName : Name) : Option (Doc.Block ElabInline ElabBlock) := Id.run do
   let spellings := getRecommendedSpellingsForName env declName
-  if spellings.size == 0 then none
-  else some <| .concat #[
+  if spellings.size == 0 then return none
+  else return some <| .concat #[
     .para #[.text "Conventions for notations in identifiers:"],
     .ul (spellings.map bullet)
   ]
@@ -125,7 +125,7 @@ def Info.ofTypedName (n : Name) (t : Expr) : MetaM Info := do
     PrettyPrinter.delabCore t (delab := PrettyPrinter.Delaborator.delabForallParamsWithSignature fun binders type =>
       -- Use `declSig` as a data structure so that the binders and type can be put through the sanitizer all together.
       `(declSig| $binders* : $type))
-  let sigStx := (sanitizeSyntax sigStx).run' { options := (← getOptions) }
+  let sigStx := (sanitizeSyntax sigStx).run' { options := (← getOptions) } |>.run
   let sigStx ← PrettyPrinter.parenthesize Parser.Command.declSig.parenthesizer sigStx
   let `(declSig| $binders* : $type) := sigStx
     | throwError "signature pretty printer failure for {n}"

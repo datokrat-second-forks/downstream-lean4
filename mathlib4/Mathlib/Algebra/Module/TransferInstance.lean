@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.GroupWithZero.Action.TransferInstance
 public import Mathlib.Algebra.Module.Equiv.Defs
 public import Mathlib.Algebra.Module.Torsion.Free
+public import Mathlib.Algebra.Module.Transport
 public import Mathlib.Algebra.NoZeroSMulDivisors.Defs
 
 /-!
@@ -38,6 +39,42 @@ protected lemma noZeroSMulDivisors [Zero α] [Zero β] [SMul R β] [NoZeroSMulDi
   exact eq_zero_or_eq_zero_of_smul_eq_zero
 
 end Equiv
+
+/-- A canonical equivalence is a ring isomorphism for the semiring structure transported along
+it. -/
+def Lean.CanonicalEquivalence.ringEquiv {S S' : Type*} (e : Lean.CanonicalEquivalence S S')
+    [Semiring S'] :
+    letI := (Semiring.canonicalCongr e).invFun ‹Semiring S'›
+    S ≃+* S' :=
+  letI := (Semiring.canonicalCongr e).invFun ‹Semiring S'›
+  { toFun := e.toFun
+    invFun := e.invFun
+    left_inv := e.left_inv
+    right_inv := e.right_inv
+    map_mul' _ _ := e.right_inv _
+    map_add' _ _ := e.right_inv _ }
+
+/-- A canonical equivalence is semilinear over `Lean.CanonicalEquivalence.ringEquiv` for the module
+structure transported along it. -/
+def Lean.CanonicalEquivalence.semilinearEquiv {S S' : Type*} (e₁ : Lean.CanonicalEquivalence S S')
+    (e₂ : Lean.CanonicalEquivalence α β) [Semiring S'] [AddCommMonoid β] [_root_.Module S' β] :
+    letI := (Semiring.canonicalCongr e₁).invFun ‹Semiring S'›
+    letI := (AddCommMonoid.canonicalCongr e₂).invFun ‹AddCommMonoid β›
+    letI := (_root_.Module.canonicalCongr e₁ e₂ rfl rfl).invFun ‹_root_.Module S' β›
+    haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+    haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+    α ≃ₛₗ[(e₁.ringEquiv : S →+* S')] β :=
+  letI := (Semiring.canonicalCongr e₁).invFun ‹Semiring S'›
+  letI := (AddCommMonoid.canonicalCongr e₂).invFun ‹AddCommMonoid β›
+  letI := (_root_.Module.canonicalCongr e₁ e₂ rfl rfl).invFun ‹_root_.Module S' β›
+  haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+  haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+  { toFun := e₂.toFun
+    invFun := e₂.invFun
+    map_add' _ _ := e₂.right_inv _
+    map_smul' _ _ := e₂.right_inv _
+    left_inv := e₂.left_inv
+    right_inv := e₂.right_inv }
 
 variable [AddCommMonoid α] [AddCommMonoid β] [Module R β]
 

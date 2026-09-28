@@ -1025,17 +1025,18 @@ requires that `M` is a `C^n` manifold. The definition is put here to avoid impor
 all the smooth bundle structure when defining manifold derivatives. -/
 
 set_option linter.unusedVariables false in
-/-- The tangent space at a point of the manifold `M`. It is just `E`. We could use instead
-`(tangentBundleCore I M).toFiberBundleCore.fiber x`, but we use `E` to help the kernel.
-
-The definition of `TangentSpace` is not reducible so that type class inference
-does not pick wrong instances.
--/
+/-- The tangent space at a point of the manifold `M`, a `newtype` over the model vector space `E`.
+Its elements are identified with those of `E` through the preferred chart at the point, see
+`TangentSpace.equivModel`. -/
 @[nolint unusedArguments, wikidata Q909601]
-def TangentSpace {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+newtype TangentSpace {𝕜 : Type*} [NontriviallyNormedField 𝕜]
     {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
-    {M : Type*} [TopologicalSpace M] [ChartedSpace H M] (_x : M) : Type u := E
+    {M : Type*} [TopologicalSpace M] [ChartedSpace H M] (_x : M) where
+  /-- Reads a vector of the model space as a tangent vector. Prefer `TangentSpace.equivModel`. -/
+  ofModel ::
+  /-- Reads a tangent vector as a vector of the model space. Prefer `TangentSpace.equivModel`. -/
+  toModel : E
 deriving
   TopologicalSpace, AddCommGroup, IsTopologicalAddGroup, Module 𝕜,
   ContinuousSMul 𝕜,
@@ -1048,30 +1049,58 @@ variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
   {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M] {x : M}
 
-/-- Definitional identification between the tangent space of a manifold at a point and the
-model space. *Do not use*, unless when setting up foundational properties of the tangent space:
-this definition is a technical detail related to our specific implementation of tangent spaces,
-but it has no mathematical meaning. The mathematically meaningful version of this definition
-is the derivative of the extended chart at `x`, in its `mvfderiv` version. -/
-def tangentSpaceCastModel (x : M) : TangentSpace I x ≃L[𝕜] E where
-  toFun v := v
-  invFun v := v
-  map_add' x y := rfl
-  map_smul' c x := rfl
+/-- The identification of the tangent space at `x` with the model space given by the preferred
+chart at `x`. It is the trivialization of the tangent bundle at `x`, read in the fiber over `x`,
+see `TangentSpace.equivModel_eq_continuousLinearMapAt`. -/
+def TangentSpace.equivModel (x : M) : TangentSpace I x ≃L[𝕜] E where
+  toFun := toModel
+  invFun := ofModel
+  left_inv _ := rfl
+  right_inv _ := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  continuous_toFun := ⟨fun _ h ↦ h⟩
+  continuous_invFun := ⟨fun _ h ↦ h⟩
 
-/-- Identifying the tangent space at a normed space with the normed space itself.
-This canonical identification (which, in mathlib, is implemented using an abuse of definitional
-equality) is very prevalent in a number of places: this device allows making it explicit. -/
+/-- Identifying the tangent space at a normed space with the normed space itself. -/
 def NormedSpace.fromTangentSpace (v : E) : TangentSpace 𝓘(𝕜, E) v ≃L[𝕜] E :=
-  tangentSpaceCastModel 𝓘(𝕜, E) v
+  TangentSpace.equivModel 𝓘(𝕜, E) v
 
-/-- Definitional identification between the tangent space of a manifold at two points. This only
-makes sense mathematically when `x = y`. -/
-def tangentSpaceCast (x y : M) : TangentSpace I x ≃L[𝕜] TangentSpace I y where
-  toFun v := v
-  invFun v := v
-  map_add' x y := rfl
-  map_smul' c x := rfl
+/-- The tangent spaces at equal points are equivalent. -/
+@[nolint unusedArguments]
+def TangentSpace.cast {x y : M} (_h : x = y) : TangentSpace I x ≃L[𝕜] TangentSpace I y where
+  toFun v := ofModel v.toModel
+  invFun v := ofModel v.toModel
+  left_inv _ := rfl
+  right_inv _ := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+  continuous_toFun := ⟨fun _ h ↦ h⟩
+  continuous_invFun := ⟨fun _ h ↦ h⟩
+
+namespace TangentSpace
+
+@[simp]
+theorem cast_rfl (v : TangentSpace I x) : TangentSpace.cast I rfl v = v :=
+  rfl
+
+@[simp]
+theorem cast_cast {x y z : M} (h : x = y) (h' : y = z) (v : TangentSpace I x) :
+    TangentSpace.cast I h' (TangentSpace.cast I h v) = TangentSpace.cast I (h.trans h') v :=
+  rfl
+
+theorem cast_heq {y : M} (h : x = y) (v : TangentSpace I x) : TangentSpace.cast I h v ≍ v := by
+  subst h
+  rfl
+
+/-- Casting the value at `x` of a section of the tangent bundle along `x = y` gives its value at
+`y`. -/
+theorem cast_apply_section {y : M} (h : x = y) (V : Π z : M, TangentSpace I z) :
+    TangentSpace.cast I h (V x) = V y := by
+  subst h
+  rfl
+
+end TangentSpace
 
 instance : Inhabited (TangentSpace I x) := ⟨0⟩
 

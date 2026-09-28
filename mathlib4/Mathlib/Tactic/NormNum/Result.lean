@@ -495,7 +495,7 @@ def Result.toRawIntEq {α : Q(Type u)} {e : Q($α)} : Result e →
 /-- Constructs a `Result` out of a raw nat cast. Assumes `e` is a raw nat cast expression. -/
 def Result.ofRawNat {α : Q(Type u)} (e : Q($α)) : Result e := Id.run do
   let .app (.app _ (sα : Q(AddMonoidWithOne $α))) (lit : Q(ℕ)) := e | panic! "not a raw nat cast"
-  .isNat sα lit (q(IsNat.of_raw $α $lit) : Expr)
+  return .isNat sα lit (q(IsNat.of_raw $α $lit) : Expr)
 
 /-- Constructs a `Result` out of a raw int cast.
 Assumes `e` is a raw int cast expression denoting `n`. -/
@@ -504,7 +504,7 @@ def Result.ofRawInt {α : Q(Type u)} (n : ℤ) (e : Q($α)) : Result e :=
     Result.ofRawNat e
   else Id.run do
     let .app (.app _ (rα : Q(Ring $α))) (.app _ (lit : Q(ℕ))) := e | panic! "not a raw int cast"
-    .isNegNat rα lit (q(IsInt.of_raw $α (.negOfNat $lit)) : Expr)
+    return .isNegNat rα lit (q(IsInt.of_raw $α (.negOfNat $lit)) : Expr)
 
 /-- Constructs a `Result` out of a raw rat cast.
 Assumes `e` is a raw rat cast expression denoting `n`. -/
@@ -516,7 +516,7 @@ def Result.ofRawNNRat
     let .app (.app (.app _ (dα : Q(DivisionSemiring $α))) (n : Q(ℕ))) (d : Q(ℕ)) := e
       | panic! "not a raw nnrat cast"
     let hyp : Q(($d : $α) ≠ 0) := hyp.get!
-    .isNNRat dα q n d (q(IsNNRat.of_raw $α $n $d $hyp) : Expr)
+    return .isNNRat dα q n d (q(IsNNRat.of_raw $α $n $d $hyp) : Expr)
 
 /-- Constructs a `Result` out of a raw rat cast.
 Assumes `e` is a raw rat cast expression denoting `n`. -/
@@ -529,7 +529,7 @@ def Result.ofRawRat {α : Q(Type u)} (q : ℚ) (e : Q($α)) (hyp : Option Expr :
     let .app (.app (.app _ (dα : Q(DivisionRing $α))) (.app _ (n : Q(ℕ)))) (d : Q(ℕ)) := e
       | panic! "not a raw rat cast"
     let hyp : Q(($d : $α) ≠ 0) := hyp.get!
-    .isNegNNRat dα q n d (q(IsRat.of_raw $α (.negOfNat $n) $d $hyp) : Expr)
+    return .isNegNNRat dα q n d (q(IsRat.of_raw $α (.negOfNat $n) $d $hyp) : Expr)
 
 /-- Convert a `Result` to a `Simp.Result`. -/
 def Result.toSimpResult {α : Q(Type u)} {e : Q($α)} : Result e → MetaM Simp.Result

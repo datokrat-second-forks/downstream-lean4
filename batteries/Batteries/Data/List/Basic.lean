@@ -424,7 +424,8 @@ def transpose (l : List (List α)) : List (List α) := (l.foldr go #[]).toList w
   /-- `pop : List α → StateM (List α) (List α)` transforms the input list `old`
   by taking the head of the current state and pushing it on the head of `old`.
   If the state list is empty, then `old` is left unchanged. -/
-  pop (old : List α) : StateM (List α) (List α)
+  pop (old : List α) : StateM (List α) (List α) :=
+    modifyGet fun
     | [] => (old, [])
     | a :: l => (a :: old, l)
 
@@ -439,7 +440,7 @@ def transpose (l : List (List α)) : List (List α) := (l.foldr go #[]).toList w
   ```
   -/
   go (l : List α) (acc : Array (List α)) : Array (List α) :=
-    let (acc, l) := acc.mapM pop l
+    let (acc, l) := ((acc.mapM pop).run l).run
     l.foldl (init := acc) fun arr a => arr.push [a]
 
 /--

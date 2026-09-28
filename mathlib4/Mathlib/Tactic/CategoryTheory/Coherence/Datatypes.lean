@@ -463,7 +463,7 @@ abbrev CoherenceM (ρ : Type) := ReaderT ρ <| StateT State MetaM
 /-- Run the `CoherenceM ρ` monad. -/
 def CoherenceM.run {α ρ : Type} (x : CoherenceM ρ α) (ctx : ρ) (s : State := {}) :
     MetaM α := do
-  Prod.fst <$> ReaderT.run x ctx s
+  (ReaderT.run x ctx).run' s
 
 end BicategoryLike
 

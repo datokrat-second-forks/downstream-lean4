@@ -395,7 +395,7 @@ theorem IsSemisimpleModule.exists_linearEquiv_fin_dfinsupp [IsSemisimpleModule R
   have ⟨s, e, h, simple⟩ := IsSemisimpleModule.exists_linearEquiv_dfinsupp R M
   have := WellFoundedGT.finite_of_iSupIndep ((sSupIndep_iff _).mp h)
     fun S ↦ (S.1.nontrivial_iff_ne_bot).mp <| IsSimpleModule.nontrivial R S
-  ⟨_, _, e.trans <| DirectSum.lequivCongrLeft R (Finite.equivFin s), fun _ ↦ simple _⟩
+  ⟨_, _, e.trans <| DFinsupp.domLCongr (Finite.equivFin s), fun _ ↦ simple _⟩
 
 open LinearMap in
 instance {ι} [Finite ι] (M : ι → Type*) [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)]

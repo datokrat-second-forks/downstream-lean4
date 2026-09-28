@@ -78,7 +78,7 @@ theorem tendsto_inv (a : G) : Tendsto Inv.inv (𝓝 a) (𝓝 a⁻¹) :=
   continuousAt_inv
 
 @[to_additive]
-instance OrderDual.instContinuousInv : ContinuousInv Gᵒᵈ := ‹ContinuousInv G›
+instance OrderDual.instContinuousInv : ContinuousInv Gᵒᵈ := inferInstanceAs (ContinuousInv G)
 
 @[to_additive]
 instance Prod.continuousInv [TopologicalSpace H] [Inv H] [ContinuousInv H] :

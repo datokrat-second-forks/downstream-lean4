@@ -55,6 +55,18 @@ class VAdd (G : Type u) (P : Type v) where
   but it is intended to be used for left actions. -/
   vadd : G → P → P
 
+/-- `VAdd` instances correspond along canonical equivalences of the scalars and of the acted-on
+types. -/
+@[transport] protected abbrev VAdd.canonicalCongr {G G' P P' : Type*}
+    (e₁ : Lean.CanonicalEquivalence G G') (e₂ : Lean.CanonicalEquivalence P P') :
+    Lean.CanonicalEquivalence (VAdd G P) (VAdd G' P') where
+  toFun i := ⟨fun g x ↦ e₂.toFun (i.vadd (e₁.invFun g) (e₂.invFun x))⟩
+  invFun i := ⟨fun g x ↦ e₂.invFun (i.vadd (e₁.toFun g) (e₂.toFun x))⟩
+  left_inv i := congrArg VAdd.mk <| funext fun g ↦ funext fun x ↦
+    (e₂.left_inv _).trans (congr (congrArg i.vadd (e₁.left_inv g)) (e₂.left_inv x))
+  right_inv i := congrArg VAdd.mk <| funext fun g ↦ funext fun x ↦
+    (e₂.right_inv _).trans (congr (congrArg i.vadd (e₁.right_inv g)) (e₂.right_inv x))
+
 /-- Type class for the `-ᵥ` notation. -/
 class VSub (G : outParam Type*) (P : Type*) where
   /-- `a -ᵥ b` computes the difference of `a` and `b`. The meaning of this notation is
@@ -68,7 +80,7 @@ class SDiv (G : outParam Type*) (P : Type*) where
   type-dependent, but it is intended to be used for multiplicative torsors. -/
   sdiv : P → P → G
 
-attribute [to_additive existing] SMul HSMul
+attribute [to_additive existing] SMul HSMul SMul.canonicalCongr
 attribute [to_additive (attr := default_instance)] instHSMul
 
 initialize_simps_projections VAdd

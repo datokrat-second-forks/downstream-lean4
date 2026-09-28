@@ -81,6 +81,15 @@ theorem small_map {α : Type*} {β : Type*} [hβ : Small.{w} β] (e : α ≃ β)
   let ⟨_, ⟨f⟩⟩ := hβ.equiv_small
   Small.mk' (e.trans f)
 
+/-- `Small` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Small.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Small.{w} α) (Small.{w} β) where
+  toFun _ := small_map e.toEquiv.symm
+  invFun _ := small_map e.toEquiv
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 theorem small_lift (α : Type u) [hα : Small.{v} α] : Small.{max v w} α :=
   let ⟨⟨_, ⟨f⟩⟩⟩ := hα
   Small.mk' <| f.trans (Equiv.ulift.{w}).symm

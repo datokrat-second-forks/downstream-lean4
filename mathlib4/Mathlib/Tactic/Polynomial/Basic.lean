@@ -122,10 +122,10 @@ elab (name := polynomial) "polynomial" tk:"!"? : tactic =>
       β ← Polynomial.inferBase α
     catch _ =>
       throwError "polynomial failed: not an equality of (mv)polynomials"
-    let some g ← transformAtTarget (fun e _ ↦ Polynomial.preprocess e) "polynomial" .silent g
-      default | done
-    let some g ← transformAtTarget (fun e _ ↦ Algebra.preprocess e) "polynomial" .silent g
-      default | done
+    let some g ← (transformAtTarget (fun e ↦ liftM (Polynomial.preprocess e))
+      "polynomial" .silent g).run default | done
+    let some g ← (transformAtTarget (fun e ↦ liftM (Algebra.preprocess e))
+      "polynomial" .silent g).run default | done
     AtomM.run (if tk.isSome then .default else .reducible)
       (Algebra.proveEq (some (← getLevelQ' β)) g)
 

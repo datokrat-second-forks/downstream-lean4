@@ -44,8 +44,8 @@ def escape (s : String) : String := Id.run do
       i := j
     else
       j := j.next h
-  if i = s.startPos then s  -- no escaping needed, return original
-  else out ++ s.extract i j
+  if i = s.startPos then return s  -- no escaping needed, return original
+  else return out ++ s.extract i j
 where
   subst : Char → Option String
     | '&' => some "&amp;"

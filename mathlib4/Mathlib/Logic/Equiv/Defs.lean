@@ -975,3 +975,11 @@ lemma ord_def [Ord β] (a b : α) :
     compare a b = compare (e a) (e b) := rfl
 
 end Equiv
+
+/-- View a canonical transport equivalence as a mathematical equivalence. -/
+@[simps]
+def Lean.CanonicalEquivalence.toEquiv (e : Lean.CanonicalEquivalence α β) : α ≃ β where
+  toFun := e.toFun
+  invFun := e.invFun
+  left_inv := e.left_inv
+  right_inv := e.right_inv

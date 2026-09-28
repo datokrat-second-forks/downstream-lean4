@@ -47,9 +47,9 @@ with the value of `f n`. -/
 @[specialize] def mapPrefix (f : Name → Option Name) (n : Name) : Name := Id.run do
   if let some n' := f n then return n'
   match n with
-  | anonymous => anonymous
-  | str n' s => mkStr (mapPrefix f n') s
-  | num n' i => mkNum (mapPrefix f n') i
+  | anonymous => return anonymous
+  | str n' s => return mkStr (mapPrefix f n') s
+  | num n' i => return mkNum (mapPrefix f n') i
 
 /-- Build a name from components.
 For example, ``from_components [`foo, `bar]`` becomes ``` `foo.bar```.

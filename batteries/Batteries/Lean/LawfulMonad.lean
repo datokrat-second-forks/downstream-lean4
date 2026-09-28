@@ -22,9 +22,11 @@ instance : LawfulMonad (ST σ) := .mk' _
   (bind_assoc := fun f g x => rfl)
 
 instance  : LawfulMonad (EST ε σ) := .mk' _
-  (id_map := fun x => funext fun v => by dsimp [Functor.map, EST.bind]; cases x v <;> rfl)
+  (id_map := fun x => congrArg EST.mk <| funext fun v => by cases x.run v <;> rfl)
   (pure_bind := fun x f => rfl)
-  (bind_assoc := fun f g x => funext fun v => by dsimp [Bind.bind, EST.bind]; cases f v <;> rfl)
+  (bind_assoc := fun f g x => congrArg EST.mk <| funext fun v => by
+    simp only [bind, EST.bind]
+    cases f.run v <;> rfl)
 
 instance : LawfulMonad (EIO ε) := inferInstanceAs <| LawfulMonad (EST _ _)
 instance : LawfulMonad BaseIO := inferInstanceAs <| LawfulMonad (ST _)

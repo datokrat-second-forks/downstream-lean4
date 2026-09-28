@@ -35,6 +35,15 @@ not cross thread boundaries.
 /-- **For internal use only.** See {name}`Internal.getPyThreadCtxUnsafe`. -/
 add_decl_doc MonadPy.getPyThreadCtxUnsafe
 
+/-- Transports {name}`MonadPy` instances along an equivalence of monads. -/
+@[transport] public protected abbrev MonadPy.canonicalCongr {m n : Type → Type u}
+    (e : ∀ α, Lean.CanonicalEquivalence (m α) (n α)) :
+    Lean.CanonicalEquivalence (MonadPy m) (MonadPy n) where
+  toFun i := ⟨(e _).toFun i.getPyThreadCtxUnsafe⟩
+  invFun i := ⟨(e _).invFun i.getPyThreadCtxUnsafe⟩
+  left_inv _ := congrArg MonadPy.mk ((e _).left_inv _)
+  right_inv _ := congrArg MonadPy.mk ((e _).right_inv _)
+
 public instance [MonadLift m n] [MonadPy m] : MonadPy n where
   getPyThreadCtxUnsafe := liftM (m := m) Internal.getPyThreadCtxUnsafe
 

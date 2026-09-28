@@ -54,11 +54,17 @@ variable (I)
 
 /-! #### Model with corners -/
 
-protected theorem hasMFDerivAt {x} : HasMFDerivAt I 𝓘(𝕜, E) I x (ContinuousLinearMap.id _ _) :=
+/-- The derivative of `I : H → E` at `x` is `TangentSpace.equivModel I x`, read in the tangent space
+to `E` at `I x`. -/
+protected theorem hasMFDerivAt {x} :
+    HasMFDerivAt I 𝓘(𝕜, E) I x ((NormedSpace.fromTangentSpace (I x)).symm.toContinuousLinearMap ∘L
+      (TangentSpace.equivModel I x).toContinuousLinearMap) :=
   ⟨I.continuousAt, (hasFDerivWithinAt_id _ _).congr' I.rightInvOn (mem_range_self _)⟩
 
 protected theorem hasMFDerivWithinAt {s x} :
-    HasMFDerivWithinAt I 𝓘(𝕜, E) I s x (ContinuousLinearMap.id _ _) :=
+    HasMFDerivWithinAt I 𝓘(𝕜, E) I s x
+      ((NormedSpace.fromTangentSpace (I x)).symm.toContinuousLinearMap ∘L
+        (TangentSpace.equivModel I x).toContinuousLinearMap) :=
   I.hasMFDerivAt.hasMFDerivWithinAt
 
 protected theorem mdifferentiableWithinAt {s x} : MDiffAt[s] I x :=
@@ -73,7 +79,9 @@ protected theorem mdifferentiableOn {s} : MDiff[s] I := fun _ _ =>
 protected theorem mdifferentiable : MDiff I := fun _ => I.mdifferentiableAt
 
 theorem hasMFDerivWithinAt_symm {x} (hx : x ∈ range I) :
-    HasMFDerivWithinAt 𝓘(𝕜, E) I I.symm (range I) x (ContinuousLinearMap.id _ _) :=
+    HasMFDerivWithinAt 𝓘(𝕜, E) I I.symm (range I) x
+      ((TangentSpace.equivModel I (I.symm x)).symm.toContinuousLinearMap ∘L
+        (NormedSpace.fromTangentSpace x).toContinuousLinearMap) :=
   ⟨I.continuousWithinAt_symm,
     (hasFDerivWithinAt_id _ _).congr' (fun _y hy => I.rightInvOn hy.1) ⟨hx, mem_range_self _⟩⟩
 
@@ -140,21 +148,20 @@ protected theorem mdifferentiableAt {x : M} (hx : x ∈ e.source) : MDiffAt e x 
 theorem mdifferentiableAt_symm {x : M'} (hx : x ∈ e.target) : MDiffAt e.symm x :=
   (he.2 x hx).mdifferentiableAt (e.open_target.mem_nhds hx)
 
+/-- The derivative of `e.symm` after that of `e` is the identity, up to the identification of the
+tangent spaces at `x` and at `e.symm (e x)`. -/
 theorem symm_comp_deriv {x : M} (hx : x ∈ e.source) :
     (mfderiv% e.symm (e x)).comp (mfderiv% e x) =
-      ContinuousLinearMap.id 𝕜 (TangentSpace I x) := by
-  have : mfderiv% (e.symm ∘ e) x = (mfderiv% e.symm (e x)).comp (mfderiv% e x) :=
+      (TangentSpace.cast I (e.left_inv hx).symm).toContinuousLinearMap := by
+  have hcomp : mfderiv% (e.symm ∘ e) x = (mfderiv% e.symm (e x)).comp (mfderiv% e x) :=
     mfderiv_comp x (he.mdifferentiableAt_symm (e.map_source hx)) (he.mdifferentiableAt hx)
-  rw [← this]
-  have : mfderiv% (_root_.id : M → M) x = ContinuousLinearMap.id _ _ := mfderiv_id
-  rw [← this]
-  apply Filter.EventuallyEq.mfderiv_eq
-  have : e.source ∈ 𝓝 x := e.open_source.mem_nhds hx
-  exact Filter.mem_of_superset this (by mfld_set_tac)
+  have hEq : (e.symm ∘ e : M → M) =ᶠ[𝓝 x] _root_.id :=
+    Filter.mem_of_superset (e.open_source.mem_nhds hx) (by mfld_set_tac)
+  rw [← hcomp, hEq.mfderiv_eq, mfderiv_id, ContinuousLinearMap.comp_id]
 
 theorem comp_symm_deriv {x : M'} (hx : x ∈ e.target) :
     (mfderiv% e (e.symm x)).comp (mfderiv% e.symm x) =
-      ContinuousLinearMap.id 𝕜 (TangentSpace I' x) :=
+      (TangentSpace.cast I' (e.right_inv hx).symm).toContinuousLinearMap :=
   he.symm.symm_comp_deriv hx
 
 /-- The derivative of a differentiable open partial homeomorphism, as a continuous linear
@@ -162,20 +169,24 @@ equivalence between the tangent spaces at `x` and `e x`. -/
 protected def mfderiv (he : e.MDifferentiable I I') {x : M} (hx : x ∈ e.source) :
     TangentSpace I x ≃L[𝕜] TangentSpace I' (e x) :=
   { mfderiv% e x with
-    invFun := mfderiv% e.symm (e x)
+    invFun v := TangentSpace.cast I (e.left_inv hx) (mfderiv% e.symm (e x) v)
     continuous_toFun := (mfderiv% e x).cont
-    continuous_invFun := (mfderiv% e.symm (e x)).cont
+    continuous_invFun :=
+      (TangentSpace.cast I (e.left_inv hx)).continuous.comp (mfderiv% e.symm (e x)).cont
     left_inv := fun y => by
-      have : (ContinuousLinearMap.id _ _ : TangentSpace I x →L[𝕜] TangentSpace I x) y = y := rfl
-      conv_rhs => rw [← this, ← he.symm_comp_deriv hx]
-      rfl
+      have := congr($(he.symm_comp_deriv hx) y)
+      simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+      change TangentSpace.cast I _ (mfderiv% e.symm (e x) (mfderiv% e x y)) = y
+      simp [this]
     right_inv := fun y => by
-      have :
-        (ContinuousLinearMap.id 𝕜 _ : TangentSpace I' (e x) →L[𝕜] TangentSpace I' (e x)) y = y :=
-        rfl
-      conv_rhs => rw [← this, ← he.comp_symm_deriv (e.map_source hx)]
-      rw [e.left_inv hx]
-      rfl }
+      have key {a b : M} (h : a = b) (v : TangentSpace I a) :
+          mfderiv% e b (TangentSpace.cast I h v) =
+            TangentSpace.cast I' (congrArg e h) (mfderiv% e a v) := by
+        subst h; rfl
+      have := congr($(he.comp_symm_deriv (e.map_source hx)) y)
+      simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+      change mfderiv% e x (TangentSpace.cast I _ (mfderiv% e.symm (e x) y)) = y
+      simp [key, this] }
 
 theorem mfderiv_bijective {x : M} (hx : x ∈ e.source) : Function.Bijective (mfderiv% e x) :=
   (he.mfderiv hx).bijective
@@ -242,91 +253,104 @@ theorem mdifferentiableOn_extend_symm (he : e ∈ maximalAtlas I 1 M) :
   exact mdifferentiableWithinAt_extend_symm he hy |>.mono (e.extend_target_subset_range)
 
 /-- The composition of the derivative of an extended chart `e.extend I` with the derivative of its
-inverse `(e.extend I).symm` gives the identity.
+inverse `(e.extend I).symm` gives the identity, up to the identification of the tangent spaces at
+`y` and at `e.extend I ((e.extend I).symm y)`.
 Version where the basepoint belongs to `(e.extend I).target`. -/
 lemma mfderiv_extend_comp_mfderivWithin_extend_symm
     {y : E} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).target) :
-    (mfderiv% (e.extend I) ((e.extend I).symm y)) ∘L
-      (mfderiv[range I] (e.extend I).symm y) = ContinuousLinearMap.id _ _ := by
+    (mfderiv% (e.extend I) ((e.extend I).symm y)) ∘L (mfderiv[range I] (e.extend I).symm y) =
+      (TangentSpace.cast 𝓘(𝕜, E) ((e.extend I).right_inv hy).symm).toContinuousLinearMap := by
   have U : UniqueMDiffAt[range I] y := by
     apply I.uniqueMDiffOn
     apply e.extend_target_subset_range hy
   have h'y : (e.extend I).symm y ∈ e.source := PartialEquiv.map_target _ (by simp_all)
-  rw [← mfderiv_comp_mfderivWithin]; rotate_left
-  · exact e.mdifferentiableAt_extend he h'y
-  · exact mdifferentiableWithinAt_extend_symm he hy
-  · exact U
-  rw [← mfderivWithin_id U]
-  apply Filter.EventuallyEq.mfderivWithin_eq
-  · have : (e.extend I) ((e.extend I).symm y) = y := (e.extend I).right_inv hy
-    filter_upwards [this ▸ e.extend_target_mem_nhdsWithin h'y (I := I)] with z hz
+  have hEq : ((e.extend I) ∘ (e.extend I).symm) =ᶠ[𝓝[range I] y] _root_.id := by
+    filter_upwards [(e.extend I).right_inv hy ▸ e.extend_target_mem_nhdsWithin h'y (I := I)]
+      with z hz
     simp_all
-  · simp_all
-
-/-- The composition of the derivative of an extended chart `e.extend I` with the derivative of its
-inverse `(e.extend I).symm` gives the identity.
-Version where the basepoint belongs to `(e.extend).source`. -/
-lemma mfderiv_extend_comp_mfderivWithin_extend_symm'
-    {y : M} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).source) :
-    (mfderiv% (e.extend I) y) ∘L (mfderiv[range I] (e.extend I).symm (e.extend I y))
-    = ContinuousLinearMap.id _ _ := by
-  convert! mfderiv_extend_comp_mfderivWithin_extend_symm he ((e.extend I).map_source hy)
-  rw [(e.extend I).left_inv hy]
+  rw [← mfderiv_comp_mfderivWithin _ (e.mdifferentiableAt_extend he h'y)
+      (mdifferentiableWithinAt_extend_symm he hy) U,
+    hEq.mfderivWithin_eq ((e.extend I).right_inv hy), mfderivWithin_id U,
+    ContinuousLinearMap.comp_id]
 
 /-- The composition of the derivative of the inverse of an extended chart `e.extend I` with the
-derivative of `e.extend I` gives the identity.
-Version where the basepoint belongs to `(extChartAt I x).target`. -/
-lemma mfderivWithin_extend_symm_comp_mfderiv_extend
-    {y : E} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).target) :
-    (mfderiv[range I] (e.extend I).symm y) ∘L
-      (mfderiv% (e.extend I) ((e.extend I).symm y))
-      = ContinuousLinearMap.id _ _ := by
-  have h'y : (e.extend I).symm y ∈ e.source := by simp_all
-  have U' : UniqueMDiffAt[(e.extend I).source] ((e.extend I).symm y) := by
-    rw [e.extend_source]
-    exact e.open_source.uniqueMDiffWithinAt h'y
-  have : mfderiv% (e.extend I) ((e.extend I).symm y)
-      = mfderiv[(e.extend I).source] (e.extend I) ((e.extend I).symm y) := by
-    rw [mfderivWithin_eq_mfderiv U']
-    exact e.mdifferentiableAt_extend he h'y
-  rw [this, ← mfderivWithin_comp_of_eq]; rotate_left
-  · exact mdifferentiableWithinAt_extend_symm he hy
-  · exact (e.mdifferentiableAt_extend he h'y).mdifferentiableWithinAt
-  · intro z hz
-    exact e.extend_target_subset_range ((e.extend I).map_source hz)
-  · exact U'
-  · exact (e.extend I).right_inv hy
-  rw [← mfderivWithin_id U']
-  apply Filter.EventuallyEq.mfderivWithin_eq
-  · filter_upwards [e.extend_source_mem_nhdsWithin (I := I) h'y] with z hz
-    simp only [Function.comp_def, PartialEquiv.left_inv (e.extend I) hz, id_eq]
-  · simp only [Function.comp_def, PartialEquiv.right_inv (e.extend I) hy, id_eq]
-
-/-- The composition of the derivative of the inverse of an extended chart `e.extend I` with the
-derivative of `e.extend I` gives the identity.
+derivative of `e.extend I` gives the identity, up to the identification of the tangent spaces at
+`y` and at `(e.extend I).symm (e.extend I y)`.
 Version where the basepoint belongs to `e.source`. -/
 lemma mfderivWithin_extend_symm_comp_mfderiv_extend'
     {y : M} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ e.source) :
-    (mfderiv[range I] (e.extend I).symm (e.extend I y)) ∘L (mfderiv% (e.extend I) y)
-      = ContinuousLinearMap.id _ _ := by
-  convert! mfderivWithin_extend_symm_comp_mfderiv_extend he
-    ((e.extend I).map_source (by simpa using hy))
-  rw [(e.extend I).left_inv (by simpa using hy)]
+    (mfderiv[range I] (e.extend I).symm (e.extend I y)) ∘L (mfderiv% (e.extend I) y) =
+      (TangentSpace.cast I
+        ((e.extend I).left_inv (by simpa using hy)).symm).toContinuousLinearMap := by
+  have hy' : y ∈ (e.extend I).source := by simpa using hy
+  have U : UniqueMDiffAt[(e.extend I).source] y := by
+    rw [e.extend_source]
+    exact e.open_source.uniqueMDiffWithinAt hy
+  have hEq : ((e.extend I).symm ∘ (e.extend I)) =ᶠ[𝓝[(e.extend I).source] y] _root_.id := by
+    filter_upwards [e.extend_source_mem_nhdsWithin (I := I) hy] with z hz
+    simp only [Function.comp_def, PartialEquiv.left_inv (e.extend I) hz, id_eq]
+  rw [← mfderivWithin_eq_mfderiv U (e.mdifferentiableAt_extend he hy),
+    ← mfderivWithin_comp y (mdifferentiableWithinAt_extend_symm he ((e.extend I).map_source hy'))
+      (e.mdifferentiableAt_extend he hy).mdifferentiableWithinAt
+      (fun z hz ↦ e.extend_target_subset_range ((e.extend I).map_source hz)) U,
+    hEq.mfderivWithin_eq ((e.extend I).left_inv hy'), mfderivWithin_id U,
+    ContinuousLinearMap.comp_id]
+
+/-- The composition of the derivative of an extended chart `e.extend I` with the derivative of its
+inverse `(e.extend I).symm` gives the identity.
+Version where the basepoint belongs to `(e.extend I).source`. -/
+lemma mfderiv_extend_comp_mfderivWithin_extend_symm'
+    {y : M} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).source) :
+    (mfderiv% (e.extend I) y) ∘L
+        (TangentSpace.cast I ((e.extend I).left_inv hy)).toContinuousLinearMap ∘L
+        (mfderiv[range I] (e.extend I).symm (e.extend I y)) =
+      ContinuousLinearMap.id 𝕜 _ := by
+  have h := mfderiv_extend_comp_mfderivWithin_extend_symm he ((e.extend I).map_source hy)
+  rw [mfderiv_congr_point (f := e.extend I) ((e.extend I).left_inv hy).symm]
+  ext v
+  have := congr($h v)
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearMap.id_apply, TangentSpace.cast_cast, TangentSpace.cast_rfl, this]
+
+/-- The composition of the derivative of the inverse of an extended chart `e.extend I` with the
+derivative of `e.extend I` gives the identity.
+Version where the basepoint belongs to `(e.extend I).target`. -/
+lemma mfderivWithin_extend_symm_comp_mfderiv_extend
+    {y : E} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).target) :
+    (mfderiv[range I] (e.extend I).symm y) ∘L
+        (TangentSpace.cast 𝓘(𝕜, E) ((e.extend I).right_inv hy)).toContinuousLinearMap ∘L
+        (mfderiv% (e.extend I) ((e.extend I).symm y)) =
+      ContinuousLinearMap.id 𝕜 _ := by
+  have h'y : (e.extend I).symm y ∈ e.source := by simp_all
+  have h := mfderivWithin_extend_symm_comp_mfderiv_extend' he h'y
+  rw [mfderivWithin_congr_point (f := (e.extend I).symm) ((e.extend I).right_inv hy).symm]
+  ext v
+  have := congr($h v)
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearMap.id_apply, TangentSpace.cast_cast, TangentSpace.cast_rfl, this]
 
 lemma isInvertible_mfderivWithin_extend_symm
     {y : E} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ (e.extend I).target) :
-    (mfderiv[range I] (e.extend I).symm y).IsInvertible :=
-  ContinuousLinearMap.IsInvertible.of_inverse
-    (mfderivWithin_extend_symm_comp_mfderiv_extend he hy)
-    (mfderiv_extend_comp_mfderivWithin_extend_symm he hy)
+    (mfderiv[range I] (e.extend I).symm y).IsInvertible := by
+  refine ContinuousLinearMap.IsInvertible.of_inverse
+    (mfderivWithin_extend_symm_comp_mfderiv_extend he hy) ?_
+  ext v
+  have := congr($(mfderiv_extend_comp_mfderivWithin_extend_symm he hy) v)
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearMap.id_apply, TangentSpace.cast_cast, TangentSpace.cast_rfl, this]
 
 lemma isInvertible_mfderiv_extend {y : M} (he : e ∈ maximalAtlas I 1 M) (hy : y ∈ e.source) :
     (mfderiv% (e.extend I) y).IsInvertible := by
-  have h'y : e.extend I y ∈ (e.extend I).target := (e.extend I).map_source (by simpa using hy)
-  have Z := ContinuousLinearMap.IsInvertible.of_inverse
-    (mfderiv_extend_comp_mfderivWithin_extend_symm he h'y)
-    (mfderivWithin_extend_symm_comp_mfderiv_extend he h'y)
-  rwa [(e.extend I).left_inv (by simpa using hy)] at Z
+  refine ContinuousLinearMap.IsInvertible.of_inverse
+    (mfderiv_extend_comp_mfderivWithin_extend_symm' he (by simpa using hy)) ?_
+  ext v
+  have := congr($(mfderivWithin_extend_symm_comp_mfderiv_extend' he hy) v)
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearMap.id_apply, TangentSpace.cast_cast, TangentSpace.cast_rfl, this]
 
 end
 
@@ -335,11 +359,17 @@ section extChartAt
 variable [IsManifold I 1 M] {s : Set M} {x y : M} {z : E}
 
 theorem hasMFDerivAt_extChartAt (h : y ∈ (chartAt H x).source) :
-    HasMFDerivAt% (extChartAt I x) y (mfderiv% (chartAt H x) y :) :=
+    HasMFDerivAt% (extChartAt I x) y
+      (((NormedSpace.fromTangentSpace (extChartAt I x y)).symm.toContinuousLinearMap ∘L
+        (TangentSpace.equivModel I (chartAt H x y)).toContinuousLinearMap) ∘L
+          mfderiv% (chartAt H x) y) :=
   I.hasMFDerivAt.comp y ((mdifferentiable_chart x).mdifferentiableAt h).hasMFDerivAt
 
 theorem hasMFDerivWithinAt_extChartAt (h : y ∈ (chartAt H x).source) :
-    HasMFDerivAt[s] (extChartAt I x) y (mfderiv% (chartAt H x) y :) :=
+    HasMFDerivAt[s] (extChartAt I x) y
+      (((NormedSpace.fromTangentSpace (extChartAt I x y)).symm.toContinuousLinearMap ∘L
+        (TangentSpace.equivModel I (chartAt H x y)).toContinuousLinearMap) ∘L
+          mfderiv% (chartAt H x) y) :=
   (hasMFDerivAt_extChartAt h).hasMFDerivWithinAt
 
 theorem mdifferentiableAt_extChartAt (h : y ∈ (chartAt H x).source) :
@@ -358,12 +388,14 @@ theorem mdifferentiableOn_extChartAt_symm :
   mdifferentiableOn_extend_symm (IsManifold.chart_mem_maximalAtlas x)
 
 /-- The composition of the derivative of `extChartAt` with the derivative of the inverse of
-`extChartAt` gives the identity.
+`extChartAt` gives the identity, up to the identification of the tangent spaces at `y` and at
+`extChartAt I x ((extChartAt I x).symm y)`.
 Version where the basepoint belongs to `(extChartAt I x).target`. -/
 lemma mfderiv_extChartAt_comp_mfderivWithin_extChartAt_symm {x : M}
     {y : E} (hy : y ∈ (extChartAt I x).target) :
     (mfderiv% (extChartAt I x) ((extChartAt I x).symm y)) ∘L
-      (mfderiv[range I] (extChartAt I x).symm y) = ContinuousLinearMap.id _ _ :=
+      (mfderiv[range I] (extChartAt I x).symm y) =
+      (TangentSpace.cast 𝓘(𝕜, E) ((extChartAt I x).right_inv hy).symm).toContinuousLinearMap :=
   mfderiv_extend_comp_mfderivWithin_extend_symm (IsManifold.chart_mem_maximalAtlas x) hy
 
 /-- The composition of the derivative of `extChartAt` with the derivative of the inverse of
@@ -371,8 +403,10 @@ lemma mfderiv_extChartAt_comp_mfderivWithin_extChartAt_symm {x : M}
 Version where the basepoint belongs to `(extChartAt I x).source`. -/
 lemma mfderiv_extChartAt_comp_mfderivWithin_extChartAt_symm' {x : M}
     {y : M} (hy : y ∈ (extChartAt I x).source) :
-    (mfderiv% (extChartAt I x) y) ∘L (mfderiv[range I] (extChartAt I x).symm (extChartAt I x y))
-    = ContinuousLinearMap.id _ _ :=
+    (mfderiv% (extChartAt I x) y) ∘L
+        (TangentSpace.cast I ((extChartAt I x).left_inv hy)).toContinuousLinearMap ∘L
+        (mfderiv[range I] (extChartAt I x).symm (extChartAt I x y)) =
+      ContinuousLinearMap.id 𝕜 _ :=
   mfderiv_extend_comp_mfderivWithin_extend_symm' (IsManifold.chart_mem_maximalAtlas x) hy
 
 /-- The composition of the derivative of the inverse of `extChartAt` with the derivative of
@@ -381,20 +415,21 @@ Version where the basepoint belongs to `(extChartAt I x).target`. -/
 lemma mfderivWithin_extChartAt_symm_comp_mfderiv_extChartAt
     {y : E} (hy : y ∈ (extChartAt I x).target) :
     (mfderiv[range I] (extChartAt I x).symm y) ∘L
-      (mfderiv% (extChartAt I x) ((extChartAt I x).symm y))
-      = ContinuousLinearMap.id _ _ :=
+        (TangentSpace.cast 𝓘(𝕜, E) ((extChartAt I x).right_inv hy)).toContinuousLinearMap ∘L
+        (mfderiv% (extChartAt I x) ((extChartAt I x).symm y)) =
+      ContinuousLinearMap.id 𝕜 _ :=
   mfderivWithin_extend_symm_comp_mfderiv_extend (IsManifold.chart_mem_maximalAtlas x) hy
 
 /-- The composition of the derivative of the inverse of `extChartAt` with the derivative of
-`extChartAt` gives the identity.
+`extChartAt` gives the identity, up to the identification of the tangent spaces at `y` and at
+`(extChartAt I x).symm (extChartAt I x y)`.
 Version where the basepoint belongs to `(extChartAt I x).source`. -/
 lemma mfderivWithin_extChartAt_symm_comp_mfderiv_extChartAt'
     {y : M} (hy : y ∈ (extChartAt I x).source) :
-    (mfderiv[range I] (extChartAt I x).symm (extChartAt I x y)) ∘L (mfderiv% (extChartAt I x) y)
-      = ContinuousLinearMap.id _ _ := by
-  have : y = (extChartAt I x).symm (extChartAt I x y) := ((extChartAt I x).left_inv hy).symm
-  convert! mfderivWithin_extChartAt_symm_comp_mfderiv_extChartAt ((extChartAt I x).map_source hy)
-  rw [(extChartAt I x).left_inv (by simpa using hy)]
+    (mfderiv[range I] (extChartAt I x).symm (extChartAt I x y)) ∘L (mfderiv% (extChartAt I x) y) =
+      (TangentSpace.cast I ((extChartAt I x).left_inv hy).symm).toContinuousLinearMap :=
+  mfderivWithin_extend_symm_comp_mfderiv_extend' (IsManifold.chart_mem_maximalAtlas x)
+    (by simpa using hy)
 
 lemma isInvertible_mfderivWithin_extChartAt_symm {y : E} (hy : y ∈ (extChartAt I x).target) :
     (mfderiv[range I] (extChartAt I x).symm y).IsInvertible :=
@@ -406,28 +441,32 @@ lemma isInvertible_mfderiv_extChartAt {y : M} (hy : y ∈ (extChartAt I x).sourc
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The trivialization of the tangent bundle at a point is the manifold derivative of the
-extended chart.
-Use with care as this abuses the defeq `TangentSpace 𝓘(𝕜, E) y = E` for `y : E`. -/
+extended chart, read in `E` through `NormedSpace.fromTangentSpace`. -/
 theorem TangentBundle.continuousLinearMapAt_trivializationAt
     {x₀ x : M} (hx : x ∈ (chartAt H x₀).source) :
     (trivializationAt E (TangentSpace I) x₀).continuousLinearMapAt 𝕜 x =
-      mfderiv% (extChartAt I x₀) x := by
+      (NormedSpace.fromTangentSpace (extChartAt I x₀ x)).toContinuousLinearMap ∘L
+        mfderiv% (extChartAt I x₀) x := by
   have : MDiffAt (extChartAt I x₀) x := mdifferentiableAt_extChartAt hx
   simp only [extChartAt, OpenPartialHomeomorph.extend, PartialEquiv.coe_trans,
     ModelWithCorners.toPartialEquiv_coe, OpenPartialHomeomorph.toFun_eq_coe] at this
-  simp only [hx, mfderiv, this, mfld_simps]
+  rw [TangentBundle.continuousLinearMapAt_trivializationAt_eq_core hx]
+  simp only [mfderiv, this, mfld_simps]
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The inverse trivialization of the tangent bundle at a point is the manifold derivative of the
-inverse of the extended chart.
-Use with care as this abuses the defeq `TangentSpace 𝓘(𝕜, E) y = E` for `y : E`. -/
+inverse of the extended chart, read from `E` through `NormedSpace.fromTangentSpace`. -/
 theorem TangentBundle.symmL_trivializationAt
     {x₀ x : M} (hx : x ∈ (chartAt H x₀).source) :
     (trivializationAt E (TangentSpace I) x₀).symmL 𝕜 x =
-      mfderiv[range I] (extChartAt I x₀).symm (extChartAt I x₀ x) := by
+      (TangentSpace.cast I ((extChartAt I x₀).left_inv (by rwa [extChartAt_source]))
+        ).toContinuousLinearMap ∘L
+        mfderiv[range I] (extChartAt I x₀).symm (extChartAt I x₀ x) ∘L
+        (NormedSpace.fromTangentSpace (extChartAt I x₀ x)).symm.toContinuousLinearMap := by
   have : MDiffAt[range I] ((chartAt H x₀).symm ∘ I.symm) (I (chartAt H x₀ x)) := by
     simpa using mdifferentiableWithinAt_extChartAt_symm (by simp [hx])
+  rw [TangentBundle.symmL_trivializationAt_eq_core hx]
   simp only [hx, mfderivWithin, this, mfld_simps]
   rfl
 
@@ -444,31 +483,43 @@ lemma fderivWithin_extChartAt_comp_extChartAt_symm_range :
   rw [eq_nhd.fderivWithin_eq (by simp)]
   exact fderivWithin_id <| I.uniqueDiffOn.uniqueDiffWithinAt (mem_range_self _)
 
-/-- The manifold derivative of `extChartAt` at the basepoint is the identity. -/
+/-- The manifold derivative of `extChartAt` at the basepoint is `TangentSpace.equivModel`. -/
 lemma mfderiv_extChartAt_self :
-    mfderiv% (extChartAt I x) x = ContinuousLinearMap.id 𝕜 _ := by
-  rw [← TangentBundle.continuousLinearMapAt_trivializationAt (by simp),
-    TangentBundle.continuousLinearMapAt_trivializationAt_eq_core (by simp)]
-  ext v
-  simpa using! (tangentBundleCore I M).coordChange_self (achart H x) x (mem_chart_source H x) v
+    mfderiv% (extChartAt I x) x =
+      (NormedSpace.fromTangentSpace (extChartAt I x x)).symm.toContinuousLinearMap ∘L
+        (TangentSpace.equivModel I x).toContinuousLinearMap := by
+  rw [TangentSpace.equivModel_eq_continuousLinearMapAt,
+    TangentBundle.continuousLinearMapAt_trivializationAt (mem_chart_source H x),
+    ← ContinuousLinearMap.comp_assoc, ContinuousLinearEquiv.coe_symm_comp_coe,
+    ContinuousLinearMap.id_comp]
 
-set_option backward.isDefEq.respectTransparency false in
 -- TODO: should there be a version for `extChartAt`?
-/-- The manifold derivative within `range I` of `(extChartAt I x).symm` at the chart point is
-the identity. -/
+/-- The manifold derivative within `range I` of `(extChartAt I x).symm` at the chart point is the
+inverse of `TangentSpace.equivModel`. -/
 lemma mfderivWithin_range_extChartAt_symm :
-    mfderiv[range I] (extChartAt I x).symm (extChartAt I x x) = ContinuousLinearMap.id 𝕜 _ := by
-  have hcomp := mfderivWithin_extChartAt_symm_comp_mfderiv_extChartAt' (I := I)
-    (mem_extChartAt_source x)
-  rw [mfderiv_extChartAt_self, ContinuousLinearMap.comp_id] at hcomp
-  simpa using! hcomp
+    mfderiv[range I] (extChartAt I x).symm (extChartAt I x x) =
+      (TangentSpace.cast I (extChartAt_to_inv x).symm).toContinuousLinearMap ∘L
+        (TangentSpace.equivModel I x).symm.toContinuousLinearMap ∘L
+        (NormedSpace.fromTangentSpace (extChartAt I x x)).toContinuousLinearMap := by
+  rw [TangentSpace.equivModel_symm_eq_symmL,
+    TangentBundle.symmL_trivializationAt (mem_chart_source H x)]
+  ext v
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearEquiv.symm_apply_apply, TangentSpace.cast_cast, TangentSpace.cast_rfl]
 
-set_option backward.isDefEq.respectTransparency false in
 /-- The inverse of the derivative of `(extChartAt I x).symm` at the chart point,
 applied to a tangent vector, gives back the tangent vector. -/
 lemma mfderivWithin_extChartAt_symm_inverse_apply (v : TangentSpace I x) :
-    (mfderiv[range I] (extChartAt I x).symm (extChartAt I x x)).inverse v = v := by
-  rw [mfderivWithin_range_extChartAt_symm, ContinuousLinearMap.inverse_id]
-  exact ContinuousLinearMap.id_apply ..
+    (mfderiv[range I] (extChartAt I x).symm (extChartAt I x x)).inverse
+        (TangentSpace.cast I (extChartAt_to_inv x).symm v) =
+      (NormedSpace.fromTangentSpace (extChartAt I x x)).symm (TangentSpace.equivModel I x v) := by
+  have : mfderiv[range I] (extChartAt I x).symm (extChartAt I x x) =
+      ((NormedSpace.fromTangentSpace (extChartAt I x x)).trans
+        ((TangentSpace.equivModel I x).symm.trans
+          (TangentSpace.cast I (extChartAt_to_inv x).symm))).toContinuousLinearMap := by
+    rw [mfderivWithin_range_extChartAt_symm]
+    rfl
+  rw [this, ContinuousLinearMap.inverse_equiv]
+  rfl
 
 end extChartAt

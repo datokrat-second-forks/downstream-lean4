@@ -224,7 +224,7 @@ Asserts that `t₁` and `t₂` have the same number of elements in the same orde
 and `R` holds pairwise between them. The tree structure is ignored.
 -/
 @[specialize] def all₂ (R : α → β → Bool) (t₁ : RBNode α) (t₂ : RBNode β) : Bool :=
-  let result := StateT.run (s := t₂.toStream) <| t₁.forM fun a s => do
+  let result := StateT.run (s := t₂.toStream) <| t₁.forM fun a => StateT.mk fun s => do
     let (b, s) ← s.next?
     bif R a b then pure (⟨⟩, s) else none
   result matches some (_, .nil)

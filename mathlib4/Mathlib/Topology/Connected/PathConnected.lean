@@ -5,6 +5,7 @@ Authors: Patrick Massot
 -/
 module
 
+public import Mathlib.Topology.Homeomorph.TransferInstance
 public import Mathlib.Topology.Path
 
 /-!
@@ -628,6 +629,21 @@ theorem Function.Surjective.pathConnectedSpace [PathConnectedSpace X]
 theorem Homeomorph.pathConnectedSpace [PathConnectedSpace X] (h : X ≃ₜ Y) :
     PathConnectedSpace Y :=
   h.surjective.pathConnectedSpace h.continuous
+
+/-- `PathConnectedSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev PathConnectedSpace.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] {tα : TopologicalSpace α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ) :
+    Lean.CanonicalEquivalence (PathConnectedSpace α) (PathConnectedSpace β) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  exact {
+    toFun _ := e.homeomorph.pathConnectedSpace
+    invFun _ := e.homeomorph.symm.pathConnectedSpace
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 instance Quotient.instPathConnectedSpace {s : Setoid X} [PathConnectedSpace X] :
     PathConnectedSpace (Quotient s) :=

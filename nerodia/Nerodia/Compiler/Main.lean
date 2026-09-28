@@ -53,7 +53,7 @@ def extractPyModule (leanModule : Lean.Name) : IO ModuleDef := do
   -- `importModules` process or use `builtin_initialize` for its Lean
   -- extensions (thereby acting more like a Lean plugin).
   let phases ← id do
-    let modIdx : Nat := modIdx
+    let modIdx : Nat := modIdx.toNat
     if h : modIdx < env.header.moduleData.size then
       let isModule := env.header.moduleData[modIdx].isModule
       return if isModule then .runtime else .all

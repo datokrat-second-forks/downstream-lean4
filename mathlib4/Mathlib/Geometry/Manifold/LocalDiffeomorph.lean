@@ -395,6 +395,31 @@ variable {f : M → N} {x : M}
 
 variable {I J n}
 
+/-- The derivative of a local inverse of `f` at `f x`, composed with the derivative of `f` at `x`,
+is the identity, up to the identification of the tangent spaces at `x` and at
+`hf.localInverse (f x)`. -/
+theorem IsLocalDiffeomorphAt.mfderiv_localInverse_comp_mfderiv
+    (hf : IsLocalDiffeomorphAt I J n f x) (hn : n ≠ 0) :
+    mfderiv% hf.localInverse (f x) ∘L mfderiv% f x =
+      (TangentSpace.cast I
+        (hf.localInverse_left_inv hf.localInverse_mem_target).symm).toContinuousLinearMap := by
+  rw [← mfderiv_comp x (hf.localInverse_mdifferentiableAt hn) (hf.mdifferentiableAt hn),
+    hf.localInverse_eventuallyEq_left.mfderiv_eq, mfderiv_id, ContinuousLinearMap.comp_id]
+
+/-- The derivative of `f` at a local inverse of `f x`, composed with the derivative of that local
+inverse at `f x`, is the identity, up to the identification of the tangent spaces at `f x` and at
+`f (hf.localInverse (f x))`. -/
+theorem IsLocalDiffeomorphAt.mfderiv_comp_mfderiv_localInverse
+    (hf : IsLocalDiffeomorphAt I J n f x) (hn : n ≠ 0) :
+    mfderiv% f (hf.localInverse (f x)) ∘L mfderiv% hf.localInverse (f x) =
+      (TangentSpace.cast J (congrArg f
+        (hf.localInverse_left_inv hf.localInverse_mem_target)).symm).toContinuousLinearMap := by
+  have hf' : MDifferentiableAt I J f (hf.localInverse (f x)) := by
+    rw [hf.localInverse_left_inv hf.localInverse_mem_target]
+    exact hf.mdifferentiableAt hn
+  rw [← mfderiv_comp (f x) hf' (hf.localInverse_mdifferentiableAt hn),
+    hf.localInverse_eventuallyEq_right.mfderiv_eq, mfderiv_id, ContinuousLinearMap.comp_id]
+
 set_option backward.isDefEq.respectTransparency false in
 /-- If `f` is a `C^n` local diffeomorphism at `x`, for `n ≠ 0`, the differential `df_x`
 is a linear equivalence. -/
@@ -402,26 +427,32 @@ is a linear equivalence. -/
     (hf : IsLocalDiffeomorphAt I J n f x) (hn : n ≠ 0) :
     TangentSpace I x ≃L[𝕜] TangentSpace J (f x) where
   toFun := mfderiv% f x
-  invFun := mfderiv% hf.localInverse (f x)
-  left_inv := by
-    apply ContinuousLinearMap.leftInverse_of_comp
-    rw [← mfderiv_id, hf.localInverse_eventuallyEq_left.symm.mfderiv_eq]
-    exact (mfderiv_comp _ (hf.localInverse_mdifferentiableAt hn) (hf.mdifferentiableAt hn)).symm
-  right_inv := by
-    apply ContinuousLinearMap.rightInverse_of_comp
-    rw [← mfderiv_id, hf.localInverse_eventuallyEq_right.symm.mfderiv_eq]
-    -- We need to rewrite the base point hf.localInverse (f x) = x twice,
-    -- in the differentiability hypothesis and for applying the chain rule.
-    have hf' : MDifferentiableAt I J f (hf.localInverse (f x)) := by
-      rw [hf.localInverse_left_inv hf.localInverse_mem_target]
-      exact hf.mdifferentiableAt hn
-    rw [mfderiv_comp _ hf' (hf.localInverse_mdifferentiableAt hn),
-      hf.localInverse_left_inv hf.localInverse_mem_target]
-    rfl
+  invFun v := TangentSpace.cast I (hf.localInverse_left_inv hf.localInverse_mem_target)
+    (mfderiv% hf.localInverse (f x) v)
+  left_inv v := by
+    have := congr($(hf.mfderiv_localInverse_comp_mfderiv hn) v)
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+    simp only [this, TangentSpace.cast_cast, TangentSpace.cast_rfl]
+  right_inv v := by
+    have := congr($(hf.mfderiv_comp_mfderiv_localInverse hn) v)
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
+    rw [mfderiv_congr_point (f := f) (hf.localInverse_left_inv hf.localInverse_mem_target).symm]
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+      TangentSpace.cast_cast, TangentSpace.cast_rfl, this]
   continuous_toFun := (mfderiv% f x).cont
-  continuous_invFun := (mfderiv% hf.localInverse (f x)).cont
+  continuous_invFun := (TangentSpace.cast I _).continuous.comp (mfderiv% hf.localInverse (f x)).cont
   map_add' := fun x_1 y ↦ map_add _ x_1 y
   map_smul' := by intros; simp
+
+/-- The derivative of a local inverse of `f` at `f x` is surjective. -/
+lemma IsLocalDiffeomorphAt.mfderiv_localInverse_surjective
+    (hf : IsLocalDiffeomorphAt I J n f x) (hn : n ≠ 0) :
+    Function.Surjective (mfderiv% hf.localInverse (f x)) := fun w ↦ by
+  have := congr($(hf.mfderiv_localInverse_comp_mfderiv hn)
+    (TangentSpace.cast I (hf.localInverse_left_inv hf.localInverse_mem_target) w))
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    TangentSpace.cast_cast, TangentSpace.cast_rfl] at this
+  exact ⟨_, this⟩
 
 @[simp, mfld_simps]
 lemma IsLocalDiffeomorphAt.mfderivToContinuousLinearEquiv_coe

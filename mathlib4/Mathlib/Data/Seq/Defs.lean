@@ -602,7 +602,7 @@ section MLList
   cyclic `MLList`s created by meta constructions. -/
 def ofMLList : MLList Id α → Seq α :=
   corec fun l =>
-    match l.uncons with
+    match l.uncons.run with
     | .none => none
     | .some (a, l') => some (a, l')
 
@@ -621,7 +621,7 @@ end MLList
 /-- Translate a sequence to a list. This function will run forever if
   run on an infinite sequence. -/
 unsafe def forceToList (s : Seq α) : List α :=
-  (toMLList s).force
+  (toMLList s).force.run
 
 /-- Take the first `n` elements of the sequence (producing a list) -/
 def take : ℕ → Seq α → List α

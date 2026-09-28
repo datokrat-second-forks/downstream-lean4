@@ -161,27 +161,24 @@ protected theorem ContMDiffWithinAt.mfderivWithin {x₀ : N} {f : N → M → M'
     · apply mdifferentiableWithinAt_extChartAt_symm
       exact PartialEquiv.map_source (extChartAt I (g x₀)) h2
     · exact inter_subset_left.trans (extChartAt_target_subset_range (g x₀))
-  rw [inTangentCoordinates_eq_mfderiv_comp_abuse, A,
-    ← mfderivWithin_comp_of_eq, ← mfderiv_comp_mfderivWithin_of_eq]
-  · exact mfderivWithin_eq_fderivWithin
-  · exact mdifferentiableAt_extChartAt (by simpa using h'x)
-  · apply MDifferentiableWithinAt.comp (I' := I) (u := u) _ _ _ inter_subset_right
-    · convert! hx.mdifferentiableWithinAt one_ne_zero
-      exact PartialEquiv.left_inv (extChartAt I (g x₀)) h2
-    · apply (mdifferentiableWithinAt_extChartAt_symm _).mono
-      · exact inter_subset_left.trans (extChartAt_target_subset_range (g x₀))
-      · exact PartialEquiv.map_source (extChartAt I (g x₀)) h2
-  · exact h3
-  · simp only [Function.comp_def, PartialEquiv.left_inv (extChartAt I (g x₀)) h2]
-  · exact hx.mdifferentiableWithinAt one_ne_zero
-  · apply (mdifferentiableWithinAt_extChartAt_symm _).mono
-    · exact inter_subset_left.trans (extChartAt_target_subset_range (g x₀))
-    · exact PartialEquiv.map_source (extChartAt I (g x₀)) h2
-  · exact inter_subset_right
-  · exact h3
-  · exact PartialEquiv.left_inv (extChartAt I (g x₀)) h2
-  · simpa using h2
-  · simpa using h'x
+  have hgx : (extChartAt I (g x₀)).symm ((extChartAt I (g x₀)) (g x)) = g x :=
+    PartialEquiv.left_inv _ h2
+  have hmf : MDiffAt[u] (f x) (g x) := hx.mdifferentiableWithinAt one_ne_zero
+  have hsymm : MDiffAt[(extChartAt I (g x₀)).target ∩ (extChartAt I (g x₀)).symm ⁻¹' u]
+      (extChartAt I (g x₀)).symm ((extChartAt I (g x₀)) (g x)) :=
+    (mdifferentiableWithinAt_extChartAt_symm (PartialEquiv.map_source _ h2)).mono
+      (inter_subset_left.trans (extChartAt_target_subset_range (g x₀)))
+  rw [inTangentCoordinates_eq_mfderiv_comp (by simpa using h2) (by simpa using h'x), A,
+    ← ContinuousLinearMap.comp_id (fderivWithin 𝕜 _ _ _),
+    ← ContinuousLinearEquiv.coe_comp_coe_symm
+      (NormedSpace.fromTangentSpace (extChartAt I (g x₀) (g x))),
+    ← ContinuousLinearMap.comp_assoc (fderivWithin 𝕜 _ _ _), ← mvfderivWithin_eq_fderivWithin,
+    mvfderiv_comp_mfderivWithin_of_eq (mdifferentiableAt_extChartAt (by simpa using h'x))
+      (hmf.comp_of_eq _ hsymm inter_subset_right hgx) h3 (congrArg (f x) hgx),
+    mfderivWithin_comp_of_eq hmf hsymm inter_subset_right h3 hgx]
+  ext v
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+    TangentSpace.cast_cast, TangentSpace.cast_rfl]
 
 /-- The derivative `D_yf(y)` is `C^m` at `x₀`, where the derivative is taken as a continuous
 linear map. We have to assume that `f` is `C^n` at `x₀` for some `n ≥ m + 1`.
@@ -340,7 +337,9 @@ may seem.
 TODO define splittings of vector bundles; state this result invariantly. -/
 theorem tangentMap_tangentBundle_pure [Is : IsManifold I 1 M]
     (p : TangentBundle I M) :
-    tangentMap% (zeroSection (B := M) E (TangentSpace I)) p = ⟨⟨p.proj, 0⟩, ⟨p.2, 0⟩⟩ := by
+    tangentMap% (zeroSection (B := M) E (TangentSpace I)) p =
+      ⟨⟨p.proj, 0⟩, (TangentSpace.equivModel I.tangent (⟨p.proj, 0⟩ : TangentBundle I M)).symm
+        (TangentSpace.equivModel I p.proj p.2, 0)⟩ := by
   rcases p with ⟨x, v⟩
   have N : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x)) := by
     apply IsOpen.mem_nhds
@@ -350,8 +349,9 @@ theorem tangentMap_tangentBundle_pure [Is : IsManifold I 1 M]
     haveI : CMDiff 1 (zeroSection E (TangentSpace I : M → Type _)) :=
       Bundle.contMDiff_zeroSection 𝕜 (TangentSpace I : M → Type _)
     this.mdifferentiableAt one_ne_zero
-  have B : fderivWithin 𝕜 (fun x' : E ↦ (x', (0 : E))) (Set.range I) (I ((chartAt H x) x)) v
-      = (v, 0) := by
+  have B : ∀ w : E, fderivWithin 𝕜 (fun x' : E ↦ (x', (0 : E))) (Set.range I)
+      (I ((chartAt H x) x)) w = (w, 0) := by
+    intro w
     rw [fderivWithin_eq_fderiv, DifferentiableAt.fderiv_prodMk]
     · simp
     · exact differentiableAt_fun_id
@@ -362,9 +362,10 @@ theorem tangentMap_tangentBundle_pure [Is : IsManifold I 1 M]
     ite_eq_left, chartAt, FiberBundle.chartedSpace_chartAt, TangentBundle.trivializationAt_apply,
     Function.comp_def, map_zero, mfld_simps]
   rw [← fderivWithin_inter N] at B
-  rw [← fderivWithin_inter N, ← B]
-  congr 1
-  refine fderivWithin_congr (fun y hy ↦ ?_) ?_
+  rw [← fderivWithin_inter N]
+  refine congrArg (TangentSpace.equivModel I.tangent (⟨x, 0⟩ : TangentBundle I M)).symm ?_
+  rw [← B]
+  refine DFunLike.congr_fun (fderivWithin_congr (fun y hy ↦ ?_) ?_) _
   · simp only [mfld_simps] at hy
     simp only [hy, mfld_simps]
   · simp only [mfld_simps]
@@ -395,10 +396,11 @@ section EquivTangentBundleProd
 variable (I I' M M') in
 /-- The tangent bundle of a product is canonically isomorphic to the product of the tangent
 bundles. -/
-@[simps] def equivTangentBundleProd :
+@[simps] noncomputable def equivTangentBundleProd :
     TangentBundle (I.prod I') (M × M') ≃ (TangentBundle I M) × (TangentBundle I' M') where
-  toFun p := (⟨p.1.1, p.2.1⟩, ⟨p.1.2, p.2.2⟩)
-  invFun p := ⟨(p.1.1, p.2.1), (p.1.2, p.2.2)⟩
+  toFun p := (⟨p.1.1, (TangentSpace.prodEquiv I I' p.1 p.2).1⟩,
+    ⟨p.1.2, (TangentSpace.prodEquiv I I' p.1 p.2).2⟩)
+  invFun p := ⟨(p.1.1, p.2.1), (TangentSpace.prodEquiv I I' (p.1.1, p.2.1)).symm (p.1.2, p.2.2)⟩
 
 lemma equivTangentBundleProd_eq_tangentMap_prod_tangentMap :
     equivTangentBundleProd I M I' M' = fun (p : TangentBundle (I.prod I') (M × M')) ↦
@@ -482,6 +484,7 @@ lemma contMDiff_equivTangentBundleProd_symm :
     rw [range_prodMap] at U
     rw [fderivWithin_comp _ (by exact D0) differentiableWithinAt_fst mapsTo_fst_prod (U _ _)]
     simp [fderivWithin_fst, U]
+    rfl
   · /- check that the composition with the second projection in the target chart is smooth.
     For this, we check that it coincides locally with the projection `pM' : TM × TM' → TM'` read in
     the target chart, which is obviously smooth. -/
@@ -521,6 +524,7 @@ lemma contMDiff_equivTangentBundleProd_symm :
     rw [range_prodMap] at U
     rw [fderivWithin_comp _ (by exact D0) differentiableWithinAt_snd mapsTo_snd_prod (U _ _)]
     simp [fderivWithin_snd, U]
+    rfl
 
 end EquivTangentBundleProd
 

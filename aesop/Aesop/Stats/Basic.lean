@@ -164,7 +164,7 @@ def ruleStatsTotals (p : Stats)
         numFailed := stats.numFailed + 1
         elapsedFailed := stats.elapsedFailed + rp.elapsed
       }
-    m.insert rp.rule stats
+    return m.insert rp.rule stats
 
 def _root_.Aesop.sortRuleStatsTotals
     (ts : Array (DisplayRuleName × RuleStatsTotals)) :

@@ -88,14 +88,16 @@ subset of `X → α`.
 Consider using `Equicontinuous.isUniformInducing_uniformFun_iff_pi` and
 `Equicontinuous.inducing_uniformFun_iff_pi` instead, to avoid rewriting instances. -/
 theorem Equicontinuous.comap_uniformFun_eq [CompactSpace X] (F_eqcont : Equicontinuous F) :
-    (UniformFun.uniformSpace X α).comap F =
+    (UniformFun.uniformSpace X α).comap (UniformFun.ofFun ∘ F) =
     (Pi.uniformSpace _).comap F := by
   -- The `≤` inequality is trivial
-  refine le_antisymm (UniformSpace.comap_mono UniformFun.uniformContinuous_toFun) ?_
+  refine le_antisymm ((UniformSpace.comap_mono <|
+      uniformContinuous_iff_le_comap.mp UniformFun.uniformContinuous_toFun).trans_eq
+    (UniformSpace.comap_comap (g := UniformFun.toFun)).symm) ?_
   -- A bit of rewriting to get a nice intermediate statement.
   simp_rw [UniformSpace.comap, UniformSpace.le_def, uniformity_comap, Pi.uniformity,
     Filter.comap_iInf, comap_comap, Function.comp_def]
-  refine ((UniformFun.hasBasis_uniformity X α).comap (Prod.map F F)).ge_iff.mpr ?_
+  refine ((UniformFun.hasBasis_uniformity X α).comap _).ge_iff.mpr ?_
   -- Core of the proof: we need to show that, for any entourage `U` in `α`,
   -- the set `𝐓(U) := {(i,j) : ι × ι | ∀ x : X, (F i x, F j x) ∈ U}` belongs to the filter
   -- `⨅ x, comap ((i,j) ↦ (F i x, F j x)) (𝓤 α)`.
@@ -114,7 +116,7 @@ theorem Equicontinuous.comap_uniformFun_eq [CompactSpace X] (F_eqcont : Equicont
   rcases CompactSpace.elim_nhds_subcover Ω (fun x ↦ F_eqcont x V hV) with ⟨A, Acover⟩
   -- We now claim that `⋂ a ∈ A, 𝐒(V, a) ⊆ 𝐓(U)`.
   have : (⋂ a ∈ A, {ij : ι × ι | (F ij.1 a, F ij.2 a) ∈ V}) ⊆
-      (Prod.map F F) ⁻¹' UniformFun.gen X α U := by
+      Prod.map (UniformFun.ofFun ∘ F) (UniformFun.ofFun ∘ F) ⁻¹' UniformFun.gen X α U := by
     -- Given `(i, j) ∈ ⋂ a ∈ A, 𝐒(V, a)` and `x : X`, we have to prove that `(F i x, F j x) ∈ U`.
     rintro ⟨i, j⟩ hij x
     rw [mem_iInter₂] at hij
@@ -143,7 +145,6 @@ lemma Equicontinuous.isUniformInducing_uniformFun_iff_pi [UniformSpace ι] [Comp
     IsUniformInducing (UniformFun.ofFun ∘ F) ↔ IsUniformInducing F := by
   rw [isUniformInducing_iff_uniformSpace, isUniformInducing_iff_uniformSpace,
       ← F_eqcont.comap_uniformFun_eq]
-  rfl
 
 /-- Let `X` be a compact topological space, `α` a uniform space, and `F : ι → (X → α)` an
 equicontinuous family. Then, the topologies of uniform convergence and pointwise convergence induce
@@ -158,7 +159,7 @@ lemma Equicontinuous.inducing_uniformFun_iff_pi [TopologicalSpace ι] [CompactSp
     (F_eqcont : Equicontinuous F) :
     IsInducing (UniformFun.ofFun ∘ F) ↔ IsInducing F := by
   rw [isInducing_iff, isInducing_iff]
-  change (_ = (UniformFun.uniformSpace X α |>.comap F |>.toTopologicalSpace)) ↔
+  change (_ = (UniformFun.uniformSpace X α |>.comap (UniformFun.ofFun ∘ F) |>.toTopologicalSpace)) ↔
          (_ = (Pi.uniformSpace _ |>.comap F |>.toTopologicalSpace))
   rw [F_eqcont.comap_uniformFun_eq]
 
@@ -203,7 +204,6 @@ theorem Equicontinuous.tendsto_uniformFun_iff_pi [CompactSpace X]
       rwa [tendsto_id', nhds_induced, ← map_le_iff_le_comap, h𝒢ℱ]
     rwa [ind.tendsto_nhds_iff, comp_id, ← tendsto_map'_iff, h𝒢ℱ] at H'
 
-set_option backward.isDefEq.respectTransparency false in
 /-- Let `X` be a topological space, `𝔖` a family of compact subsets of `X`, `α` a uniform space,
 and `F : ι → (X → α)` a family which is equicontinuous on each `K ∈ 𝔖`. Then, the uniform
 structures of uniform convergence on `𝔖` and pointwise convergence on `⋃₀ 𝔖` induce the same
@@ -217,17 +217,16 @@ Consider using `EquicontinuousOn.isUniformInducing_uniformOnFun_iff_pi'` and
 as well as their unprimed versions in case `𝔖` covers `X`. -/
 theorem EquicontinuousOn.comap_uniformOnFun_eq {𝔖 : Set (Set X)} (𝔖_compact : ∀ K ∈ 𝔖, IsCompact K)
     (F_eqcont : ∀ K ∈ 𝔖, EquicontinuousOn F K) :
-    (UniformOnFun.uniformSpace X α 𝔖).comap F =
+    (UniformOnFun.uniformSpace X α 𝔖).comap (UniformOnFun.ofFun 𝔖 ∘ F) =
     (Pi.uniformSpace _).comap ((⋃₀ 𝔖).domRestrict ∘ F) := by
   -- Recall that the uniform structure on `X →ᵤ[𝔖] α` is the one induced by all the maps
   -- `K.domRestrict : (X →ᵤ[𝔖] α) → (K →ᵤ α)` for `K ∈ 𝔖`. Its pullback along `F`, which is
   -- the LHS of our goal, is thus the uniform structure induced by the maps
   -- `K.domRestrict ∘ F : ι → (K →ᵤ α)` for `K ∈ 𝔖`.
-  have H1 : (UniformOnFun.uniformSpace X α 𝔖).comap F =
-      ⨅ (K ∈ 𝔖), (UniformFun.uniformSpace _ _).comap (K.domRestrict ∘ F) := by
+  have H1 : (UniformOnFun.uniformSpace X α 𝔖).comap (UniformOnFun.ofFun 𝔖 ∘ F) =
+      ⨅ (K ∈ 𝔖), (UniformFun.uniformSpace _ _).comap (UniformFun.ofFun ∘ K.domRestrict ∘ F) := by
     simp_rw [UniformOnFun.uniformSpace, UniformSpace.comap_iInf, ← UniformSpace.comap_comap,
-      UniformFun.ofFun, Equiv.coe_fn_mk, UniformOnFun.toFun, UniformOnFun.ofFun, Function.comp_def,
-      UniformFun, Equiv.coe_fn_symm_mk]
+      Function.comp_def, UniformOnFun.toFun_ofFun]
   -- Now, note that a similar fact is true for the uniform structure on `X → α` induced by
   -- the map `(⋃₀ 𝔖).domRestrict : (X → α) → ((⋃₀ 𝔖) → α)`: it is equal to the one induced by
   -- all maps `K.domRestrict : (X → α) → (K → α)` for `K ∈ 𝔖`, which means that the RHS of our
@@ -239,7 +238,7 @@ theorem EquicontinuousOn.comap_uniformOnFun_eq {𝔖 : Set (Set X)} (𝔖_compac
       UniformSpace.comap_iInf]
   -- But, for `K ∈ 𝔖` fixed, we know that the uniform structures of `K →ᵤ α` and `K → α`
   -- induce, via the equicontinuous family `K.domRestrict ∘ F`, the same uniform structure on `ι`.
-  have H3 : ∀ K ∈ 𝔖, (UniformFun.uniformSpace K α).comap (K.domRestrict ∘ F) =
+  have H3 : ∀ K ∈ 𝔖, (UniformFun.uniformSpace K α).comap (UniformFun.ofFun ∘ K.domRestrict ∘ F) =
       (Pi.uniformSpace _).comap (K.domRestrict ∘ F) := fun K hK ↦ by
     have : CompactSpace K := isCompact_iff_compactSpace.mp (𝔖_compact K hK)
     exact (equicontinuous_restrict_iff _ |>.mpr <| F_eqcont K hK).comap_uniformFun_eq
@@ -263,7 +262,6 @@ lemma EquicontinuousOn.isUniformInducing_uniformOnFun_iff_pi' [UniformSpace ι]
     IsUniformInducing ((⋃₀ 𝔖).domRestrict ∘ F) := by
   rw [isUniformInducing_iff_uniformSpace, isUniformInducing_iff_uniformSpace,
       ← EquicontinuousOn.comap_uniformOnFun_eq 𝔖_compact F_eqcont]
-  rfl
 
 /-- Let `X` be a topological space, `𝔖` a covering of `X` by compact subsets, `α` a uniform space,
 and `F : ι → (X → α)` a family which is equicontinuous on each `K ∈ 𝔖`. Then, the uniform
@@ -301,7 +299,8 @@ lemma EquicontinuousOn.inducing_uniformOnFun_iff_pi' [TopologicalSpace ι]
     IsInducing (UniformOnFun.ofFun 𝔖 ∘ F) ↔
     IsInducing ((⋃₀ 𝔖).domRestrict ∘ F) := by
   rw [isInducing_iff, isInducing_iff]
-  change (_ = ((UniformOnFun.uniformSpace X α 𝔖).comap F).toTopologicalSpace) ↔
+  change (_ = ((UniformOnFun.uniformSpace X α 𝔖).comap
+      (UniformOnFun.ofFun 𝔖 ∘ F)).toTopologicalSpace) ↔
     (_ = ((Pi.uniformSpace _).comap ((⋃₀ 𝔖).domRestrict ∘ F)).toTopologicalSpace)
   rw [← EquicontinuousOn.comap_uniformOnFun_eq 𝔖_compact F_eqcont]
 
@@ -387,8 +386,9 @@ theorem EquicontinuousOn.isClosed_range_pi_of_uniformOnFun'
   simp_rw [isClosed_iff_clusterPt, ← Filter.map_top, ← mapClusterPt_def,
     mapClusterPt_iff_ultrafilter, range_comp, Subtype.coe_injective.surjective_comp_right.forall,
     ← domRestrict_eq, ← EquicontinuousOn.tendsto_uniformOnFun_iff_pi' 𝔖_compact F_eqcont]
-  exact fun f ⟨u, _, hu⟩ ↦ mem_image_of_mem _ <| H.mem_of_tendsto hu <|
-    Eventually.of_forall mem_range_self
+  exact fun f ⟨u, _, hu⟩ ↦ mem_image_of_mem _ <| by
+    simpa only [range_comp, (UniformOnFun.ofFun 𝔖).injective.mem_set_image] using
+      H.mem_of_tendsto hu (Eventually.of_forall mem_range_self)
 
 /-- Let `X` be a topological space, `𝔖` a covering of `X` by compact subsets, and
 `α` a uniform space. An equicontinuous subset of `X → α` is closed in the topology of uniform

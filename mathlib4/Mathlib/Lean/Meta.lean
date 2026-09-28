@@ -73,7 +73,7 @@ variable {α : Type}
 
 @[inline] private def TacticM.runCore (x : TacticM α) (ctx : Context) (s : State) :
     TermElabM (α × State) :=
-  x ctx |>.run s
+  x.run ctx |>.run s
 
 @[inline] private def TacticM.runCore' (x : TacticM α) (ctx : Context) (s : State) : TermElabM α :=
   Prod.fst <$> x.runCore ctx s

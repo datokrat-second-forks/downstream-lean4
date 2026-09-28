@@ -348,9 +348,9 @@ where
     lines := children.fold (init := lines) fun lines key trie =>
       lines.push (Format.nest 2 f!"{key} =>{Format.line}{go trie}")
     if lines.isEmpty then
-      f!"<empty node>"
+      return f!"<empty node>"
     else
-      Format.joinSep lines.toList "\n"
+      return Format.joinSep lines.toList "\n"
 
 instance [ToFormat α] : ToFormat (RefinedDiscrTree α) := ⟨format⟩
 

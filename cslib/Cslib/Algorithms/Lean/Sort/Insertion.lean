@@ -46,7 +46,7 @@ theorem orderedInsertM_pure [LawfulMonad m] (r : α → α → Bool) (a : α) (x
 @[simp]
 theorem idRun_orderedInsertM (r : α → α → Id Bool) (a : α) (xs : List α) :
     Id.run (orderedInsertM r a xs) = orderedInsert (fun x y => Id.run <| r x y) a xs :=
-  orderedInsertM_pure _ _ _
+  congrArg Id.run (orderedInsertM_pure _ _ _)
 
 @[grind .]
 theorem _root_.Cslib.IsMonadHom.map_orderedInsertM {f : {β : Type} → m β → n β}
@@ -73,7 +73,7 @@ theorem insertionSortM_pure [LawfulMonad m] (xs : List α) (r : α → α → Bo
 @[simp]
 theorem idRun_insertionSortM (xs : List α) (r : α → α → Id Bool) :
     Id.run (insertionSortM r xs) = insertionSort (fun x y => Id.run <| r x y) xs :=
-  insertionSortM_pure _ _
+  congrArg Id.run (insertionSortM_pure _ _)
 
 @[grind .]
 theorem _root_.Cslib.IsMonadHom.map_listInsertionSortM {f : {β : Type} → m β → n β}

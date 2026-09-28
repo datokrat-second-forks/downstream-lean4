@@ -208,7 +208,7 @@ info:
 -/
 #guard_msgs in
 run_cmd
-  let transDeps : ArrayHierarchy := Std.RandM.run' testSeed <| ArrayHierarchy.randM 5
+  let transDeps : ArrayHierarchy := Id.run <| Std.RandM.run' testSeed <| ArrayHierarchy.randM 5
   logInfo m!"\n\n{transDeps.toString}"
 
 /-- A `Needs` which exhibits every set of `NeedsKind`s in one of its columns. -/

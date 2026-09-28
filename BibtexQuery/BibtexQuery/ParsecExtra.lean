@@ -109,7 +109,7 @@ def natNum : Parser Nat := attempt do
   let some n := (← manyChars digit).toNat? | fail "Not a natural number"
   return n
 
-def manyCharsUntilWithPrev (test : Option Char → Char → Bool) : Parser String := fun it =>
+def manyCharsUntilWithPrev (test : Option Char → Char → Bool) : Parser String := .mk fun it =>
   let ⟨res, pos⟩ := go it.1 it.2 ""
   .success ⟨_, pos⟩ res
 where

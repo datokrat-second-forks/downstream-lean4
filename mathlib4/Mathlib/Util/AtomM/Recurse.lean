@@ -75,11 +75,11 @@ monad.
 def onSubexpressions (eval : Expr → AtomM Simp.Result) (parent : Expr)
     (wellBehavedDischarge : Bool) (root := true) :
     RecurseM Simp.Result :=
-  fun nctx rctx s ↦ do
+  ReaderT.mk fun nctx => ReaderT.mk fun rctx => ReaderT.mk fun s => do
     let pre : Simp.Simproc := fun e =>
       try
         guard <| root || parent != e -- recursion guard
-        let r' ← eval e rctx s
+        let r' ← (show MetaM _ from ReaderT.run (ReaderT.run (eval e) rctx) s)
         let r ← nctx.simp r'
         if ← withReducible <| isDefEq r.expr e then return .done { expr := r.expr }
         pure (.done r)
@@ -114,8 +114,10 @@ partial def RecurseM.run
     /-- The recursive context. -/
     rctx := { red := cfg.red, evalAtom },
     /-- The atom evaluator calls `AtomM.onSubexpressions` recursively. -/
-    evalAtom e := onSubexpressions eval e wellBehavedDischarge false nctx rctx s
-  withConfig ({ · with zetaDelta := cfg.zetaDelta }) <| x nctx rctx s
+    evalAtom e := ReaderT.run (ReaderT.run (ReaderT.run
+      (onSubexpressions eval e wellBehavedDischarge false) nctx) rctx) s
+  withConfig ({ · with zetaDelta := cfg.zetaDelta }) <|
+    ReaderT.run (ReaderT.run (ReaderT.run x nctx) rctx) s
 
 /--
 Normalizes an expression, given initial data:

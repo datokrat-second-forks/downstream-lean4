@@ -24,8 +24,8 @@ def mkUnfoldSimpContext : MetaM Simp.Context := do
 @[inline]
 def unfoldManyCore (ctx : Simp.Context) (unfold? : Name → Option (Option Name))
     (e : Expr) : StateRefT (Array Name) MetaM Simp.Result :=
-  λ usedDeclsRef =>
-    (·.fst) <$> Simp.main e ctx (methods := { pre := (pre · usedDeclsRef) })
+  .mk λ usedDeclsRef =>
+    (·.fst) <$> Simp.main e ctx (methods := { pre := (fun e => ReaderT.run (pre e) usedDeclsRef) })
 where
   -- NOTE: once we succeed in unfolding something, we return `done`. This
   -- means that `simp` won't recurse into the unfolded expression, missing

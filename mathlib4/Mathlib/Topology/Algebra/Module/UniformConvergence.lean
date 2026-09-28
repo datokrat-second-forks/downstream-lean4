@@ -63,8 +63,8 @@ lemma UniformFun.continuousSMul_induced_of_range_bounded (φ : hom)
     (hφ : IsInducing (ofFun ∘ φ)) (h : ∀ u : H, Bornology.IsVonNBounded 𝕜 (Set.range (φ u))) :
     ContinuousSMul 𝕜 H := by
   have : IsTopologicalAddGroup H :=
-    let ofFun' : (α → E) →+ (α →ᵤ E) := AddMonoidHom.id _
-    IsInducing.isTopologicalAddGroup (ofFun'.comp (φ : H →+ (α → E))) hφ
+    let ofFunHom : (α → E) →+ (α →ᵤ E) := AddMonoidHom.mk' ofFun fun _ _ ↦ rfl
+    IsInducing.isTopologicalAddGroup (ofFunHom.comp (φ : H →+ (α → E))) hφ
   have hb : (𝓝 (0 : H)).HasBasis (· ∈ 𝓝 (0 : E)) fun V ↦ {u | ∀ x, φ u x ∈ V} := by
     simp only [hφ.nhds_eq_comap, Function.comp_apply, map_zero]
     exact UniformFun.hasBasis_nhds_zero.comap _
@@ -115,9 +115,10 @@ equipped with the topology of `𝔖`-convergence, is a TVS.
 
 If you have a hard time using this lemma, try the one above instead. -/
 theorem UniformOnFun.continuousSMul_submodule_of_image_bounded (H : Submodule 𝕜 (α →ᵤ[𝔖] E))
-    (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
+    (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (toFun 𝔖 u '' s)) :
     @ContinuousSMul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced ((↑) : H → α →ᵤ[𝔖] E)) :=
   UniformOnFun.continuousSMul_induced_of_image_bounded 𝕜 α E H
-    (LinearMap.id.domRestrict H : H →ₗ[𝕜] α → E) IsInducing.subtypeVal fun ⟨u, hu⟩ => h u hu
+    (⟨⟨fun u : H ↦ toFun 𝔖 u, fun _ _ ↦ rfl⟩, fun _ _ ↦ rfl⟩ : H →ₗ[𝕜] α → E)
+    IsInducing.subtypeVal fun ⟨u, hu⟩ => h u hu
 
 end Module

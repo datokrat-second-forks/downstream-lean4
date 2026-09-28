@@ -51,7 +51,7 @@ def _root_.Lean.Expr.swapBVars (e : Expr) (i j : Nat) : Expr :=
     let mut a : Array Expr := .mkEmpty e.looseBVarRange
     for k in [0:e.looseBVarRange] do
       a := a.push (.bvar (if k = i then j else if k = j then i else k))
-    a
+    return a
 
   e.instantiate swapBVarArray
 

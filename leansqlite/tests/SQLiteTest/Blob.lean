@@ -21,7 +21,7 @@ def toFromBinary [ToBinary α] [FromBinary α] [BEq α] (pre post : ByteArray) (
   let cursor := pre.size
   if h : cursor ≤ data.size then
     let s : Deserializer.State := { data, cursor }
-    match FromBinary.deserializer (α := α) s with
+    match StateT.run (FromBinary.deserializer (α := α)) s with
     | Except.error _ => false
     | Except.ok (v, s') =>
       s'.cursor ≥ s.cursor &&

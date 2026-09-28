@@ -1,0 +1,241 @@
+# One-field structures downstream experiment
+
+This downstream branch tests the changes that Batteries, Mathlib, and their dependencies need for the `/root/lean4/onefieldstructures` toolchain.
+The result must provide credible evidence about the effect on downstream projects.
+The aim is to avoid substantial deterioration and identify improvements where possible.
+Repairs must usually follow the design of the original declarations on the green branch that forms this checkout's base.
+Use sustainable repairs that preserve the intended abstractions. Avoid ad hoc workarounds.
+Preserve downstream type definitions such as `def X := Nat`. Do not convert downstream definitions to `newtype` declarations.
+The scope is the fallout from abstraction changes in the toolchain.
+
+## Work sequence
+
+1. Record this task in `TASK.md`.
+2. Read the toolchain changes relative to `origin/downstream-green`. Ignore the generated `stage0` changes.
+3. Fix Mathlib's dependencies.
+4. Start the Mathlib port with repairs for a few errors.
+
+## Decision records and evidence
+
+Record each nontrivial repair decision in a Markdown file under `/root/static/ofs-ddr/`.
+Use one DDR per substantive decision, not one per user task or work batch.
+Identify who decided: the user, the assistant, or both, with their respective contributions.
+Reuse an existing DDR when a repair applies the same decision.
+Keep batch progress, module lists, and verification summaries in `/root/static/ofs-ddr/progress/`, with raw evidence in `evidence/`.
+Each future progress report must include the number of directly failing Mathlib modules and transitively blocked Mathlib modules.
+Use `/root/documentation/scripts/blocked.py` with `MATHLIB_ROOT=/root/downstream/ofs/mathlib4` and the directly failing module names.
+Record the failure list, total module count, source build log, and whether the scan completed or used `--fail-fast`.
+For a current full-build statistic, use a scheduled build without `--fail-fast`; retain `--fail-fast` for first-error discovery.
+Label incomplete scans as observations, not complete failure counts.
+The script's `outside failure set` output means outside the supplied failure set and its transitive dependents; it does not verify successful compilation.
+Do not count fail-fast import cancellations as direct failures.
+Explain the original intent, the cause of the error, the alternatives, and the selected repair.
+Verify the repairs with the requested toolchain and record the results.
+Distinguish completed dependency builds and selected Mathlib repairs from a complete Mathlib build.
+
+## Initial batch outcome
+
+The toolchain findings are in `TOOLCHAIN_CHANGES.md`.
+Decision records and durable build logs are in `/root/static/ofs-ddr/`.
+All eight dependency package targets and their available test libraries passed.
+Seven initial Mathlib files received repairs.
+The selected Mathlib build and two existing linter test modules passed.
+The complete Mathlib build and performance comparisons remain open.
+
+## Next batch and execution requirements
+
+Fix ten additional failing Mathlib modules and verify each repaired module.
+Run every Lean invocation through `lowprio`, as required by `/root/.claude/CLAUDE.md`.
+For builds, use `lowprio schedule --preemptable TASKNAME lake build ...`, then `lowprio waitfor TASKNAME`.
+Always specify the task name when waiting. Use `--fail-fast` when only the first error is needed.
+Use `lowprio lake env lean ...` for direct Lean invocations.
+
+When the Equiv conflict arises, remove Mathlib's duplicate definition and reuse the upstream core definition.
+For representation-only collection conversions, avoid an elementwise map.
+Prefer a proof-based cast when the types are propositionally equal, with an equivalence-to-map theorem if useful.
+For actual newtypes, `unsealing_newtype` can establish the required representation equality.
+Verify the type declaration first: the current toolchain declares `ModuleIdx` as a real structure.
+Record nontrivial decisions with short explanatory examples in `/root/static/ofs-ddr/`.
+Record unexpected toolchain differences as anomaly records under `/root/static/ofs-ddr/anomalies/`.
+An anomaly record does not replace a DDR when its repair involves a substantive choice.
+Keep observed behavior and diagnostic evidence in the anomaly, and link to the decision, alternatives, and rationale in a DDR.
+Include a small example, observed behavior, toolchain revision, and links to the relevant DDR and evidence.
+
+## Ten-module batch outcome
+
+Ten additional Mathlib modules now compile, including `Mathlib.Logic.Equiv.Defs`.
+The existing cross-reference and location tests pass, together with a new core-Equiv regression test.
+The final scheduled build passes 137 Lake jobs.
+The batch 02 progress report lists repairs and verification. DDRs 006–007 record runner and Equiv decisions.
+Anomaly records describe the changed Equiv API and operation transparency.
+The toolchain source remains unchanged, and no downstream type definition became a newtype.
+
+## Authorized core Equiv follow-up
+
+Align the newly upstreamed core Equiv API with Mathlib, as authorized by the user.
+Match the original operation reducibility and upstream pointwise `Equiv.ext`.
+Align the composition and cancellation theorem names, then simplify the downstream repair.
+Record the decision in DDR 008 and update the anomaly resolutions after verification.
+
+The authorized core follow-up is complete and verified; see DDR 008.
+The original Mathlib theorem names, constructor simp registrations, and proof automation are restored.
+The full toolchain build and all 14 selected core tests pass.
+A clean downstream rebuild passes 807 jobs, followed by 50 jobs for ImportGraph tests.
+The verified toolchain edits are committed as `9d16753d84f66efca4be5105db45086669b60723` and preserved as a patch in the verification evidence.
+The full Mathlib build and performance comparison remain open.
+
+## Further ten-module batch
+
+Ten more directly failing Mathlib modules now compile; see the batch 03 progress report for the list and DDR 009 for the nonemptiness decision.
+The final scheduled build passes 217 jobs, including five existing tactic test modules.
+This batch changes ten source files, with 34 inserted lines and 9 removed lines.
+The toolchain remains unchanged at `9d16753d84f66efca4be5105db45086669b60723`.
+The repairs preserve downstream type definitions and the existing algorithms.
+The complete Mathlib build and performance comparison remain open.
+
+DDR 009 now selects `deriving Nonempty` on `CongrResult`, following the user’s suggestion.
+The private exception witness was removed; the revised module and unchanged tests pass (78 jobs).
+
+## Ongoing work
+
+Continue as a long-running task until the user asks to stop. Ten-module batches are reporting checkpoints, not a stopping condition.
+
+Batch 04 repairs 22 further Mathlib modules and passes a 580-job selected build.
+Full scans report 17 direct failures and 7,875 blocked modules before repairs, then 22 direct failures and 7,610 blocked modules afterward.
+Both snapshots contain 8,526 modules and use the corrected header parser in the preserved `blocked.py`.
+See `/root/static/ofs-ddr/progress/mathlib-batch-04.md` for evidence and limits.
+
+Batch 05 repairs 27 more source modules and passes 713 selected jobs, including traversal and `itauto` tests.
+The full scan reports 22 direct failures and 7,195 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-05.md`.
+
+## Resumed work
+
+The user released the DDR 011 discussion pause and requested continued work.
+Apply explicit constructor-based unitors to the two traversal proofs, then resume the Mathlib port.
+The four instance-identity lemmas initially retained HEq statements.
+The user subsequently selected migration of all four to explicit unitors; see DDR 011 and the A006 migration report.
+Batch 06 repairs all 22 previous direct failures and applies the verified unitor proofs.
+Its completed full scan reports 20 direct failures and 6,831 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-06.md`.
+
+Batch 07 repairs the next 20 direct failures and passes the existing abel, ring, and field_simp tests.
+Its completed full scan reports 14 direct failures and 6,557 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-07.md`.
+
+Batch 08 repairs all 14 baseline failures and passes 1,119 selected Lake jobs.
+The completed full scan reports 24 direct failures and 6,103 blocked modules.
+See `/root/static/ofs-ddr/progress/mathlib-batch-08.md`.
+
+Batch 09 repairs all 24 baseline failures. Its completed full scan reports 14 direct failures and 5,477 blocked modules.
+See `/root/static/ofs-ddr/progress/mathlib-batch-09.md`.
+
+Batch 10 repairs 38 source modules and passes the existing matrix/determinant and slim_check tests (1,681 jobs).
+The completed full scan reports 44 direct failures and 4,177 blocked modules.
+See `/root/static/ofs-ddr/progress/mathlib-batch-10.md`.
+
+Batch 11 repairs all 44 baseline failures and passes 2,258 selected jobs with five tactic test modules.
+Its completed full scan reports 30 direct failures and 3,405 blocked modules out of 8,526.
+Toolchain commit `4013a0b4ba` lifts StateRefT computation inhabitants; the extra DDR 014 result witnesses are removed.
+See `/root/static/ofs-ddr/progress/mathlib-batch-11.md`.
+
+Batch 12 repairs all 30 baseline failures with inverse proofs and passes 2,454 selected jobs.
+Its completed full scan reports 40 direct failures and 1,926 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-12.md`.
+
+Batch 13 repairs all 40 baseline failures and passes 3,210 selected jobs.
+Its completed full scan reports 20 direct failures and 1,273 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-13.md`.
+
+Batch 14 repairs all 20 baseline failures and passes 3,434 selected jobs.
+Its completed full scan reports 13 direct failures and 438 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-14.md`.
+
+Batch 15 repairs all 13 baseline failures and passes 3,755 selected jobs.
+Its completed full scan reports 9 direct failures and 79 blocked modules out of 8,526.
+The pullback naturality proof now uses 2,239 heartbeats on this toolchain; see anomaly 014.
+See `/root/static/ofs-ddr/progress/mathlib-batch-15.md`.
+
+Batch 16 repairs all 9 baseline failures and passes 3,556 selected jobs.
+Its completed full scan reports 3 direct failures and 9 blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/mathlib-batch-16.md`.
+
+Batch 17 repairs the remaining 3 baseline failures. The full `lake build Mathlib` now passes all 8,920 jobs.
+The completed scan reports zero direct failures and zero blocked modules out of 8,526.
+The full `MathlibTest` target, accumulated-change review, and performance comparison remain open.
+See `/root/static/ofs-ddr/progress/mathlib-batch-17.md`.
+
+## Canonical equivalence separation after the rebase
+
+The user completed the toolchain rebase and requested a downstream rebuild.
+DDR 017 supersedes the earlier instruction to share core Equiv with Mathlib.
+Restore Mathlib's own Equiv and use explicit canonical-equivalence conversions where needed; see DDR 018.
+Preserve unrelated workspace edits and verify a complete Mathlib build on the rebased toolchain.
+
+The post-rebase integration passes the full library and selected equivalence/traversal tests (8,923 jobs).
+The completed scan reports zero directly failing and zero blocked modules out of 8,526.
+See `/root/static/ofs-ddr/progress/canonical-rebase-mathlib.md` for the changes and build evidence.
+
+## Sealing `DirectSum` with `newtype` (started 2026-09-26)
+
+The user authorized an exception to "do not convert downstream definitions to `newtype`" for this task: `DirectSum` becomes a `newtype` over `Π₀ i, β i`.
+Status: ported; Mathlib, Archive, Counterexamples, Wanted and the tests build with `--wfail`. Progress report: `/root/static/ofs-ddr/progress/directsum-newtype.md`.
+Earlier alias ports along these lines are the TangentSpace and OrderDual branches. WithLp (`Mathlib/Analysis/Normed/Lp/WithLp.lean`) is the along-the-grain model for the API.
+The goal is a change that would convince Mathlib maintainers: consistent with Mathlib's existing definitions and style, no quick-and-dirty repairs.
+
+Rules:
+- Use `newtype`, not `structure`, so that proofs can use `unsealing_newtype` locally. Use it only as a last resort, with a DDR for each use.
+- Names: constructor `DirectSum.ofDFinsupp`, projection `DirectSum.toDFinsupp`, as in `Finsupp.toDFinsupp`. Mathlib's existing `DirectSum.mk` keeps its meaning.
+- Mirror WithLp's API: the equivalence and its additive and linear versions, `ext_iff`, injectivity and surjectivity, and simp lemmas relating the two sides.
+- Obtain instances with the toolchain's transport: `deriving`, `inferInstanceAs`, `transport`. Do not use `Equiv.addCommMonoid`-style copies where transport can do it.
+- The user's rule for which instances are transported: an instance declaration that was morally `inferInstanceAs` before the seal (`deriving`, `inferInstanceAs`, or a `Π₀` instance used at `⨁` by defeq, e.g. `Module.Free.dfinsupp R M`) stays `inferInstanceAs`, adding the congruence it needs. Explicit transports, theorems and non-class data cross by Mathlib's equivalence lemmas along `DirectSum.linearEquiv`. See DDR 023, "Which instances are transported".
+- Add `@[transport]` congruences (`C.canonicalCongr`) whenever needed. Put them directly below the class declaration, as `equivDef` follows its type. Only tricky, nontrivial ones go to the matching `TransferInstance.lean`. Test each congruence, and test instance diamonds with `with_reducible_and_instances rfl`.
+- The user's unfolding rule for congruences: data must be glue, proofs are free. Data fields come from the per-operation congruences (`Add`/`Mul`/`Zero`/`One`/`Neg`/`Inv`/`Sub`/`Div`/`SMul.canonicalCongr`) or projections of the equivalence, in term mode; never `subst`/casts or non-reducible definitions such as `toEquiv` in data. Otherwise transport cannot unfold the instance and `linter.transport.unfold` warns. See DDR 023, "The unfolding rule".
+- Do not thin out the DFinsupp API where it is not meant only for `DirectSum`. Record significant decisions about it in DDRs.
+- Consumers are fixed bottom-up (`DirectSum/Basic`, then `Module`, `Ring`, `Algebra`, `Decomposition`, then graded algebras, Lie, tensor products). Prefer DirectSum-level lemmas to inserting `toDFinsupp`.
+- The user's rule for proofs that had to change: the central fact, usually the upstream proof term (a `DFinsupp` twin), stays visible and unchanged, and the transport glue is kept apart from it. Ideally the glue is a transfer lemma stated once, next to the definition that conjugates. Do not put the glue into the same `simpa` call as the twin, and do not prove the content again with `simp`. Example: the ker/range lemmas of `map`/`lmap`, `(range_ofDFinsuppLinearMap _).trans <| congrArg (Submodule.comap _) (DFinsupp.range_mapRangeLinearMap f)`. See DDR 079.
+- No separate measurement spike: run `blocked.py` after each rebuild while fixing, and record the counts in the progress report.
+
+Toolchain prerequisite (layer 2, `onefieldstructures-newtype-changes`, then replay layers 3–5 and regenerate stage0 per `reviews/plan.md`):
+- Decided by the user: structure-like syntax `newtype N ps where ctor :: proj : ty`, with doc comments on the constructor and projector, binder updates on the constructor (e.g. `toLp (p) ::`), constructor name defaulting to `mk`, and a trailing `deriving`. The old form `newtype N ps := ty with proj` is removed, not kept: layer 2 `fa32464038` (syntax plus its tests), layer 3 `3b7c73daa4` (its tests), and a layer-5 commit migrating the library's 50 seals and 18 test declarations.
+- The user suggested `alias structure …`; the assistant advised against it. Keyword cost is not the reason: `newtype` is itself a new keyword relative to `master`, and a keyword `alias` would only break plain identifiers named `alias` (none in core; Mathlib already has the keyword via Batteries), while `.alias` dot notation keeps working. The reasons are that `alias` is Batteries' command, so core would own only one form of it, that in Mathlib "alias" means definitional transparency, the opposite of a seal, and that the feature is already called `newtype`.
+- The `u_1`/`u_2` universe names seen in `#check` are display renaming (a plain `def` shows the same); `#print` shows the declared names. Nothing to fix.
+
+## Sealing `TangentSpace` and `OrderDual` with `newtype` (started 2026-09-26)
+
+The user asked to port `TangentSpace` first, then `OrderDual`, each as its own commit in this workspace. The DirectSum rules above apply (newtype, transport/deriving, `@[transport]` congruences below the class, the transport rule, the unfolding rule, DDRs, `blocked.py` counts in a progress report).
+Earlier ports without transport, on Mathlib `d9f6d1887c`: branches `tangentspace` and `orderdual` in `/root/mathlib4/mathlib4.git` (worktree `/root/mathlib4/tangentspace`; OrderDual notes in that branch's `TASK.md`/`FRICTION.md`). Orient on them, but they are not the standard: the user was not satisfied with how technical the old TangentSpace statements became.
+
+TangentSpace decisions (user, 2026-09-26):
+- Raw constructor and projection: `TangentSpace.ofModel` / `TangentSpace.toModel`.
+- Tangent bundle: realize the core along fiberwise coordinates (old branch's "Strategy 2"): generalize `FiberBundleCore`/`VectorBundleCore` and the smooth core construction to a family `E` with `ψ x : E x ≃ F`, `Z.Fiber` being the case `ψ = refl` definitionally; the tangent bundle is the realization along the chart-induced identification. Not the total-space homeomorphism, not `FiberPrebundle`.
+- Adopt the old review's reshaping of upstream API: `TangentSpace.congr (h : x = y)` replaces `tangentSpaceCast I x y` (and `_of_eq` lemmas keep `y`); `tangentSpaceCastModel` gets a meaningful name and a characterisation as the trivialization at `x` (no "no mathematical meaning" docstring); its `Hom` variant is tied to `inTangentCoordinates`; model-space bridge lemmas are stated via `NormedSpace.fromTangentSpace`. Propose concrete names to the user before using them.
+- Names decided: `tangentSpaceCastModel` → `TangentSpace.equivModel` (first `chartEquiv`, renamed for one vocabulary with `ofModel`/`toModel`); its lift to `(TangentSpace I x →L[𝕜] TangentSpace I' y) ≃ (E →L[𝕜] E')` (old `tangentSpaceCastModelHom`) is `TangentSpace.homEquivModel`; `tangentSpaceCast I x y` → `TangentSpace.cast` (taking `h : x = y`).
+- Maps into a normed space `W`: no `toTangentSpaceAt`/`ofTangentSpaceAt` defs. `HasMFDerivAt` statements carry `(fromTangentSpace y).symm.toContinuousLinearMap ∘L f'` inline (precedent in `MFDeriv/NormedSpace`); equalities are stated with `d%`/`mvfderiv` where one exists (moving `mvfderiv`'s definition earlier if needed). Model-space bridge lemmas (`hasMFDerivAt_iff_hasFDerivAt`, `mfderiv_eq_fderiv`) conjugate by `NormedSpace.fromTangentSpace`.
+- Products and sums: four named `≃L` defs `TangentSpace.prodEquiv`, `TangentSpace.sumInlEquiv`, `TangentSpace.sumInrEquiv`, `TangentSpace.sumSwapEquiv` (the old branch's `tangentSpaceProd`/`tangentSpaceSumInl/Inr/Swap`).
+- `TangentSpace.cast` coerced to `→L` is written `(TangentSpace.cast I h).toContinuousLinearMap` (an ascription `(… : _ →L[𝕜] _)` fails on universe metavariables).
+- Vector fields on a normed space: two named defs `NormedSpace.fromTangentSpaceField : (Π x, TangentSpace 𝓘(𝕜, E) x) → E → E` and `NormedSpace.toTangentSpaceField`, with the old branch's rfl simp lemmas (apply, round trips, zero/add/neg/smul). They appear in `mlieBracketWithin`'s definition and in the bridge lemmas `mpullback(Within)_eq_pullback(Within)`, `mlieBracketWithin_eq_lieBracketWithin`. (Unlike maps, where the conversion stays inline.)
+
+From 2026-09-26 evening (user asleep): make further design decisions autonomously, record each in a DDR, don't block on questions, continue with OrderDual after TangentSpace, and present all autonomous decisions to the user at the end.
+
+OrderDual decisions (user, 2026-09-26):
+- Raw constructor and projection: `toDual'` / `ofDual'`; `toDual`/`ofDual` stay the `Equiv`s.
+- Retry the three files parked on the old branch (`Ordmap/Invariants`, `CompleteLattice/PiLex`, `Category/BddOrd`); ask the user if one needs a design change.
+
+## Sealing `UniformOnFun` with `newtype` (started 2026-09-27)
+
+The user asked to port the earlier `UniformOnFun` seal onto this workspace, as its own commit after `OrderDual`. The DirectSum rules above apply (newtype, transport/deriving, `@[transport]` congruences below the class, the transport rule, the unfolding rule, DDRs, `blocked.py` counts in a progress report). The goal is a change that convinces Mathlib maintainers with high standards and stays along the grain.
+Earlier port without transport: commit `3d2b0fbc89b` on branch `adaptation-15066` of `/root/downstream` (toolchain `irredalias`), notes in that commit's `mathlib4/FRICTION.md`, "UniformOnFun as a `newtype`" (items 16–22). Orient on it, but it is not the standard: its algebraic instances were rebuilt with `Function.Injective.*` instead of transport.
+
+Decisions (user, 2026-09-27):
+- Only `UniformOnFun` (`α →ᵤ[𝔖] β`). `UniformFun` stays a plain definition. `PiLp` stays an `abbrev` over `WithLp`: every `PiLp` instance is keyed under `WithLp`, so `PiLp` is no barrier to instance search and has no definitional equality to seal.
+- Raw constructor and projection: `UniformOnFun.ofFun'` / `UniformOnFun.toFun'`; `ofFun 𝔖` / `toFun 𝔖` stay the `Equiv`s.
+- No `CoeFun`: elements are evaluated as `toFun 𝔖 f x`, as for `α →ᵤ β`.
+
+## Sealing `UniformFun` with `newtype` (started 2026-09-28)
+
+The user asked to seal `UniformFun` (`α →ᵤ β`) as well, as its own commit after `UniformOnFun`. The same rules apply. The earlier branch has no port of it to orient on.
+
+Decisions (user, 2026-09-28):
+- Raw constructor and projection: `UniformFun.ofFun'` / `UniformFun.toFun'`; `UniformFun.ofFun` / `UniformFun.toFun` stay the `Equiv`s.
+- Still no `CoeFun` on `α →ᵤ β` or `α →ᵤ[𝔖] β`: elements are evaluated as `toFun f x`, which existing statements already use. The comment in `UniformConvergenceTopology.lean` gives this reason instead of the definitional equality with `α → β`.

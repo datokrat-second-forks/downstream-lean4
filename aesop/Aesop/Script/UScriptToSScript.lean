@@ -39,7 +39,7 @@ partial def UScript.toStepTree (s : UScript) : StepTree := Id.run do
   for h : i in [:s.size] do
     preGoalMap := preGoalMap.insert s[i].preGoal (i, s[i])
   if h : 0 < s.size then
-    go preGoalMap s[0].preGoal
+    return go preGoalMap s[0].preGoal
   else
     return .empty
 where

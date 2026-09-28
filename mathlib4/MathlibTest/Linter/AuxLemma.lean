@@ -69,14 +69,10 @@ set_option linter.auxLemma false in
 #guard_msgs in
 example := @foo.match_1
 
--- copied from `Std.Iterators.Types.FilterMap.instIterator` at the time of writing this test
+def FooAux (α : Type) := Option α
+
 -- `_aux_1` refers to the first field of the instance `fooAux`
-open Std Iterators in
-universe w w' w'' in
-instance fooAux {α β γ : Type w} {m : Type w → Type w'} {n : Type w → Type w''} [Monad n]
-    [Iterator α m β] {lift : ⦃α : Type w⦄ → m α → n α} {f : β → PostconditionT n γ} :
-    Iterator (Types.Map α m n lift f) n γ :=
-  inferInstanceAs <| Iterator (Types.FilterMap α m n lift _) n γ
+instance fooAux : Monad FooAux := inferInstanceAs (Monad Option)
 
 /--
 warning: `fooAux._aux_1` refers to an auto-generated auxiliary declaration. These are not stable across refactors; consider using a different approach.

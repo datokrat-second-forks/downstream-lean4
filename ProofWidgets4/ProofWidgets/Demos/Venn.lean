@@ -98,7 +98,7 @@ def VennDisplay.rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
             s!"could not find goal for location {toJson selectedLoc}"
       g.ctx.val.runMetaM {} do
         let md ← g.mvarId.getDecl
-        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)}
+        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)} |>.run
         Meta.withLCtx lctx md.localInstances do
           let locs : Array LocalDecl ← props.selectedLocations.filterMapM fun
             | ⟨mv, .hyp fv⟩ | ⟨mv, .hypType fv _⟩ =>

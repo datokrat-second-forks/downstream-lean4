@@ -111,7 +111,7 @@ def setAliasInfo [MonadEnv m] (info : AliasInfo) (declName : Name) : m Unit :=
 
 /-- Updates the `deprecated` declaration to point to `target` if no target is provided. -/
 def setDeprecatedTarget (target : Name) (arr : Array Attribute) : Array Attribute × Bool :=
-  StateT.run (m := Id) (s := false) do
+  Id.run <| StateT.run (s := false) do
     arr.mapM fun s => do
       if s.name == `deprecated then
         if let `(deprecated| deprecated%$tk $[$desc:str]?

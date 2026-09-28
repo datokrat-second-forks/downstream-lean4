@@ -645,7 +645,7 @@ def GCongrM.run {α} (x : GCongrM α) (patterns : List (TSyntax `rintroPat) := [
     (mainGoalDischarger : MVarId → MetaM Bool := gcongrForwardDischarger)
     (sideGoalDischarger : MVarId → MetaM Unit := gcongrDischarger) :
     MetaM (α × State) :=
-  (x { mainGoalDischarger, sideGoalDischarger }).run { patterns }
+  (ReaderT.run x { mainGoalDischarger, sideGoalDischarger }).run { patterns }
 
 /-- Add an unsolved goal to the `newGoals` array in the state. -/
 def pushNewGoal (g : MVarId) : GCongrM Unit :=

@@ -97,7 +97,7 @@ def findPositiveVector {n m : Nat} {matType : Nat → Nat → Type} [UsableInSim
   let initTableau ← Gauss.getTableau B
 
   /- Run the Simplex Algorithm and extract the solution. -/
-  let res ← runSimplexAlgorithm.run initTableau
+  let res ← runSimplexAlgorithm.run.run initTableau
   if res.fst.isOk then
     return extractSolution res.snd
   else

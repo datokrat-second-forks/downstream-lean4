@@ -61,11 +61,30 @@ class Norm (E : Type*) where
   /-- the `ℝ`-valued norm function. -/
   norm : E → ℝ
 
+/-- Norms correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev Norm.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Norm α) (Norm β) where
+  toFun i := ⟨fun x ↦ i.norm (e.invFun x)⟩
+  invFun i := ⟨fun x ↦ i.norm (e.toFun x)⟩
+  left_inv i := congrArg Norm.mk <| funext fun x ↦ congrArg i.norm (e.left_inv x)
+  right_inv i := congrArg Norm.mk <| funext fun x ↦ congrArg i.norm (e.right_inv x)
+
 /-- Auxiliary class, endowing a type `α` with a function `nnnorm : α → ℝ≥0` with notation `‖x‖₊`. -/
 @[notation_class]
 class NNNorm (E : Type*) where
   /-- the `ℝ≥0`-valued norm function. -/
   nnnorm : E → ℝ≥0
+
+/-- `ℝ≥0`-valued norms correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev NNNorm.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (NNNorm α) (NNNorm β) where
+  toFun i := ⟨fun x ↦ i.nnnorm (e.invFun x)⟩
+  invFun i := ⟨fun x ↦ i.nnnorm (e.toFun x)⟩
+  left_inv i := congrArg NNNorm.mk <| funext fun x ↦ congrArg i.nnnorm (e.left_inv x)
+  right_inv i := congrArg NNNorm.mk <| funext fun x ↦ congrArg i.nnnorm (e.right_inv x)
 
 /-- Auxiliary class, endowing a type `α` with a function `enorm : α → ℝ≥0∞` with notation `‖x‖ₑ`. -/
 @[notation_class]
@@ -262,6 +281,154 @@ class NormedCommGroup (E : Type*) extends Norm E, CommGroup E, MetricSpace E whe
 
 -- see Note [lower instance priority]
 attribute [instance 10] NormedCommGroup.toCommGroup
+
+/-- `SeminormedGroup` instances correspond along a canonical equivalence. -/
+@[to_additive (attr := transport)
+  /-- `SeminormedAddGroup` instances correspond along a canonical equivalence. -/]
+protected abbrev SeminormedGroup.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (SeminormedGroup α) (SeminormedGroup β) where
+  toFun i :=
+    SeminormedGroup.mk (toNorm := (Norm.canonicalCongr e).toFun i.toNorm)
+      (toGroup := (Group.canonicalCongr e).toFun i.toGroup)
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).toFun i.toPseudoMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.invFun x) (e.invFun y) =
+          ‖e.invFun (e.toFun (e.invFun (e.toFun (e.invFun x)⁻¹) * e.invFun y))‖
+        rw [e.invFun_toFun, e.invFun_toFun]
+        exact i.dist_eq _ _)
+  invFun i :=
+    SeminormedGroup.mk (toNorm := (Norm.canonicalCongr e).invFun i.toNorm)
+      (toGroup := (Group.canonicalCongr e).invFun i.toGroup)
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).invFun i.toPseudoMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.toFun x) (e.toFun y) =
+          ‖e.toFun (e.invFun (e.toFun (e.invFun (e.toFun x)⁻¹) * e.toFun y))‖
+        rw [e.toFun_invFun, e.toFun_invFun]
+        exact i.dist_eq _ _)
+  left_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).left_inv _, (Group.canonicalCongr e).left_inv _,
+      (PseudoMetricSpace.canonicalCongr e).left_inv _]
+  right_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).right_inv _, (Group.canonicalCongr e).right_inv _,
+      (PseudoMetricSpace.canonicalCongr e).right_inv _]
+
+/-- `SeminormedCommGroup` instances correspond along a canonical equivalence. -/
+@[to_additive (attr := transport)
+  /-- `SeminormedAddCommGroup` instances correspond along a canonical equivalence. -/]
+protected abbrev SeminormedCommGroup.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (SeminormedCommGroup α) (SeminormedCommGroup β) where
+  toFun i :=
+    SeminormedCommGroup.mk (toNorm := (Norm.canonicalCongr e).toFun i.toNorm)
+      (toCommGroup := (CommGroup.canonicalCongr e).toFun i.toCommGroup)
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).toFun i.toPseudoMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.invFun x) (e.invFun y) =
+          ‖e.invFun (e.toFun (e.invFun (e.toFun (e.invFun x)⁻¹) * e.invFun y))‖
+        rw [e.invFun_toFun, e.invFun_toFun]
+        exact i.dist_eq _ _)
+  invFun i :=
+    SeminormedCommGroup.mk (toNorm := (Norm.canonicalCongr e).invFun i.toNorm)
+      (toCommGroup := (CommGroup.canonicalCongr e).invFun i.toCommGroup)
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).invFun i.toPseudoMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.toFun x) (e.toFun y) =
+          ‖e.toFun (e.invFun (e.toFun (e.invFun (e.toFun x)⁻¹) * e.toFun y))‖
+        rw [e.toFun_invFun, e.toFun_invFun]
+        exact i.dist_eq _ _)
+  left_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).left_inv _, (CommGroup.canonicalCongr e).left_inv _,
+      (PseudoMetricSpace.canonicalCongr e).left_inv _]
+  right_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).right_inv _, (CommGroup.canonicalCongr e).right_inv _,
+      (PseudoMetricSpace.canonicalCongr e).right_inv _]
+
+/-- `NormedGroup` instances correspond along a canonical equivalence. -/
+@[to_additive (attr := transport)
+  /-- `NormedAddGroup` instances correspond along a canonical equivalence. -/]
+protected abbrev NormedGroup.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (NormedGroup α) (NormedGroup β) where
+  toFun i :=
+    NormedGroup.mk (toNorm := (Norm.canonicalCongr e).toFun i.toNorm)
+      (toGroup := (Group.canonicalCongr e).toFun i.toGroup)
+      (toMetricSpace := (MetricSpace.canonicalCongr e).toFun i.toMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.invFun x) (e.invFun y) =
+          ‖e.invFun (e.toFun (e.invFun (e.toFun (e.invFun x)⁻¹) * e.invFun y))‖
+        rw [e.invFun_toFun, e.invFun_toFun]
+        exact i.dist_eq _ _)
+  invFun i :=
+    NormedGroup.mk (toNorm := (Norm.canonicalCongr e).invFun i.toNorm)
+      (toGroup := (Group.canonicalCongr e).invFun i.toGroup)
+      (toMetricSpace := (MetricSpace.canonicalCongr e).invFun i.toMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.toFun x) (e.toFun y) =
+          ‖e.toFun (e.invFun (e.toFun (e.invFun (e.toFun x)⁻¹) * e.toFun y))‖
+        rw [e.toFun_invFun, e.toFun_invFun]
+        exact i.dist_eq _ _)
+  left_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).left_inv _, (Group.canonicalCongr e).left_inv _,
+      (MetricSpace.canonicalCongr e).left_inv _]
+  right_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).right_inv _, (Group.canonicalCongr e).right_inv _,
+      (MetricSpace.canonicalCongr e).right_inv _]
+
+/-- `NormedCommGroup` instances correspond along a canonical equivalence. -/
+@[to_additive (attr := transport)
+  /-- `NormedAddCommGroup` instances correspond along a canonical equivalence. -/]
+protected abbrev NormedCommGroup.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (NormedCommGroup α) (NormedCommGroup β) where
+  toFun i :=
+    NormedCommGroup.mk (toNorm := (Norm.canonicalCongr e).toFun i.toNorm)
+      (toCommGroup := (CommGroup.canonicalCongr e).toFun i.toCommGroup)
+      (toMetricSpace := (MetricSpace.canonicalCongr e).toFun i.toMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.invFun x) (e.invFun y) =
+          ‖e.invFun (e.toFun (e.invFun (e.toFun (e.invFun x)⁻¹) * e.invFun y))‖
+        rw [e.invFun_toFun, e.invFun_toFun]
+        exact i.dist_eq _ _)
+  invFun i :=
+    NormedCommGroup.mk (toNorm := (Norm.canonicalCongr e).invFun i.toNorm)
+      (toCommGroup := (CommGroup.canonicalCongr e).invFun i.toCommGroup)
+      (toMetricSpace := (MetricSpace.canonicalCongr e).invFun i.toMetricSpace)
+      (dist_eq := fun x y ↦ by
+        change dist (e.toFun x) (e.toFun y) =
+          ‖e.toFun (e.invFun (e.toFun (e.invFun (e.toFun x)⁻¹) * e.toFun y))‖
+        rw [e.toFun_invFun, e.toFun_invFun]
+        exact i.dist_eq _ _)
+  left_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).left_inv _, (CommGroup.canonicalCongr e).left_inv _,
+      (MetricSpace.canonicalCongr e).left_inv _]
+  right_inv i := by
+    cases i
+    dsimp only
+    congr 1
+    exacts [(Norm.canonicalCongr e).right_inv _, (CommGroup.canonicalCongr e).right_inv _,
+      (MetricSpace.canonicalCongr e).right_inv _]
 
 -- See note [lower instance priority]
 @[to_additive]

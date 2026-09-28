@@ -347,7 +347,7 @@ recursive interpreter `run` for `FreeCont`.
 -/
 @[simp]
 theorem run_toContT {α : Type u} (comp : FreeCont r α) (k : α → r) :
-    (toContT comp).run k = pure (run comp k) := by
+    (toContT comp).run (fun a => pure (k a)) = pure (run comp k) := by
   simp only [toContT]
   induction comp using FreeM.induction with
   | pure a => rfl

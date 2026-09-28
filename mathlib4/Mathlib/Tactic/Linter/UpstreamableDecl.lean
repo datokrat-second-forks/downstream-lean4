@@ -110,7 +110,7 @@ def upstreamableDeclLinter : Linter where run := withSetOptionIn fun stx ↦ do
         return
 
       let minImports := getIrredundantImports env (← getAllImports stx id)
-      match minImports.size, minImports.min? with
+      match minImports.size, minImports.toTreeSet.min? with
       | 1, some upstream => do
         if !(← env.localDefinitionDependencies stx id) then
           let p : GoToModuleLinkProps := { modName := upstream }

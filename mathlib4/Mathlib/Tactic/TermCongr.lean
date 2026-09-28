@@ -275,6 +275,7 @@ structure CongrResult where
 
   If `pf? = none`, then `lhs` and `rhs` are defeq, and the proof is by reflexivity. -/
   (pf? : Option (CongrType → MetaM Expr))
+  deriving Nonempty
 
 /-- Returns whether the proof is by reflexivity.
 Such congruence proofs are trivial. -/

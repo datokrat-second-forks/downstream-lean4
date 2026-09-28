@@ -284,6 +284,28 @@ def OpenPartialHomeomorph.MDifferentiable (f : OpenPartialHomeomorph M M') :=
   MDifferentiableOn I I' f f.source ∧ MDifferentiableOn I' I f.symm f.target
 
 variable (I I') in
+/-- Continuous linear maps between the tangent spaces at `x` and `y` correspond to continuous linear
+maps between the model spaces, through `TangentSpace.equivModel` at both ends. This is
+`inTangentCoordinates` with equal base and evaluation points, see
+`TangentSpace.homEquivModel_eq_inTangentCoordinates`. -/
+def TangentSpace.homEquivModel (x : M) (y : M') :
+    (TangentSpace I x →L[𝕜] TangentSpace I' y) ≃ (E →L[𝕜] E') :=
+  ContinuousLinearEquiv.arrowCongrEquiv (TangentSpace.equivModel I x) (TangentSpace.equivModel I' y)
+
+theorem TangentSpace.homEquivModel_apply {x : M} {y : M'}
+    (ϕ : TangentSpace I x →L[𝕜] TangentSpace I' y) :
+    TangentSpace.homEquivModel I I' x y ϕ =
+      (TangentSpace.equivModel I' y : TangentSpace I' y →L[𝕜] E') ∘L ϕ ∘L
+        ((TangentSpace.equivModel I x).symm : E →L[𝕜] TangentSpace I x) :=
+  rfl
+
+theorem TangentSpace.homEquivModel_symm_apply {x : M} {y : M'} (ϕ : E →L[𝕜] E') :
+    (TangentSpace.homEquivModel I I' x y).symm ϕ =
+      ((TangentSpace.equivModel I' y).symm : E' →L[𝕜] TangentSpace I' y) ∘L ϕ ∘L
+        (TangentSpace.equivModel I x : TangentSpace I x →L[𝕜] E) :=
+  rfl
+
+variable (I I') in
 /-- `HasMFDerivWithinAt I I' f s x f'` indicates that the function `f` between manifolds
 has, at the point `x` and within the set `s`, the derivative `f'`. Here, `f'` is a continuous linear
 map from the tangent space at `x` to the tangent space at `f x`.
@@ -299,7 +321,7 @@ def HasMFDerivWithinAt (f : M → M') (s : Set M) (x : M)
     (f' : TangentSpace I x →L[𝕜] TangentSpace I' (f x)) :=
   ContinuousWithinAt f s x ∧
     HasFDerivWithinAt (writtenInExtChartAt I I' x f)
-      ((tangentSpaceCastModel I' (f x)) ∘L f' ∘L (tangentSpaceCastModel I x).symm)
+      ((TangentSpace.equivModel I' (f x)) ∘L f' ∘L (TangentSpace.equivModel I x).symm)
       ((extChartAt I x).symm ⁻¹' s ∩ range I) ((extChartAt I x) x)
 
 variable (I I') in
@@ -314,7 +336,7 @@ this would not mean anything relevant. -/
 def HasMFDerivAt (f : M → M') (x : M) (f' : TangentSpace I x →L[𝕜] TangentSpace I' (f x)) :=
   ContinuousAt f x ∧
     HasFDerivWithinAt (writtenInExtChartAt I I' x f)
-    ((tangentSpaceCastModel I' (f x)) ∘L f' ∘L (tangentSpaceCastModel I x).symm)
+    ((TangentSpace.equivModel I' (f x)) ∘L f' ∘L (TangentSpace.equivModel I x).symm)
     (range I) ((extChartAt I x) x)
 
 open scoped Classical in
@@ -324,9 +346,9 @@ is the derivative of `f` at `x` within `s`,
 as a continuous linear map from the tangent space at `x` to the tangent space at `f x`. -/
 def mfderivWithin (f : M → M') (s : Set M) (x : M) : TangentSpace I x →L[𝕜] TangentSpace I' (f x) :=
   if MDifferentiableWithinAt I I' f s x then
-    ((tangentSpaceCastModel I' (f x)).symm) ∘L
+    ((TangentSpace.equivModel I' (f x)).symm) ∘L
     (fderivWithin 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ range I)
-        ((extChartAt I x) x)) ∘L (tangentSpaceCastModel I x)
+        ((extChartAt I x) x)) ∘L (TangentSpace.equivModel I x)
   else 0
 
 open scoped Classical in
@@ -335,9 +357,9 @@ variable (I I') in
 as a continuous linear map from the tangent space at `x` to the tangent space at `f x`. -/
 def mfderiv (f : M → M') (x : M) : TangentSpace I x →L[𝕜] TangentSpace I' (f x) :=
   if MDifferentiableAt I I' f x then
-    ((tangentSpaceCastModel I' (f x)).symm) ∘L
+    ((TangentSpace.equivModel I' (f x)).symm) ∘L
     (fderivWithin 𝕜 (writtenInExtChartAt I I' x f : E → E') (range I) ((extChartAt I x) x)) ∘L
-    (tangentSpaceCastModel I x)
+    (TangentSpace.equivModel I x)
   else 0
 
 variable (I I') in

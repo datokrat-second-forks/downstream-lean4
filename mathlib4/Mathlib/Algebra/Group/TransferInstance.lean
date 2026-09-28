@@ -6,7 +6,9 @@ Authors: Johannes Hölzl
 module
 
 public import Mathlib.Algebra.Group.Equiv.Defs
+public import Mathlib.Algebra.Group.Ext
 public import Mathlib.Algebra.Group.InjSurj
+public import Mathlib.Algebra.Group.Transport
 public import Mathlib.Data.Fintype.Basic
 
 /-!

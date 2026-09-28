@@ -56,7 +56,7 @@ def formatToHtmlWithDoc (fmt : Format) (n : Name) : MetaM Html := do
   let tag := 0
   -- Hack: use `.ofCommandInfo` instead of `.ofTacticInfo` to avoid printing `n` and its type.
   -- Unfortunately, there is still a loose dangling ` : `.
-  let infos := .insert ∅ tag <| .ofCommandInfo
+  let infos := .insert ∅ ⟨tag⟩ <| .ofCommandInfo
     { elaborator := `ClickSuggestions, stx := .node .none n #[] }
   let tt := TaggedText.prettyTagged <| .tag tag fmt
   let ctx := {
@@ -362,7 +362,7 @@ def mkSuggestion (tac : TSyntax `tactic) (html : Html) (isClosing := false) :
   let tac ← match (← read).onGoal with
     | some n => `(tactic| on_goal $(Syntax.mkNatLit (n + 1)) => $tac:tactic)
     | none => pure tac
-  let (range, newText) ← mkInsertion tac (← read)
+  let (range, newText) ← mkInsertion tac
   let buttonText := if isClosing then "[done] " else "[apply] "
   let button :=
     -- TODO: The hover on this button should be a `CodeWithInfos`, instead of a string.

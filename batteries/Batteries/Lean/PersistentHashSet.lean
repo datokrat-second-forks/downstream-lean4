@@ -37,7 +37,7 @@ Returns `true` if `f` returns `true` for any element of the set.
 -/
 @[inline]
 def any (s : PersistentHashSet α) (f : α → Bool) : Bool :=
-  Id.run <| s.anyM f
+  Id.run <| s.anyM (fun a => pure (f a))
 
 /--
 Returns `true` if `f` returns `true` for all elements of the set.
@@ -54,7 +54,7 @@ Returns `true` if `f` returns `true` for all elements of the set.
 -/
 @[inline]
 def all (s : PersistentHashSet α) (f : α → Bool) : Bool :=
-  Id.run <| s.allM f
+  Id.run <| s.allM (fun a => pure (f a))
 
 instance : BEq (PersistentHashSet α) where
   beq s t := s.all (t.contains ·) && t.all (s.contains ·)

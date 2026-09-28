@@ -158,7 +158,7 @@ def MVarGraph.rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
       -- Execute the next part using the metavariable context and local context of the main goal.
       g.ctx.val.runMetaM {} do
         let md ← g.mvarId.getDecl
-        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)}
+        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)} |>.run
         Meta.withLCtx lctx md.localInstances do
           drawMVarGraph <| props.goals.toList.map (·.mvarId))
 

@@ -242,7 +242,7 @@ def bracedContent (p : Parser String) : Parser String :=
   pchar '{' *> (("{" ++ · ++ "}") <$> p) <* pchar '}'
 
 partial def manyOptions {α} (p : Parser (Option α)) (acc : Array α := #[]) :
-    Parser (Array α) := fun it =>
+    Parser (Array α) := .mk fun it =>
   match p it with
   | .success it ret =>
     match ret with
@@ -254,7 +254,7 @@ partial def mathContentAux : Parser String := do
   let normalChars : Parser String := many1Chars <| satisfy fun
     | '\\' | '$' | '{' | '}' => false
     | _ => true
-  let doOne : Parser (Option String) := fun it =>
+  let doOne : Parser (Option String) := .mk fun it =>
     if Input.hasNext it then
       match Input.curr it with
       | '{' => (.some <$> bracedContent mathContentAux) it
@@ -269,7 +269,7 @@ partial def mathContentAux : Parser String := do
   return String.join (← manyOptions doOne).toList
 
 /-- Match a math content. Returns `Option.none` if it does not start with `\(`, `\[` or `$`. -/
-def mathContent : Parser (Option TexContent) := fun it =>
+def mathContent : Parser (Option TexContent) := .mk fun it =>
   let aux (beginning ending : String) : Parser String :=
     pstring beginning *> mathContentAux <* pstring ending
   let substr := it.1.extract it.2 (it.2.nextn 2)
@@ -288,7 +288,7 @@ partial def rawContentAux : Parser String := do
   let normalChars : Parser String := many1Chars <| satisfy fun
     | '\\' | '{' | '}' => false
     | _ => true
-  let doOne : Parser (Option String) := fun it =>
+  let doOne : Parser (Option String) := .mk fun it =>
     if Input.hasNext it then
       match Input.curr it with
       | '{' => (.some <$> bracedContent rawContentAux) it
@@ -351,7 +351,7 @@ def texDiacriticsCommand (p : Parser (Option TexContent)) : Parser (Option TexCo
 The TeX commands for diacritics will be converted into UTF-8 characters.
 Other TeX commands are preserved.
 Returns `Option.none` if it can't match any and there are no errors. -/
-partial def texContent : Parser (Option TexContent) := fun it =>
+partial def texContent : Parser (Option TexContent) := .mk fun it =>
   let normalChars' : Parser String := many1Chars <| satisfy fun
     | '\\' | '$' | '{' | '}' | ' ' | '\t' | '\r' | '\n' | ',' => false
     | _ => true

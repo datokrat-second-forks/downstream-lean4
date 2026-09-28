@@ -18,4 +18,4 @@ where
     let mut decls := st.state.toArray
     for ds in st.importedEntries do
       decls := decls ++ ds
-    decls
+    return decls

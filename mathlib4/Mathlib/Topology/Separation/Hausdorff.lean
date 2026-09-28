@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Basic.Rel
 public import Mathlib.Topology.Compactness.SigmaCompact
+public import Mathlib.Topology.Homeomorph.TransferInstance
 public import Mathlib.Topology.Irreducible
 public import Mathlib.Topology.Separation.Basic
 
@@ -379,6 +380,20 @@ theorem Topology.IsEmbedding.t2Space [TopologicalSpace Y] [T2Space Y] {f : X →
 
 protected theorem Homeomorph.t2Space [TopologicalSpace Y] [T2Space X] (h : X ≃ₜ Y) : T2Space Y :=
   h.symm.isEmbedding.t2Space
+
+/-- `T2Space` holds on both sides of a canonical equivalence, for the transported topology. -/
+@[transport]
+protected abbrev T2Space.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] {tα : TopologicalSpace α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ) :
+    Lean.CanonicalEquivalence (T2Space α) (T2Space β) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  exact {
+    toFun _ := e.homeomorph.t2Space
+    invFun _ := e.homeomorph.symm.t2Space
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 instance ULift.instT2Space [T2Space X] : T2Space (ULift X) :=
   IsEmbedding.uliftDown.t2Space

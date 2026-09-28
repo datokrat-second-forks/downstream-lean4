@@ -99,7 +99,7 @@ def corec' (f : α → β × α) : α → Stream' β :=
 
 /-- Use a state monad to generate a stream through corecursion -/
 def corecState {σ α} (cmd : StateM σ α) (s : σ) : Stream' α :=
-  corec Prod.fst (cmd.run ∘ Prod.snd) (cmd.run s)
+  corec Prod.fst (Id.run ∘ cmd.run ∘ Prod.snd) ((cmd.run s).run)
 
 -- corec is also known as unfolds
 abbrev unfolds (g : α → β) (f : α → α) (a : α) : Stream' β :=

@@ -58,7 +58,7 @@ def normalizeStops (a b : Array GradientStop) :
   -- Sample both arrays at each offset
   let stopsA := offsets.map fun o => { offset := o, color := sampleStops a o : GradientStop }
   let stopsB := offsets.map fun o => { offset := o, color := sampleStops b o : GradientStop }
-  (stopsA, stopsB)
+  return (stopsA, stopsB)
 
 /-!
 # Fill interpolation helpers

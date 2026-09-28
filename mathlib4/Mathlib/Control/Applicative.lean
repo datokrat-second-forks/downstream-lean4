@@ -108,15 +108,49 @@ instance instLawfulApplicativeComp : LawfulApplicative (Comp F G) where
   seq_pure := Comp.seq_pure
   seq_assoc := Comp.seq_assoc
 
-theorem applicative_id_comp {F} [AF : Applicative F] [LawfulApplicative F] :
-    @instApplicativeComp Id F _ _ = AF :=
-  @Applicative.ext F _ _ (instLawfulApplicativeComp (F := Id)) _
-    (fun _ => rfl) (fun _ _ => rfl)
+section Unitors
 
-theorem applicative_comp_id {F} [AF : Applicative F] [LawfulApplicative F] :
-    @Comp.instApplicativeComp F Id _ _ = AF :=
-  @Applicative.ext F _ _ (instLawfulApplicativeComp (G := Id)) _
-    (fun _ => rfl) (fun f x => show id <$> f <*> x = f <*> x by rw [id_map])
+variable {F : Type u → Type v} [Applicative F] {α β : Type u}
+
+@[simp] theorem leftUnitor_pure (x : α) : leftUnitor F (pure x) = (pure x : F α) := rfl
+
+@[simp] theorem leftUnitorInv_pure (x : α) :
+    leftUnitorInv F (pure x) = (pure x : Comp Id F α) := rfl
+
+@[simp] theorem leftUnitor_seq (f : Comp Id F (α → β)) (x : Comp Id F α) :
+    leftUnitor F (f <*> x) = leftUnitor F f <*> leftUnitor F x := rfl
+
+@[simp] theorem leftUnitorInv_seq (f : F (α → β)) (x : F α) :
+    leftUnitorInv F (f <*> x) = leftUnitorInv F f <*> leftUnitorInv F x := rfl
+
+variable [LawfulApplicative F]
+
+@[simp] theorem rightUnitorInv_pure (x : α) :
+    rightUnitorInv F (pure x) = (pure x : Comp F Id α) := by
+  apply Comp.ext
+  simp only [rightUnitorInv, Comp.run_mk, Comp.run_pure, LawfulApplicative.map_pure]
+  rfl
+
+@[simp] theorem rightUnitorInv_seq (f : F (α → β)) (x : F α) :
+    rightUnitorInv F (f <*> x) = rightUnitorInv F f <*> rightUnitorInv F x := by
+  apply Comp.ext
+  simp only [rightUnitorInv, Comp.run_mk, Comp.run_seq, map_map]
+  rw [map_seq, Applicative.map_seq_map]
+  rfl
+
+@[simp] theorem rightUnitor_pure (x : α) : rightUnitor F (pure x) = (pure x : F α) := by
+  apply rightUnitorInv_injective
+  simp only [rightUnitorInv_pure, rightUnitorInv_rightUnitor]
+
+@[simp] theorem rightUnitor_seq (f : Comp F Id (α → β)) (x : Comp F Id α) :
+    rightUnitor F (f <*> x) = rightUnitor F f <*> rightUnitor F x := by
+  apply rightUnitorInv_injective
+  simp only [rightUnitorInv_seq, rightUnitorInv_rightUnitor]
+
+@[deprecated (since := "2026-09-23")] alias applicative_id_comp := leftUnitor_seq
+@[deprecated (since := "2026-09-23")] alias applicative_comp_id := rightUnitor_seq
+
+end Unitors
 
 open CommApplicative
 

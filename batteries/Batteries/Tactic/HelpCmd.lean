@@ -57,7 +57,7 @@ private def elabHelpOption (id : Option Ident) : CommandElabM Unit := do
   -- string like `"pp.all"` is not the same as `` `pp.all ``, so looking up by
   -- the display string would never show `(currently: …)` for real options.
   let mut decls : Std.TreeMap String (Name × OptionDecl) compare := {}
-  for (name, decl) in show NameMap OptionDecl from ← getOptionDecls do
+  for (name, decl) in show OptionDecls from ← getOptionDecls do
     let nameStr := name.toString false
     if let some id := id then
       if !id.isPrefixOf nameStr then

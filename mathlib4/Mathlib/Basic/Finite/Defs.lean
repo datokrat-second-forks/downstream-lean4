@@ -110,6 +110,15 @@ theorem Finite.exists_equiv_fin (α : Sort*) [h : Finite α] : ∃ n : ℕ, None
 theorem Finite.of_equiv (α : Sort*) [h : Finite α] (f : α ≃ β) : Finite β :=
   let ⟨e⟩ := h; ⟨f.symm.trans e⟩
 
+/-- `Finite` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Finite.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Finite α) (Finite β) where
+  toFun _ := .of_equiv _ e.toEquiv
+  invFun _ := .of_equiv _ e.toEquiv.symm
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 

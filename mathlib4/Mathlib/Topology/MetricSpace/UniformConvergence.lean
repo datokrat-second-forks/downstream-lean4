@@ -70,9 +70,11 @@ noncomputable instance : PseudoEMetricSpace (α →ᵤ β) where
   edist_self := by simp [edist_def]
   edist_comm := by simp [edist_def, edist_comm]
   edist_triangle f₁ f₂ f₃ := calc
-    ⨆ x, edist (f₁ x) (f₃ x) ≤ ⨆ x, edist (f₁ x) (f₂ x) + edist (f₂ x) (f₃ x) :=
+    ⨆ x, edist (toFun f₁ x) (toFun f₃ x) ≤
+        ⨆ x, edist (toFun f₁ x) (toFun f₂ x) + edist (toFun f₂ x) (toFun f₃ x) :=
       iSup_mono fun _ ↦ edist_triangle _ _ _
-    _ ≤ (⨆ x, edist (f₁ x) (f₂ x)) + (⨆ x, edist (f₂ x) (f₃ x)) := iSup_add_le _ _
+    _ ≤ (⨆ x, edist (toFun f₁ x) (toFun f₂ x)) + (⨆ x, edist (toFun f₂ x) (toFun f₃ x)) :=
+      iSup_add_le _ _
   toUniformSpace := inferInstance
   uniformity_edist := by
     suffices 𝓤 (α →ᵤ β) = comap (fun x ↦ edist x.1 x.2) (𝓝 0) by

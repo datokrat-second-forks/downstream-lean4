@@ -75,21 +75,21 @@ where `a..b` is a token and `b..c` is whitespace.
 -/
 partial def satisfyTokensFn (p : Char → Bool) (errorMsg : String) (many := true)
     (k : Array (String.Pos.Raw × String.Pos.Raw × String.Pos.Raw) → ParserState → ParserState) :
-    ParserFn := fun c s =>
+    ParserFn := .mk fun c s =>
   let start := s.pos
-  let s := takeWhile1Fn p errorMsg c s
+  let s := (takeWhile1Fn p errorMsg).toFn c s
   if s.hasError then s else
   let stop := s.pos
-  let s := whitespace c s
+  let s := whitespace.toFn c s
   let toks := #[(start, stop, s.pos)]
   if many then
     let rec /-- Loop body of `satisfyTokensFn` -/
     loop (toks) (s : ParserState) : ParserState :=
       let start := s.pos
-      let s := takeWhileFn p c s
+      let s := (takeWhileFn p).toFn c s
       if s.pos == start then k toks s else
         let stop := s.pos
-        let s := whitespace c s
+        let s := whitespace.toFn c s
         let toks := toks.push (start, stop, s.pos)
         loop toks s
     loop toks s
@@ -120,9 +120,9 @@ def partitionPoint (lo := 0) (hi := as.size) : Nat :=
 If `many` is false, then whitespace (and comments) are not allowed inside the superscript.
 -/
 partial def scriptFnNoAntiquot (m : Mapping) (errorMsg : String) (p : ParserFn)
-    (many := true) : ParserFn := fun c s =>
+    (many := true) : ParserFn := .mk fun c s =>
   let start := s.pos
-  satisfyTokensFn m.toNormal.contains errorMsg many c s (k := fun toks s => Id.run do
+  (satisfyTokensFn m.toNormal.contains errorMsg many (k := fun toks s => Id.run do
     let mut newStr := ""
     -- This consists of a sorted array of `(from, to)` pairs, where indexes `from+i` in `newStr`
     -- such that `from+i < from'` for the next element of the array, are mapped to `to+i`.
@@ -171,8 +171,8 @@ partial def scriptFnNoAntiquot (m : Mapping) (errorMsg : String) (p : ParserFn)
         .atom (alignInfo info) val
       | .ident info rawVal val preresolved =>
         .ident (alignInfo info) (alignSubstr rawVal) val preresolved
-    s.pushSyntax (alignSyntax s'.stxStack.back)
-  )
+    return s.pushSyntax (alignSyntax s'.stxStack.back)
+  )).toFn c s
 
 /-- The super/subscript parser.
 

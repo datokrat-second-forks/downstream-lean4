@@ -31,19 +31,13 @@ instance : LawfulMonadLift BaseIO (EIO ε) :=
 @[simp] theorem EIO.adapt_pure (f : ε₁ → ε₂) (a : α) :
     EIO.adapt f (pure a : EIO ε₁ α) = (pure a : EIO ε₂ α) := by rfl
 
-private theorem EIO.bind_eq_EST_bind (ma : EIO ε α) (f : α → EIO ε β) :
-    (ma >>= f) = EST.bind ma f := by rfl
-
-private theorem EIO.adapt_EST_bind (f : ε₁ → ε₂) (ma : EIO ε₁ α) (g : α → EIO ε₁ β) :
-    EIO.adapt f (EST.bind ma g) = EST.bind (EIO.adapt f ma) (fun a => EIO.adapt f (g a)) := by
-  funext s; simp only [EIO.adapt, EST.bind]; cases ma s <;> rfl
-
-set_option allowUnsafeReducibility true in
-attribute [implicit_reducible] EIO
-
 @[simp] theorem EIO.adapt_bind (f : ε₁ → ε₂) (ma : EIO ε₁ α) (g : α → EIO ε₁ β) :
     EIO.adapt f (ma >>= g) = EIO.adapt f ma >>= fun a => EIO.adapt f (g a) := by
-  simp only [EIO.bind_eq_EST_bind, EIO.adapt_EST_bind]
+  apply congrArg EIO.mk
+  apply congrArg EST.mk
+  funext s
+  simp only [EIO.adapt, bind, EST.bind]
+  cases ma.toEST.run s <;> rfl
 
 /-! ### `StateRefT'.lift` simp lemmas -/
 
@@ -57,19 +51,25 @@ attribute [implicit_reducible] EIO
 /-! ### `LawfulMonadLift IO CoreM` -/
 
 private theorem Core.run_liftIOCore (x : IO α) (r : Core.Context) :
-    ReaderT.run (Core.liftIOCore x) r =
+    ReaderT.run (Core.liftIOCore x).toReaderT r =
       (StateRefT'.lift
         (EIO.adapt
           (fun err => Exception.error r.ref (MessageData.ofFormat (format (toString err)))) x) :
         StateRefT' IO.RealWorld Core.State (EIO Exception) α) := by rfl
 
+private theorem Core.toReaderT_bind (x : CoreM α) (f : α → CoreM β) :
+    (x >>= f).toReaderT = x.toReaderT >>= fun a => (f a).toReaderT := rfl
+
 instance : LawfulMonadLift IO CoreM where
   monadLift_pure a := by
-    ext r
-    simp [MonadLift.monadLift, Core.run_liftIOCore]
+    show (.mk (Core.liftIOCore (pure a)).toReaderT : CoreM _) = .mk (pure a : CoreM _).toReaderT
+    congr 1
   monadLift_bind ma f := by
+    show (.mk (Core.liftIOCore (ma >>= f)).toReaderT : CoreM _) =
+      .mk (Core.liftIOCore ma >>= fun a => Core.liftIOCore (f a)).toReaderT
+    congr 1
     ext r
-    simp [MonadLift.monadLift, Core.run_liftIOCore]
+    simp [Core.run_liftIOCore, Core.toReaderT_bind]
 
 instance : LawfulMonadLiftT (EIO Exception) CommandElabM := inferInstance
 instance : LawfulMonadLiftT (EIO Exception) CoreM := inferInstance

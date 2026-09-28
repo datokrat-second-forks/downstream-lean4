@@ -70,7 +70,7 @@ def elabInsertCastAux (declName : Name) (castKind : CastKind) (stx : Term) (t : 
   let (newType, _) ← (applyReplacementFun t type).run #[] #[]
   let newValue ← forallBoundedTelescope newType numFVars fun xs goalType ↦ do
     -- Make the goal easier to prove by unfolding the new lhs
-    let goalType := (← unfoldLHS? castKind goalType).getD goalType
+    let goalType := (← (unfoldLHS? castKind goalType).run).getD goalType
     let newValue ← elabTermEnsuringType stx goalType <* synthesizeSyntheticMVarsNoPostponing
     mkLambdaFVars xs (← instantiateMVars newValue)
   let newName ← mkAuxDeclName ((t.attrName.appendBefore "_").appendAfter "_cast")

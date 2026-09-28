@@ -6,6 +6,7 @@ Authors: Yury Kudryashov, Yaël Dillies
 module
 
 public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Algebra.Group.Transport
 public import Mathlib.Algebra.Notation.Defs
 public import Mathlib.Order.Lex
 public import Mathlib.Order.OrderDual
@@ -116,8 +117,10 @@ theorem toDual_one [One α] : toDual (1 : α) = 1 := rfl
 @[to_additive (attr := simp)]
 theorem ofDual_one [One α] : (ofDual 1 : α) = 1 := rfl
 
-@[to_additive (attr := simp)] lemma toDual_eq_one [One α] {a : α} : toDual a = 1 ↔ a = 1 := .rfl
-@[to_additive (attr := simp)] lemma ofDual_eq_one [One α] {a : αᵒᵈ} : ofDual a = 1 ↔ a = 1 := .rfl
+@[to_additive (attr := simp)]
+lemma toDual_eq_one [One α] {a : α} : toDual a = 1 ↔ a = 1 := toDual_inj
+@[to_additive (attr := simp)]
+lemma ofDual_eq_one [One α] {a : αᵒᵈ} : ofDual a = 1 ↔ a = 1 := ofDual_inj (b := 1)
 
 @[to_additive (attr := simp)]
 theorem toDual_mul [Mul α] (a b : α) : toDual (a * b) = toDual a * toDual b := rfl
@@ -153,22 +156,34 @@ section Monoid
 variable [Monoid α]
 
 @[to_additive (attr := simp)]
-lemma isLeftRegular_toDual {a : α} : IsLeftRegular (toDual a) ↔ IsLeftRegular a := .rfl
+lemma isLeftRegular_toDual {a : α} : IsLeftRegular (toDual a) ↔ IsLeftRegular a :=
+  ⟨fun h _ _ hxy ↦ congrArg ofDual' (h (congrArg toDual' hxy)),
+    fun h _ _ hxy ↦ congrArg toDual' (h (congrArg ofDual' hxy))⟩
 
 @[to_additive (attr := simp)]
-lemma isLeftRegular_ofDual {a : αᵒᵈ} : IsLeftRegular (ofDual a) ↔ IsLeftRegular a := .rfl
+lemma isLeftRegular_ofDual {a : αᵒᵈ} : IsLeftRegular (ofDual a) ↔ IsLeftRegular a :=
+  ⟨fun h _ _ hxy ↦ congrArg toDual' (h (congrArg ofDual' hxy)),
+    fun h _ _ hxy ↦ congrArg ofDual' (h (congrArg toDual' hxy))⟩
 
 @[to_additive (attr := simp)]
-lemma isRightRegular_toDual {a : α} : IsRightRegular (toDual a) ↔ IsRightRegular a := .rfl
+lemma isRightRegular_toDual {a : α} : IsRightRegular (toDual a) ↔ IsRightRegular a :=
+  ⟨fun h _ _ hxy ↦ congrArg ofDual' (h (congrArg toDual' hxy)),
+    fun h _ _ hxy ↦ congrArg toDual' (h (congrArg ofDual' hxy))⟩
 
 @[to_additive (attr := simp)]
-lemma isRightRegular_ofDual {a : αᵒᵈ} : IsRightRegular (ofDual a) ↔ IsRightRegular a := .rfl
+lemma isRightRegular_ofDual {a : αᵒᵈ} : IsRightRegular (ofDual a) ↔ IsRightRegular a :=
+  ⟨fun h _ _ hxy ↦ congrArg toDual' (h (congrArg ofDual' hxy)),
+    fun h _ _ hxy ↦ congrArg ofDual' (h (congrArg toDual' hxy))⟩
 
 @[to_additive (attr := simp)]
-lemma isRegular_toDual {a : α} : IsRegular (toDual a) ↔ IsRegular a := .rfl
+lemma isRegular_toDual {a : α} : IsRegular (toDual a) ↔ IsRegular a :=
+  ⟨fun h ↦ ⟨isLeftRegular_toDual.1 h.left, isRightRegular_toDual.1 h.right⟩,
+    fun h ↦ ⟨isLeftRegular_toDual.2 h.left, isRightRegular_toDual.2 h.right⟩⟩
 
 @[to_additive (attr := simp)]
-lemma isRegular_ofDual {a : αᵒᵈ} : IsRegular (ofDual a) ↔ IsRegular a := .rfl
+lemma isRegular_ofDual {a : αᵒᵈ} : IsRegular (ofDual a) ↔ IsRegular a :=
+  ⟨fun h ↦ ⟨isLeftRegular_ofDual.1 h.left, isRightRegular_ofDual.1 h.right⟩,
+    fun h ↦ ⟨isLeftRegular_ofDual.2 h.left, isRightRegular_ofDual.2 h.right⟩⟩
 
 end Monoid
 

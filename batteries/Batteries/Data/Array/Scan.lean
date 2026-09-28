@@ -128,12 +128,12 @@ theorem scanrM_pure [Monad m] [LawfulMonad m] {f : α → β → β} {as : Array
 @[simp]
 theorem idRun_scanlM {f : β → α → Id β} {as : Array α} :
     (as.scanlM f init).run = as.scanl (f · · |>.run) init :=
-  scanlM_pure
+  congrArg Id.run scanlM_pure
 
 @[simp]
 theorem idRun_scanrM {f : α → β → Id β} {as : Array α} :
     (as.scanrM f init).run = as.scanr (f · · |>.run) init :=
-  scanrM_pure
+  congrArg Id.run scanrM_pure
 
 @[grind =]
 theorem scanlM_map [Monad m] [LawfulMonad m] {f : α₁ → α₂ } {g: β → α₂ → m β} {as : Array α₁} :

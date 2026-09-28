@@ -62,6 +62,21 @@ lemma Bornology.ext (t t' : Bornology α)
   cases t'
   congr
 
+/-- Bornologies correspond along a canonical equivalence: a set is cobounded if its preimage is. -/
+@[transport]
+protected abbrev Bornology.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Bornology α) (Bornology β) where
+  toFun b :=
+    { cobounded := (@Bornology.cobounded α b).map e.toFun
+      le_cofinite := (map_mono (@Bornology.le_cofinite α b)).trans
+        e.toFun_injective.tendsto_cofinite }
+  invFun b :=
+    { cobounded := (@Bornology.cobounded β b).map e.invFun
+      le_cofinite := (map_mono (@Bornology.le_cofinite β b)).trans
+        e.invFun_injective.tendsto_cofinite }
+  left_inv _ := Bornology.ext _ _ <| map_map.trans <| by rw [e.left_inv.comp_eq_id, map_id]
+  right_inv _ := Bornology.ext _ _ <| map_map.trans <| by rw [e.right_inv.comp_eq_id, map_id]
+
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps, instance_reducible]
@@ -313,10 +328,26 @@ theorem cobounded_eq_bot : cobounded α = ⊥ :=
 
 end Bornology
 
+/-- `BoundedSpace` holds on both sides of a canonical equivalence, for the transported
+bornology. -/
+@[transport]
+protected abbrev BoundedSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β)
+    [bβ : Bornology β] {bα : Bornology α} (hb : bα = (Bornology.canonicalCongr e).invFun bβ) :
+    Lean.CanonicalEquivalence (BoundedSpace α) (BoundedSpace β) := by
+  subst hb
+  letI := (Bornology.canonicalCongr e).invFun bβ
+  exact {
+    toFun h := Bornology.cobounded_eq_bot_iff.1 <|
+      Filter.map_eq_bot_iff.1 ((Bornology.cobounded_eq_bot_iff (α := α)).2 h)
+    invFun h := (Bornology.cobounded_eq_bot_iff (α := α)).1 <|
+      Filter.map_eq_bot_iff.2 (Bornology.cobounded_eq_bot_iff.2 h)
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 namespace OrderDual
 variable [Bornology α]
 
-instance instBornology : Bornology αᵒᵈ := ‹Bornology α›
+instance instBornology : Bornology αᵒᵈ := inferInstanceAs (Bornology α)
 
 @[simp] lemma isCobounded_preimage_ofDual {s : Set α} :
     IsCobounded (ofDual ⁻¹' s) ↔ IsCobounded s := Iff.rfl

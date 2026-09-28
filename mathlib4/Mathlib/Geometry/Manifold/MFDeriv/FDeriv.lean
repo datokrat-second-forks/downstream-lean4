@@ -49,19 +49,20 @@ theorem ModelWithCorners.uniqueMDiffOn {H : Type*} [TopologicalSpace H]
 theorem writtenInExtChartAt_model_space : writtenInExtChartAt 𝓘(𝕜, E) 𝓘(𝕜, E') x f = f :=
   rfl
 
-variable {f' : TangentSpace 𝓘(𝕜, E) x →L[𝕜] TangentSpace 𝓘(𝕜, E') (f x)}
+variable {f' : E →L[𝕜] E'}
 
-set_option backward.isDefEq.respectTransparency false in
 theorem hasMFDerivWithinAt_iff_hasFDerivWithinAt :
-    HasMFDerivAt[s] f x f' ↔ HasFDerivWithinAt f f' s x := by
+    HasMFDerivAt[s] f x ((NormedSpace.fromTangentSpace (f x)).symm.toContinuousLinearMap ∘L f' ∘L
+      (NormedSpace.fromTangentSpace x).toContinuousLinearMap) ↔ HasFDerivWithinAt f f' s x := by
   simp only [HasMFDerivWithinAt, mfld_simps]
   exact ⟨fun h ↦ h.2, fun h ↦ ⟨h.continuousWithinAt, h⟩⟩
 
 alias ⟨HasMFDerivWithinAt.hasFDerivWithinAt, HasFDerivWithinAt.hasMFDerivWithinAt⟩ :=
   hasMFDerivWithinAt_iff_hasFDerivWithinAt
 
-set_option backward.isDefEq.respectTransparency false in
-theorem hasMFDerivAt_iff_hasFDerivAt : HasMFDerivAt% f x f' ↔ HasFDerivAt f f' x := by
+theorem hasMFDerivAt_iff_hasFDerivAt :
+    HasMFDerivAt% f x ((NormedSpace.fromTangentSpace (f x)).symm.toContinuousLinearMap ∘L f' ∘L
+      (NormedSpace.fromTangentSpace x).toContinuousLinearMap) ↔ HasFDerivAt f f' x := by
   rw [← hasMFDerivWithinAt_univ, hasMFDerivWithinAt_iff_hasFDerivWithinAt, hasFDerivWithinAt_univ]
 
 alias ⟨HasMFDerivAt.hasFDerivAt, HasFDerivAt.hasMFDerivAt⟩ := hasMFDerivAt_iff_hasFDerivAt

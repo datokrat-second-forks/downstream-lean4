@@ -253,7 +253,7 @@ partial def renderTagged (doc : CodeWithInfos) : RenderedCode := Id.run do
             let (front, t, back) := splitWhitespaces t
             return .append #[.text front, .tag (.const n) (.text t), .text back]
           | _ =>
-            .tag (.const n) <$> renderTagged t
+            return .tag (.const n) (renderTagged t)
       | .sort _u =>
         match t with
         | .text t =>
@@ -268,9 +268,9 @@ partial def renderTagged (doc : CodeWithInfos) : RenderedCode := Id.run do
             restStr := " " ++ restStr
           return .append #[.tag (.sort sortFormer) (.text sortPrefix), .text restStr]
         | _ =>
-          .tag (.sort none) <$> renderTagged t
-      | _ => .tag .otherExpr <$> renderTagged t
-    | _ => .tag .otherExpr <$> renderTagged t
-  | .append xs => xs.mapM renderTagged <&> (·.foldl (init := .empty) (· ++ ·))
+          return .tag (.sort none) (renderTagged t)
+      | _ => return .tag .otherExpr (renderTagged t)
+    | _ => return .tag .otherExpr (renderTagged t)
+  | .append xs => return xs.map renderTagged |>.foldl (init := .empty) (· ++ ·)
 
 end DocGen4

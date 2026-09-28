@@ -36,7 +36,7 @@ meta def checkQqDelabOptions : DelabM Unit := do
   if ← getPPOption getPPExplicit then failure
 
 meta instance : MonadLift UnquoteM (StateT UnquoteState DelabM) where
-  monadLift k s := k s
+  monadLift k := .mk fun s => k.run s
 
 meta def delabQuoted : StateT UnquoteState DelabM Term := do
   let e ← getExpr

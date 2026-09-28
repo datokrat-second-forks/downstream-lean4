@@ -290,7 +290,7 @@ termination_by s.realSize
 by repeatedly pulling the minimum element out of the heap.
 -/
 @[inline] def Heap.fold (le : α → α → Bool) (s : Heap α) (init : β) (f : β → α → β) : β :=
-  Id.run <| s.foldM le init f
+  Id.run <| s.foldM le init (fun b a => pure (f b a))
 
 /-- `O(n log n)`. Convert the heap to an array in increasing order. -/
 @[inline] def Heap.toArray (le : α → α → Bool) (s : Heap α) : Array α := fold le s #[] Array.push
@@ -315,7 +315,7 @@ end
 
 /-- `O(n)`. Fold a function over the tree structure to accumulate a value. -/
 @[inline] def Heap.foldTree (nil : β) (join : α → β → β → β) (s : Heap α) : β :=
-  Id.run <| s.foldTreeM nil join
+  Id.run <| s.foldTreeM nil (fun a b c => pure (join a b c))
 
 /-- `O(n)`. Convert the heap to a list in arbitrary order. -/
 def Heap.toListUnordered (s : Heap α) : List α :=

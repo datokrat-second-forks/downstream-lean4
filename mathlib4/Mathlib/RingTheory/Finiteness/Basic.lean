@@ -312,6 +312,28 @@ theorem equiv [Module.Finite R M] (e : M ≃ₗ[R] N) : Module.Finite R N :=
 theorem equiv_iff (e : M ≃ₗ[R] N) : Module.Finite R M ↔ Module.Finite R N :=
   ⟨fun _ ↦ equiv e, fun _ ↦ equiv e.symm⟩
 
+/-- `Module.Finite` holds on both sides of canonical equivalences of the scalars and of the
+modules, for the transported semiring and module structures. -/
+@[transport]
+protected abbrev canonicalCongr {S S' α β : Type*} (e₁ : Lean.CanonicalEquivalence S S')
+    (e₂ : Lean.CanonicalEquivalence α β) [iS' : Semiring S'] {iS : Semiring S}
+    (hS : iS = (Semiring.canonicalCongr e₁).invFun iS') [iβ : AddCommMonoid β]
+    {iα : AddCommMonoid α} (hα : iα = (AddCommMonoid.canonicalCongr e₂).invFun iβ)
+    [mβ : Module S' β] {mα : Module S α} (hm : mα = (Module.canonicalCongr e₁ e₂ hS hα).invFun mβ) :
+    Lean.CanonicalEquivalence (Module.Finite S α) (Module.Finite S' β) := by
+  subst hm hS hα
+  letI := (Semiring.canonicalCongr e₁).invFun iS'
+  letI := (AddCommMonoid.canonicalCongr e₂).invFun iβ
+  letI := (Module.canonicalCongr e₁ e₂ rfl rfl).invFun mβ
+  haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+  haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+  exact {
+    toFun _ := of_surjective (e₁.semilinearEquiv e₂).toLinearMap (e₁.semilinearEquiv e₂).surjective
+    invFun _ := of_surjective (e₁.semilinearEquiv e₂).symm.toLinearMap
+      (e₁.semilinearEquiv e₂).symm.surjective
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 instance [Module.Finite R M] : Module.Finite R Mᵐᵒᵖ := equiv (MulOpposite.opLinearEquiv R)
 
 instance ulift [Module.Finite R M] : Module.Finite R (ULift M) := equiv ULift.moduleEquiv.symm

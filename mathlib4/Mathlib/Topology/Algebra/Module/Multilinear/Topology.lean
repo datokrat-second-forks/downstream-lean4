@@ -53,7 +53,7 @@ lemma range_toUniformOnFun [DecidableEq ι] [TopologicalSpace F] :
   · rintro ⟨f, rfl⟩
     exact ⟨f.cont, f.map_update_add, f.map_update_smul⟩
   · rintro ⟨hcont, hadd, hsmul⟩
-    exact ⟨⟨⟨f, by intro; convert! hadd, by intro; convert! hsmul⟩, hcont⟩, rfl⟩
+    exact ⟨⟨⟨toFun _ f, by intro; convert! hadd, by intro; convert! hsmul⟩, hcont⟩, rfl⟩
 
 @[simp]
 lemma toUniformOnFun_toFun [TopologicalSpace F] (f : ContinuousMultilinearMap 𝕜 E F) :
@@ -80,7 +80,7 @@ lemma isUniformInducing_toUniformOnFun :
 
 lemma isUniformEmbedding_toUniformOnFun :
     IsUniformEmbedding (toUniformOnFun : ContinuousMultilinearMap 𝕜 E F → _) :=
-  ⟨isUniformInducing_toUniformOnFun, DFunLike.coe_injective⟩
+  ⟨isUniformInducing_toUniformOnFun, (UniformOnFun.ofFun _).injective.comp DFunLike.coe_injective⟩
 
 lemma isEmbedding_toUniformOnFun :
     IsEmbedding (toUniformOnFun : ContinuousMultilinearMap 𝕜 E F →
@@ -157,7 +157,6 @@ variable (𝕜' : Type*) [NontriviallyNormedField 𝕜'] [NormedAlgebra 𝕜' �
   [∀ i, Module 𝕜' (E i)] [∀ i, IsScalarTower 𝕜' 𝕜 (E i)] [Module 𝕜' F] [IsScalarTower 𝕜' 𝕜 F]
   [∀ i, ContinuousSMul 𝕜 (E i)]
 
-set_option backward.isDefEq.respectTransparency false in
 @[fun_prop]
 theorem isUniformEmbedding_restrictScalars :
     IsUniformEmbedding
@@ -165,8 +164,10 @@ theorem isUniformEmbedding_restrictScalars :
   let : NontriviallyNormedField 𝕜 :=
     ⟨let ⟨x, hx⟩ := @NontriviallyNormedField.non_trivial 𝕜' _; ⟨algebraMap 𝕜' 𝕜 x, by simpa⟩⟩
   rw [← isUniformEmbedding_toUniformOnFun.of_comp_iff]
-  convert! isUniformEmbedding_toUniformOnFun using 4 with s
-  exact ⟨fun h ↦ h.extend_scalars _, fun h ↦ h.restrict_scalars _⟩
+  have h𝔖 : {s : Set (Π i, E i) | IsVonNBounded 𝕜 s} = {s | IsVonNBounded 𝕜' s} :=
+    Set.ext fun s ↦ ⟨fun h ↦ h.restrict_scalars _, fun h ↦ h.extend_scalars _⟩
+  exact (UniformOnFun.uniformEquivOfEq h𝔖).isUniformEmbedding.comp
+    isUniformEmbedding_toUniformOnFun
 
 @[fun_prop]
 theorem uniformContinuous_restrictScalars :
@@ -209,7 +210,7 @@ theorem hasBasis_nhds_zero_of_basis {ι : Type*} {p : ι → Prop} {b : ι → S
   let : UniformSpace F := IsTopologicalAddGroup.rightUniformSpace F
   have : IsUniformAddGroup F := isUniformAddGroup_of_addCommGroup
   rw [nhds_induced]
-  refine (UniformOnFun.hasBasis_nhds_zero_of_basis _ ?_ ?_ h).comap DFunLike.coe
+  refine (UniformOnFun.hasBasis_nhds_zero_of_basis _ ?_ ?_ h).comap toUniformOnFun
   · exact ⟨∅, isVonNBounded_empty _ _⟩
   · exact directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union
 

@@ -107,6 +107,17 @@ class Dist (α : Type*) where
 
 export Dist (dist)
 
+/-- Distances correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev Dist.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Dist α) (Dist β) where
+  toFun i := ⟨fun x y ↦ i.dist (e.invFun x) (e.invFun y)⟩
+  invFun i := ⟨fun x y ↦ i.dist (e.toFun x) (e.toFun y)⟩
+  left_inv i := congrArg Dist.mk <| funext₂ fun x y ↦
+    congrArg₂ i.dist (e.left_inv x) (e.left_inv y)
+  right_inv i := congrArg Dist.mk <| funext₂ fun x y ↦
+    congrArg₂ i.dist (e.right_inv x) (e.right_inv y)
+
 -- the uniform structure and the emetric space structure are embedded in the metric space structure
 -- to avoid instance diamond issues. See Note [forgetful inheritance].
 set_option backward.privateInPublic true in
@@ -1106,6 +1117,54 @@ example {α} [B : Bornology α] (m : PseudoMetricSpace α)
     (PseudoMetricSpace.replaceBornology m H).toUniformSpace = m.toUniformSpace := by
   with_reducible_and_instances rfl
 
+/-- Pseudometric space structures correspond along a canonical equivalence, with the distance of
+`Dist.canonicalCongr`, the uniformity of `UniformSpace.canonicalCongr` and the bornology of
+`Bornology.canonicalCongr`. -/
+@[transport]
+protected abbrev PseudoMetricSpace.canonicalCongr {α β : Type*}
+    (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (PseudoMetricSpace α) (PseudoMetricSpace β) where
+  toFun m :=
+    PseudoMetricSpace.mk (toDist := (Dist.canonicalCongr e).toFun m.toDist)
+      (dist_self := fun x ↦ m.dist_self (e.invFun x))
+      (dist_comm := fun x y ↦ m.dist_comm (e.invFun x) (e.invFun y))
+      (dist_triangle := fun x y z ↦ m.dist_triangle (e.invFun x) (e.invFun y) (e.invFun z))
+      (edist := fun x y ↦ m.edist (e.invFun x) (e.invFun y))
+      (edist_dist := fun x y ↦ m.edist_dist (e.invFun x) (e.invFun y))
+      (toUniformSpace := (UniformSpace.canonicalCongr e).toFun m.toUniformSpace)
+      (uniformity_dist := (map_eq_comap_of_inverse (m := Prod.map e.toFun e.toFun)
+        (n := Prod.map e.invFun e.invFun) (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))
+        (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))).trans
+        ((@uniformity_basis_dist α m).comap (Prod.map e.invFun e.invFun)).eq_biInf)
+      (toBornology := (Bornology.canonicalCongr e).toFun m.toBornology)
+      (cobounded_sets := Set.ext fun s ↦ (Set.ext_iff.1 m.cobounded_sets (e.toFun ⁻¹' s)).trans
+        ⟨fun ⟨C, hC⟩ ↦ ⟨C, fun x hx y hy ↦
+          hC _ (by rw [mem_compl_iff, mem_preimage, e.toFun_invFun]; exact hx)
+            _ (by rw [mem_compl_iff, mem_preimage, e.toFun_invFun]; exact hy)⟩,
+        fun ⟨C, hC⟩ ↦ ⟨C, fun x hx y hy ↦ (congrArg₂ (@dist α m.toDist) (e.left_inv x)
+          (e.left_inv y)).symm.trans_le (hC (e.toFun x) hx (e.toFun y) hy)⟩⟩)
+  invFun m :=
+    PseudoMetricSpace.mk (toDist := (Dist.canonicalCongr e).invFun m.toDist)
+      (dist_self := fun x ↦ m.dist_self (e.toFun x))
+      (dist_comm := fun x y ↦ m.dist_comm (e.toFun x) (e.toFun y))
+      (dist_triangle := fun x y z ↦ m.dist_triangle (e.toFun x) (e.toFun y) (e.toFun z))
+      (edist := fun x y ↦ m.edist (e.toFun x) (e.toFun y))
+      (edist_dist := fun x y ↦ m.edist_dist (e.toFun x) (e.toFun y))
+      (toUniformSpace := (UniformSpace.canonicalCongr e).invFun m.toUniformSpace)
+      (uniformity_dist := (map_eq_comap_of_inverse (m := Prod.map e.invFun e.invFun)
+        (n := Prod.map e.toFun e.toFun) (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))
+        (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))).trans
+        ((@uniformity_basis_dist β m).comap (Prod.map e.toFun e.toFun)).eq_biInf)
+      (toBornology := (Bornology.canonicalCongr e).invFun m.toBornology)
+      (cobounded_sets := Set.ext fun s ↦ (Set.ext_iff.1 m.cobounded_sets (e.invFun ⁻¹' s)).trans
+        ⟨fun ⟨C, hC⟩ ↦ ⟨C, fun x hx y hy ↦
+          hC _ (by rw [mem_compl_iff, mem_preimage, e.invFun_toFun]; exact hx)
+            _ (by rw [mem_compl_iff, mem_preimage, e.invFun_toFun]; exact hy)⟩,
+        fun ⟨C, hC⟩ ↦ ⟨C, fun x hx y hy ↦ (congrArg₂ (@dist β m.toDist) (e.right_inv x)
+          (e.right_inv y)).symm.trans_le (hC (e.invFun x) hx (e.invFun y) hy)⟩⟩)
+  left_inv m := PseudoMetricSpace.ext ((Dist.canonicalCongr e).left_inv m.toDist)
+  right_inv m := PseudoMetricSpace.ext ((Dist.canonicalCongr e).right_inv m.toDist)
+
 section Real
 
 /-- Instantiate the reals as a pseudometric space. -/
@@ -1271,7 +1330,7 @@ end
 
 open OrderDual
 
-instance : PseudoMetricSpace αᵒᵈ := ‹_›
+instance : PseudoMetricSpace αᵒᵈ := inferInstanceAs (PseudoMetricSpace α)
 
 section
 

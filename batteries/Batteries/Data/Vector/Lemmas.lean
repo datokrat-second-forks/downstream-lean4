@@ -212,22 +212,22 @@ theorem scanlM_pure [Monad m] [LawfulMonad m] {f : β → α → β} {as : Vecto
     as.scanlM (m := m) (pure <| f · ·) init = pure (as.scanl f init) := by
   rw [← _root_.map_inj_right toArray_inj.mp, toArray_scanlM, map_pure, Array.scanlM_pure]
   congr
-  apply toArray_scanlM.symm
+  exact congrArg Id.run toArray_scanlM.symm
 
 @[simp]
 theorem scanrM_pure [Monad m] [LawfulMonad m] {f : α → β → β} {as : Vector α n} :
     as.scanrM (m := m) (pure <| f · ·) init = pure (as.scanr f init) := by
   rw [← _root_.map_inj_right toArray_inj.mp, toArray_scanrM, map_pure, Array.scanrM_pure]
   congr
-  apply toArray_scanrM.symm
+  exact congrArg Id.run toArray_scanrM.symm
 
 theorem idRun_scanlM {f : β → α → Id β} {as : Vector α n} :
     (as.scanlM f init).run = as.scanl (f · · |>.run) init :=
-  scanlM_pure
+  congrArg Id.run scanlM_pure
 
 theorem idRun_scanrM {f : α → β → Id β} {as : Vector α n} :
     (as.scanrM f init).run = as.scanr (f · · |>.run) init :=
-  scanrM_pure
+  congrArg Id.run scanrM_pure
 
 @[grind =]
 theorem scanlM_map [Monad m] [LawfulMonad m] {f : α₁ → α₂} {g : β → α₂ → m β} {as : Vector α₁ n} :
@@ -255,15 +255,13 @@ theorem toArray_scanl {f : β → α → β} {as : Vector α n} :
     (as.scanl f init).toArray = as.toArray.scanl f init := by
   have h : Vector.toArray <$> (as.scanlM (m := Id) (pure <| f · ·) init) =
       as.toArray.scanlM (m := Id) (pure <| f · ·) init := toArray_scanlM ..
-  simp only [scanl, Id.run]
-  exact h
+  exact congrArg Id.run h
 
 theorem toArray_scanr {f : α → β → β} {as : Vector α n} :
     (as.scanr f init).toArray = as.toArray.scanr f init := by
   have h : Vector.toArray <$> (as.scanrM (m := Id) (pure <| f · ·) init) =
       as.toArray.scanrM (m := Id) (pure <| f · ·) init := toArray_scanrM
-  simp only [scanr, Id.run]
-  exact h
+  exact congrArg Id.run h
 
 @[simp, grind =]
 theorem toList_scanl {f : β → α → β} {as : Vector α n} :
