@@ -221,6 +221,7 @@ From 2026-09-26 evening (user asleep): make further design decisions autonomousl
 OrderDual decisions (user, 2026-09-26):
 - Raw constructor and projection: `toDual'` / `ofDual'`; `toDual`/`ofDual` stay the `Equiv`s.
 - Retry the three files parked on the old branch (`Ordmap/Invariants`, `CompleteLattice/PiLex`, `Category/BddOrd`); ask the user if one needs a design change.
+- Transfer lemmas between `α` and `αᵒᵈ` state the sealed side as a `toDual` preimage, as Mathlib's `*_preimage_toDual` lemmas and `ofDual_sSup` do. Then `rw [← transfer]` rewrites the goal into the dual, and the upstream proof term applies unchanged (DDR 063 learnings, approach 1). Example: `preimage_toDual_image_smulRightDual` (DDR 080, user 2026-09-28).
 
 ## Sealing `UniformOnFun` with `newtype` (started 2026-09-27)
 

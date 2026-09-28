@@ -88,39 +88,26 @@ variable [Field α] [LinearOrder α] [IsStrictOrderedRing α]
   [Module α β] [PosSMulMono α β] {s : Set β}
   {a : α}
 
-/-- The image of `t` under `OrderIso.smulRightDual`, as a set of `βᵒᵈ`, is the dual copy of the
-pointwise scalar multiple `a • t`. -/
-lemma image_smulRightDual (ha : a < 0) (t : Set β) :
-    OrderIso.smulRightDual β ha '' t = ⇑OrderDual.ofDual ⁻¹' (a • t) := by
-  ext x
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨y, hy, rfl⟩
-  · rintro ⟨y, hy, hxy⟩
-    exact ⟨y, hy, congrArg OrderDual.toDual hxy⟩
+/-- The image of `t` under `OrderIso.smulRightDual`, pulled back along `toDual`, is the pointwise
+scalar multiple `a • t`. -/
+lemma preimage_toDual_image_smulRightDual (ha : a < 0) (t : Set β) :
+    ⇑OrderDual.toDual ⁻¹' (OrderIso.smulRightDual β ha '' t) = a • t :=
+  Set.ext fun _ ↦ exists_congr fun _ ↦ and_congr_right' OrderDual.toDual_inj
 
 @[simp] lemma lowerBounds_smul_of_neg (ha : a < 0) : lowerBounds (a • s) = a • upperBounds s := by
-  have h : ⇑OrderDual.ofDual ⁻¹' lowerBounds (a • s) =
-      ⇑OrderDual.ofDual ⁻¹' (a • upperBounds s) := by
-    rw [← upperBounds_preimage_ofDual]
-    simp only [← image_smulRightDual ha]
-    exact (OrderIso.smulRightDual β ha).upperBounds_image
-  exact congrArg (⇑OrderDual.toDual ⁻¹' ·) h
+  simp only [← preimage_toDual_image_smulRightDual ha, lowerBounds_preimage_toDual]
+  exact congrArg _ (OrderIso.smulRightDual β ha).upperBounds_image
 
 @[simp] lemma upperBounds_smul_of_neg (ha : a < 0) : upperBounds (a • s) = a • lowerBounds s := by
-  have h : ⇑OrderDual.ofDual ⁻¹' upperBounds (a • s) =
-      ⇑OrderDual.ofDual ⁻¹' (a • lowerBounds s) := by
-    rw [← lowerBounds_preimage_ofDual]
-    simp only [← image_smulRightDual ha]
-    exact (OrderIso.smulRightDual β ha).lowerBounds_image
-  exact congrArg (⇑OrderDual.toDual ⁻¹' ·) h
+  simp only [← preimage_toDual_image_smulRightDual ha, upperBounds_preimage_toDual]
+  exact congrArg _ (OrderIso.smulRightDual β ha).lowerBounds_image
 
 @[simp] lemma bddBelow_smul_iff_of_neg (ha : a < 0) : BddBelow (a • s) ↔ BddAbove s := by
-  rw [← bddAbove_preimage_ofDual, ← image_smulRightDual ha]
+  rw [← preimage_toDual_image_smulRightDual ha, bddBelow_preimage_toDual]
   exact (OrderIso.smulRightDual β ha).bddAbove_image
 
 @[simp] lemma bddAbove_smul_iff_of_neg (ha : a < 0) : BddAbove (a • s) ↔ BddBelow s := by
-  rw [← bddBelow_preimage_ofDual, ← image_smulRightDual ha]
+  rw [← preimage_toDual_image_smulRightDual ha, bddAbove_preimage_toDual]
   exact (OrderIso.smulRightDual β ha).bddBelow_image
 
 end LinearOrderedField
