@@ -327,7 +327,7 @@ theorem isUniformEmbedding_uniformFunOfFun :
   comap_uniformity := UniformOnFun.uniformEquivUniformFun β _ isCompact_univ
     |>.isUniformEmbedding.comp isUniformEmbedding_toUniformOnFunIsCompact
     |>.comap_uniformity
-  injective := DFunLike.coe_injective
+  injective := ofFun.injective.comp DFunLike.coe_injective
 
 /-- Convergence in the compact-open topology is the same as uniform convergence for sequences of
 continuous functions on a compact space. -/

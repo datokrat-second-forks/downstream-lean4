@@ -232,7 +232,7 @@ protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : �
 @[to_additive]
 protected theorem UniformFun.hasBasis_nhds_one :
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V =>
-      { f : α → G | ∀ x, f x ∈ V } :=
+      { f : α →ᵤ G | ∀ x, toFun f x ∈ V } :=
   UniformFun.hasBasis_nhds_one_of_basis (basis_sets _)
 
 /-- Let `𝔖 : Set (Set α)`. If `G` is a uniform group, then `α →ᵤ[𝔖] G` is a uniform group as
@@ -280,12 +280,12 @@ lemma UniformOnFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α →ᵤ
 @[to_additive (attr := simp)]
 lemma UniformFun.ofFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
     ofFun (∏ i ∈ I, f i) = ∏ i ∈ I, ofFun (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' ofFun fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
-lemma UniformFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
+lemma UniformFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α →ᵤ β} (I : Finset ι) :
     toFun (∏ i ∈ I, f i) = ∏ i ∈ I, toFun (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' toFun fun _ _ ↦ rfl) f I
 
 end Group
 

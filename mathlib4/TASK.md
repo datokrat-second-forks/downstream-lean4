@@ -231,3 +231,11 @@ Decisions (user, 2026-09-27):
 - Only `UniformOnFun` (`α →ᵤ[𝔖] β`). `UniformFun` stays a plain definition. `PiLp` stays an `abbrev` over `WithLp`: every `PiLp` instance is keyed under `WithLp`, so `PiLp` is no barrier to instance search and has no definitional equality to seal.
 - Raw constructor and projection: `UniformOnFun.ofFun'` / `UniformOnFun.toFun'`; `ofFun 𝔖` / `toFun 𝔖` stay the `Equiv`s.
 - No `CoeFun`: elements are evaluated as `toFun 𝔖 f x`, as for `α →ᵤ β`.
+
+## Sealing `UniformFun` with `newtype` (started 2026-09-28)
+
+The user asked to seal `UniformFun` (`α →ᵤ β`) as well, as its own commit after `UniformOnFun`. The same rules apply. The earlier branch has no port of it to orient on.
+
+Decisions (user, 2026-09-28):
+- Raw constructor and projection: `UniformFun.ofFun'` / `UniformFun.toFun'`; `UniformFun.ofFun` / `UniformFun.toFun` stay the `Equiv`s.
+- Still no `CoeFun` on `α →ᵤ β` or `α →ᵤ[𝔖] β`: elements are evaluated as `toFun f x`, which existing statements already use. The comment in `UniformConvergenceTopology.lean` gives this reason instead of the definitional equality with `α → β`.

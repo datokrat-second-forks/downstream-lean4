@@ -308,12 +308,13 @@ def MultipliableUniformly : Prop := Multipliable (UniformFun.ofFun ∘ f)
 @[to_additive]
 lemma MultipliableUniformly.exists (h : MultipliableUniformly f) :
     ∃ g, HasProdUniformly f g :=
-  h
+  let ⟨g, hg⟩ := h
+  ⟨UniformFun.toFun g, hg⟩
 
 @[to_additive]
 theorem HasProdUniformly.multipliableUniformly (h : HasProdUniformly f g) :
     MultipliableUniformly f :=
-  ⟨g, h⟩
+  ⟨UniformFun.ofFun g, h⟩
 
 @[to_additive]
 lemma hasProdUniformly_iff_tendstoUniformly :

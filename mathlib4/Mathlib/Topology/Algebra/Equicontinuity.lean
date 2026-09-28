@@ -28,9 +28,9 @@ theorem equicontinuous_of_equicontinuousAt_one {ι G M hom : Type*} [Topological
   rw [equicontinuous_iff_continuous]
   rw [equicontinuousAt_iff_continuousAt] at hf
   let φ : G →* (ι →ᵤ M) :=
-    { toFun := swap ((↑) ∘ F)
-      map_one' := by dsimp [UniformFun]; ext; exact map_one _
-      map_mul' := fun a b => by dsimp [UniformFun]; ext; exact map_mul _ _ _ }
+    { toFun := UniformFun.ofFun ∘ swap ((↑) ∘ F)
+      map_one' := UniformFun.toFun.injective <| funext fun _ ↦ map_one _
+      map_mul' := fun a b => UniformFun.toFun.injective <| funext fun _ ↦ map_mul _ _ _ }
   exact continuous_of_continuousAt_one φ hf
 
 @[to_additive]
@@ -42,7 +42,7 @@ theorem uniformEquicontinuous_of_equicontinuousAt_one {ι G M hom : Type*} [Unif
   rw [uniformEquicontinuous_iff_uniformContinuous]
   rw [equicontinuousAt_iff_continuousAt] at hf
   let φ : G →* (ι →ᵤ M) :=
-    { toFun := swap ((↑) ∘ F)
-      map_one' := by dsimp [UniformFun]; ext; exact map_one _
-      map_mul' := fun a b => by dsimp [UniformFun]; ext; exact map_mul _ _ _ }
+    { toFun := UniformFun.ofFun ∘ swap ((↑) ∘ F)
+      map_one' := UniformFun.toFun.injective <| funext fun _ ↦ map_one _
+      map_mul' := fun a b => UniformFun.toFun.injective <| funext fun _ ↦ map_mul _ _ _ }
   exact uniformContinuous_of_continuousAt_one φ hf
