@@ -499,7 +499,7 @@ variable {f' f₀' f₁' : TangentSpace% x →L[𝕜] TangentSpace% (f x)}
 /-- `UniqueMDiffWithinAt` achieves its goal: it implies the uniqueness of the derivative. -/
 protected nonrec theorem UniqueMDiffWithinAt.eq (U : UniqueMDiffAt[s] x)
     (h : HasMFDerivAt[s] f x f') (h₁ : HasMFDerivAt[s] f x f₁') : f' = f₁' :=
-  (TangentSpace.homEquivModel I I' x (f x)).injective (U.eq (E := E) (F := E') h.2 h₁.2)
+  (tangentSpaceCastModelHom I I' x (f x)).injective (U.eq (E := E) (F := E') h.2 h₁.2)
 
 protected theorem UniqueMDiffOn.eq (U : UniqueMDiff[s]) (hx : x ∈ s)
     (h : HasMFDerivAt[s] f x f') (h₁ : HasMFDerivAt[s] f x f₁') : f' = f₁' :=
@@ -569,11 +569,11 @@ theorem HasMFDerivAt.hasMFDerivWithinAt (h : HasMFDerivAt% f x f') : HasMFDerivA
   ⟨ContinuousAt.continuousWithinAt h.1, HasFDerivWithinAt.mono h.2 inter_subset_right⟩
 
 theorem HasMFDerivWithinAt.mdifferentiableWithinAt (h : HasMFDerivAt[s] f x f') : MDiffAt[s] f x :=
-  ⟨h.1, ⟨TangentSpace.homEquivModel I I' x (f x) f', h.2⟩⟩
+  ⟨h.1, ⟨tangentSpaceCastModelHom I I' x (f x) f', h.2⟩⟩
 
 theorem HasMFDerivAt.mdifferentiableAt (h : HasMFDerivAt% f x f') : MDiffAt f x := by
   rw [mdifferentiableAt_iff]
-  exact ⟨h.1, ⟨TangentSpace.homEquivModel I I' x (f x) f', h.2⟩⟩
+  exact ⟨h.1, ⟨tangentSpaceCastModelHom I I' x (f x) f', h.2⟩⟩
 
 @[simp, mfld_simps]
 theorem hasMFDerivWithinAt_univ : HasMFDerivAt[univ] f x f' ↔ HasMFDerivAt% f x f' := by
@@ -637,14 +637,14 @@ theorem mdifferentiableWithinAt_congr_nhds {t : Set M} (hst : 𝓝[s] x = 𝓝[t
 
 protected theorem MDifferentiableWithinAt.mfderivWithin (h : MDiffAt[s] f x) :
     mfderiv[s] f x =
-      ((TangentSpace.equivModel I' (f x)).symm) ∘L
+      ((tangentSpaceCastModel I' (f x)).symm) ∘L
       (fderivWithin 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ range I)
-        ((extChartAt I x) x)) ∘L (TangentSpace.equivModel I x) := by
+        ((extChartAt I x) x)) ∘L (tangentSpaceCastModel I x) := by
   simp only [mfderivWithin, h, ite_eq_left]
 
 /-- Formula for the manifold derivative of a map within a set, read in the charts. -/
 protected theorem MDifferentiableWithinAt.homEquivModel_mfderivWithin (h : MDiffAt[s] f x) :
-    TangentSpace.homEquivModel I I' x (f x) (mfderiv[s] f x) =
+    tangentSpaceCastModelHom I I' x (f x) (mfderiv[s] f x) =
       fderivWithin 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).symm ⁻¹' s ∩ range I)
         ((extChartAt I x) x) := by
   rw [h.mfderivWithin]; rfl
@@ -656,14 +656,14 @@ theorem MDifferentiableAt.hasMFDerivAt (h : MDiffAt f x) : HasMFDerivAt% f x (mf
 
 protected theorem MDifferentiableAt.mfderiv (h : MDiffAt f x) :
     mfderiv% f x =
-      ((TangentSpace.equivModel I' (f x)).symm) ∘L
+      ((tangentSpaceCastModel I' (f x)).symm) ∘L
       fderivWithin 𝕜 (writtenInExtChartAt I I' x f) (range I) ((extChartAt I x) x) ∘L
-      (TangentSpace.equivModel I x) := by
+      (tangentSpaceCastModel I x) := by
   simp only [mfderiv, h, ite_eq_left]
 
 /-- Formula for the manifold derivative of a map, read in the charts. -/
 protected theorem MDifferentiableAt.homEquivModel_mfderiv (h : MDiffAt f x) :
-    TangentSpace.homEquivModel I I' x (f x) (mfderiv% f x) =
+    tangentSpaceCastModelHom I I' x (f x) (mfderiv% f x) =
       fderivWithin 𝕜 (writtenInExtChartAt I I' x f) (range I) ((extChartAt I x) x) := by
   rw [h.mfderiv]; rfl
 
@@ -1123,7 +1123,7 @@ theorem HasMFDerivWithinAt.comp (hg : HasMFDerivAt[u] g (f x) g')
   refine ⟨ContinuousWithinAt.comp hg.1 hf.1 hst, ?_⟩
   have A :
     HasFDerivWithinAt (writtenInExtChartAt I' I'' (f x) g ∘ writtenInExtChartAt I I' x f)
-      (TangentSpace.homEquivModel I I'' x (g (f x)) (g'.comp f'))
+      (tangentSpaceCastModelHom I I'' x (g (f x)) (g'.comp f'))
       ((extChartAt I x).symm ⁻¹' s ∩ range I)
       ((extChartAt I x) x) := by
     have :
@@ -1158,9 +1158,9 @@ theorem HasMFDerivAt.comp_hasMFDerivWithinAt (hg : HasMFDerivAt% g (f x) g')
 theorem MDifferentiableWithinAt.comp (hg : MDiffAt[u] g (f x)) (hf : MDiffAt[s] f x)
     (h : s ⊆ f ⁻¹' u) : MDifferentiableWithinAt I I'' (g ∘ f) s x := by
   rcases hf.2 with ⟨f', hf'⟩
-  have F : HasMFDerivAt[s] f x ((TangentSpace.homEquivModel I I' x (f x)).symm f') := ⟨hf.1, hf'⟩
+  have F : HasMFDerivAt[s] f x ((tangentSpaceCastModelHom I I' x (f x)).symm f') := ⟨hf.1, hf'⟩
   rcases hg.2 with ⟨g', hg'⟩
-  have G : HasMFDerivAt[u] g (f x) ((TangentSpace.homEquivModel I' I'' (f x) (g (f x))).symm g') :=
+  have G : HasMFDerivAt[u] g (f x) ((tangentSpaceCastModelHom I' I'' (f x) (g (f x))).symm g') :=
     ⟨hg.1, hg'⟩
   exact (HasMFDerivWithinAt.comp x G F h).mdifferentiableWithinAt
 

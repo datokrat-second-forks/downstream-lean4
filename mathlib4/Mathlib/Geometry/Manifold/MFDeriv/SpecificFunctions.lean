@@ -64,14 +64,14 @@ variable (I I') in
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   continuous_toFun :=
-    ((equivModel I p.1).symm.continuous.comp
-        (continuous_fst.comp (equivModel (I.prod I') p).continuous)).prodMk
-      ((equivModel I' p.2).symm.continuous.comp
-        (continuous_snd.comp (equivModel (I.prod I') p).continuous))
+    ((tangentSpaceCastModel I p.1).symm.continuous.comp
+        (continuous_fst.comp (tangentSpaceCastModel (I.prod I') p).continuous)).prodMk
+      ((tangentSpaceCastModel I' p.2).symm.continuous.comp
+        (continuous_snd.comp (tangentSpaceCastModel (I.prod I') p).continuous))
   continuous_invFun :=
-    (equivModel (I.prod I') p).symm.continuous.comp
-      (((equivModel I p.1).continuous.comp continuous_fst).prodMk
-        ((equivModel I' p.2).continuous.comp continuous_snd))
+    (tangentSpaceCastModel (I.prod I') p).symm.continuous.comp
+      (((tangentSpaceCastModel I p.1).continuous.comp continuous_fst).prodMk
+        ((tangentSpaceCastModel I' p.2).continuous.comp continuous_snd))
 
 namespace ContinuousLinearMap
 

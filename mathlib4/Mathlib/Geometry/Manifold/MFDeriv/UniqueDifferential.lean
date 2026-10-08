@@ -48,12 +48,12 @@ theorem UniqueMDiffWithinAt.image_denseRange (hs : UniqueMDiffAt[s] x)
     {f : M → M'} {f' : TangentSpace I x →L[𝕜] TangentSpace I' (f x)}
     (hf : HasMFDerivAt[s] f x f') (hd : DenseRange f') : UniqueMDiffAt[f '' s] (f x) := by
   /- Rewrite in coordinates, apply `HasFDerivWithinAt.uniqueDiffWithinAt`. -/
-  have hd' : DenseRange ⇑((TangentSpace.equivModel I' (f x)).toContinuousLinearMap ∘L
-      f' ∘L (TangentSpace.equivModel I x).symm.toContinuousLinearMap) := by
+  have hd' : DenseRange ⇑((tangentSpaceCastModel I' (f x)).toContinuousLinearMap ∘L
+      f' ∘L (tangentSpaceCastModel I x).symm.toContinuousLinearMap) := by
     simp only [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
-    refine (TangentSpace.equivModel I' (f x)).surjective.denseRange.comp ?_
-      (TangentSpace.equivModel I' (f x)).continuous
-    rw [DenseRange, (TangentSpace.equivModel I x).symm.surjective.range_comp]
+    refine (tangentSpaceCastModel I' (f x)).surjective.denseRange.comp ?_
+      (tangentSpaceCastModel I' (f x)).continuous
+    rw [DenseRange, (tangentSpaceCastModel I x).symm.surjective.range_comp]
     exact hd
   have := hs.inter' <| hf.1 (extChartAt_source_mem_nhds (I := I') (f x))
   refine (((hf.2.mono ?sub1).uniqueDiffWithinAt this hd').mono ?sub2).congr_pt ?pt
@@ -106,7 +106,7 @@ theorem UniqueMDiffOn.uniqueMDiffOn_target_inter (hs : UniqueMDiff[s]) (x : M) :
   refine (hs.inter (chartAt H x).open_source).image_denseRange'
     (fun y hy ↦ hasMFDerivWithinAt_extChartAt hy.2) fun y hy ↦ ?_
   exact (((NormedSpace.fromTangentSpace _).symm.surjective.comp
-    (TangentSpace.equivModel I _).surjective).comp
+    (tangentSpaceCastModel I _).surjective).comp
     ((mdifferentiable_chart _).mfderiv_surjective hy.2)).denseRange
 
 variable [IsManifold I 1 M] in

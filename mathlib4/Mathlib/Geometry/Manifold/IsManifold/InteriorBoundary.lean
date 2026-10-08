@@ -365,8 +365,8 @@ lemma MDifferentiableAt.isInteriorPoint_of_surjective_mfderiv {f : M → N} {x :
   rw [fderivWithin_eq_fderiv (I.uniqueDiffOn _ <| by simp) hf''] at hf'
   replace hf' : Surjective (fderiv 𝕜 (writtenInExtChartAt I I' x f) (extChartAt I x x)) := by
     intro y
-    obtain ⟨v, hv⟩ := hf' ((TangentSpace.equivModel I' (f x)).symm y)
-    exact ⟨TangentSpace.equivModel I x v, (TangentSpace.equivModel I' (f x)).symm.injective hv⟩
+    obtain ⟨v, hv⟩ := hf' ((tangentSpaceCastModel I' (f x)).symm y)
+    exact ⟨tangentSpaceCastModel I x v, (tangentSpaceCastModel I' (f x)).symm.injective hv⟩
   /- Since `writtenInExtChartAt I I' x f` is differentiable with surjective differential at `x`
   over `𝕜`, it also is so over `ℝ`. -/
   replace hf' : Surjective (fderiv ℝ (writtenInExtChartAt I I' x f) (extChartAt I x x)) := by

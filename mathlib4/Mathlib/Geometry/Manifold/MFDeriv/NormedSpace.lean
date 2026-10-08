@@ -625,13 +625,13 @@ lemma mvfderiv_zero {x : M} : d% (0 : M → F) x = 0 := by
 protected theorem MDifferentiableWithinAt.mvfderivWithin {f : M → E'} (h : MDiffAt[s] f x) :
     d[s] f x = fderivWithin 𝕜 (writtenInExtChartAt I 𝓘(𝕜, E') x f)
       ((extChartAt I x).symm ⁻¹' s ∩ range I) (extChartAt I x x) ∘L
-        (TangentSpace.equivModel I x).toContinuousLinearMap := by
+        (tangentSpaceCastModel I x).toContinuousLinearMap := by
   simp only [mvfderivWithin, h.mfderivWithin]
   rfl
 
 protected theorem MDifferentiableAt.mvfderiv {f : M → E'} (h : MDiffAt f x) :
     d% f x = fderivWithin 𝕜 (writtenInExtChartAt I 𝓘(𝕜, E') x f) (range I) (extChartAt I x x) ∘L
-      (TangentSpace.equivModel I x).toContinuousLinearMap := by
+      (tangentSpaceCastModel I x).toContinuousLinearMap := by
   simp only [mvfderiv, h.mfderiv]
   rfl
 

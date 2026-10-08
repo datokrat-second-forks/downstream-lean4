@@ -447,7 +447,7 @@ lemma mpullback_mfderivWithin_apply_smul {f : M → 𝕜}
       mpullbackWithin 𝓘(𝕜, E) I (extChartAt I x).symm W (range I) ((extChartAt I x) x) := rfl
   -- the pullback of `V` at `extChartAt I x x` is the vector `V x` read in the model space
   have hV' : fromTangentSpaceField (mpullbackWithin 𝓘(𝕜, E) I (extChartAt I x).symm V (range I))
-      ((extChartAt I x) x) = TangentSpace.equivModel I x (V x) := by
+      ((extChartAt I x) x) = tangentSpaceCastModel I x (V x) := by
     rw [NormedSpace.fromTangentSpaceField_apply, mpullbackWithin_apply,
       ← TangentSpace.cast_apply_section I (extChartAt_to_inv x).symm V,
       mfderivWithin_extChartAt_symm_inverse_apply]
@@ -823,7 +823,7 @@ lemma mpullbackWithin_mlieBracketWithin_of_isSymmSndFDerivWithinAt
   have : CompleteSpace E' := by
     rcases hfi with ⟨M, -⟩
     let M' : E ≃L[𝕜] E' :=
-      (TangentSpace.equivModel I x₀).symm.trans (M.trans (TangentSpace.equivModel I' (f x₀)))
+      (tangentSpaceCastModel I x₀).symm.trans (M.trans (tangentSpaceCastModel I' (f x₀)))
     exact (completeSpace_congr (e := M'.toEquiv) M'.isUniformEmbedding).1 (by assumption)
   -- choose a small open set `v` around `x₀` where `f` is `C^2`
   obtain ⟨u, u_open, x₀u, ut, maps_u, u_smooth⟩ :

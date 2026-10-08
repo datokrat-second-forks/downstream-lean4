@@ -1027,15 +1027,15 @@ all the smooth bundle structure when defining manifold derivatives. -/
 set_option linter.unusedVariables false in
 /-- The tangent space at a point of the manifold `M`, a `newtype` over the model vector space `E`.
 Its elements are identified with those of `E` through the preferred chart at the point, see
-`TangentSpace.equivModel`. -/
+`tangentSpaceCastModel`. -/
 @[nolint unusedArguments, wikidata Q909601]
 newtype TangentSpace {𝕜 : Type*} [NontriviallyNormedField 𝕜]
     {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
     {M : Type*} [TopologicalSpace M] [ChartedSpace H M] (_x : M) where
-  /-- Reads a vector of the model space as a tangent vector. Prefer `TangentSpace.equivModel`. -/
+  /-- Reads a vector of the model space as a tangent vector. Prefer `tangentSpaceCastModel`. -/
   ofModel ::
-  /-- Reads a tangent vector as a vector of the model space. Prefer `TangentSpace.equivModel`. -/
+  /-- Reads a tangent vector as a vector of the model space. Prefer `tangentSpaceCastModel`. -/
   toModel : E
 deriving
   TopologicalSpace, AddCommGroup, IsTopologicalAddGroup, Module 𝕜,
@@ -1049,12 +1049,20 @@ variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
   {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M] {x : M}
 
-/-- The identification of the tangent space at `x` with the model space given by the preferred
-chart at `x`. It is the trivialization of the tangent bundle at `x`, read in the fiber over `x`,
-see `TangentSpace.equivModel_eq_continuousLinearMapAt`. -/
-def TangentSpace.equivModel (x : M) : TangentSpace I x ≃L[𝕜] E where
-  toFun := toModel
-  invFun := ofModel
+/-- The identification of the tangent space at `x` with the model space, given by the preferred
+chart at `x`: it is the trivialization of the tangent bundle at `x`, read in the fiber over `x`, see
+`tangentSpaceCastModel_eq_continuousLinearMapAt`.
+
+In general this identification depends on the choice of the preferred chart `chartAt H x`. It is
+canonical when that choice is trivial, i.e., when the charted space has a single chart, defined on
+the whole space: then the tangent bundle has a single, global trivialization, and this is that
+trivialization at `x`. This is the case for the model space charted over itself
+(`chartedSpaceSelf`), and in particular for a normed space, see `NormedSpace.fromTangentSpace`.
+On other manifolds, use it only when setting up foundational properties of the tangent space, where
+the preferred chart is the intended one. -/
+def tangentSpaceCastModel (x : M) : TangentSpace I x ≃L[𝕜] E where
+  toFun := TangentSpace.toModel
+  invFun := TangentSpace.ofModel
   left_inv _ := rfl
   right_inv _ := rfl
   map_add' _ _ := rfl
@@ -1062,9 +1070,11 @@ def TangentSpace.equivModel (x : M) : TangentSpace I x ≃L[𝕜] E where
   continuous_toFun := ⟨fun _ h ↦ h⟩
   continuous_invFun := ⟨fun _ h ↦ h⟩
 
-/-- Identifying the tangent space at a normed space with the normed space itself. -/
+/-- Identifying the tangent space at a normed space with the normed space itself.
+This canonical identification (see `tangentSpaceCastModel`) is very prevalent in a number of places:
+this device allows making it explicit. -/
 def NormedSpace.fromTangentSpace (v : E) : TangentSpace 𝓘(𝕜, E) v ≃L[𝕜] E :=
-  TangentSpace.equivModel 𝓘(𝕜, E) v
+  tangentSpaceCastModel 𝓘(𝕜, E) v
 
 /-- The tangent spaces at equal points are equivalent. -/
 @[nolint unusedArguments]

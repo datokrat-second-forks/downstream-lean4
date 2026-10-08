@@ -338,8 +338,8 @@ TODO define splittings of vector bundles; state this result invariantly. -/
 theorem tangentMap_tangentBundle_pure [Is : IsManifold I 1 M]
     (p : TangentBundle I M) :
     tangentMap% (zeroSection (B := M) E (TangentSpace I)) p =
-      ⟨⟨p.proj, 0⟩, (TangentSpace.equivModel I.tangent (⟨p.proj, 0⟩ : TangentBundle I M)).symm
-        (TangentSpace.equivModel I p.proj p.2, 0)⟩ := by
+      ⟨⟨p.proj, 0⟩, (tangentSpaceCastModel I.tangent (⟨p.proj, 0⟩ : TangentBundle I M)).symm
+        (tangentSpaceCastModel I p.proj p.2, 0)⟩ := by
   rcases p with ⟨x, v⟩
   have N : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x)) := by
     apply IsOpen.mem_nhds
@@ -363,7 +363,7 @@ theorem tangentMap_tangentBundle_pure [Is : IsManifold I 1 M]
     Function.comp_def, map_zero, mfld_simps]
   rw [← fderivWithin_inter N] at B
   rw [← fderivWithin_inter N]
-  refine congrArg (TangentSpace.equivModel I.tangent (⟨x, 0⟩ : TangentBundle I M)).symm ?_
+  refine congrArg (tangentSpaceCastModel I.tangent (⟨x, 0⟩ : TangentBundle I M)).symm ?_
   rw [← B]
   refine DFunLike.congr_fun (fderivWithin_congr (fun y hy ↦ ?_) ?_) _
   · simp only [mfld_simps] at hy

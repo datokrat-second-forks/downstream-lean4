@@ -54,17 +54,17 @@ variable (I)
 
 /-! #### Model with corners -/
 
-/-- The derivative of `I : H → E` at `x` is `TangentSpace.equivModel I x`, read in the tangent space
+/-- The derivative of `I : H → E` at `x` is `tangentSpaceCastModel I x`, read in the tangent space
 to `E` at `I x`. -/
 protected theorem hasMFDerivAt {x} :
     HasMFDerivAt I 𝓘(𝕜, E) I x ((NormedSpace.fromTangentSpace (I x)).symm.toContinuousLinearMap ∘L
-      (TangentSpace.equivModel I x).toContinuousLinearMap) :=
+      (tangentSpaceCastModel I x).toContinuousLinearMap) :=
   ⟨I.continuousAt, (hasFDerivWithinAt_id _ _).congr' I.rightInvOn (mem_range_self _)⟩
 
 protected theorem hasMFDerivWithinAt {s x} :
     HasMFDerivWithinAt I 𝓘(𝕜, E) I s x
       ((NormedSpace.fromTangentSpace (I x)).symm.toContinuousLinearMap ∘L
-        (TangentSpace.equivModel I x).toContinuousLinearMap) :=
+        (tangentSpaceCastModel I x).toContinuousLinearMap) :=
   I.hasMFDerivAt.hasMFDerivWithinAt
 
 protected theorem mdifferentiableWithinAt {s x} : MDiffAt[s] I x :=
@@ -80,7 +80,7 @@ protected theorem mdifferentiable : MDiff I := fun _ => I.mdifferentiableAt
 
 theorem hasMFDerivWithinAt_symm {x} (hx : x ∈ range I) :
     HasMFDerivWithinAt 𝓘(𝕜, E) I I.symm (range I) x
-      ((TangentSpace.equivModel I (I.symm x)).symm.toContinuousLinearMap ∘L
+      ((tangentSpaceCastModel I (I.symm x)).symm.toContinuousLinearMap ∘L
         (NormedSpace.fromTangentSpace x).toContinuousLinearMap) :=
   ⟨I.continuousWithinAt_symm,
     (hasFDerivWithinAt_id _ _).congr' (fun _y hy => I.rightInvOn hy.1) ⟨hx, mem_range_self _⟩⟩
@@ -361,14 +361,14 @@ variable [IsManifold I 1 M] {s : Set M} {x y : M} {z : E}
 theorem hasMFDerivAt_extChartAt (h : y ∈ (chartAt H x).source) :
     HasMFDerivAt% (extChartAt I x) y
       (((NormedSpace.fromTangentSpace (extChartAt I x y)).symm.toContinuousLinearMap ∘L
-        (TangentSpace.equivModel I (chartAt H x y)).toContinuousLinearMap) ∘L
+        (tangentSpaceCastModel I (chartAt H x y)).toContinuousLinearMap) ∘L
           mfderiv% (chartAt H x) y) :=
   I.hasMFDerivAt.comp y ((mdifferentiable_chart x).mdifferentiableAt h).hasMFDerivAt
 
 theorem hasMFDerivWithinAt_extChartAt (h : y ∈ (chartAt H x).source) :
     HasMFDerivAt[s] (extChartAt I x) y
       (((NormedSpace.fromTangentSpace (extChartAt I x y)).symm.toContinuousLinearMap ∘L
-        (TangentSpace.equivModel I (chartAt H x y)).toContinuousLinearMap) ∘L
+        (tangentSpaceCastModel I (chartAt H x y)).toContinuousLinearMap) ∘L
           mfderiv% (chartAt H x) y) :=
   (hasMFDerivAt_extChartAt h).hasMFDerivWithinAt
 
@@ -483,25 +483,25 @@ lemma fderivWithin_extChartAt_comp_extChartAt_symm_range :
   rw [eq_nhd.fderivWithin_eq (by simp)]
   exact fderivWithin_id <| I.uniqueDiffOn.uniqueDiffWithinAt (mem_range_self _)
 
-/-- The manifold derivative of `extChartAt` at the basepoint is `TangentSpace.equivModel`. -/
+/-- The manifold derivative of `extChartAt` at the basepoint is `tangentSpaceCastModel`. -/
 lemma mfderiv_extChartAt_self :
     mfderiv% (extChartAt I x) x =
       (NormedSpace.fromTangentSpace (extChartAt I x x)).symm.toContinuousLinearMap ∘L
-        (TangentSpace.equivModel I x).toContinuousLinearMap := by
-  rw [TangentSpace.equivModel_eq_continuousLinearMapAt,
+        (tangentSpaceCastModel I x).toContinuousLinearMap := by
+  rw [tangentSpaceCastModel_eq_continuousLinearMapAt,
     TangentBundle.continuousLinearMapAt_trivializationAt (mem_chart_source H x),
     ← ContinuousLinearMap.comp_assoc, ContinuousLinearEquiv.coe_symm_comp_coe,
     ContinuousLinearMap.id_comp]
 
 -- TODO: should there be a version for `extChartAt`?
 /-- The manifold derivative within `range I` of `(extChartAt I x).symm` at the chart point is the
-inverse of `TangentSpace.equivModel`. -/
+inverse of `tangentSpaceCastModel`. -/
 lemma mfderivWithin_range_extChartAt_symm :
     mfderiv[range I] (extChartAt I x).symm (extChartAt I x x) =
       (TangentSpace.cast I (extChartAt_to_inv x).symm).toContinuousLinearMap ∘L
-        (TangentSpace.equivModel I x).symm.toContinuousLinearMap ∘L
+        (tangentSpaceCastModel I x).symm.toContinuousLinearMap ∘L
         (NormedSpace.fromTangentSpace (extChartAt I x x)).toContinuousLinearMap := by
-  rw [TangentSpace.equivModel_symm_eq_symmL,
+  rw [tangentSpaceCastModel_symm_eq_symmL,
     TangentBundle.symmL_trivializationAt (mem_chart_source H x)]
   ext v
   simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
@@ -512,10 +512,10 @@ applied to a tangent vector, gives back the tangent vector. -/
 lemma mfderivWithin_extChartAt_symm_inverse_apply (v : TangentSpace I x) :
     (mfderiv[range I] (extChartAt I x).symm (extChartAt I x x)).inverse
         (TangentSpace.cast I (extChartAt_to_inv x).symm v) =
-      (NormedSpace.fromTangentSpace (extChartAt I x x)).symm (TangentSpace.equivModel I x v) := by
+      (NormedSpace.fromTangentSpace (extChartAt I x x)).symm (tangentSpaceCastModel I x v) := by
   have : mfderiv[range I] (extChartAt I x).symm (extChartAt I x x) =
       ((NormedSpace.fromTangentSpace (extChartAt I x x)).trans
-        ((TangentSpace.equivModel I x).symm.trans
+        ((tangentSpaceCastModel I x).symm.trans
           (TangentSpace.cast I (extChartAt_to_inv x).symm))).toContinuousLinearMap := by
     rw [mfderivWithin_range_extChartAt_symm]
     rfl

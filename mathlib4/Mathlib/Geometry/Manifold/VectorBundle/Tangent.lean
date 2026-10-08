@@ -180,32 +180,32 @@ local notation "TM" => TangentBundle I M
 section TangentBundleInstances
 
 instance : TopologicalSpace TM :=
-  (tangentBundleCore I M).totalSpaceTopologyAlong (TangentSpace.equivModel I)
+  (tangentBundleCore I M).totalSpaceTopologyAlong (tangentSpaceCastModel I)
 
 instance TangentSpace.fiberBundle : FiberBundle E (TangentSpace I : M → Type _) :=
-  (tangentBundleCore I M).fiberBundleAlong (TangentSpace.equivModel I)
+  (tangentBundleCore I M).fiberBundleAlong (tangentSpaceCastModel I)
 
 instance TangentSpace.vectorBundle : VectorBundle 𝕜 E (TangentSpace I : M → Type _) :=
-  (tangentBundleCore I M).vectorBundleAlong (TangentSpace.equivModel I)
+  (tangentBundleCore I M).vectorBundleAlong (tangentSpaceCastModel I)
 
 namespace TangentBundle
 
 protected theorem chartAt (p : TM) :
     chartAt (ModelProd H E) p =
-      ((tangentBundleCore I M).localTrivAtAlong (TangentSpace.equivModel I)
+      ((tangentBundleCore I M).localTrivAtAlong (tangentSpaceCastModel I)
         p.1).toOpenPartialHomeomorph ≫ₕ
         (chartAt H p.1).prod (OpenPartialHomeomorph.refl E) :=
   rfl
 
 theorem chartAt_toPartialEquiv (p : TM) :
     (chartAt (ModelProd H E) p).toPartialEquiv =
-      ((tangentBundleCore I M).localTrivAtAlong (TangentSpace.equivModel I) p.1).toPartialEquiv ≫
+      ((tangentBundleCore I M).localTrivAtAlong (tangentSpaceCastModel I) p.1).toPartialEquiv ≫
         (chartAt H p.1).toPartialEquiv.prod (PartialEquiv.refl E) :=
   rfl
 
 theorem trivializationAt_eq_localTriv (x : M) :
     trivializationAt E (TangentSpace I) x =
-      (tangentBundleCore I M).localTrivAtAlong (TangentSpace.equivModel I) x :=
+      (tangentBundleCore I M).localTrivAtAlong (tangentSpaceCastModel I) x :=
   rfl
 
 @[simp, mfld_simps]
@@ -227,7 +227,7 @@ theorem trivializationAt_baseSet (x : M) :
 theorem trivializationAt_apply (x : M) (z : TM) :
     trivializationAt E (TangentSpace I) x z =
       (z.1, fderivWithin 𝕜 ((chartAt H x).extend I ∘ ((chartAt H z.1).extend I).symm) (range I)
-        ((chartAt H z.1).extend I z.1) (TangentSpace.equivModel I z.1 z.2)) :=
+        ((chartAt H z.1).extend I z.1) (tangentSpaceCastModel I z.1 z.2)) :=
   rfl
 
 @[simp, mfld_simps]
@@ -260,41 +260,41 @@ theorem coe_chartAt_symm_fst (p : H × E) (q : TM) :
   rfl
 
 /-- The trivialization of the tangent space can be expressed in terms of the tangent bundle core,
-composed with `TangentSpace.equivModel`. To write the trivialization as the manifold derivative of
+composed with `tangentSpaceCastModel`. To write the trivialization as the manifold derivative of
 `extChartAt`, see `TangentBundle.continuousLinearMapAt_trivializationAt`. -/
 theorem continuousLinearMapAt_trivializationAt_eq_core {b₀ b : M} (hb : b ∈ (chartAt H b₀).source) :
     (trivializationAt E (TangentSpace I) b₀).continuousLinearMapAt 𝕜 b =
       ((tangentBundleCore I M).coordChange (achart H b) (achart H b₀) b).comp
-        (TangentSpace.equivModel I b : TangentSpace I b →L[𝕜] E) :=
-  (tangentBundleCore I M).localTrivAlong_continuousLinearMapAt (TangentSpace.equivModel I)
+        (tangentSpaceCastModel I b : TangentSpace I b →L[𝕜] E) :=
+  (tangentBundleCore I M).localTrivAlong_continuousLinearMapAt (tangentSpaceCastModel I)
     (achart H b₀) hb
 
 /-- The inverse trivialization of the tangent space can be expressed in terms of the tangent bundle
-core, composed with `TangentSpace.equivModel`. To write the inverse trivialization as the manifold
+core, composed with `tangentSpaceCastModel`. To write the inverse trivialization as the manifold
 derivative of `(extChartAt I b₀).symm`, see `TangentBundle.symmL_trivializationAt`. -/
 theorem symmL_trivializationAt_eq_core {b₀ b : M} (hb : b ∈ (chartAt H b₀).source) :
     (trivializationAt E (TangentSpace I) b₀).symmL 𝕜 b =
-      ((TangentSpace.equivModel I b).symm : E →L[𝕜] TangentSpace I b).comp
+      ((tangentSpaceCastModel I b).symm : E →L[𝕜] TangentSpace I b).comp
         ((tangentBundleCore I M).coordChange (achart H b₀) (achart H b) b) :=
-  (tangentBundleCore I M).localTrivAlong_symmL (TangentSpace.equivModel I) (achart H b₀) hb
+  (tangentBundleCore I M).localTrivAlong_symmL (tangentSpaceCastModel I) (achart H b₀) hb
 
-/-- The identification `TangentSpace.equivModel I x` of the tangent space at `x` with the model
+/-- The identification `tangentSpaceCastModel I x` of the tangent space at `x` with the model
 space is the trivialization of the tangent bundle at `x`, read in the fiber over `x`. -/
-theorem _root_.TangentSpace.equivModel_eq_continuousLinearMapAt (x : M) :
-    (TangentSpace.equivModel I x : TangentSpace I x →L[𝕜] E) =
+theorem _root_.tangentSpaceCastModel_eq_continuousLinearMapAt (x : M) :
+    (tangentSpaceCastModel I x : TangentSpace I x →L[𝕜] E) =
       (trivializationAt E (TangentSpace I) x).continuousLinearMapAt 𝕜 x := by
   rw [continuousLinearMapAt_trivializationAt_eq_core (mem_chart_source H x)]
   ext v
   exact ((tangentBundleCore I M).coordChange_self (achart H x) x (mem_chart_source H x) _).symm
 
-/-- The inverse of `TangentSpace.equivModel I x` is the inverse trivialization of the tangent
+/-- The inverse of `tangentSpaceCastModel I x` is the inverse trivialization of the tangent
 bundle at `x`, read in the fiber over `x`. -/
-theorem _root_.TangentSpace.equivModel_symm_eq_symmL (x : M) :
-    ((TangentSpace.equivModel I x).symm : E →L[𝕜] TangentSpace I x) =
+theorem _root_.tangentSpaceCastModel_symm_eq_symmL (x : M) :
+    ((tangentSpaceCastModel I x).symm : E →L[𝕜] TangentSpace I x) =
       (trivializationAt E (TangentSpace I) x).symmL 𝕜 x := by
   rw [symmL_trivializationAt_eq_core (mem_chart_source H x)]
   ext v
-  exact congrArg (TangentSpace.equivModel I x).symm
+  exact congrArg (tangentSpaceCastModel I x).symm
     ((tangentBundleCore I M).coordChange_self (achart H x) x (mem_chart_source H x) v).symm
 
 /-! The lemmas below have high priority because `simp` simplifies the LHS to `.id _ _`;
@@ -344,7 +344,7 @@ lemma TangentBundle.contMDiffVectorBundle [h : IsManifold I (n + 1) M] :
     ContMDiffVectorBundle n E (TangentSpace I : M → Type _) I := by
   have : IsManifold I 1 M := .of_le (n := n + 1) le_add_self
   have : (tangentBundleCore I M).IsContMDiff I n := tangentBundleCore.isContMDiff
-  exact (tangentBundleCore I M).contMDiffVectorBundleAlong (TangentSpace.equivModel I)
+  exact (tangentBundleCore I M).contMDiffVectorBundleAlong (tangentSpaceCastModel I)
 
 omit [IsManifold I 1 M] in
 instance [h : IsManifold I ∞ M] :
@@ -370,32 +370,32 @@ end TangentBundleInstances
 set_option backward.isDefEq.respectTransparency false in
 @[simp, mfld_simps]
 theorem trivializationAt_model_space_apply (p : TangentBundle I H) (x : H) :
-    trivializationAt E (TangentSpace I) x p = (p.1, TangentSpace.equivModel I p.1 p.2) := by
+    trivializationAt E (TangentSpace I) x p = (p.1, tangentSpaceCastModel I p.1 p.2) := by
   simp only [TangentBundle.trivializationAt_apply]
   have : fderivWithin 𝕜 (↑I ∘ ↑I.symm) (range I) (I p.proj) =
       fderivWithin 𝕜 id (range I) (I p.proj) :=
     fderivWithin_congr' (fun y hy ↦ by simp [hy]) (mem_range_self p.proj)
   simp [this, fderivWithin_id (ModelWithCorners.uniqueDiffWithinAt_image I),
-    TangentSpace.equivModel]
+    tangentSpaceCastModel]
 
 variable (I) in
 /-- The canonical identification between the tangent bundle to the model space and the
 product space. For the homeomorphism version, see `tangentBundleModelSpaceHomeomorph`; for
 the diffeomorphism version, see `tangentBundleModelSpaceDiffeomorph`. -/
 def tangentBundleModelSpaceEquiv : TangentBundle I H ≃ ModelProd H E where
-  toFun p := (p.1, TangentSpace.equivModel I p.1 p.2)
-  invFun p := ⟨p.1, (TangentSpace.equivModel I p.1).symm p.2⟩
+  toFun p := (p.1, tangentSpaceCastModel I p.1 p.2)
+  invFun p := ⟨p.1, (tangentSpaceCastModel I p.1).symm p.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
 
 @[simp, mfld_simps]
 theorem tangentBundleModelSpaceEquiv_apply (p : TangentBundle I H) :
-    tangentBundleModelSpaceEquiv I p = (p.1, TangentSpace.equivModel I p.1 p.2) :=
+    tangentBundleModelSpaceEquiv I p = (p.1, tangentSpaceCastModel I p.1 p.2) :=
   rfl
 
 @[simp, mfld_simps]
 theorem tangentBundleModelSpaceEquiv_symm_apply (p : ModelProd H E) :
-    (tangentBundleModelSpaceEquiv I).symm p = ⟨p.1, (TangentSpace.equivModel I p.1).symm p.2⟩ :=
+    (tangentBundleModelSpaceEquiv I).symm p = ⟨p.1, (tangentSpaceCastModel I p.1).symm p.2⟩ :=
   rfl
 
 /-- In the tangent bundle to the model space, the charts are just the canonical identification
@@ -407,10 +407,10 @@ theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
   ext x : 1
   · ext; · rfl
     exact (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1)
-      (TangentSpace.equivModel I x.1 x.2)
+      (tangentSpaceCastModel I x.1 x.2)
   · ext; · rfl
     apply heq_of_eq
-    exact congrArg (TangentSpace.equivModel I x.1).symm <|
+    exact congrArg (tangentSpaceCastModel I x.1).symm <|
       (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1) x.2
   exact eq_univ_of_forall fun x ↦ (TangentBundle.mem_chart_source_iff x p).2 (mem_univ _)
 
@@ -490,7 +490,7 @@ variable (H I) in
 /-- In the tangent bundle to the model space, the second projection is `C^n`. -/
 lemma contMDiff_snd_tangentBundle_modelSpace :
     ContMDiff I.tangent 𝓘(𝕜, E) n
-      (fun (p : TangentBundle I H) ↦ TangentSpace.equivModel I p.1 p.2) := by
+      (fun (p : TangentBundle I H) ↦ tangentSpaceCastModel I p.1 p.2) := by
   change CMDiff n ((id Prod.snd : ModelProd H E → E) ∘ (tangentBundleModelSpaceHomeomorph I))
   apply ContMDiff.comp (I' := I.prod 𝓘(𝕜, E))
   · convert! contMDiff_snd
@@ -510,7 +510,7 @@ lemma contMDiffWithinAt_vectorSpace_iff_contDiffWithinAt
   · apply Bundle.contMDiffWithinAt_totalSpace.2
     refine ⟨contMDiffWithinAt_id, ?_⟩
     convert! h.contMDiffWithinAt with y
-    simp [NormedSpace.fromTangentSpace, TangentSpace.equivModel]
+    simp [NormedSpace.fromTangentSpace, tangentSpaceCastModel]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- A vector field on a vector space is `C^n` in the manifold sense iff it is `C^n` in the vector
@@ -543,8 +543,8 @@ variable {N : Type*}
 theorem inCoordinates_tangent_bundle_core_model_space (x₀ x : H) (y₀ y : H')
     (ϕ : TangentSpace I x →L[𝕜] TangentSpace I' y) :
     inCoordinates E (TangentSpace I) E' (TangentSpace I') x₀ x y₀ y ϕ =
-      (TangentSpace.equivModel I' y : TangentSpace I' y →L[𝕜] E') ∘L ϕ ∘L
-        ((TangentSpace.equivModel I x).symm : E →L[𝕜] TangentSpace I x) := by
+      (tangentSpaceCastModel I' y : TangentSpace I' y →L[𝕜] E') ∘L ϕ ∘L
+        ((tangentSpaceCastModel I x).symm : E →L[𝕜] TangentSpace I x) := by
   rw [ContinuousLinearMap.inCoordinates,
     TangentBundle.continuousLinearMapAt_trivializationAt_eq_core (mem_univ _),
     TangentBundle.symmL_trivializationAt_eq_core (mem_univ _),
@@ -567,8 +567,8 @@ def inTangentCoordinates (f : N → M) (g : N → M')
 theorem inTangentCoordinates_model_space (f : N → H) (g : N → H')
     (ϕ : Π x : N, TangentSpace I (f x) →L[𝕜] TangentSpace I' (g x)) (x₀ x : N) :
     inTangentCoordinates I I' f g ϕ x₀ x =
-      (TangentSpace.equivModel I' (g x) : TangentSpace I' (g x) →L[𝕜] E') ∘L ϕ x ∘L
-        ((TangentSpace.equivModel I (f x)).symm : E →L[𝕜] TangentSpace I (f x)) := by
+      (tangentSpaceCastModel I' (g x) : TangentSpace I' (g x) →L[𝕜] E') ∘L ϕ x ∘L
+        ((tangentSpaceCastModel I (f x)).symm : E →L[𝕜] TangentSpace I (f x)) := by
   simp only [inTangentCoordinates, inCoordinates_tangent_bundle_core_model_space]
 
 /-- To write a linear map between tangent spaces in coordinates amounts to precomposing and
@@ -580,8 +580,8 @@ theorem inTangentCoordinates_eq (f : N → M) (g : N → M')
     (hx : f x ∈ (chartAt H (f x₀)).source) (hy : g x ∈ (chartAt H' (g x₀)).source) :
     inTangentCoordinates I I' f g ϕ x₀ x =
       (tangentBundleCore I' M').coordChange (achart H' (g x)) (achart H' (g x₀)) (g x) ∘L
-        (TangentSpace.equivModel I' (g x) : TangentSpace I' (g x) →L[𝕜] E') ∘L ϕ x ∘L
-        ((TangentSpace.equivModel I (f x)).symm : E →L[𝕜] TangentSpace I (f x)) ∘L
+        (tangentSpaceCastModel I' (g x) : TangentSpace I' (g x) →L[𝕜] E') ∘L ϕ x ∘L
+        ((tangentSpaceCastModel I (f x)).symm : E →L[𝕜] TangentSpace I (f x)) ∘L
         (tangentBundleCore I M).coordChange (achart H (f x₀)) (achart H (f x)) (f x) := by
   rw [inTangentCoordinates, ContinuousLinearMap.inCoordinates,
     TangentBundle.continuousLinearMapAt_trivializationAt_eq_core hy,

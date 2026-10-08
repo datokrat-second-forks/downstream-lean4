@@ -495,7 +495,7 @@ theorem range_mvfderiv_subtypeVal {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : 
   suffices
       (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ (↑)) ∘ U.symm) 0).range = (ℝ ∙ (v : E))ᗮ by
     rw [← this, LinearMap.range_comp_of_range_eq_top _
-      (LinearMap.range_eq_top_of_surjective _ (TangentSpace.equivModel (𝓡 n) v).surjective)]
+      (LinearMap.range_eq_top_of_surjective _ (tangentSpaceCastModel (𝓡 n) v).surjective)]
     congr 3
     apply stereographic'_neg
   have :
@@ -533,7 +533,7 @@ theorem injective_mvfderiv_subtypeVal_sphere {n : ℕ} [Fact (finrank ℝ E = n 
       (𝕜 := ℝ) n (ne_zero_of_mem_unit_sphere (-v))).repr
   suffices Injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ (↑)) ∘ U.symm) 0) by
     rw [ContinuousLinearMap.coe_comp]
-    refine Function.Injective.comp ?_ (TangentSpace.equivModel (𝓡 n) v).injective
+    refine Function.Injective.comp ?_ (tangentSpaceCastModel (𝓡 n) v).injective
     convert! this using 3
     apply stereographic'_neg (v := v)
   have : HasFDerivAt (stereoInvFunAux (-v : E) ∘ (Subtype.val : (ℝ ∙ (↑(-v) : E))ᗮ → E))

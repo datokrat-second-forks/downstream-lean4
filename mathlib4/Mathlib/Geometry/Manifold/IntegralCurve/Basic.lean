@@ -174,7 +174,7 @@ expressed in the local chart around the initial point `γ t₀`. -/
 lemma IsMIntegralCurveOn.hasDerivWithinAt (hγ : IsMIntegralCurveOn γ v s) {t : ℝ} (ht : t ∈ s)
     (hsrc : γ t ∈ (extChartAt I (γ t₀)).source) :
     HasDerivWithinAt ((extChartAt I (γ t₀)) ∘ γ)
-      (tangentCoordChange I (γ t) (γ t₀) (γ t) (TangentSpace.equivModel I (γ t) (v (γ t)))) s
+      (tangentCoordChange I (γ t) (γ t₀) (γ t) (tangentSpaceCastModel I (γ t) (v (γ t)))) s
       t := by
   -- turn `HasDerivWithinAt` into comp of `HasMFDerivWithinAt`
   replace hsrc := extChartAt_source I (γ t₀) ▸ hsrc
@@ -187,7 +187,7 @@ lemma IsMIntegralCurveOn.hasDerivWithinAt (hγ : IsMIntegralCurveOn γ v s) {t :
 set_option backward.isDefEq.respectTransparency false in
 lemma IsMIntegralCurveAt.eventually_hasDerivAt (hγ : IsMIntegralCurveAt γ v t₀) :
     ∀ᶠ t in 𝓝 t₀, HasDerivAt ((extChartAt I (γ t₀)) ∘ γ)
-      (tangentCoordChange I (γ t) (γ t₀) (γ t) (TangentSpace.equivModel I (γ t) (v (γ t)))) t := by
+      (tangentCoordChange I (γ t) (γ t₀) (γ t) (tangentSpaceCastModel I (γ t) (v (γ t)))) t := by
   apply eventually_mem_nhds_iff.mpr
     (hγ.continuousAt.preimage_mem_nhds (extChartAt_source_mem_nhds (I := I) _)) |>.and hγ |>.mono
   rintro t ⟨ht1, ht2⟩

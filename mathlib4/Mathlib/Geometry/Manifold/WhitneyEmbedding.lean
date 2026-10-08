@@ -104,7 +104,7 @@ theorem embeddingPiTangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     simp only [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
     exact (NormedSpace.fromTangentSpace _).injective.comp
       (((NormedSpace.fromTangentSpace _).symm.injective.comp
-        (TangentSpace.equivModel I _).injective).comp
+        (tangentSpaceCastModel I _).injective).comp
         ((mdifferentiable_chart (f.c (f.ind x hx))).mfderiv_injective
           (f.mem_chartAt_ind_source x hx)))
   rw [← comp_embeddingPiTangent_mfderiv f x hx] at hchart

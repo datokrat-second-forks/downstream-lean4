@@ -68,8 +68,8 @@ theorem tangentMap_chart_symm {p : TangentBundle I M} {q : TangentBundle I H}
 
 lemma mfderiv_chartAt_eq_tangentCoordChange {x y : M} (hsrc : x ∈ (chartAt H y).source) :
     mfderiv% (chartAt H y) x =
-      (TangentSpace.equivModel I (chartAt H y x)).symm.toContinuousLinearMap ∘L
-        tangentCoordChange I x y x ∘L (TangentSpace.equivModel I x).toContinuousLinearMap := by
+      (tangentSpaceCastModel I (chartAt H y x)).symm.toContinuousLinearMap ∘L
+        tangentCoordChange I x y x ∘L (tangentSpaceCastModel I x).toContinuousLinearMap := by
   have := mdifferentiableAt_atlas (I := I) (ChartedSpace.chart_mem_atlas _) hsrc
   simp [mfderiv, ite_eq_left this, Function.comp_assoc]
   rfl
@@ -100,9 +100,9 @@ lemma inTangentCoordinates_eq_mfderiv_comp
     TangentBundle.symmL_trivializationAt hx]
   rfl
 
-theorem TangentSpace.homEquivModel_eq_inTangentCoordinates {N : Type*} (f : N → M) (g : N → M')
+theorem tangentSpaceCastModelHom_eq_inTangentCoordinates {N : Type*} (f : N → M) (g : N → M')
     (ϕ : Π x : N, TangentSpace I (f x) →L[𝕜] TangentSpace I' (g x)) (x : N) :
-    TangentSpace.homEquivModel I I' (f x) (g x) (ϕ x) = inTangentCoordinates I I' f g ϕ x x := by
+    tangentSpaceCastModelHom I I' (f x) (g x) (ϕ x) = inTangentCoordinates I I' f g ϕ x x := by
   rw [inTangentCoordinates_eq f g ϕ (mem_chart_source H (f x)) (mem_chart_source H' (g x))]
   ext v
   simp only [ContinuousLinearMap.coe_comp, Function.comp_apply,
