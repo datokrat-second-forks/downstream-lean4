@@ -1,8 +1,8 @@
 import Mathlib.Algebra.DirectSum.Module
 
 /-!
-Tests for the `newtype`-sealed `DirectSum`: its transported instances reduce to the constructor and
-projector, and the algebraic diamonds close with `with_reducible_and_instances rfl`.
+Tests for `DirectSum` as a `+defeq` structure: its transported instances reduce to the constructor
+and projection, and the algebraic diamonds close with `with_reducible_and_instances rfl`.
 -/
 
 open DirectSum

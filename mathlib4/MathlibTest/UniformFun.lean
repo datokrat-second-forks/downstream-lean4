@@ -1,8 +1,8 @@
 import Mathlib.Topology.Algebra.UniformConvergence
 
 /-!
-Tests for the `newtype`-sealed `UniformFun`: `α →ᵤ β` is a type of its own, distinct from `α → β`
-and from `α →ᵤ[𝔖] β`; its transported instances reduce to the constructor and projector; and the
+Tests for `UniformFun` as a `+defeq` structure: `α →ᵤ β` is a type of its own, distinct from `α → β`
+and from `α →ᵤ[𝔖] β`; its transported instances reduce to the constructor and projection; and the
 algebraic diamonds close with `with_reducible_and_instances rfl`.
 -/
 

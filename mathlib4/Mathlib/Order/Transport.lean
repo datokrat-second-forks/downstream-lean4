@@ -11,9 +11,9 @@ public import Mathlib.Order.BoundedOrder.Basic
 # Transporting order structures
 
 `@[transport]` congruences for the order classes, so that `inferInstanceAs` and `deriving` carry
-them across a `newtype` whose order is that of its representation, such as `Additive α`. The
-relations are those of `LE.canonicalCongr` and `LT.canonicalCongr`, so that transport unfolds them,
-and diamonds between separately transported instances close by unfolding.
+them across a `+defeq` structure whose order is that of its representation, such as `Additive α`.
+The relations are those of `LE.canonicalCongr` and `LT.canonicalCongr`, so that transport unfolds
+them, and diamonds between separately transported instances close by unfolding.
 
 A synonym with a different order, such as `αᵒᵈ`, defines its instances by hand instead.
 -/

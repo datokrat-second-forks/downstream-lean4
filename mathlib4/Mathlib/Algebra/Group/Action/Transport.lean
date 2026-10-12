@@ -12,10 +12,10 @@ public import Mathlib.Algebra.Group.Transport
 # Transporting monoid actions
 
 `@[transport]` congruences for `MulAction`, `SMulCommClass`, `IsScalarTower` and `IsCentralScalar`,
-so that `inferInstanceAs` and `deriving` carry these structures across a `newtype`. Each takes an
-equivalence for every type argument; the search fills the unchanged ones with
-`Lean.CanonicalEquivalence.refl`. The actions are those of `SMul.canonicalCongr`, so that transport
-unfolds them.
+so that `inferInstanceAs` and `deriving` carry instances of these classes across a `+defeq`
+structure. Each takes an equivalence for every type argument; the search fills the unchanged ones
+with `Lean.CanonicalEquivalence.refl`. The actions are those of `SMul.canonicalCongr`, so that
+transport unfolds them.
 
 This file is kept light, so that the order synonyms can import it.
 -/

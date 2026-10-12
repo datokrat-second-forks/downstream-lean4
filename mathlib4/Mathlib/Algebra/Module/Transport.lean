@@ -12,8 +12,8 @@ public import Mathlib.Algebra.Ring.Transport
 /-!
 # Transporting modules
 
-A `@[transport]` congruence for `Module`, so that `inferInstanceAs` and `deriving` carry module
-structures across a `newtype`, in the scalars and in the module.
+A `@[transport]` congruence for `Module`, so that `inferInstanceAs` and `deriving` carry `Module`
+instances across a `+defeq` structure, in the scalars and in the module.
 
 This file is kept light, so that the order synonyms can import it.
 -/

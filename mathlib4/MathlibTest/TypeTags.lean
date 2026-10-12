@@ -2,7 +2,7 @@ import Mathlib.Analysis.Normed.Group.Constructions
 import Mathlib.Topology.Algebra.Monoid
 
 /-!
-Tests for the `newtype`-sealed `Additive` and `Multiplicative`: `Additive α` is a type of its own,
+Tests for `Additive` and `Multiplicative` as `+defeq` structures: `Additive α` is a type of its own,
 distinct from `α`; the conversions are inverse by `rfl`; the operations reduce to the ones of `α`;
 and the transported order, topology and metric agree with the ones the algebra builds on.
 -/

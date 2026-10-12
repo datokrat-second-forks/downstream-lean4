@@ -363,7 +363,7 @@ def toDualImpl (t : Ordnode α) : Ordnode αᵒᵈ :=
 
 @[csimp]
 theorem toDual_eq_toDualImpl : @toDual = @toDualImpl := by
-  unsealing_newtype OrderDual =>
+  unsealing_structure OrderDual =>
     funext α t
     change map id t = t
     induction t with

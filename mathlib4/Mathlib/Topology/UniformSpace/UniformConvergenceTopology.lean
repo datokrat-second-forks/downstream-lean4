@@ -122,8 +122,8 @@ connection API to do most of the work.
 
 ## Implementation notes
 
-`α →ᵤ β` and `α →ᵤ[𝔖] β` are `newtype`s, so that the uniform structure, and the family `𝔖`, are
-genuine parts of the type: `α →ᵤ β`, `α →ᵤ[𝔖] β`, `α →ᵤ[𝔗] β` and `α → β` are not
+`α →ᵤ β` and `α →ᵤ[𝔖] β` are `+defeq` structures, so that the uniform structure, and the family
+`𝔖`, are genuine parts of the type: `α →ᵤ β`, `α →ᵤ[𝔖] β`, `α →ᵤ[𝔗] β` and `α → β` are not
 interchangeable. Move between them with the equivalences `UniformFun.ofFun`/`UniformFun.toFun` and
 `UniformOnFun.ofFun 𝔖`/`UniformOnFun.toFun 𝔖`, and between two families with the identity map
 `ofFun 𝔖 ∘ toFun 𝔗`, see `UniformOnFun.uniformContinuous_ofFun_toFun` and
@@ -156,9 +156,9 @@ section TypeAlias
 /-- The type of functions from `α` to `β` equipped with the uniform structure and topology of
 uniform convergence. We denote it `α →ᵤ β`.
 
-This is a `newtype`: `α →ᵤ β` and `α → β` are different types, related by the equivalences
+This is a `+defeq` structure: `α →ᵤ β` and `α → β` are different types, related by the equivalences
 `UniformFun.ofFun` and `UniformFun.toFun`. -/
-newtype UniformFun (α β : Type*) where
+structure +defeq UniformFun (α β : Type*) where
   /-- Reinterpret `f : α → β` as an element of `α →ᵤ β`. This is the raw constructor; the bundled
   equivalence `UniformFun.ofFun` should be preferred. -/
   ofFun' ::
@@ -169,10 +169,10 @@ newtype UniformFun (α β : Type*) where
 /-- The type of functions from `α` to `β` equipped with the uniform structure and topology of
 uniform convergence on some family `𝔖` of subsets of `α`. We denote it `α →ᵤ[𝔖] β`.
 
-This is a `newtype`: `α →ᵤ[𝔖] β`, `α →ᵤ[𝔗] β` and `α → β` are different types, related by the
-equivalences `UniformOnFun.ofFun 𝔖` and `UniformOnFun.toFun 𝔖`. -/
+This is a `+defeq` structure: `α →ᵤ[𝔖] β`, `α →ᵤ[𝔗] β` and `α → β` are different types, related
+by the equivalences `UniformOnFun.ofFun 𝔖` and `UniformOnFun.toFun 𝔖`. -/
 @[nolint unusedArguments]
-newtype UniformOnFun (α β : Type*) (_ : Set (Set α)) where
+structure +defeq UniformOnFun (α β : Type*) (_ : Set (Set α)) where
   /-- Reinterpret `f : α → β` as an element of `α →ᵤ[𝔖] β`. This is the raw constructor; the
   bundled equivalence `UniformOnFun.ofFun` should be preferred. -/
   ofFun' ::

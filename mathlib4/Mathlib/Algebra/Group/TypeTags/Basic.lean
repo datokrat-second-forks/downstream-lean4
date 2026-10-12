@@ -42,7 +42,7 @@ additive structure.
 
 `Additive α` and `α` are different types: convert between them with `Additive.ofMul` and
 `Additive.toMul`. -/
-newtype Additive (α : Type*) where
+structure +defeq Additive (α : Type*) where
   /-- Reinterpret `x : α` as an element of `Additive α`. This is the raw constructor; the bundled
   equivalence `Additive.ofMul` should be preferred. -/
   ofMul' ::
@@ -55,7 +55,7 @@ multiplicative structure.
 
 `Multiplicative α` and `α` are different types: convert between them with `Multiplicative.ofAdd`
 and `Multiplicative.toAdd`. -/
-newtype Multiplicative (α : Type*) where
+structure +defeq Multiplicative (α : Type*) where
   /-- Reinterpret `x : α` as an element of `Multiplicative α`. This is the raw constructor; the
   bundled equivalence `Multiplicative.ofAdd` should be preferred. -/
   ofAdd' ::

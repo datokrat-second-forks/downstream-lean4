@@ -33,7 +33,7 @@ variable {α : Type*}
 
 /-- Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. `αᵒᵈ` is
 notation for `OrderDual α`. -/
-newtype OrderDual (α : Type*) where
+structure +defeq OrderDual (α : Type*) where
   /-- Reinterpret `a : α` as an element of `OrderDual α`. This is the raw constructor; the bundled
   equivalence `OrderDual.toDual` should be preferred. -/
   toDual' ::

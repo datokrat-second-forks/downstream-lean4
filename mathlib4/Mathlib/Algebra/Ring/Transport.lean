@@ -12,10 +12,10 @@ public import Mathlib.Algebra.Ring.InjSurj
 # Transporting semiring and ring structures
 
 `@[transport]` congruences for the casts, the additive monoids and groups with one, and the
-semiring and ring classes, so that `inferInstanceAs` and `deriving` carry these structures across a
-`newtype`. The operations are those of the per-operation congruences (`Add.canonicalCongr`,
-`NatCast.canonicalCongr`, …), so that transport unfolds them, and diamonds between separately
-transported instances close by unfolding.
+semiring and ring classes, so that `inferInstanceAs` and `deriving` carry instances of these
+classes across a `+defeq` structure. The operations are those of the per-operation congruences
+(`Add.canonicalCongr`, `NatCast.canonicalCongr`, …), so that transport unfolds them, and diamonds
+between separately transported instances close by unfolding.
 -/
 
 public section

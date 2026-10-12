@@ -24,11 +24,11 @@ import Mathlib.Topology.Separation.Hausdorff
 /-!
 Tests for the `@[transport]` congruences of Mathlib's classes: each instance is transported without
 the warning that transport emits when it cannot unfold a congruence, its operations reduce to the
-`newtype`'s constructor and projector, and diamonds between transported instances close with
+structure's constructor and projection, and diamonds between transported instances close with
 `with_reducible_and_instances rfl`.
 -/
 
-newtype Wrap (M : Type*) where
+structure +defeq Wrap (M : Type*) where
   unwrap : M
 
 namespace Wrap
@@ -130,7 +130,7 @@ end Wrap
 
 /-! `DFunLike` moves along an equivalence of the bundled type. -/
 
-newtype WrapHom (M N : Type*) [AddZeroClass M] [AddZeroClass N] where
+structure +defeq WrapHom (M N : Type*) [AddZeroClass M] [AddZeroClass N] where
   toHom : M →+ N
 
 #guard_msgs in
@@ -143,7 +143,7 @@ example {M N : Type*} [AddZeroClass M] [AddZeroClass N] (f : WrapHom M N) (x : M
 
 /-! The semigroup-to-group hierarchy, `Pow` on either side, and `Subsingleton`. -/
 
-newtype WrapGroup (M : Type*) where
+structure +defeq WrapGroup (M : Type*) where
   unwrap : M
 
 namespace WrapGroup
@@ -229,11 +229,11 @@ end WrapGroup
 Tests for the `@[transport]` congruences of the monoid-with-zero and group-with-zero classes and of
 the action classes in the positions of the scalars and of the acted-on type: each instance is
 transported without the warning that transport emits when it cannot unfold a congruence, its
-operations reduce to the `newtype`'s constructor and projector, and diamonds between transported
+operations reduce to the structure's constructor and projection, and diamonds between transported
 instances close with `with_reducible_and_instances rfl`.
 -/
 
-newtype WrapGroupWithZero (M : Type*) where
+structure +defeq WrapGroupWithZero (M : Type*) where
   unwrap : M
 
 namespace WrapGroupWithZero
@@ -508,11 +508,11 @@ end WrapGroupWithZero
 /-!
 Tests for the `@[transport]` congruences of the semiring, ring and field classes and of the casts:
 each instance is transported without the warning that transport emits when it cannot unfold a
-congruence, its operations reduce to the `newtype`'s constructor and projector, and diamonds
+congruence, its operations reduce to the structure's constructor and projection, and diamonds
 between transported instances close with `with_reducible_and_instances rfl`.
 -/
 
-newtype WrapRing (M : Type*) where
+structure +defeq WrapRing (M : Type*) where
   unwrap : M
 
 namespace WrapRing
@@ -602,7 +602,7 @@ instance instSemifield [Semifield M] : Semifield (WrapRing M) := inferInstanceAs
 #guard_msgs in
 instance instField [Field M] : Field (WrapRing M) := inferInstanceAs (Field M)
 
-/-! Operations reduce to the constructor and projector. -/
+/-! Operations reduce to the constructor and projection. -/
 
 example [NatCast M] (n : ℕ) : (n : WrapRing M) = .mk (n : M) := by
   with_reducible_and_instances rfl
@@ -800,11 +800,11 @@ example {K : Type*} [Field K] (x y : Kᵒᵈ) : x / y = OrderDual.toDual' (x.ofD
 /-!
 Tests for the `@[transport]` congruences of bornologies, uniform spaces, (extended) metric spaces
 and normed groups: each instance is transported without the warning that transport emits when it
-cannot unfold a congruence, its data reduces to the `newtype`'s constructor and projector, and
+cannot unfold a congruence, its data reduces to the structure's constructor and projection, and
 diamonds between transported instances close with `with_reducible_and_instances rfl`.
 -/
 
-newtype WrapMetric (M : Type*) where
+structure +defeq WrapMetric (M : Type*) where
   unwrap : M
 
 namespace WrapMetric
@@ -1050,10 +1050,10 @@ end OrderDual
 /-!
 Tests for the `@[transport]` congruences of the topological mixins, `MeasurableSpace`, `Fintype`,
 `Finite` and `Small`: each instance is transported without the unfolding warning, data reduces to
-the `newtype`'s constructor and projector, and the mixins apply to transported parents.
+the structure's constructor and projection, and the mixins apply to transported parents.
 -/
 
-newtype WrapMisc (M : Type*) where
+structure +defeq WrapMisc (M : Type*) where
   unwrap : M
 
 namespace WrapMisc
@@ -1138,7 +1138,7 @@ end WrapMisc
 
 /-! Transport along the scalars of an action. -/
 
-newtype WrapScalar (R : Type*) where
+structure +defeq WrapScalar (R : Type*) where
   unwrap : R
 
 namespace WrapScalar
@@ -1181,7 +1181,7 @@ Congruences take an equivalence for every type argument, so they transport in se
 once, including through the opposite of the scalars for `IsCentralScalar`.
 -/
 
-newtype WrapBoth (M : Type*) where
+structure +defeq WrapBoth (M : Type*) where
   unwrap : M
 
 namespace WrapBoth

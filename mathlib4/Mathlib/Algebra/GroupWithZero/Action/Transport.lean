@@ -13,9 +13,9 @@ public import Mathlib.Algebra.GroupWithZero.Transport
 # Transporting actions preserving zero and addition
 
 `@[transport]` congruences for `SMulZeroClass`, `SMulWithZero`, `DistribSMul`, `DistribMulAction`
-and `MulActionWithZero`, so that `inferInstanceAs` and `deriving` carry these structures across a
-`newtype`. Each takes an equivalence for the scalars and one for the acted-on types. The actions are
-those of `SMul.canonicalCongr`, so that transport unfolds them.
+and `MulActionWithZero`, so that `inferInstanceAs` and `deriving` carry instances of these classes
+across a `+defeq` structure. Each takes an equivalence for the scalars and one for the acted-on
+types. The actions are those of `SMul.canonicalCongr`, so that transport unfolds them.
 -/
 
 public section

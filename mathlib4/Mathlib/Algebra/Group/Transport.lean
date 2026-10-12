@@ -12,9 +12,9 @@ public import Mathlib.Algebra.Group.InjSurj
 # Transporting monoid and group structures
 
 `@[transport]` congruences for the semigroup, monoid and group classes, so that `inferInstanceAs`
-and `deriving` carry these structures across a `newtype`. The operations are those of the
-per-operation congruences (`Mul.canonicalCongr`, `One.canonicalCongr`, …), so that transport
-unfolds them, and diamonds between separately transported instances close by unfolding.
+and `deriving` carry instances of these classes across a `+defeq` structure. The operations are
+those of the per-operation congruences (`Mul.canonicalCongr`, `One.canonicalCongr`, …), so that
+transport unfolds them, and diamonds between separately transported instances close by unfolding.
 
 This file is kept light (no `Finset`), so that the order synonyms can import it.
 -/

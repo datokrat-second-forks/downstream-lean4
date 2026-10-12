@@ -694,7 +694,7 @@ def Finset.mapToDualImpl (s : Finset α) : Finset αᵒᵈ :=
 
 @[csimp]
 theorem Finset.mapToDual_eq_mapToDualImpl : @Finset.mapToDual = @Finset.mapToDualImpl := by
-  unsealing_newtype OrderDual =>
+  unsealing_structure OrderDual =>
     funext α s
     exact map_refl
 

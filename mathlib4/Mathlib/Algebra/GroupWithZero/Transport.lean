@@ -12,7 +12,7 @@ public import Mathlib.Algebra.GroupWithZero.InjSurj
 # Transporting monoid and group with zero structures
 
 `@[transport]` congruences for the classes of monoids and groups with zero, so that
-`inferInstanceAs` and `deriving` carry these structures across a `newtype`. As in
+`inferInstanceAs` and `deriving` carry instances of these classes across a `+defeq` structure. As in
 `Mathlib/Algebra/Group/Transport.lean`, the operations are those of the per-operation congruences,
 so that transport unfolds them.
 -/

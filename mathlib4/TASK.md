@@ -184,7 +184,7 @@ Earlier alias ports along these lines are the TangentSpace and OrderDual branche
 The goal is a change that would convince Mathlib maintainers: consistent with Mathlib's existing definitions and style, no quick-and-dirty repairs.
 
 Rules:
-- Use `newtype`, not `structure`, so that proofs can use `unsealing_newtype` locally. Use it only as a last resort, with a DDR for each use.
+- Use `structure +defeq`, not a plain `structure`, so that proofs can use `unsealing_structure` locally. Use it only as a last resort, with a DDR for each use.
 - Names: constructor `DirectSum.ofDFinsupp`, projection `DirectSum.toDFinsupp`, as in `Finsupp.toDFinsupp`. Mathlib's existing `DirectSum.mk` keeps its meaning.
 - Mirror WithLp's API: the equivalence and its additive and linear versions, `ext_iff`, injectivity and surjectivity, and simp lemmas relating the two sides.
 - Obtain instances with the toolchain's transport: `deriving`, `inferInstanceAs`, `transport`. Do not use `Equiv.addCommMonoid`-style copies where transport can do it.
@@ -199,6 +199,7 @@ Rules:
 Toolchain prerequisite (layer 2, `onefieldstructures-newtype-changes`, then replay layers 3–5 and regenerate stage0 per `reviews/plan.md`):
 - Decided by the user: structure-like syntax `newtype N ps where ctor :: proj : ty`, with doc comments on the constructor and projector, binder updates on the constructor (e.g. `toLp (p) ::`), constructor name defaulting to `mk`, and a trailing `deriving`. The old form `newtype N ps := ty with proj` is removed, not kept: layer 2 `fa32464038` (syntax plus its tests), layer 3 `3b7c73daa4` (its tests), and a layer-5 commit migrating the library's 50 seals and 18 test declarations.
 - The user suggested `alias structure …`; the assistant advised against it. Keyword cost is not the reason: `newtype` is itself a new keyword relative to `master`, and a keyword `alias` would only break plain identifiers named `alias` (none in core; Mathlib already has the keyword via Batteries), while `.alias` dot notation keeps working. The reasons are that `alias` is Batteries' command, so core would own only one form of it, that in Mathlib "alias" means definitional transparency, the opposite of a seal, and that the feature is already called `newtype`.
+- Superseded (user, 2026-10-12): `newtype N ps where …` is now written `structure +defeq N ps where …`, and `unsealing_newtype` is now `unsealing_structure`. `+alias` was rejected because `alias` is a keyword under Batteries.
 - The `u_1`/`u_2` universe names seen in `#check` are display renaming (a plain `def` shows the same); `#print` shows the declared names. Nothing to fix.
 
 ## Sealing `TangentSpace` and `OrderDual` with `newtype` (started 2026-09-26)

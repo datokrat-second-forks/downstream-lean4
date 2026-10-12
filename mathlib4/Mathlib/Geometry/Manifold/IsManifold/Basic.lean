@@ -1025,11 +1025,11 @@ requires that `M` is a `C^n` manifold. The definition is put here to avoid impor
 all the smooth bundle structure when defining manifold derivatives. -/
 
 set_option linter.unusedVariables false in
-/-- The tangent space at a point of the manifold `M`, a `newtype` over the model vector space `E`.
-Its elements are identified with those of `E` through the preferred chart at the point, see
-`tangentSpaceCastModel`. -/
+/-- The tangent space at a point of the manifold `M`, a `+defeq` structure over the model vector
+space `E`. Its elements are identified with those of `E` through the preferred chart at the point,
+see `tangentSpaceCastModel`. -/
 @[nolint unusedArguments, wikidata Q909601]
-newtype TangentSpace {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+structure +defeq TangentSpace {𝕜 : Type*} [NontriviallyNormedField 𝕜]
     {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
     {M : Type*} [TopologicalSpace M] [ChartedSpace H M] (_x : M) where
