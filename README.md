@@ -36,10 +36,13 @@ their transitive dependencies by passing the repo names (without trailing `/`!),
 e.g. `.meta/get-cache.sh mathlib4 repl`.
 
 For every toolchain, a branch `green-nightly-YYYY-MM-DD` points to the latest
-green commit on `master` using said toolchain. In addition, the branch `green`
-points to the latest green commit on `master` regardless of toolchain. In the
-Lean repository, a corresponding branch `downstream-green` points to the commit
-the toolchain used by `green` is based on.
+green commit on `master` using said toolchain, and a tag
+`first-green-nightly-YYYY-MM-DD` points to the first such commit. Similarly, a
+tag `first-green-YYYY-MM-DD` points to the first green commit on `master` on
+each day (UTC). In addition, the branch `green` points to the latest green
+commit on `master` regardless of toolchain. In the Lean repository, a
+corresponding branch `downstream-green` points to the commit the toolchain used
+by `green` is based on.
 
 It is recommended to set the following environment variables while working in
 this repository to benefit from cross-project caching and match the CI behavior:
