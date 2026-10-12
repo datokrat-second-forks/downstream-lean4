@@ -45,7 +45,7 @@ meta def isNonemptyDoc (doc : TacticDoc) : Bool :=
     -- This `get?` should not return `none` for normally declared tactics,
     -- but if we do environment manipulation it might give us weird results.
     -- So we should allow the case of `none`.
-    let doc := docMap.get? tac
+    let doc := docMap.find? tac
     let name := (doc.map (·.userName)).getD tac.toString
 
     if let some doc := doc then

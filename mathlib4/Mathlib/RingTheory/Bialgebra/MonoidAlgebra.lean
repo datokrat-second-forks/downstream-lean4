@@ -356,7 +356,8 @@ lemma bialgHom_ext' ⦃φ₁ φ₂ : A[M] →ₐc[R] B⦄
       (φ₂ : A[M] →ₐ[R] B).comp singleZeroAlgHom) : φ₁ = φ₂ :=
   BialgHom.coe_toAlgHom_injective <| algHom_ext' single_one_right single_one_left
 
-lemma isGroupLikeElem_of (m : M) : IsGroupLikeElem R (of A M m) := isGroupLikeElem_single_one ..
+lemma isGroupLikeElem_of (m : Multiplicative M) : IsGroupLikeElem R (of A M m) :=
+  isGroupLikeElem_single_one ..
 
 variable (R A M) in
 /-- The bialgebra equivalence between `AddMonoidAlgebra` and `MonoidAlgebra` in terms of
@@ -410,7 +411,9 @@ section AddZeroClass
 variable [AddZeroClass M] {x : R[M]}
 
 lemma isGroupLikeElem_iff_mem_range_of : IsGroupLikeElem R x ↔ x ∈ Set.range (of R M) :=
-  isGroupLikeElem_iff_mem_range_single_one
+  isGroupLikeElem_iff_mem_range_single_one.trans <| by
+    rw [← Multiplicative.toAdd.surjective.range_comp]
+    exact Iff.rfl
 
 end AddZeroClass
 

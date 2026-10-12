@@ -6,6 +6,7 @@ Authors: Yakov Pechersky
 module
 
 public import Mathlib.Algebra.Order.Group.Units
+public import Mathlib.Algebra.Order.TypeTags
 public import Mathlib.Algebra.Order.Monoid.LocallyFiniteOrder
 public import Mathlib.Data.Int.Interval
 public import Mathlib.GroupTheory.Archimedean
@@ -92,13 +93,17 @@ instance : Unique (ℤ ≃+o ℤᵒᵈ) where
   default := ⟨AddEquiv.neg ℤ |>.trans ⟨toDual, toDual_add⟩, by simp⟩
   uniq e := OrderAddMonoidIso.toAddEquiv_injective <| by
     simp only [OrderAddMonoidIso.toAddEquiv_eq_coe]
-    refine Int.addEquiv_eq_refl_or_neg ((e : ℤ ≃+ ℤᵒᵈ).trans ⟨toDual, toDual_add⟩)
+    -- `ℤᵒᵈ` is no longer the type `ℤ`, so the two `AddEquiv`s have to be composed with
+    -- `ofDual`/`toDual` explicitly and the conclusion transported back.
+    have key : (e : ℤ ≃+ ℤᵒᵈ).trans ⟨ofDual, ofDual_add⟩ = AddEquiv.neg ℤ :=
+      Int.addEquiv_eq_refl_or_neg ((e : ℤ ≃+ ℤᵒᵈ).trans ⟨ofDual, ofDual_add⟩)
         |>.resolve_left fun H => by
-      replace H : e 1 = 1 := congr($H 1)
-      have h1 : 0 < e 1 := by
-        rw [← map_zero e, map_lt_map_iff]
-        simp
-      simp [H, ← ofDual_lt_ofDual] at h1
+        replace H : ofDual (e 1) = 1 := congr($H 1)
+        have h1 : 0 < e 1 := by
+          rw [← map_zero e, map_lt_map_iff]
+          simp
+        simp [H, ← ofDual_lt_ofDual] at h1
+    exact DFunLike.ext _ _ fun x ↦ congrArg toDual (congr($key x))
 
 open Subgroup in
 /-- In two linearly ordered groups, the closure of an element of one group
@@ -206,7 +211,8 @@ noncomputable def LinearOrderedAddCommGroup.int_orderAddMonoidIso_of_isLeast_pos
 then the whole group is isomorphic (and order-isomorphic) to the multiplicative integers. -/
 noncomputable def LinearOrderedCommGroup.multiplicative_int_orderMonoidIso_of_isLeast_one_lt
     {x : G} (h : IsLeast {y : G | 1 < y} x) : G ≃*o Multiplicative ℤ := by
-  have : IsLeast {y : Additive G | 0 < y} (.ofMul x) := h
+  have : IsLeast {y : Additive G | 0 < y} (.ofMul x) :=
+    ⟨Additive.ofMul_lt.2 h.1, fun _ hy ↦ Additive.ofMul_le.2 (h.2 (Additive.toMul_lt.2 hy))⟩
   let f' := LinearOrderedAddCommGroup.int_orderAddMonoidIso_of_isLeast_pos (G := Additive G) this
   exact f'.toMultiplicativeRight
 
@@ -271,7 +277,8 @@ variable (G) in
 to the multiplicative integers, or is densely ordered. -/
 lemma LinearOrderedCommGroup.discrete_or_denselyOrdered :
     Nonempty (G ≃*o Multiplicative ℤ) ∨ DenselyOrdered G := by
-  rw [← OrderAddMonoidIso.toMultiplicativeRight.nonempty_congr]
+  rw [← OrderAddMonoidIso.toMultiplicativeRight.nonempty_congr,
+    denselyOrdered_iff_of_orderIsoClass (Additive.ofMulOrderIso (X := G))]
   exact LinearOrderedAddCommGroup.discrete_or_denselyOrdered (Additive G)
 
 variable (G) in
@@ -281,7 +288,7 @@ to the multiplicative integers, or is densely ordered, exclusively.
 (See also `LinearOrderedCommGroup.isCyclic_iff_not_denselyOrdered`.) -/
 lemma LinearOrderedCommGroup.discrete_iff_not_denselyOrdered :
     Nonempty (G ≃*o Multiplicative ℤ) ↔ ¬ DenselyOrdered G := by
-  let e : G ≃o Additive G := .refl G
+  let e : G ≃o Additive G := Additive.ofMulOrderIso
   rw [← OrderAddMonoidIso.toMultiplicativeRight.nonempty_congr,
     LinearOrderedAddCommGroup.discrete_iff_not_denselyOrdered,
     denselyOrdered_iff_of_orderIsoClass e]
@@ -292,7 +299,7 @@ exclusively. -/
 lemma LinearOrderedCommGroup.isCyclic_iff_not_denselyOrdered [Nontrivial G] :
     IsCyclic G ↔ ¬ DenselyOrdered G := by
   rw [← isAddCyclic_additive_iff, LinearOrderedAddCommGroup.isAddCyclic_iff_not_denselyOrdered]
-  rfl
+  exact not_congr (denselyOrdered_iff_of_orderIsoClass (Additive.ofMulOrderIso (X := G))).symm
 
 /-- Any nontrivial (has other than 0 and 1) linearly ordered mul-archimedean group with zero is
 either isomorphic (and order-isomorphic) to `ℤᵐ⁰`, or is densely ordered. -/
@@ -383,7 +390,7 @@ alias LinearOrderedAddCommGroup.wellFoundedOn_setOf_ge_gt_iff_nonempty_discrete 
 lemma LinearOrderedCommGroup.wellFoundedOn_setOfPred_le_lt_iff_nonempty_discrete
     {G : Type*} [CommGroup G] [LinearOrder G] [IsOrderedMonoid G] [Nontrivial G] {g : G} :
     Set.WellFoundedOn {x : G | g ≤ x} (· < ·) ↔ Nonempty (G ≃*o Multiplicative ℤ) := by
-  let e : G ≃o Additive G := OrderIso.refl G
+  let e : G ≃o Additive G := Additive.ofMulOrderIso
   suffices Set.WellFoundedOn {x : G | g ≤ x} (· < ·) ↔ Set.WellFoundedOn {x | e g ≤ x} (· < ·) by
     rw [this, LinearOrderedAddCommGroup.wellFoundedOn_setOfPred_le_lt_iff_nonempty_discrete,
       OrderAddMonoidIso.toMultiplicativeRight.nonempty_congr]
@@ -526,9 +533,20 @@ section DenselyOrdered
 
 variable {X : Type*} [LT X]
 
-lemma denselyOrdered_additive_iff : DenselyOrdered (Additive X) ↔ DenselyOrdered X := Iff.rfl
+lemma denselyOrdered_additive_iff : DenselyOrdered (Additive X) ↔ DenselyOrdered X :=
+  ⟨fun h ↦ ⟨fun a₁ a₂ hlt ↦
+      let ⟨a, h₁, h₂⟩ := h.dense (.ofMul a₁) (.ofMul a₂) hlt
+      ⟨a.toMul, h₁, h₂⟩⟩,
+    fun h ↦ ⟨fun a₁ a₂ hlt ↦
+      let ⟨a, h₁, h₂⟩ := h.dense a₁.toMul a₂.toMul hlt
+      ⟨.ofMul a, h₁, h₂⟩⟩⟩
 lemma denselyOrdered_multiplicative_iff : DenselyOrdered (Multiplicative X) ↔ DenselyOrdered X :=
-  Iff.rfl
+  ⟨fun h ↦ ⟨fun a₁ a₂ hlt ↦
+      let ⟨a, h₁, h₂⟩ := h.dense (.ofAdd a₁) (.ofAdd a₂) hlt
+      ⟨a.toAdd, h₁, h₂⟩⟩,
+    fun h ↦ ⟨fun a₁ a₂ hlt ↦
+      let ⟨a, h₁, h₂⟩ := h.dense a₁.toAdd a₂.toAdd hlt
+      ⟨.ofAdd a, h₁, h₂⟩⟩⟩
 
 instance [DenselyOrdered X] : DenselyOrdered (Multiplicative X) :=
   denselyOrdered_multiplicative_iff.2 ‹_›

@@ -326,7 +326,7 @@ theorem _root_.MeasureTheory.Measure.ext_of_complexMGF_eq [IsFiniteMeasure μ]
   apply MeasureTheory.ext_of_integral_char_eq continuous_probChar probChar_ne_one inner_ne_zero
     h_cont (fun w ↦ ?_)
   rw [funext_iff] at h
-  specialize h (Multiplicative.toAdd w * I)
+  specialize h (w * I)
   simp_rw [complexMGF, mul_assoc, mul_comm I, ← mul_assoc] at h
   simp only [BoundedContinuousFunction.char_apply, innerₗ_apply_apply,
     RCLike.inner_apply, conj_trivial, probChar_apply, ofReal_mul]

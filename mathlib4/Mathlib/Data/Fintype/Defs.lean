@@ -260,6 +260,18 @@ instance subsingleton (α : Type*) : Subsingleton (Fintype α) :=
 
 instance (α : Type*) : Lean.Meta.FastSubsingleton (Fintype α) := {}
 
+/-- `Fintype` instances correspond along a canonical equivalence: the elements are mapped along
+it. -/
+@[transport]
+protected abbrev canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Fintype α) (Fintype β) where
+  toFun i := ⟨⟨i.elems.1.map e.toFun, Multiset.Nodup.map e.left_inv.injective i.elems.2⟩,
+    fun b ↦ Multiset.mem_map.2 ⟨e.invFun b, i.complete _, e.right_inv b⟩⟩
+  invFun i := ⟨⟨i.elems.1.map e.invFun, Multiset.Nodup.map e.right_inv.injective i.elems.2⟩,
+    fun a ↦ Multiset.mem_map.2 ⟨e.toFun a, i.complete _, e.left_inv a⟩⟩
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+
 /-- Given a predicate that can be represented by a finset, the subtype
 associated to the predicate is a fintype. -/
 @[instance_reducible]
@@ -282,10 +294,10 @@ instance Ordering.fintype : Fintype Ordering :=
   ⟨⟨{.lt, .eq, .gt}, by simp⟩, fun x => by cases x <;> simp⟩
 
 instance OrderDual.fintype (α : Type*) [Fintype α] : Fintype αᵒᵈ :=
-  ‹Fintype α›
+  inferInstanceAs (Fintype α)
 
 instance OrderDual.finite (α : Type*) [Finite α] : Finite αᵒᵈ :=
-  ‹Finite α›
+  inferInstanceAs (Finite α)
 
 instance Lex.fintype (α : Type*) [Fintype α] : Fintype (Lex α) :=
   ‹Fintype α›

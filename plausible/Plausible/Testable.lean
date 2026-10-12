@@ -365,7 +365,7 @@ def addShrinks (n : Nat) : TestResult p → TestResult p
 
 universe u in
 instance {α : Type u} {m : Type u → Type _} [Pure m] : Inhabited (OptionT m α) :=
-  ⟨(pure none : m (Option α))⟩
+  ⟨.mk (pure none : m (Option α))⟩
 
 variable {α : Sort _}
 

@@ -586,9 +586,12 @@ theorem sumAssoc_symm_apply_inr_inr : (sumAssoc α β γ).symm (inr (inr c)) = i
 
 /-- `orderDual` is distributive over `⊕` up to an order isomorphism. -/
 def sumDualDistrib (α β : Type*) [LE α] [LE β] : (α ⊕ β)ᵒᵈ ≃o αᵒᵈ ⊕ βᵒᵈ :=
-  { Equiv.refl _ with
-    map_rel_iff' := by
-      rintro (a | a) (b | b)
+  { toFun := fun x ↦ Sum.map OrderDual.toDual' OrderDual.toDual' x.ofDual'
+    invFun := fun x ↦ OrderDual.toDual' (Sum.map OrderDual.ofDual' OrderDual.ofDual' x)
+    left_inv x := by obtain ⟨a | a, rfl⟩ := toDual.surjective x <;> rfl
+    right_inv := by rintro (a | a) <;> rfl
+    map_rel_iff' := fun {a b} ↦ by
+      obtain ⟨a | a, rfl⟩ := toDual.surjective a <;> obtain ⟨b | b, rfl⟩ := toDual.surjective b
       · change inl (toDual a) ≤ inl (toDual b) ↔ toDual (inl a) ≤ toDual (inl b)
         simp [toDual_le_toDual, inl_le_inl_iff]
       · exact iff_of_false (@not_inl_le_inr (OrderDual β) (OrderDual α) _ _ _ _) not_inr_le_inl
@@ -682,9 +685,14 @@ theorem sumLexAssoc_symm_apply_inr_inr : (sumLexAssoc α β γ).symm (inr (inr c
 
 /-- `OrderDual` is antidistributive over `⊕ₗ` up to an order isomorphism. -/
 def sumLexDualAntidistrib (α β : Type*) [LE α] [LE β] : (α ⊕ₗ β)ᵒᵈ ≃o βᵒᵈ ⊕ₗ αᵒᵈ :=
-  { Equiv.sumComm α β with
+  { toFun := fun x ↦
+      toLex (Sum.map OrderDual.toDual' OrderDual.toDual' (Sum.swap (ofLex x.ofDual')))
+    invFun := fun x ↦ OrderDual.toDual'
+      (toLex (Sum.swap (Sum.map OrderDual.ofDual' OrderDual.ofDual' (ofLex x))))
+    left_inv x := by obtain ⟨a | a, rfl⟩ := toDual.surjective x <;> rfl
+    right_inv := by rintro (a | a) <;> rfl
     map_rel_iff' := fun {a b} => by
-      rcases a with (a | a) <;> rcases b with (b | b)
+      obtain ⟨a | a, rfl⟩ := toDual.surjective a <;> obtain ⟨b | b, rfl⟩ := toDual.surjective b
       · change
           toLex (inr <| toDual a) ≤ toLex (inr <| toDual b) ↔
             toDual (toLex <| inl a) ≤ toDual (toLex <| inl b)

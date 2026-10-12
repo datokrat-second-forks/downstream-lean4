@@ -139,7 +139,7 @@ instance [Monad m] : MonadLift HtmlM (HtmlT m) where
   monadLift x := do return (x.run (← getThe SiteState) (← readThe SiteContext) (← readThe SiteBaseContext)).1
 
 instance [Monad m] : MonadLift BaseHtmlM (BaseHtmlT m) where
-  monadLift x := do return x.run (← readThe SiteBaseContext)
+  monadLift x := do return (x.run (← readThe SiteBaseContext)).run
 
 /-- Add a backref of the given `citekey` and `funName` to current document, and returns it. -/
 def addBackref (citekey funName : String) : HtmlM BackrefItem := do

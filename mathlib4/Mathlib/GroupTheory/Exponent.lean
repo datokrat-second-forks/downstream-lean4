@@ -76,14 +76,6 @@ noncomputable def exponent :=
 
 variable {G}
 
-@[simp]
-theorem _root_.AddMonoid.exponent_additive :
-    AddMonoid.exponent (Additive G) = exponent G := rfl
-
-@[simp]
-theorem exponent_multiplicative {G : Type*} [AddMonoid G] :
-    exponent (Multiplicative G) = AddMonoid.exponent G := rfl
-
 set_option backward.isDefEq.respectTransparency false in
 open MulOpposite in
 @[to_additive (attr := simp)]
@@ -385,6 +377,21 @@ theorem exponent_eq_of_mulEquiv (e : G ≃* H) : Monoid.exponent G = Monoid.expo
   Nat.dvd_antisymm
     (exponent_dvd_of_monoidHom e e.injective)
     (exponent_dvd_of_monoidHom e.symm e.symm.injective)
+
+@[simp]
+theorem exponent_multiplicative {G : Type*} [AddMonoid G] :
+    exponent (Multiplicative G) = AddMonoid.exponent G :=
+  Nat.dvd_antisymm
+    (exponent_dvd_of_forall_pow_eq_one fun g ↦ by
+      rw [← ofAdd_toAdd g, ← ofAdd_nsmul, AddMonoid.exponent_nsmul_eq_zero, ofAdd_zero])
+    (AddMonoid.exponent_dvd_of_forall_nsmul_eq_zero fun g ↦ Multiplicative.ofAdd.injective <| by
+      rw [ofAdd_nsmul, pow_exponent_eq_one, ofAdd_zero])
+
+@[simp]
+theorem _root_.AddMonoid.exponent_additive {G : Type*} [Monoid G] :
+    AddMonoid.exponent (Additive G) = exponent G :=
+  (exponent_multiplicative (G := Additive G)).symm.trans
+    (exponent_eq_of_mulEquiv (MulEquiv.multiplicativeAdditive G))
 
 end Monoid
 

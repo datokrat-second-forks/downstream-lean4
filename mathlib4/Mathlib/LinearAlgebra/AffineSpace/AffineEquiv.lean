@@ -479,7 +479,7 @@ theorem constVAdd_symm (v : V₁) : (constVAdd k P₁ v).symm = constVAdd k P₁
 def constVAddHom : Multiplicative V₁ →* P₁ ≃ᵃ[k] P₁ where
   toFun v := constVAdd k P₁ v.toAdd
   map_one' := constVAdd_zero _ _
-  map_mul' := constVAdd_add _ P₁
+  map_mul' x y := constVAdd_add _ P₁ x.toAdd y.toAdd
 
 theorem constVAdd_nsmul (n : ℕ) (v : V₁) : constVAdd k P₁ (n • v) = constVAdd k P₁ v ^ n :=
   (constVAddHom k P₁).map_pow _ _

@@ -90,7 +90,7 @@ A list of blocklisted syntax kinds, which are expected to have subterms that con
 unused tactics.
 -/
 initialize ignoreTacticKindsRef : IO.Ref NameHashSet ←
-  IO.mkRef <| .ofArray #[
+  IO.mkRef <| NameHashSet.mk <| .ofArray #[
     `Mathlib.Tactic.Says.says,
     ``Parser.Term.binderTactic,
     ``Lean.Parser.Term.dynamicQuot,

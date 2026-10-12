@@ -94,7 +94,7 @@ open Mathlib.Command.MinImports
 It returns the modules that are transitively imported by `ms`, using the data in `tc`.
 -/
 def importsBelow (tc : NameMap NameSet) (ms : NameSet) : NameSet :=
-  ms.foldl (·.append <| tc.getD · default) ms
+  ms.foldl (·.union <| tc.getD · default) ms
 
 @[inherit_doc Mathlib.Linter.linter.minImports]
 macro "#import_bumps" : command => `(
@@ -147,7 +147,7 @@ def minImportsLinter : Linter where run := withSetOptionIn fun stx ↦ do
           m!"-- missing imports\n{"\n".intercalate withImport.toList}"
     let id ← getId stx
     let newImports := (getIrredundantImports env (← getAllImports stx id)).filter (!isInitImport ·)
-    let tot := (newImports.append importsSoFar)
+    let tot := (newImports.union importsSoFar)
     let redundant := env.findRedundantImports tot.toArray
     let currImports := tot \ redundant
     let currImpArray := currImports.toArray.qsort Name.lt

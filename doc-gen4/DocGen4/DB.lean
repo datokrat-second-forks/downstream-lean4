@@ -122,7 +122,7 @@ open SQLite.Blob in
 instance : SQLite.QueryParam RenderedCode where
   bind stmt index code := Id.run do
     let str := ToBinary.serializer code .empty
-    SQLite.QueryParam.bind stmt index str
+    return SQLite.QueryParam.bind stmt index str
 
 -- Each `WriteStmts` field is a prepared SQLite statement. The corresponding `WriteStmts.funName`
 -- function binds parameters by position (1-indexed, matching the `?` placeholders in the SQL).

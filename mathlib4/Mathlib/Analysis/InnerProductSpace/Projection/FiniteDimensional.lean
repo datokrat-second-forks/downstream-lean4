@@ -296,12 +296,10 @@ theorem OrthogonalFamily.projection_directSum_coeAddHom [DecidableEq ι] {V : ι
   induction x using DirectSum.induction_on with
   | zero => simp
   | of j x =>
-    simp_rw [DirectSum.coeAddMonoidHom_of, DirectSum.of,
-      -- Need to unfold `DirectSum` to see through the defeq abuse.
-      DirectSum, DFinsupp.singleAddHom_apply]
+    rw [DirectSum.coeAddMonoidHom_of]
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [orthogonalProjectionOnto_mem_subspace_eq_self, DFinsupp.single_eq_same]
-    · rw [orthogonalProjectionOnto_apply_of_mem_orthogonal, DFinsupp.single_eq_of_ne hij]
+    · rw [orthogonalProjectionOnto_mem_subspace_eq_self, DirectSum.of_eq_same]
+    · rw [orthogonalProjectionOnto_apply_of_mem_orthogonal, DirectSum.of_eq_of_ne _ _ _ hij]
       exact hV.isOrtho hij.symm x.prop
   | add x y hx hy =>
     simp_rw [map_add]
@@ -317,11 +315,14 @@ noncomputable abbrev OrthogonalFamily.decomposition
     [DecidableEq ι] [Fintype ι] {V : ι → Submodule 𝕜 E}
     [∀ i, CompleteSpace (V i)] (hV : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ)
     (h : iSup V = ⊤) : DirectSum.Decomposition V where
-  decompose' x := DFinsupp.equivFunOnFintype.symm fun i => (V i).orthogonalProjectionOnto x
+  decompose' x := DirectSum.ofDFinsupp <|
+    DFinsupp.equivFunOnFintype.symm fun i => (V i).orthogonalProjectionOnto x
   left_inv x := by
     dsimp only
     let := fun i => Classical.decEq (V i)
-    rw [DirectSum.coeAddMonoidHom, DirectSum.toAddMonoid, DFinsupp.liftAddHom_apply]
+    rw [DirectSum.coeAddMonoidHom, DirectSum.toAddMonoid, AddMonoidHom.comp_apply,
+      AddEquiv.coe_toAddMonoidHom, DirectSum.addEquiv_apply, DirectSum.toDFinsupp_ofDFinsupp,
+      DFinsupp.liftAddHom_apply]
     -- This used to be `rw`, but we need `erw` after https://github.com/leanprover/lean4/pull/2644
     erw [DFinsupp.sumAddHom_apply]; rw [DFinsupp.sum_eq_sum_fintype]
     · simp_rw [Equiv.apply_symm_apply, AddSubmonoidClass.coe_subtype]
@@ -329,8 +330,9 @@ noncomputable abbrev OrthogonalFamily.decomposition
     · intro i
       exact map_zero _
   right_inv x := by
-    dsimp only
-    simp_rw [hV.projection_directSum_coeAddHom, DFinsupp.equivFunOnFintype_symm_coe]
+    ext i
+    simp only [DirectSum.ofDFinsupp_apply, hV.projection_directSum_coeAddHom]
+    rfl
 
 end OrthogonalFamily
 

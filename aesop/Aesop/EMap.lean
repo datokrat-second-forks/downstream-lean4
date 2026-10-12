@@ -57,7 +57,7 @@ def foldlM (init : σ) (f : σ → Expr → α → m σ) (map : EMap α) : m σ 
     | s, some (e, a) => f s e a
 
 def foldl (init : σ) (f : σ → Expr → α → σ) (map : EMap α) : σ :=
-  inline <| map.foldlM (m := Id) init f
+  Id.run <| inline <| map.foldlM init (fun s e a => pure (f s e a))
 
 private def getCandidates (e : Expr) (map : EMap α) : m (Array Nat) :=
   map.idx.getMatch e
@@ -133,7 +133,7 @@ def mapM (f : Expr → α → m β) (map : EMap α) : m (EMap β) := do
   return { map with rep }
 
 def map (f : Expr → α → β) (map : EMap α) : EMap β :=
-  map.mapM (m := Id) f
+  Id.run <| map.mapM (fun e a => pure (f e a))
 
 end EMap
 end Aesop

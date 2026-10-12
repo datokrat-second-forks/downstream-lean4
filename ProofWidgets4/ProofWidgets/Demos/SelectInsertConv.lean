@@ -83,7 +83,7 @@ private def solveLevel (expr : Expr) (path : List Nat) : MetaM SolveReturn := ma
 
   | _ => do
     return {
-      expr := ←(Lean.Core.viewSubexpr path.head! expr)
+      expr := ←(Lean.Core.viewSubexpr ⟨path.head!⟩ expr)
       val? := toString (path.head! + 1)
       listRest := path.tail!
     }
@@ -135,7 +135,7 @@ def ConvSelectionPanel.rpc (props : ConvSelectionPanelProps) : RequestM (Request
             s!"could not find goal for location {toJson selectedLoc}"
       g.ctx.val.runMetaM {} do
         let md ← g.mvarId.getDecl
-        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)}
+        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)} |>.run
         Meta.withLCtx lctx md.localInstances do
           let newCode ← insertEnter props.selectedLocations md.type
           return .ofComponent

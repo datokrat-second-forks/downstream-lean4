@@ -118,7 +118,7 @@ end ULiftable
 open ULift
 
 instance instULiftableId : ULiftable Id Id where
-  congr F := F
+  congr F := Id.equivDef.toEquiv.trans (F.trans Id.equivDef.toEquiv.symm)
 
 /-- for specific state types, this function helps to create a uliftable instance -/
 @[instance_reducible]

@@ -30,6 +30,10 @@ private def inf [WellFoundedLT ι] (s : Set (Πₗ i, α i)) (i : ι) : α i :=
   ⨅ e : {e ∈ s | ∀ j < i, e j = inf s j}, e.1 i
 termination_by wellFounded_lt.wrap i
 
+private def sup [WellFoundedLT ι] (s : Set (Πₗ i, α i)) (i : ι) : α i :=
+  ⨆ e : {e ∈ s | ∀ j < i, e j = sup s j}, e.1 i
+termination_by wellFounded_lt.wrap i
+
 variable [WellFoundedLT ι]
 
 @[no_expose]
@@ -66,19 +70,22 @@ private theorem isGLB_sInf {s : Set (Πₗ i, α i)} : IsGLB s (sInf s) := by
 
 @[no_expose]
 instance : SupSet (Πₗ i, α i) where
-  sSup s := sInf (α := Πₗ i, (α i)ᵒᵈ) s
+  sSup s := toLex (sup s)
 
 theorem sSup_apply (s : Set (Πₗ i, α i)) (i : ι) :
-    sSup s i = ⨆ e : {e ∈ s | ∀ j < i, e j = sSup s j}, e.1 i :=
-  sInf_apply (α := fun i ↦ (α i)ᵒᵈ) ..
+    sSup s i = ⨆ e : {e ∈ s | ∀ j < i, e j = sSup s j}, e.1 i := by
+  simp [sSup, sup, -iSup_of_empty']
 
 theorem le_sSup_apply {s : Set (Πₗ i, α i)} {i : ι} {e : Πₗ i, α i}
-    (he : e ∈ s) (h : ∀ j < i, e j = sSup s j) : e i ≤ sSup s i :=
-  sInf_apply_le (α := fun i ↦ (α i)ᵒᵈ) he h
+    (he : e ∈ s) (h : ∀ j < i, e j = sSup s j) : e i ≤ sSup s i := by
+  rw [sSup_apply]
+  exact le_sSup ⟨⟨e, he, h⟩, rfl⟩
 
 theorem sSup_apply_le {s : Set (Πₗ i, α i)} {i : ι} {e : Πₗ i, α i}
-    (h : ∀ f ∈ s, (∀ j < i, f j = sSup s j) → f i ≤ e i) : sSup s i ≤ e i :=
-  le_sInf_apply (α := fun i ↦ (α i)ᵒᵈ) h
+    (h : ∀ f ∈ s, (∀ j < i, f j = sSup s j) → f i ≤ e i) : sSup s i ≤ e i := by
+  rw [sSup_apply]
+  apply sSup_le
+  grind
 
 private theorem isLUB_sSup {s : Set (Πₗ i, α i)} : IsLUB s (sSup s) := by
   refine ⟨fun e he ↦ ?_, fun e h ↦ ?_⟩
@@ -104,54 +111,80 @@ end Lex
 /-! ### Colexicographic ordering -/
 
 namespace Colex
+
+private def inf [WellFoundedGT ι] (s : Set (Colex ((i : ι) → α i))) (i : ι) : α i :=
+  ⨅ e : {e ∈ s | ∀ j > i, e j = inf s j}, e.1 i
+termination_by wellFounded_gt.wrap i
+
+private def sup [WellFoundedGT ι] (s : Set (Colex ((i : ι) → α i))) (i : ι) : α i :=
+  ⨆ e : {e ∈ s | ∀ j > i, e j = sup s j}, e.1 i
+termination_by wellFounded_gt.wrap i
+
 variable [WellFoundedGT ι]
 
-set_option backward.isDefEq.respectTransparency false in
 @[no_expose]
 instance : InfSet (Colex ((i : ι) → α i)) where
-  sInf s := sInf (α := Πₗ i : ιᵒᵈ, α i) s
+  sInf s := toColex (inf s)
 
-set_option backward.isDefEq.respectTransparency false in
 theorem sInf_apply (s : Set (Colex ((i : ι) → α i))) (i : ι) :
-    sInf s i = ⨅ e : {e ∈ s | ∀ j > i, e j = sInf s j}, e.1 i :=
-  Lex.sInf_apply (ι := ιᵒᵈ) s i
+    sInf s i = ⨅ e : {e ∈ s | ∀ j > i, e j = sInf s j}, e.1 i := by
+  simp [sInf, inf, -iInf_of_isEmpty]
 
-set_option backward.isDefEq.respectTransparency false in
 theorem sInf_apply_le {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
-    (he : e ∈ s) (h : ∀ j > i, e j = sInf s j) : sInf s i ≤ e i :=
-  Lex.sInf_apply_le (ι := ιᵒᵈ) he h
+    (he : e ∈ s) (h : ∀ j > i, e j = sInf s j) : sInf s i ≤ e i := by
+  rw [sInf_apply]
+  exact sInf_le ⟨⟨e, he, h⟩, rfl⟩
 
-set_option backward.isDefEq.respectTransparency false in
 theorem le_sInf_apply {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
-    (h : ∀ f ∈ s, (∀ j > i, f j = sInf s j) → e i ≤ f i) : e i ≤ sInf s i :=
-  Lex.le_sInf_apply (ι := ιᵒᵈ) h
+    (h : ∀ f ∈ s, (∀ j > i, f j = sInf s j) → e i ≤ f i) : e i ≤ sInf s i := by
+  rw [sInf_apply]
+  apply le_sInf
+  grind
+
+private theorem isGLB_sInf {s : Set (Colex ((i : ι) → α i))} : IsGLB s (sInf s) := by
+  refine ⟨fun e he ↦ ?_, fun e h ↦ ?_⟩
+  · by_contra! hs
+    obtain ⟨a, ha⟩ := hs
+    exact ha.2.not_ge (sInf_apply_le he ha.1)
+  · by_contra! hs
+    obtain ⟨a, ha⟩ := hs
+    refine ha.2.not_ge <| le_sInf_apply fun f hf hf' ↦ apply_le_of_toColex (h hf) ?_
+    simp_all
 
 -- TODO: figure out how to use `to_dual` here
 
-set_option backward.isDefEq.respectTransparency false in
 @[no_expose]
 instance : SupSet (Colex ((i : ι) → α i)) where
-  sSup s := sSup (α := Πₗ i : ιᵒᵈ, α i) s
+  sSup s := toColex (sup s)
 
-set_option backward.isDefEq.respectTransparency false in
 theorem sSup_apply (s : Set (Colex ((i : ι) → α i))) (i : ι) :
-    sSup s i = ⨆ e : {e ∈ s | ∀ j > i, e j = sSup s j}, e.1 i :=
-  Lex.sSup_apply (ι := ιᵒᵈ) s i
+    sSup s i = ⨆ e : {e ∈ s | ∀ j > i, e j = sSup s j}, e.1 i := by
+  simp [sSup, sup, -iSup_of_empty']
 
-set_option backward.isDefEq.respectTransparency false in
 theorem le_sSup_apply {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
-    (he : e ∈ s) (h : ∀ j > i, e j = sSup s j) : e i ≤ sSup s i :=
-  Lex.le_sSup_apply (ι := ιᵒᵈ) he h
+    (he : e ∈ s) (h : ∀ j > i, e j = sSup s j) : e i ≤ sSup s i := by
+  rw [sSup_apply]
+  exact le_sSup ⟨⟨e, he, h⟩, rfl⟩
 
-set_option backward.isDefEq.respectTransparency false in
 theorem sSup_apply_le {s : Set (Colex ((i : ι) → α i))} {i : ι} {e : Colex ((i : ι) → α i)}
-    (h : ∀ f ∈ s, (∀ j > i, f j = sSup s j) → f i ≤ e i) : sSup s i ≤ e i :=
-  Lex.sSup_apply_le (ι := ιᵒᵈ) h
+    (h : ∀ f ∈ s, (∀ j > i, f j = sSup s j) → f i ≤ e i) : sSup s i ≤ e i := by
+  rw [sSup_apply]
+  apply sSup_le
+  grind
 
-set_option backward.isDefEq.respectTransparency false in
+private theorem isLUB_sSup {s : Set (Colex ((i : ι) → α i))} : IsLUB s (sSup s) := by
+  refine ⟨fun e he ↦ ?_, fun e h ↦ ?_⟩
+  · by_contra! hs
+    obtain ⟨a, ha⟩ := hs
+    exact ha.2.not_ge (le_sSup_apply he fun j hj ↦ (ha.1 j hj).symm)
+  · by_contra! hs
+    obtain ⟨a, ha⟩ := hs
+    refine ha.2.not_ge <| sSup_apply_le fun f hf hf' ↦ apply_le_of_toColex (h hf) ?_
+    simp_all
+
 noncomputable instance completeLattice : CompleteLattice (Colex ((i : ι) → α i)) where
-  isLUB_sSup _ := by exact Lex.isLUB_sSup (ι := ιᵒᵈ)
-  isGLB_sInf _ := by exact Lex.isGLB_sInf (ι := ιᵒᵈ)
+  isLUB_sSup _ := by exact isLUB_sSup
+  isGLB_sInf _ := by exact isGLB_sInf
 
 noncomputable instance : CompleteLinearOrder (Colex ((i : ι) → α i)) where
   __ := linearOrder

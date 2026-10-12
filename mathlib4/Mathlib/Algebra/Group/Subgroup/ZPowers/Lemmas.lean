@@ -32,7 +32,13 @@ variable {N : Type*} [Group N]
 
 namespace Subgroup
 
-theorem range_zpowersHom (g : G) : (zpowersHom G g).range = zpowers g := rfl
+theorem range_zpowersHom (g : G) : (zpowersHom G g).range = zpowers g :=
+  SetLike.ext fun _ ↦ by
+    constructor
+    · rintro ⟨n, hn⟩
+      exact ⟨n.toAdd, hn⟩
+    · rintro ⟨n, hn⟩
+      exact ⟨.ofAdd n, hn⟩
 
 @[to_additive]
 instance (a : G) : Countable (zpowers a) := Set.rangeFactorization_surjective.countable

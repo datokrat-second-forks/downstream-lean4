@@ -36,12 +36,12 @@ variable (R M) (ι : Type*) [DecidableEq ι]
 copies of M indexed by ι. -/
 def finsuppLEquivDirectSum : (ι →₀ M) ≃ₗ[R] ⨁ _ : ι, M :=
   haveI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
-  finsuppLequivDFinsupp R
+  finsuppLequivDFinsupp R ≪≫ₗ (DirectSum.linearEquiv R _).symm
 
 @[simp]
 theorem finsuppLEquivDirectSum_single (i : ι) (m : M) :
     finsuppLEquivDirectSum R M ι (Finsupp.single i m) = DirectSum.lof R ι _ i m :=
-  Finsupp.toDFinsupp_single i m
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single i m
 
 @[simp]
 theorem finsuppLEquivDirectSum_apply (m : ι →₀ M) (i : ι) :

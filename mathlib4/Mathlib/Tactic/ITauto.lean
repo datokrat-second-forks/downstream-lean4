@@ -343,7 +343,8 @@ def Proof.check : Lean.NameMap IProp → Proof → Option IProp
 -/
 
 /-- Get a new name in the pattern `h0, h1, h2, ...` -/
-@[inline] def freshName : StateM Nat Name := fun n => (Name.mkSimple s!"h{n}", n + 1)
+@[inline] def freshName : StateM Nat Name :=
+  .mk fun n => pure (Name.mkSimple s!"h{n}", n + 1)
 
 /-- The context during proof search is a map from propositions to proof values. -/
 abbrev Context := TreeMap IProp Proof IProp.cmp
@@ -415,24 +416,24 @@ potentially many implications to split like this, and we have to try all of them
 complete. -/
 partial def search (Γ : Context) (B : IProp) : StateM Nat (Bool × Proof) := do
   if let some p := Γ[B]? then return (true, p)
-  fun n =>
+  StateT.mk fun n => Id.mk <|
   let search₁ := Γ.foldl (init := none) fun r A p => do
     if let some r := r then return r
     let .imp A' C := A | none
     if let some q := Γ[A']? then
-      isOk <| Context.withAdd (Γ.erase A) C (p.app q) B prove n
+      isOk <| ((Context.withAdd (Γ.erase A) C (p.app q) B prove).run n).run
     else
       let .imp A₁ A₂ := A' | none
       let Γ : Context := Γ.erase A
-      let (a, n) := freshName n
-      let (p₁, n) ← isOk <| Γ.withAdd A₁ (.hyp a) A₂ (fun Γ_A₁ A₂ =>
-        Γ_A₁.withAdd (IProp.imp A₂ C) (.impImpSimp a p) A₂ prove) n
-      isOk <| Γ.withAdd C (p.app (.intro a p₁)) B prove n
+      let (a, n) := (freshName.run n).run
+      let (p₁, n) ← isOk <| ((Γ.withAdd A₁ (.hyp a) A₂ (fun Γ_A₁ A₂ =>
+        Γ_A₁.withAdd (IProp.imp A₂ C) (.impImpSimp a p) A₂ prove)).run n).run
+      isOk <| ((Γ.withAdd C (p.app (.intro a p₁)) B prove).run n).run
   if let some (r, n) := search₁ then
     ((true, r), n)
   else if let .or B₁ B₂ := B then
-    match (mapProof .orInL <$> prove Γ B₁) n with
-    | ((false, _), _) => (mapProof .orInR <$> prove Γ B₂) n
+    match ((mapProof .orInL <$> prove Γ B₁).run n).run with
+    | ((false, _), _) => ((mapProof .orInR <$> prove Γ B₂).run n).run
     | r => r
   else ((false, .sorry), n)
 
@@ -694,7 +695,7 @@ def itautoCore (g : MVarId)
       Γ := return (← Γ).insert (A.or A.not) (.em cl n)
     let p : Proof :=
       match Γ with
-      | .ok Γ => (prove Γ t 0).1.2
+      | .ok Γ => ((prove Γ t).run 0).run.1.2
       | .error p => p t
     applyProof g hs p
 

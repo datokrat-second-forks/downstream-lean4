@@ -404,6 +404,23 @@ theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G �
 
 end trivial
 
+section Additive
+
+variable {A : Type*} [CommGroup A]
+
+/-- `Additive` commutes with quotients: the quotient of `Additive A` by the additive subgroup
+corresponding to `S` is `Additive (A ⧸ S)`. -/
+noncomputable def additiveQuotientAddEquiv (S : Subgroup A) :
+    Additive A ⧸ Subgroup.toAddSubgroup S ≃+ Additive (A ⧸ S) :=
+  (QuotientAddGroup.quotientAddEquivOfEq (by
+      rw [MonoidHom.coe_toAdditive_ker, QuotientGroup.ker_mk'])).trans
+    (QuotientAddGroup.quotientKerEquivOfSurjective
+      (MonoidHom.toAdditive (QuotientGroup.mk' S))
+      (Additive.ofMul.surjective.comp
+        ((QuotientGroup.mk'_surjective S).comp Additive.toMul.surjective)))
+
+end Additive
+
 @[to_additive]
 theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G ⧸ H₁)} [H₂.Normal] :
     ((Subgroup.center ((G ⧸ H₁) ⧸ H₂)).comap (mk' H₂)).comap (mk' H₁) =

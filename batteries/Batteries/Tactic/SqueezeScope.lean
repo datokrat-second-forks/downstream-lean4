@@ -171,4 +171,4 @@ elab_rules : tactic
       let newSimps := match map1.find? x with
       | some (stx, oldSimps) => (stx, stats.usedTheorems :: oldSimps)
       | none => (stxToStore, [stats.usedTheorems])
-      map.insert a (map1.insert x newSimps)
+      return map.insert a (map1.insert x newSimps)

@@ -46,7 +46,7 @@ instance : ToExpr MData where
       | ofNat v    => mkApp3 (.const ``KVMap.setNat []) e k (toExpr v)
       | ofInt v    => mkApp3 (.const ``KVMap.setInt []) e k (toExpr v)
       | ofSyntax _ => e -- TODO
-    e
+    return e
 
 open Expr Literal in
 def toExprExpr : Expr → Expr

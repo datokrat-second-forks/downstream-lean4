@@ -97,15 +97,58 @@ lemma Int.zmultiples_one : AddSubgroup.zmultiples (1 : ℤ) = ⊤ := by
 
 theorem ofMul_image_zpowers_eq_zmultiples_ofMul {x : G} :
     Additive.ofMul '' (Subgroup.zpowers x : Set G) = AddSubgroup.zmultiples (Additive.ofMul x) := by
-  ext
-  exact Set.mem_image_iff_of_inverse (congrFun rfl) (congrFun rfl)
+  ext y
+  constructor
+  · rintro ⟨-, ⟨k, rfl⟩, rfl⟩
+    exact ⟨k, rfl⟩
+  · rintro ⟨k, rfl⟩
+    exact ⟨x ^ k, ⟨k, rfl⟩, rfl⟩
+
+theorem mem_zmultiples_ofMul {x : G} {y : Additive G} :
+    y ∈ AddSubgroup.zmultiples (Additive.ofMul x) ↔ y.toMul ∈ Subgroup.zpowers x := by
+  constructor
+  · rintro ⟨k, rfl⟩
+    exact ⟨k, rfl⟩
+  · rintro ⟨k, hk⟩
+    exact ⟨k, congrArg Additive.ofMul hk⟩
+
+@[simp]
+theorem Subgroup.toAddSubgroup_zpowers (x : G) :
+    (Subgroup.zpowers x).toAddSubgroup = AddSubgroup.zmultiples (Additive.ofMul x) :=
+  SetLike.ext fun _ ↦ mem_zmultiples_ofMul.symm
+
+@[simp]
+theorem AddSubgroup.toSubgroup_zmultiples (a : A) :
+    (AddSubgroup.zmultiples a).toSubgroup = Subgroup.zpowers (Multiplicative.ofAdd a) := by
+  ext x
+  constructor
+  · rintro ⟨k, hk⟩
+    exact ⟨k, congrArg Multiplicative.ofAdd hk⟩
+  · rintro ⟨k, hk⟩
+    exact ⟨k, congrArg Multiplicative.toAdd hk⟩
+
+/-- `Additive.ofMul x` generates `Additive G` exactly when `x` generates `G`. -/
+theorem forall_mem_zmultiples_ofMul_iff {x : G} :
+    (∀ y : Additive G, y ∈ AddSubgroup.zmultiples (Additive.ofMul x)) ↔
+      ∀ y : G, y ∈ Subgroup.zpowers x :=
+  ⟨fun h y ↦ mem_zmultiples_ofMul.1 (h (Additive.ofMul y)),
+    fun h y ↦ mem_zmultiples_ofMul.2 (h y.toMul)⟩
+
+/-- `Additive.ofMul` identifies the subgroup `zpowers x` of `G` with the additive subgroup
+`zmultiples (Additive.ofMul x)` of `Additive G`. -/
+def Subgroup.zpowersEquivZMultiples (x : G) :
+    Subgroup.zpowers x ≃ AddSubgroup.zmultiples (Additive.ofMul x) :=
+  Equiv.subtypeEquiv Additive.ofMul fun _ ↦ mem_zmultiples_ofMul.symm
 
 theorem ofAdd_image_zmultiples_eq_zpowers_ofAdd {x : A} :
     Multiplicative.ofAdd '' (AddSubgroup.zmultiples x : Set A) =
       Subgroup.zpowers (Multiplicative.ofAdd x) := by
-  symm
-  rw [Equiv.eq_image_iff_symm_image_eq]
-  exact ofMul_image_zpowers_eq_zmultiples_ofMul
+  ext y
+  constructor
+  · rintro ⟨-, ⟨k, rfl⟩, rfl⟩
+    exact ⟨k, rfl⟩
+  · rintro ⟨k, rfl⟩
+    exact ⟨k • x, ⟨k, rfl⟩, rfl⟩
 
 namespace Subgroup
 

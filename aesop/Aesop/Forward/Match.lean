@@ -108,7 +108,7 @@ def foldHypsM [Monad M] (f : σ → FVarId → M σ) (init : σ)
 
 /-- Fold over the hypotheses contained in a match. -/
 def foldHyps (f : σ → FVarId → σ) (init : σ) (m : ForwardRuleMatch) : σ :=
-  m.foldHypsM (M := Id) f init
+  Id.run <| m.foldHypsM (fun s h => pure (f s h)) init
 
 /-- Returns `true` if any hypothesis contained in `m` satisfies `f`. -/
 def anyHyp (m : ForwardRuleMatch) (f : FVarId → Bool) : Bool :=

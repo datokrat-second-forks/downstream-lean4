@@ -206,7 +206,7 @@ theorem hahnCoeff_apply {x : seed.baseDomain} {f : Π₀ c, seed.stratum c}
   have hxm {c : FiniteArchimedeanClass M} (x : seed.stratum c) : x.val ∈ seed.baseDomain := by
     apply Set.mem_of_mem_of_subset x.prop
     simpa using! le_iSup _ _
-  let f' : ⨁ c, seed.stratum' c :=
+  let f' : ⨁ c, seed.stratum' c := ofDFinsupp <|
     f.mapRange (fun c x ↦ (⟨⟨x.val, hxm x⟩, by simp⟩ : seed.stratum' c)) (by simp)
   have hf : f c = (seed.baseDomain.subtype.submoduleComap (seed.stratum c)) (f' c) := by
     apply Subtype.ext
@@ -214,7 +214,9 @@ theorem hahnCoeff_apply {x : seed.baseDomain} {f : Π₀ c, seed.stratum c}
   have hx : x = (decompose seed.stratum').symm f' := by
     change x = f'.coeAddMonoidHom _
     apply Submodule.subtype_injective
-    rw [DirectSum.coeAddMonoidHom_eq_dfinsuppSum, DFinsupp.sum_mapRange_index (by simp)]
+    rw [DirectSum.coeAddMonoidHom_eq_dfinsuppSum]
+    simp only [f']
+    rw [DFinsupp.sum_mapRange_index (by simp)]
     simp [h]
   simp [hf, hx]
 
@@ -224,7 +226,8 @@ noncomputable
 def baseEmbedding : M →ₗ.[K] Lex R⟦FiniteArchimedeanClass M⟧ where
   domain := seed.baseDomain
   toFun := (toLexLinearEquiv _ _).toLinearMap ∘ₗ (HahnSeries.ofFinsuppLinearMap _) ∘ₗ
-    (finsuppLequivDFinsupp K).symm.toLinearMap ∘ₗ seed.hahnCoeff
+    (finsuppLequivDFinsupp K).symm.toLinearMap ∘ₗ (DirectSum.linearEquiv K _).toLinearMap ∘ₗ
+      seed.hahnCoeff
 
 theorem domain_baseEmbedding : seed.baseEmbedding.domain = seed.baseDomain := rfl
 

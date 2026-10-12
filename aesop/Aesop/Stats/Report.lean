@@ -53,7 +53,7 @@ def default : StatsReport := λ statsArray => Id.run do
     forwardState := forwardState + stats.forwardState
     ruleStats := stats.ruleStatsTotals (init := ruleStats)
   let samples := statsArray.size
-  f!"Statistics for {statsArray.size} Aesop calls in current and imported modules\n\
+  return f!"Statistics for {statsArray.size} Aesop calls in current and imported modules\n\
      Displaying totals and [averages]\n\
      Total Aesop time:      {fmtTime total samples}\n\
      Config parsing:        {fmtTime configParsing samples}\n\
@@ -120,7 +120,7 @@ def scriptsCore (nSlowest := 30) (nontrivialOnly := false) :
       | none => f!"?:?"
     f!"{e.fileName}:{pos}: script {e.stats.script}, total {e.stats.total}, type {fmtScriptGenerated e.stats.scriptGenerated}"
 
-  f!"Statistics for {statsArray.size} Aesop calls{if nontrivialOnly then f!" with nontrivial script generation" else ""} in current and imported modules\n\
+  return f!"Statistics for {statsArray.size} Aesop calls{if nontrivialOnly then f!" with nontrivial script generation" else ""} in current and imported modules\n\
      Total Aesop time:         {fmtTimes totalTimes}\n\
      Script generation time:   {fmtTimes scriptTimes}\n\
      Scripts generated:        {scriptTimes.size}\n\

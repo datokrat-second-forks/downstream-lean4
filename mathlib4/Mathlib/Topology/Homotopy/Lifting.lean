@@ -701,14 +701,14 @@ variable {G : Type*} [AddGroup G] [AddAction G E] (hp : IsAddQuotientCoveringMap
 
 theorem monodromy_toPermFiber {x y : X} {γ : Path.Homotopic.Quotient x y} {e : p ⁻¹' {x}} :
     letI monodromy := hp.isCoveringMap.monodromy
-    monodromy γ (hp.toMultiplicative.toPermFiber x g e) =
-      hp.toMultiplicative.toPermFiber y g (monodromy γ e) :=
+    monodromy γ (hp.toMultiplicative.toPermFiber x (.ofAdd g) e) =
+      hp.toMultiplicative.toPermFiber y (.ofAdd g) (monodromy γ e) :=
   hp.toMultiplicative.monodromy_toPermFiber
 
 theorem commute_monodromyPerm_toPermFiber {x : X} {γ : FundamentalGroup X x} :
     Commute
       (hp.isCoveringMap.monodromyPerm x γ)
-      (hp.toMultiplicative.toPermFiber x g) :=
+      (hp.toMultiplicative.toPermFiber x (.ofAdd g)) :=
   hp.toMultiplicative.commute_monodromyPerm_toPermFiber
 
 theorem monodromy_ext_iff {x y : X} {γ γ' : Path.Homotopic.Quotient x y} (e : p ⁻¹' {x}) :

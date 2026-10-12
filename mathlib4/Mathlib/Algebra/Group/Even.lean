@@ -77,10 +77,12 @@ instance [DecidablePred (IsSquare : α → Prop)] : DecidablePred (IsSquare : α
   fun _ ↦ decidable_of_iff _ isSquare_unop_iff
 
 @[simp]
-lemma even_ofMul_iff {a : α} : Even (Additive.ofMul a) ↔ IsSquare a := Iff.rfl
+lemma even_ofMul_iff {a : α} : Even (Additive.ofMul a) ↔ IsSquare a :=
+  ⟨fun ⟨r, h⟩ ↦ ⟨r.toMul, congrArg Additive.toMul h⟩,
+    fun ⟨r, h⟩ ↦ ⟨.ofMul r, congrArg Additive.ofMul h⟩⟩
 
 @[simp]
-lemma isSquare_toMul_iff {a : Additive α} : IsSquare (a.toMul) ↔ Even a := Iff.rfl
+lemma isSquare_toMul_iff {a : Additive α} : IsSquare (a.toMul) ↔ Even a := even_ofMul_iff.symm
 
 instance Additive.instDecidablePredEven [DecidablePred (IsSquare : α → Prop)] :
     DecidablePred (Even : Additive α → Prop) :=
@@ -91,10 +93,12 @@ end Mul
 section Add
 variable [Add α]
 
-@[simp] lemma isSquare_ofAdd_iff {a : α} : IsSquare (Multiplicative.ofAdd a) ↔ Even a := Iff.rfl
+@[simp] lemma isSquare_ofAdd_iff {a : α} : IsSquare (Multiplicative.ofAdd a) ↔ Even a :=
+  ⟨fun ⟨r, h⟩ ↦ ⟨r.toAdd, congrArg Multiplicative.toAdd h⟩,
+    fun ⟨r, h⟩ ↦ ⟨.ofAdd r, congrArg Multiplicative.ofAdd h⟩⟩
 
 @[simp]
-lemma even_toAdd_iff {a : Multiplicative α} : Even a.toAdd ↔ IsSquare a := Iff.rfl
+lemma even_toAdd_iff {a : Multiplicative α} : Even a.toAdd ↔ IsSquare a := isSquare_ofAdd_iff.symm
 
 instance Multiplicative.instDecidablePredIsSquare [DecidablePred (Even : α → Prop)] :
     DecidablePred (IsSquare : Multiplicative α → Prop) :=

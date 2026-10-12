@@ -78,7 +78,7 @@ theorem tendsto_inv (a : G) : Tendsto Inv.inv (𝓝 a) (𝓝 a⁻¹) :=
   continuousAt_inv
 
 @[to_additive]
-instance OrderDual.instContinuousInv : ContinuousInv Gᵒᵈ := ‹ContinuousInv G›
+instance OrderDual.instContinuousInv : ContinuousInv Gᵒᵈ := inferInstanceAs (ContinuousInv G)
 
 @[to_additive]
 instance Prod.continuousInv [TopologicalSpace H] [Inv H] [ContinuousInv H] :
@@ -153,10 +153,10 @@ alias isClosed_setOf_map_neg := isClosed_setOfPred_map_neg
 end PointwiseLimits
 
 instance [TopologicalSpace H] [Inv H] [ContinuousInv H] : ContinuousNeg (Additive H) where
-  continuous_neg := @continuous_inv H _ _ _
+  continuous_neg := continuous_ofMul.comp <| continuous_inv.comp continuous_toMul
 
 instance [TopologicalSpace H] [Neg H] [ContinuousNeg H] : ContinuousInv (Multiplicative H) where
-  continuous_inv := @continuous_neg H _ _ _
+  continuous_inv := continuous_ofAdd.comp <| continuous_neg.comp continuous_toAdd
 
 end ContinuousInv
 

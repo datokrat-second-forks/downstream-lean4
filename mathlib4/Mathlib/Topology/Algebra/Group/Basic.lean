@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Group.Subgroup.Pointwise
 public import Mathlib.Topology.Algebra.Group.ContinuousInv
+public import Mathlib.Topology.Homeomorph.TransferInstance
 
 /-!
 # Basic results on topological groups
@@ -279,6 +280,29 @@ protected theorem Topology.IsInducing.isTopologicalGroup {F : Type*} [Group H] [
 @[to_additive (attr := deprecated (since := "2026-08-21"))]
 protected alias Topology.IsInducing.topologicalGroup := Topology.IsInducing.isTopologicalGroup
 
+/-- `IsTopologicalGroup` holds on both sides of a canonical equivalence, for the transported
+topology and multiplication. -/
+@[to_additive (attr := transport) /-- `IsTopologicalAddGroup` holds on both sides of a canonical
+equivalence, for the transported topology and addition. -/]
+protected abbrev IsTopologicalGroup.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] [iβ : Group β] {tα : TopologicalSpace α} {iα : Group α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hm : iα.toMul = (Mul.canonicalCongr e).invFun iβ.toMul) :
+    Lean.CanonicalEquivalence (IsTopologicalGroup α) (IsTopologicalGroup β) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  have hmul (x y : α) : x * y = e.invFun (e.toFun x * e.toFun y) :=
+    congrArg (fun m : Mul α ↦ m.mul x y) hm
+  exact {
+    toFun _ := IsInducing.isTopologicalGroup
+      (MonoidHom.mk' e.invFun fun a b ↦ by rw [hmul, e.right_inv a, e.right_inv b])
+      e.homeomorph.symm.isInducing
+    invFun _ := IsInducing.isTopologicalGroup
+      (MonoidHom.mk' e.toFun fun x y ↦ by rw [hmul, e.right_inv])
+      e.homeomorph.isInducing
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 @[to_additive]
 theorem isTopologicalGroup_induced {F : Type*} [Group H] [FunLike F H G] [MonoidHomClass F H G]
     (f : F) :
@@ -410,11 +434,11 @@ end FilterMul
 
 instance {G} [TopologicalSpace G] [Group G] [IsTopologicalGroup G] :
     IsTopologicalAddGroup (Additive G) where
-  continuous_neg := @continuous_inv G _ _ _
+  continuous_neg := continuous_ofMul.comp <| continuous_inv.comp continuous_toMul
 
 instance {G} [TopologicalSpace G] [AddGroup G] [IsTopologicalAddGroup G] :
     IsTopologicalGroup (Multiplicative G) where
-  continuous_inv := @continuous_neg G _ _ _
+  continuous_inv := continuous_ofAdd.comp <| continuous_neg.comp continuous_toAdd
 
 section LatticeOps
 

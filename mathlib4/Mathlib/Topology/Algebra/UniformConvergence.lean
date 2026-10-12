@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Topology.Algebra.UniformMulAction
 public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Module.Transport
 public import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
 
 /-!
@@ -231,7 +232,7 @@ protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : �
 @[to_additive]
 protected theorem UniformFun.hasBasis_nhds_one :
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V =>
-      { f : α → G | ∀ x, f x ∈ V } :=
+      { f : α →ᵤ G | ∀ x, toFun f x ∈ V } :=
   UniformFun.hasBasis_nhds_one_of_basis (basis_sets _)
 
 /-- Let `𝔖 : Set (Set α)`. If `G` is a uniform group, then `α →ᵤ[𝔖] G` is a uniform group as
@@ -263,28 +264,28 @@ protected theorem UniformOnFun.hasBasis_nhds_one (𝔖 : Set <| Set α) (h𝔖�
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
-      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, toFun 𝔖 f x ∈ SV.2 } :=
   UniformOnFun.hasBasis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
 
 @[to_additive (attr := simp)]
 lemma UniformOnFun.ofFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
     ofFun 𝔖 (∏ i ∈ I, f i) = ∏ i ∈ I, ofFun 𝔖 (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' (ofFun 𝔖) fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
-lemma UniformOnFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
+lemma UniformOnFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α →ᵤ[𝔖] β} (I : Finset ι) :
     toFun 𝔖 (∏ i ∈ I, f i) = ∏ i ∈ I, toFun 𝔖 (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' (toFun 𝔖) fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
 lemma UniformFun.ofFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
     ofFun (∏ i ∈ I, f i) = ∏ i ∈ I, ofFun (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' ofFun fun _ _ ↦ rfl) f I
 
 @[to_additive (attr := simp)]
-lemma UniformFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α → β} (I : Finset ι) :
+lemma UniformFun.toFun_prod {β : Type*} [CommMonoid β] {f : ι → α →ᵤ β} (I : Finset ι) :
     toFun (∏ i ∈ I, f i) = ∏ i ∈ I, toFun (f i) :=
-  rfl
+  map_prod (MulEquiv.mk' toFun fun _ _ ↦ rfl) f I
 
 end Group
 

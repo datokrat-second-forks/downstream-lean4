@@ -151,8 +151,8 @@ variable [Semiring k] [Zero G] [NonAssocSemiring R]
 @[simp]
 theorem liftNC_one {g_hom : Type*}
     [FunLike g_hom (Multiplicative G) R] [OneHomClass g_hom (Multiplicative G) R]
-    (f : k →+* R) (g : g_hom) : liftNC (f : k →+ R) g 1 = 1 :=
-  MonoidAlgebra.liftNC_one f g
+    (f : k →+* R) (g : g_hom) : liftNC (f : k →+ R) g 1 = 1 := by
+  simp [one_def]
 
 end One
 

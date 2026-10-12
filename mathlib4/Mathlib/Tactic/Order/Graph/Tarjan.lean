@@ -87,6 +87,6 @@ def findSCCs (g : Graph) : Std.HashMap Nat Nat :=
     onStack := ∅
     time := 0
   }
-  (findSCCsImp g).run s |>.snd.lowlink
+  (findSCCsImp g).run s |>.run.snd.lowlink
 
 end Mathlib.Tactic.Order.Graph

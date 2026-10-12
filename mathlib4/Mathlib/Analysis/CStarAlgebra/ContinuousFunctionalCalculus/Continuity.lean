@@ -260,7 +260,8 @@ theorem continuousOn_cfc_setProd {s : Set 𝕜} (hs : IsCompact s) :
 
 open UniformOnFun in
 theorem continuousOn_cfc_setProd_nhdsSet [CompleteSpace A] {s : Set 𝕜} :
-    ContinuousOn (fun fa : (𝕜 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] 𝕜) × A ↦ cfc (toFun {s} fa.1) fa.2)
+    ContinuousOn (fun fa : (𝕜 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] 𝕜) × A ↦
+        cfc (toFun {t | IsCompact t ∧ t ⊆ s} fa.1) fa.2)
       ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s} ×ˢ
         {a | p a ∧ s ∈ 𝓝ˢ (spectrum 𝕜 a)}) := by
   refine continuousOn_of_locally_continuousOn fun (f, a) ⟨hf, ha, has⟩ ↦ ?_
@@ -444,7 +445,8 @@ theorem continuousOn_cfc_nnreal_setProd {s : Set ℝ≥0} (hs : IsCompact s) :
 
 open UniformOnFun in
 theorem continuousOn_cfc_nnreal_setProd_nhdsSet [CompleteSpace A] {s : Set ℝ≥0} :
-    ContinuousOn (fun fa : (ℝ≥0 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] ℝ≥0) × A ↦ cfc (toFun {s} fa.1) fa.2)
+    ContinuousOn (fun fa : (ℝ≥0 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] ℝ≥0) × A ↦
+        cfc (toFun {t | IsCompact t ∧ t ⊆ s} fa.1) fa.2)
       ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s} ×ˢ
         {a | 0 ≤ a ∧ s ∈ 𝓝ˢ (spectrum ℝ≥0 a)}) := by
   refine continuousOn_of_locally_continuousOn fun (f, a) ⟨hf, ha, has⟩ ↦ ?_
@@ -700,7 +702,7 @@ supremum metric (on `R →ᵤ[{quasispectrum R a}] R`) on those functions which 
 the quasispectrum and map zero to itself. -/
 lemma lipschitzOnWith_cfcₙ_fun (a : A) :
     LipschitzOnWith 1 (fun f ↦ cfcₙ (toFun {quasispectrum R a} f) a)
-      {f | ContinuousOn (toFun {quasispectrum R a} f) (quasispectrum R a) ∧ f 0 = 0} := by
+      {f | ContinuousOn (toFun {quasispectrum R a} f) (quasispectrum R a) ∧ toFun _ f 0 = 0} := by
   by_cases ha : p a
   · rintro f ⟨hf, hf0⟩ g ⟨hg, hg0⟩
     simp only
@@ -717,10 +719,10 @@ supremum metric (on `R →ᵤ[{s}] R`) on those functions which are continuous o
 the quasispectrum and map zero to itself. -/
 lemma lipschitzOnWith_cfcₙ_fun_of_subset (a : A) {s : Set R} (hs : quasispectrum R a ⊆ s) :
     LipschitzOnWith 1 (fun f ↦ cfcₙ (toFun {s} f) a)
-      {f | ContinuousOn (toFun {s} f) (s) ∧ f 0 = 0} := by
+      {f | ContinuousOn (toFun {s} f) (s) ∧ toFun _ f 0 = 0} := by
   have h₂ := lipschitzWith_one_ofFun_toFun' (𝔖 := {quasispectrum R a}) (𝔗 := {s}) (β := R)
     (by simpa)
-  have h₃ := h₂.lipschitzOnWith (s := {f | ContinuousOn (toFun {s} f) (s) ∧ f 0 = 0})
+  have h₃ := h₂.lipschitzOnWith (s := {f | ContinuousOn (toFun {s} f) (s) ∧ toFun _ f 0 = 0})
   simpa using! lipschitzOnWith_cfcₙ_fun R a |>.comp h₃ (fun f ↦ .imp_left fun hf ↦ hf.mono hs)
 
 end Isometric
@@ -791,15 +793,16 @@ Then `cfcₙ` is jointly continuous in both variables (i.e., continuous in its u
 set of pairs when the function space is equipped with the topology of uniform convergence on `s`. -/
 theorem continuousOn_cfcₙ_setProd {s : Set 𝕜} (hs : IsCompact s) :
     ContinuousOn (fun fa : (𝕜 →ᵤ[{s}] 𝕜) × A ↦ cfcₙ (toFun {s} fa.1) fa.2)
-      ({f | ContinuousOn (toFun {s} f) s ∧ f 0 = 0} ×ˢ {a | p a ∧ quasispectrum 𝕜 a ⊆ s}) :=
+      ({f | ContinuousOn (toFun {s} f) s ∧ toFun _ f 0 = 0} ×ˢ {a | p a ∧ quasispectrum 𝕜 a ⊆ s}) :=
   continuousOn_prod_of_continuousOn_lipschitzOnWith _ 1
     (fun f hf ↦ continuousOn_cfcₙ A hs ((toFun {s}) f) hf.1 hf.2)
     (fun a ⟨_, ha'⟩ ↦ lipschitzOnWith_cfcₙ_fun_of_subset a ha')
 
 open UniformOnFun in
 theorem continuousOn_cfcₙ_setProd_nhdsSet [CompleteSpace A] {s : Set 𝕜} :
-    ContinuousOn (fun fa : (𝕜 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] 𝕜) × A ↦ cfcₙ (toFun {s} fa.1) fa.2)
-      ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s ∧ f 0 = 0} ×ˢ
+    ContinuousOn (fun fa : (𝕜 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] 𝕜) × A ↦
+        cfcₙ (toFun {t | IsCompact t ∧ t ⊆ s} fa.1) fa.2)
+      ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s ∧ toFun _ f 0 = 0} ×ˢ
         {a | p a ∧ s ∈ 𝓝ˢ (quasispectrum 𝕜 a)}) := by
   refine continuousOn_of_locally_continuousOn fun (f, a) ⟨hf, ha, has⟩ ↦ ?_
   have hs := NonUnitalContinuousFunctionalCalculus.isCompact_quasispectrum (R := 𝕜) a
@@ -986,15 +989,17 @@ Then `cfcₙ` is jointly continuous in both variables (i.e., continuous in its u
 set of pairs when the function space is equipped with the topology of uniform convergence on `s`. -/
 theorem continuousOn_cfcₙ_nnreal_setProd {s : Set ℝ≥0} (hs : IsCompact s) :
     ContinuousOn (fun fa : (ℝ≥0 →ᵤ[{s}] ℝ≥0) × A ↦ cfcₙ (toFun {s} fa.1) fa.2)
-      ({f | ContinuousOn (toFun {s} f) s ∧ f 0 = 0} ×ˢ {a | 0 ≤ a ∧ quasispectrum ℝ≥0 a ⊆ s}) :=
+      ({f | ContinuousOn (toFun {s} f) s ∧ toFun _ f 0 = 0} ×ˢ
+        {a | 0 ≤ a ∧ quasispectrum ℝ≥0 a ⊆ s}) :=
   continuousOn_prod_of_continuousOn_lipschitzOnWith _ 1
     (fun f hf ↦ continuousOn_cfcₙ_nnreal A hs ((toFun {s}) f) hf.1 hf.2)
     (fun a ⟨_, ha'⟩ ↦ lipschitzOnWith_cfcₙ_fun_of_subset a ha')
 
 open UniformOnFun in
 theorem continuousOn_cfcₙ_nnreal_setProd_nhdsSet [CompleteSpace A] {s : Set ℝ≥0} :
-    ContinuousOn (fun fa : (ℝ≥0 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] ℝ≥0) × A ↦ cfcₙ (toFun {s} fa.1) fa.2)
-      ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s ∧ f 0 = 0} ×ˢ
+    ContinuousOn (fun fa : (ℝ≥0 →ᵤ[{t | IsCompact t ∧ t ⊆ s}] ℝ≥0) × A ↦
+        cfcₙ (toFun {t | IsCompact t ∧ t ⊆ s} fa.1) fa.2)
+      ({f | ContinuousOn (toFun {t | IsCompact t ∧ t ⊆ s} f) s ∧ toFun _ f 0 = 0} ×ˢ
         {a | 0 ≤ a ∧ s ∈ 𝓝ˢ (quasispectrum ℝ≥0 a)}) := by
   refine continuousOn_of_locally_continuousOn fun (f, a) ⟨hf, ha, has⟩ ↦ ?_
   have hs := NonUnitalContinuousFunctionalCalculus.isCompact_quasispectrum (R := ℝ≥0) a

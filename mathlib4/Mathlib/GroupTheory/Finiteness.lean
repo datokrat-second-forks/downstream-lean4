@@ -67,15 +67,26 @@ theorem Submonoid.fg_iff_add_fg (P : Submonoid M) : P.FG ↔ P.toAddSubmonoid.FG
   ⟨fun h =>
     let ⟨S, hS, hf⟩ := (Submonoid.fg_iff _).1 h
     (AddSubmonoid.fg_iff _).mpr
-      ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.toAddSubmonoid_closure, hS], hf⟩,
+      ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.toAddSubmonoid_closure, hS],
+        hf.preimage Additive.toMul.injective.injOn⟩,
     fun h =>
     let ⟨T, hT, hf⟩ := (AddSubmonoid.fg_iff _).1 h
     (Submonoid.fg_iff _).mpr
-      ⟨Additive.ofMul ⁻¹' T, by simp [← AddSubmonoid.toSubmonoid'_closure, hT], hf⟩⟩
+      ⟨Additive.ofMul ⁻¹' T, by simp [← AddSubmonoid.toSubmonoid'_closure, hT],
+        hf.preimage Additive.ofMul.injective.injOn⟩⟩
 
 theorem AddSubmonoid.fg_iff_mul_fg {M : Type*} [AddMonoid M] (P : AddSubmonoid M) :
-    P.FG ↔ P.toSubmonoid.FG := by
-  convert! (Submonoid.fg_iff_add_fg (toSubmonoid P)).symm
+    P.FG ↔ P.toSubmonoid.FG :=
+  ⟨fun h =>
+    let ⟨S, hS, hf⟩ := (AddSubmonoid.fg_iff _).1 h
+    (Submonoid.fg_iff _).mpr
+      ⟨Multiplicative.toAdd ⁻¹' S, by simp [← AddSubmonoid.toSubmonoid_closure, hS],
+        hf.preimage Multiplicative.toAdd.injective.injOn⟩,
+    fun h =>
+    let ⟨T, hT, hf⟩ := (Submonoid.fg_iff _).1 h
+    (AddSubmonoid.fg_iff _).mpr
+      ⟨Multiplicative.ofAdd ⁻¹' T, by simp [← Submonoid.toAddSubmonoid'_closure, hT],
+        hf.preimage Multiplicative.ofAdd.injective.injOn⟩⟩
 
 @[to_additive]
 theorem Submonoid.FG.bot : FG (⊥ : Submonoid M) :=

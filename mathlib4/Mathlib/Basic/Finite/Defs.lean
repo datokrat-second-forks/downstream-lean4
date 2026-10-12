@@ -110,6 +110,15 @@ theorem Finite.exists_equiv_fin (α : Sort*) [h : Finite α] : ∃ n : ℕ, None
 theorem Finite.of_equiv (α : Sort*) [h : Finite α] (f : α ≃ β) : Finite β :=
   let ⟨e⟩ := h; ⟨f.symm.trans e⟩
 
+/-- `Finite` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Finite.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Finite α) (Finite β) where
+  toFun _ := .of_equiv _ e.toEquiv
+  invFun _ := .of_equiv _ e.toEquiv.symm
+  left_inv _ := rfl
+  right_inv _ := rfl
+
 theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 
@@ -145,6 +154,15 @@ theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
 
 theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
   not_finite_iff_infinite.symm.trans <| e.finite_iff.not.trans not_finite_iff_infinite
+
+/-- `Infinite` holds on both sides of a canonical equivalence. -/
+@[transport]
+protected abbrev Infinite.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (Infinite α) (Infinite β) where
+  toFun h := e.toEquiv.infinite_iff.1 h
+  invFun h := e.toEquiv.infinite_iff.2 h
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 instance [Infinite α] : Infinite (PLift α) :=
   Equiv.plift.infinite_iff.2 ‹_›

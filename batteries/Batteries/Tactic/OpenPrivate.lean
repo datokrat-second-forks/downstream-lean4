@@ -28,9 +28,7 @@ def Meta.collectPrivateIn [Monad m] [MonadEnv m] [MonadError m]
 
 /-- Get the module index given a module name. -/
 def Environment.moduleIdxForModule? (env : Environment) (mod : Name) : Option ModuleIdx :=
-  (env.allImportedModuleNames.idxOf? mod).map fun idx => idx
-
-instance : DecidableEq ModuleIdx := instDecidableEqNat
+  (env.allImportedModuleNames.idxOf? mod).map ModuleIdx.mk
 
 /-- Get the list of declarations in a module (referenced by index). -/
 def Environment.declsInModuleIdx (env : Environment) (idx : ModuleIdx) : List Name :=
@@ -70,7 +68,7 @@ def elabOpenPrivateLike (ids : Array Ident) (tgts mods : Option (Array Ident))
         msg := msg ++ m!"{mkConst c (info.levelParams.map mkLevelParam)}\n"
       else if let some name := privateToUserName? c then
         msg := msg ++ s!"{name}\n"
-    msg
+    return msg
   if ids.isEmpty && !names.isEmpty then
     logInfo (appendNames "found private declarations:\n")
   let mut decls := #[]
@@ -110,7 +108,7 @@ def elabOpenPrivateLike (ids : Array Ident) (tgts mods : Option (Array Ident))
     let mut openDecls := scope.openDecls
     for decl in decls do
       openDecls := decl::openDecls
-    { scope with openDecls := openDecls }
+    return { scope with openDecls := openDecls }
 
 /--
 The command `open private a b c in foo bar` will look for private definitions named `a`, `b`, `c`

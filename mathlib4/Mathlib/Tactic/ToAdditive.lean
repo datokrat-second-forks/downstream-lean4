@@ -23,6 +23,8 @@ attribute [to_additive existing Zero.toOfNat0] One.toOfNat1
 attribute [to_additive existing Zero.ofOfNat0] One.ofOfNat1
 
 attribute [to_additive existing] Inv Mul HMul instHMul Div HDiv instHDiv
+attribute [to_additive existing]
+  One.canonicalCongr Mul.canonicalCongr Inv.canonicalCongr Div.canonicalCongr
 
 set_option linter.translate.warnInvalid false in
 attribute [to_additive (reorder := α β) SMul] Pow

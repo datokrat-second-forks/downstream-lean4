@@ -51,9 +51,9 @@ deriving instance ToBinary, FromBinary for DeclarationRange
 deriving instance ToBinary, FromBinary for MessageSeverity
 deriving instance ToBinary, FromBinary for Name
 
-instance [ToBinary α] : ToBinary (NameMap α) := .via Std.TreeMap.toArray
+instance [ToBinary α] : ToBinary (NameMap α) := .via NameMap.toArray
 instance [FromBinary α] : FromBinary (NameMap α) :=
-  .via (Std.TreeMap.ofArray · Name.quickCmp)
+  .via NameMap.ofArray
 
 deriving instance ToBinary, FromBinary for DefinitionSafety
 deriving instance ToBinary, FromBinary for ReducibilityHints

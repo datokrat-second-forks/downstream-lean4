@@ -142,7 +142,7 @@ protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G
   cases x <;> simp [Sum.traverse, functor_norm] <;> rfl
 
 protected theorem id_traverse {σ α} (x : σ ⊕ α) :
-    Sum.traverse (pure : α → Id α) x = x := by cases x <;> rfl
+    Sum.traverse (pure : α → Id α) x = pure x := by cases x <;> rfl
 
 variable [LawfulApplicative G]
 

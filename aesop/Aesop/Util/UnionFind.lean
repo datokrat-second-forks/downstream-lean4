@@ -32,7 +32,8 @@ def add (x : α) (u : UnionFind α) : UnionFind α := Id.run do
   if u.toRep.contains x then
     return u
   let rep := u.parents.size.toUSize
-  { parents := u.parents.push rep
+  return {
+    parents := u.parents.push rep
     sizes := u.parents.push 1
     toRep := u.toRep.insert x rep }
 
@@ -63,8 +64,8 @@ partial def find? (x : α) (u : UnionFind α) : Option USize × UnionFind α :=
 
 private unsafe def mergeUnsafe (x y : α) (u : UnionFind α) :
     UnionFind α := Id.run do
-  let (some xRep, u) := u.find? x | u
-  let (some yRep, u) := u.find? y | u
+  let (some xRep, u) := u.find? x | return u
+  let (some yRep, u) := u.find? y | return u
   if xRep == yRep then
     return u
   else

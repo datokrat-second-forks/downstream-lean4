@@ -169,22 +169,23 @@ noncomputable
 def LocallyFiniteOrder.orderMonoidEquiv (G : Type*) [CommGroup G] [LinearOrder G]
     [IsOrderedMonoid G] [LocallyFiniteOrder G] [Nontrivial G] :
     G ≃*o Multiplicative ℤ :=
-  have : LocallyFiniteOrder (Additive G) := ‹LocallyFiniteOrder G›
-  (orderAddMonoidEquiv (Additive G)).toMultiplicative
+  have : LocallyFiniteOrder (Additive G) := inferInstanceAs (LocallyFiniteOrder G)
+  OrderAddMonoidIso.toMultiplicativeRight (orderAddMonoidEquiv (Additive G))
 
 /-- Any linearly ordered abelian group that is locally finite embeds into `Multiplicative ℤ`. -/
 noncomputable
 def LocallyFiniteOrder.orderMonoidHom (G : Type*) [CommGroup G] [LinearOrder G]
     [IsOrderedMonoid G] [LocallyFiniteOrder G] :
     G →*o Multiplicative ℤ :=
-  have : LocallyFiniteOrder (Additive G) := ‹LocallyFiniteOrder G›
-  ⟨(orderAddMonoidHom (Additive G)).toMultiplicative, (orderAddMonoidHom (Additive G)).2⟩
+  have : LocallyFiniteOrder (Additive G) := inferInstanceAs (LocallyFiniteOrder G)
+  ⟨AddMonoidHom.toMultiplicativeRight (orderAddMonoidHom (Additive G)).toAddMonoidHom,
+    fun _ _ h ↦ (orderAddMonoidHom (Additive G)).monotone' h⟩
 
 lemma LocallyFiniteOrder.orderMonoidHom_strictMono {G : Type*} [CommGroup G] [LinearOrder G]
     [IsOrderedMonoid G] [LocallyFiniteOrder G] :
     StrictMono (orderMonoidHom G) :=
-  let : LocallyFiniteOrder (Additive G) := ‹LocallyFiniteOrder G›
-  fun a b h ↦ orderAddMonoidHom_strictMono h
+  let : LocallyFiniteOrder (Additive G) := inferInstanceAs (LocallyFiniteOrder G)
+  fun _ _ h ↦ orderAddMonoidHom_strictMono (G := Additive G) h
 
 open scoped WithZero in
 /-- Any nontrivial linearly ordered abelian group with zero that is locally finite

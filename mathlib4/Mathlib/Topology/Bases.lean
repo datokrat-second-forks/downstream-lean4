@@ -9,6 +9,7 @@ public import Mathlib.Data.Set.Constructions
 public import Mathlib.Order.Filter.AtTopBot.CountablyGenerated
 public import Mathlib.Topology.Constructions
 public import Mathlib.Topology.ContinuousOn
+public import Mathlib.Topology.Homeomorph.TransferInstance
 public import Mathlib.Topology.NhdsWithin
 
 /-!
@@ -399,6 +400,22 @@ protected theorem _root_.DenseRange.separableSpace [SeparableSpace α] [Topologi
   let ⟨s, s_cnt, s_dense⟩ := exists_countable_dense α
   ⟨⟨f '' s, Countable.image s_cnt f, h.dense_image h' s_dense⟩⟩
 
+/-- `SeparableSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev SeparableSpace.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (SeparableSpace X) (SeparableSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.surjective.denseRange.separableSpace e.homeomorph.continuous
+    invFun _ :=
+      e.homeomorph.symm.surjective.denseRange.separableSpace e.homeomorph.symm.continuous
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 theorem _root_.Topology.IsQuotientMap.separableSpace [SeparableSpace α] [TopologicalSpace β]
     {f : α → β} (hf : IsQuotientMap f) : SeparableSpace β :=
   hf.surjective.denseRange.separableSpace hf.continuous
@@ -740,6 +757,21 @@ protected theorem _root_.Topology.IsEmbedding.firstCountableTopology {β : Type*
     [TopologicalSpace β] [FirstCountableTopology β] {f : α → β} (hf : IsEmbedding f) :
     FirstCountableTopology α :=
   hf.1.firstCountableTopology
+
+/-- `FirstCountableTopology` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev _root_.FirstCountableTopology.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (FirstCountableTopology X) (FirstCountableTopology Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isInducing.firstCountableTopology
+    invFun _ := e.homeomorph.isInducing.firstCountableTopology
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 section FirstCountableTopology
 
@@ -1183,6 +1215,21 @@ protected theorem Topology.IsEmbedding.secondCountableTopology
     [TopologicalSpace β] [SecondCountableTopology β]
     (hf : IsEmbedding f) : SecondCountableTopology α :=
   hf.1.secondCountableTopology
+
+/-- `SecondCountableTopology` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev SecondCountableTopology.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (SecondCountableTopology X) (SecondCountableTopology Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isInducing.secondCountableTopology
+    invFun _ := e.homeomorph.isInducing.secondCountableTopology
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 protected theorem Topology.IsEmbedding.separableSpace
     [TopologicalSpace β] [SecondCountableTopology β] {f : α → β} (hf : IsEmbedding f) :

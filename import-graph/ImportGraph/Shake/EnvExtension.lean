@@ -67,19 +67,19 @@ a public-facing type. -/
 
 @[inline] public def resetNewExtraModUses (env : Environment) :
     Environment :=
-  PersistentEnvExtension.setState extraModUses env ([], {})
+  PersistentEnvExtension.setState extraModUses.toPersistentEnvExtension env ([], {})
 
 @[inline] public def getNewExtraModUses (env : Environment)
     (asyncMode : EnvExtension.AsyncMode := extraModUsesAsyncMode)
     (asyncDecl : Name := Name.anonymous) :
     List ExtraModUse × PHashSet ExtraModUse :=
-  PersistentEnvExtension.getState extraModUses env asyncMode asyncDecl
+  PersistentEnvExtension.getState extraModUses.toPersistentEnvExtension env asyncMode asyncDecl
 
 @[inline] public def setNewExtraModUses (env : Environment)
     (entries : List ExtraModUse)
     (state : PHashSet ExtraModUse) :
     Environment :=
-  PersistentEnvExtension.setState extraModUses env (entries, state)
+  PersistentEnvExtension.setState extraModUses.toPersistentEnvExtension env (entries, state)
 
 /-- Gets and resets the new extra mod uses in the `extraModUses` extension. Note that the state
 does not include imported entries. -/
@@ -167,7 +167,7 @@ public def copyExtraModUses (src dest : Environment)
   for entry in extraModUses.getEntries src srcAsyncMode do
     if !(extraModUses.getState env destAsyncMode destAsyncDecl).contains entry then
       env := extraModUses.addEntry env entry destAsyncMode destAsyncDecl
-  env
+  return env
 
 /-- Copies new indirect mod uses from `src` and adds them to `dest`. Does not erase extra mod uses
 already in `dest`. -/

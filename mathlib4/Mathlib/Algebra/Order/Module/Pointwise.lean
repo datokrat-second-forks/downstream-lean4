@@ -88,16 +88,26 @@ variable [Field α] [LinearOrder α] [IsStrictOrderedRing α]
   [Module α β] [PosSMulMono α β] {s : Set β}
   {a : α}
 
-@[simp] lemma lowerBounds_smul_of_neg (ha : a < 0) : lowerBounds (a • s) = a • upperBounds s :=
-  (OrderIso.smulRightDual β ha).upperBounds_image
+/-- The image of `t` under `OrderIso.smulRightDual`, pulled back along `toDual`, is the pointwise
+scalar multiple `a • t`. -/
+lemma preimage_toDual_image_smulRightDual (ha : a < 0) (t : Set β) :
+    ⇑OrderDual.toDual ⁻¹' (OrderIso.smulRightDual β ha '' t) = a • t :=
+  Set.ext fun _ ↦ exists_congr fun _ ↦ and_congr_right' OrderDual.toDual_inj
 
-@[simp] lemma upperBounds_smul_of_neg (ha : a < 0) : upperBounds (a • s) = a • lowerBounds s :=
-  (OrderIso.smulRightDual β ha).lowerBounds_image
+@[simp] lemma lowerBounds_smul_of_neg (ha : a < 0) : lowerBounds (a • s) = a • upperBounds s := by
+  simp only [← preimage_toDual_image_smulRightDual ha, lowerBounds_preimage_toDual]
+  exact congrArg _ (OrderIso.smulRightDual β ha).upperBounds_image
 
-@[simp] lemma bddBelow_smul_iff_of_neg (ha : a < 0) : BddBelow (a • s) ↔ BddAbove s :=
-  (OrderIso.smulRightDual β ha).bddAbove_image
+@[simp] lemma upperBounds_smul_of_neg (ha : a < 0) : upperBounds (a • s) = a • lowerBounds s := by
+  simp only [← preimage_toDual_image_smulRightDual ha, upperBounds_preimage_toDual]
+  exact congrArg _ (OrderIso.smulRightDual β ha).lowerBounds_image
 
-@[simp] lemma bddAbove_smul_iff_of_neg (ha : a < 0) : BddAbove (a • s) ↔ BddBelow s :=
-  (OrderIso.smulRightDual β ha).bddBelow_image
+@[simp] lemma bddBelow_smul_iff_of_neg (ha : a < 0) : BddBelow (a • s) ↔ BddAbove s := by
+  rw [← preimage_toDual_image_smulRightDual ha, bddBelow_preimage_toDual]
+  exact (OrderIso.smulRightDual β ha).bddAbove_image
+
+@[simp] lemma bddAbove_smul_iff_of_neg (ha : a < 0) : BddAbove (a • s) ↔ BddBelow s := by
+  rw [← preimage_toDual_image_smulRightDual ha, bddAbove_preimage_toDual]
+  exact (OrderIso.smulRightDual β ha).bddBelow_image
 
 end LinearOrderedField

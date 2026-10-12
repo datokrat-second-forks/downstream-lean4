@@ -496,7 +496,7 @@ section Configuration
           (longName    := "version")
           (description := "Prints the version.")
         fixedFlags := fixedFlags.push versionFlag
-      { m with flags := fixedFlags ++ m.flags }
+      return { m with flags := fixedFlags ++ m.flags }
   end Cmd.Meta
 
   /--
@@ -974,7 +974,7 @@ section Configuration
         let extension? := do extensionIndex.get? (← c.originalFullName?) |> Option.join
         let subCmds := c.subCmds.map loop
         .init c.meta c.run subCmds extension?
-      loop c |>.updateParentNames |> prependOriginalParentNames
+      return loop c |>.updateParentNames |> prependOriginalParentNames
     where
       collectExtensions (currentCmd : Cli.Cmd) : Array (String × Option Extension) := Id.run do
         let mut extensions := #[(currentCmd.meta.fullName, currentCmd.extension?)]
@@ -985,7 +985,7 @@ section Configuration
         let parentNames := original.meta.parentNames ++ currentCmd.meta.parentNames
         let «meta» := { currentCmd.meta with parentNames := parentNames }
         let subCmds := currentCmd.subCmds.map prependOriginalParentNames
-        currentCmd.update («meta» := «meta») (subCmds := subCmds)
+        return currentCmd.update («meta» := «meta») (subCmds := subCmds)
 
     /-- Converts `c` back into `Cli.Cmd` while retaining none of the extensions. -/
     partial def toFullCmdWithoutExtensions (c : ExtendableCmd) : Cli.Cmd :=
@@ -1487,12 +1487,12 @@ section Parsing
         for parsedFlag in parsedFlags do
           pushParsedFlag parsedFlag
         return true
-      let tryRead parse : OptionT ParseM Parsed.Flag := parse
+      let tryRead parse : OptionT ParseM Parsed.Flag := .mk parse
       let some parsedFlag ←
-          tryRead readEqFlag?     <|>
+          (tryRead readEqFlag?     <|>
           tryRead readWsFlag?     <|>
           tryRead readPrefixFlag? <|>
-          tryRead readParamlessFlag?
+          tryRead readParamlessFlag?).run
         | return false
       pushParsedFlag parsedFlag
       return true
@@ -1530,7 +1530,7 @@ section Parsing
                       <||> parseVariableArg
 
     private def parse (c : Cmd) (args : List String) : Except ParseError (Cmd × Parsed) :=
-      parse' args.toArray |>.run' {
+      Id.run <| (parse'.run.run args.toArray).run' {
         idx                  := 0
         cmd                  := c
         parent?              := none
@@ -1571,7 +1571,7 @@ section Parsing
       let c := c.update (subCmds := subCmds)
       let some extension := c.extension?
         | return c
-      extension.extend (.ofFullCmd c) |>.toFullCmd c
+      return extension.extend (.ofFullCmd c) |>.toFullCmd c
 
     /--
     Processes `args` by applying all extensions in `c`, `Cmd.parse?`ing the input according to `c`

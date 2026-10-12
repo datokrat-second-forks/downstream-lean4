@@ -76,6 +76,23 @@ theorem MetricSpace.ext {α : Type*} {m m' : MetricSpace α} (h : m.toDist = m'.
     m = m' := by
   cases m; cases m'; congr; ext1; assumption
 
+/-- Metric space structures correspond along a canonical equivalence. -/
+@[transport]
+protected abbrev MetricSpace.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (MetricSpace α) (MetricSpace β) where
+  toFun m :=
+    MetricSpace.mk
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).toFun m.toPseudoMetricSpace)
+      (eq_of_dist_eq_zero := fun {x y} h ↦
+        e.invFun_injective (m.eq_of_dist_eq_zero (x := e.invFun x) (y := e.invFun y) h))
+  invFun m :=
+    MetricSpace.mk
+      (toPseudoMetricSpace := (PseudoMetricSpace.canonicalCongr e).invFun m.toPseudoMetricSpace)
+      (eq_of_dist_eq_zero := fun {x y} h ↦
+        e.toFun_injective (m.eq_of_dist_eq_zero (x := e.toFun x) (y := e.toFun y) h))
+  left_inv m := MetricSpace.ext ((Dist.canonicalCongr e).left_inv m.toDist)
+  right_inv m := MetricSpace.ext ((Dist.canonicalCongr e).right_inv m.toDist)
+
 /-- Construct a metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
@@ -224,8 +241,8 @@ section
 
 variable [Dist X]
 
-instance : Dist (Additive X) := ‹Dist X›
-instance : Dist (Multiplicative X) := ‹Dist X›
+instance : Dist (Additive X) := inferInstanceAs (Dist X)
+instance : Dist (Multiplicative X) := inferInstanceAs (Dist X)
 
 @[simp] theorem dist_ofMul (a b : X) : dist (ofMul a) (ofMul b) = dist a b := rfl
 
@@ -237,8 +254,8 @@ instance : Dist (Multiplicative X) := ‹Dist X›
 
 end
 
-instance [MetricSpace X] : MetricSpace (Additive X) := ‹MetricSpace X›
-instance [MetricSpace X] : MetricSpace (Multiplicative X) := ‹MetricSpace X›
+instance [MetricSpace X] : MetricSpace (Additive X) := inferInstanceAs (MetricSpace X)
+instance [MetricSpace X] : MetricSpace (Multiplicative X) := inferInstanceAs (MetricSpace X)
 
 /-!
 ### Order dual
@@ -252,7 +269,7 @@ section
 
 variable [Dist X]
 
-instance : Dist Xᵒᵈ := ‹Dist X›
+instance : Dist Xᵒᵈ := inferInstanceAs (Dist X)
 
 @[simp] theorem dist_toDual (a b : X) : dist (toDual a) (toDual b) = dist a b := rfl
 
@@ -260,4 +277,4 @@ instance : Dist Xᵒᵈ := ‹Dist X›
 
 end
 
-instance [MetricSpace X] : MetricSpace Xᵒᵈ := ‹MetricSpace X›
+instance [MetricSpace X] : MetricSpace Xᵒᵈ := inferInstanceAs (MetricSpace X)

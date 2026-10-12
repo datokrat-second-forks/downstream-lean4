@@ -104,8 +104,8 @@ open Additive Multiplicative
 section Norm
 variable [Norm E]
 
-instance Additive.toNorm : Norm (Additive E) := ‹Norm E›
-instance Multiplicative.toNorm : Norm (Multiplicative E) := ‹Norm E›
+instance Additive.toNorm : Norm (Additive E) := inferInstanceAs (Norm E)
+instance Multiplicative.toNorm : Norm (Multiplicative E) := inferInstanceAs (Norm E)
 
 @[simp] lemma norm_toMul (x : Additive E) : ‖(x.toMul : E)‖ = ‖x‖ := rfl
 
@@ -120,9 +120,9 @@ end Norm
 section NNNorm
 variable [NNNorm E]
 
-instance Additive.toNNNorm : NNNorm (Additive E) := ‹NNNorm E›
+instance Additive.toNNNorm : NNNorm (Additive E) := inferInstanceAs (NNNorm E)
 
-instance Multiplicative.toNNNorm : NNNorm (Multiplicative E) := ‹NNNorm E›
+instance Multiplicative.toNNNorm : NNNorm (Multiplicative E) := inferInstanceAs (NNNorm E)
 
 @[simp] lemma nnnorm_toMul (x : Additive E) : ‖(x.toMul : E)‖₊ = ‖x‖₊ := rfl
 
@@ -181,8 +181,9 @@ open OrderDual
 section Norm
 variable [Norm E]
 
-instance OrderDual.toNorm : Norm Eᵒᵈ where
-  norm x := ‖ofDual x‖
+-- was `where norm x := ‖ofDual x‖`, but `ofDual` is only implicit-reducible, so that norm did not
+-- agree with `SeminormedAddCommGroup.toNorm` at instance transparency (a diamond)
+instance OrderDual.toNorm : Norm Eᵒᵈ := inferInstanceAs (Norm E)
 
 @[simp] lemma norm_toDual (x : E) : ‖toDual x‖ = ‖x‖ := rfl
 
@@ -193,8 +194,8 @@ end Norm
 section NNNorm
 variable [NNNorm E]
 
-instance OrderDual.toNNNorm : NNNorm Eᵒᵈ where
-  nnnorm x := ‖ofDual x‖₊
+-- was `where nnnorm x := ‖ofDual x‖₊`; see `OrderDual.toNorm`
+instance OrderDual.toNNNorm : NNNorm Eᵒᵈ := inferInstanceAs (NNNorm E)
 
 @[simp] lemma nnnorm_toDual (x : E) : ‖toDual x‖₊ = ‖x‖₊ := rfl
 

@@ -274,6 +274,60 @@ theorem UniformSpace.replaceTopology_eq {α : Type*} [i : TopologicalSpace α] (
     (h : i = u.toTopologicalSpace) : u.replaceTopology h = u :=
   UniformSpace.ext rfl
 
+/-- Uniform structures correspond along a canonical equivalence: a relation is an entourage if its
+preimage is. The topology is that of `TopologicalSpace.canonicalCongr`. -/
+@[transport]
+protected abbrev UniformSpace.canonicalCongr (e : Lean.CanonicalEquivalence α β) :
+    Lean.CanonicalEquivalence (UniformSpace α) (UniformSpace β) where
+  toFun u :=
+    UniformSpace.mk
+      (toTopologicalSpace := (TopologicalSpace.canonicalCongr e).toFun u.toTopologicalSpace)
+      (uniformity := u.uniformity.map (Prod.map e.toFun e.toFun))
+      (symm := tendsto_map'_iff.2 (tendsto_map.comp u.symm))
+      (comp := by
+        rw [map_eq_comap_of_inverse (m := Prod.map e.toFun e.toFun)
+          (n := Prod.map e.invFun e.invFun)
+          (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))
+          (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))]
+        refine le_trans ?_ (comap_mono u.comp)
+        rw [comap_lift'_eq2 (g := fun s ↦ s ○ s) (monotone_id.relComp monotone_id), comap_lift'_eq]
+        exact lift'_mono' fun s _ ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ ↦ ⟨e.invFun x, h₁, h₂⟩)
+      (nhds_eq_comap_uniformity := fun x ↦ by
+        change @nhds β (u.toTopologicalSpace.coinduced e.toEquiv) x = _
+        rw [← e.toEquiv.induced_symm, nhds_induced, u.nhds_eq_comap_uniformity,
+          map_eq_comap_of_inverse (m := Prod.map e.toFun e.toFun)
+            (n := Prod.map e.invFun e.invFun)
+            (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))
+            (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _)), comap_comap, comap_comap]
+        rfl)
+  invFun u :=
+    UniformSpace.mk
+      (toTopologicalSpace := (TopologicalSpace.canonicalCongr e).invFun u.toTopologicalSpace)
+      (uniformity := u.uniformity.map (Prod.map e.invFun e.invFun))
+      (symm := tendsto_map'_iff.2 (tendsto_map.comp u.symm))
+      (comp := by
+        rw [map_eq_comap_of_inverse (m := Prod.map e.invFun e.invFun)
+          (n := Prod.map e.toFun e.toFun)
+          (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))
+          (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _))]
+        refine le_trans ?_ (comap_mono u.comp)
+        rw [comap_lift'_eq2 (g := fun s ↦ s ○ s) (monotone_id.relComp monotone_id), comap_lift'_eq]
+        exact lift'_mono' fun s _ ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ ↦ ⟨e.toFun x, h₁, h₂⟩)
+      (nhds_eq_comap_uniformity := fun x ↦ by
+        change @nhds α (u.toTopologicalSpace.coinduced e.toEquiv.symm) x = _
+        rw [← e.toEquiv.symm.induced_symm, nhds_induced, u.nhds_eq_comap_uniformity,
+          map_eq_comap_of_inverse (m := Prod.map e.invFun e.invFun)
+            (n := Prod.map e.toFun e.toFun)
+            (funext fun _ ↦ Prod.ext (e.left_inv _) (e.left_inv _))
+            (funext fun _ ↦ Prod.ext (e.right_inv _) (e.right_inv _)), comap_comap, comap_comap]
+        rfl)
+  left_inv _ := UniformSpace.ext <| map_map.trans <| by
+    rw [Prod.map_comp_map, e.left_inv.comp_eq_id, Prod.map_id, map_id]
+    rfl
+  right_inv _ := UniformSpace.ext <| map_map.trans <| by
+    rw [Prod.map_comp_map, e.right_inv.comp_eq_id, Prod.map_id, map_id]
+    rfl
+
 section UniformSpace
 
 variable [UniformSpace α]

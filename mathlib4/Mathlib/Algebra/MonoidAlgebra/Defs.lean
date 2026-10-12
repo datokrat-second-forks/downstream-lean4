@@ -1000,7 +1000,7 @@ theorem induction_on [AddMonoid M] {motive : R[M] → Prop} (x : R[M])
   Finsupp.induction_linear (motive := fun x ↦ motive (ofCoeff x)) x.coeff
     (by simpa using smul 0 (.of R M 1) (of 0))
     (fun x y hf hg ↦ add (ofCoeff x) (ofCoeff y) hf hg)
-    fun m r ↦ by simpa using! smul r (.of R M m) (of m)
+    fun m r ↦ by simpa using! smul r (.of R M (.ofAdd m)) (of m)
 
 /-- If two ring homomorphisms from `R[M]` are equal on all `single m 1`
 and `single 0 r`, then they are equal.
@@ -1011,6 +1011,6 @@ theorem ringHom_ext' [Semiring S] [AddMonoid M] {f g : R[M] →+* S}
     (h₁ : f.comp singleZeroRingHom = g.comp singleZeroRingHom)
     (h_of : (f : R[M] →* S).comp (of R M) = (g : R[M] →* S).comp (of R M)) :
     f = g :=
-  ringHom_ext (RingHom.congr_fun h₁) (DFunLike.congr_fun h_of)
+  ringHom_ext (RingHom.congr_fun h₁) fun m ↦ DFunLike.congr_fun h_of (.ofAdd m)
 
 end AddMonoidAlgebra

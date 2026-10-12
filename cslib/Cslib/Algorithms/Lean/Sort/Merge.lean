@@ -60,7 +60,7 @@ theorem mergeM_pure [LawfulMonad m] (xs ys : List α) (le : α → α → Bool) 
 @[simp]
 theorem idRun_mergeM (xs ys : List α) (le : α → α → Id Bool) :
     Id.run (mergeM xs ys le) = merge xs ys (fun x y => Id.run <| le x y) :=
-  mergeM_pure _ _ _
+  congrArg Id.run (mergeM_pure _ _ _)
 
 @[grind .]
 theorem _root_.Cslib.IsMonadHom.map_listMergeM {f : {β : Type} → m β → n β}
@@ -99,7 +99,7 @@ theorem mergeSortM_pure [LawfulMonad m] (xs : List α) (le : α → α → Bool)
 @[simp]
 theorem idRun_mergeSortM (xs : List α) (le : α → α → Id Bool) :
     Id.run (mergeSortM xs le) = mergeSort xs (fun x y => Id.run <| le x y) :=
-  mergeSortM_pure _ _
+  congrArg Id.run (mergeSortM_pure _ _)
 
 @[grind .]
 theorem _root_.Cslib.IsMonadHom.map_listMergeSortM {f : {β : Type} → m β → n β}

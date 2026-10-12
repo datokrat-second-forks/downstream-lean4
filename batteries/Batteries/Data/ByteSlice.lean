@@ -33,7 +33,7 @@ public def foldlM [Monad m] (s : ByteSlice) (f : β → UInt8 → m β) (init : 
 /-- Folds a function over a `ByteSubarray` from left to right. -/
 @[inline]
 public def foldl (s : ByteSlice) (f : β → UInt8 → β) (init : β) : β :=
-  s.foldlM (m:=Id) f init
+  Id.run <| s.foldlM (fun b a => pure (f b a)) init
 
 /-- Implementation of `forIn` for a `ByteSlice`. -/
 @[specialize]

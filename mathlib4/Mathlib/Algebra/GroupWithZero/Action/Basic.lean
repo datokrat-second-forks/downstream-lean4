@@ -87,9 +87,9 @@ variable (G)
 This is a stronger version of `MulAction.toPermHom`. -/
 @[simps]
 def DistribMulAction.toAddAut [DistribMulAction G A] : G →* Multiplicative (AddAut A) where
-  toFun := toAddEquiv _
-  map_one' := AddEquiv.ext (one_smul _)
-  map_mul' _ _ := AddEquiv.ext (mul_smul _ _)
+  toFun g := .ofAdd (toAddEquiv _ g)
+  map_one' := congrArg Multiplicative.ofAdd (AddEquiv.ext (one_smul _))
+  map_mul' _ _ := congrArg Multiplicative.ofAdd (AddEquiv.ext (mul_smul _ _))
 
 end DistribMulAction
 

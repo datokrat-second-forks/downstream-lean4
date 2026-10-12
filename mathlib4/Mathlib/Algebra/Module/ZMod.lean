@@ -134,7 +134,12 @@ lemma exists_submodule_subset_card_le (hp : p.Prime) [Module (ZMod p) G]
     ∃ H' : Submodule (ZMod p) G, Nat.card H' ≤ k ∧ k < p * Nat.card H' ∧ H' ≤ H := by
   obtain ⟨H'm, H'mHm, H'mk, kH'm⟩ := Sylow.exists_subgroup_le_card_le
     (H := AddSubgroup.toSubgroup ((AddSubgroup.toZModSubmodule _).symm H)) hp
-      isPGroup_multiplicative hk h'k
-  exact ⟨AddSubgroup.toZModSubmodule _ (AddSubgroup.toSubgroup.symm H'm), H'mk, kH'm, H'mHm⟩
+      isPGroup_multiplicative
+      (hk.trans_eq (Nat.card_congr (Equiv.subtypeEquiv Multiplicative.ofAdd fun _ ↦ Iff.rfl))) h'k
+  have hc : Nat.card (AddSubgroup.toZModSubmodule p (AddSubgroup.toSubgroup.symm H'm)) =
+      Nat.card H'm :=
+    Nat.card_congr (Equiv.subtypeEquiv Multiplicative.ofAdd fun _ ↦ Iff.rfl)
+  exact ⟨AddSubgroup.toZModSubmodule _ (AddSubgroup.toSubgroup.symm H'm), hc.trans_le H'mk,
+    hc ▸ kH'm, fun _ hx ↦ H'mHm hx⟩
 
 end ZModModule

@@ -88,7 +88,7 @@ def Subsemigroup.toAddSubsemigroup : Subsemigroup M ≃o AddSubsemigroup (Additi
   invFun S :=
     { carrier := Additive.ofMul ⁻¹' S
       mul_mem' := S.add_mem' }
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Additive.toMul.surjective.preimage_subset_preimage_iff
 
 /-- Additive subsemigroups of an additive semigroup `Additive M` are isomorphic to subsemigroups
 of `M`. -/
@@ -100,16 +100,16 @@ theorem Subsemigroup.toAddSubsemigroup_closure (S : Set M) :
     AddSubsemigroup.closure (Additive.toMul ⁻¹' S) :=
   le_antisymm
     (Subsemigroup.toAddSubsemigroup.le_symm_apply.1 <|
-      Subsemigroup.closure_le.2 (AddSubsemigroup.subset_closure (M := Additive M)))
-    (AddSubsemigroup.closure_le.2 (Subsemigroup.subset_closure (M := M)))
+      Subsemigroup.closure_le.2 fun _ hx ↦ AddSubsemigroup.subset_closure hx)
+    (AddSubsemigroup.closure_le.2 (Set.preimage_mono Subsemigroup.subset_closure))
 
 theorem AddSubsemigroup.toSubsemigroup'_closure (S : Set (Additive M)) :
     AddSubsemigroup.toSubsemigroup' (AddSubsemigroup.closure S) =
       Subsemigroup.closure (Additive.ofMul ⁻¹' S) :=
   le_antisymm
     (AddSubsemigroup.toSubsemigroup'.le_symm_apply.1 <|
-      AddSubsemigroup.closure_le.2 (Subsemigroup.subset_closure (M := M)))
-    (Subsemigroup.closure_le.2 <| AddSubsemigroup.subset_closure (M := Additive M))
+      AddSubsemigroup.closure_le.2 fun _ hx ↦ Subsemigroup.subset_closure hx)
+    (Subsemigroup.closure_le.2 <| Set.preimage_mono AddSubsemigroup.subset_closure)
 
 end
 
@@ -127,7 +127,7 @@ def AddSubsemigroup.toSubsemigroup : AddSubsemigroup A ≃o Subsemigroup (Multip
   invFun S :=
     { carrier := Multiplicative.ofAdd ⁻¹' S
       add_mem' := S.mul_mem' }
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Multiplicative.toAdd.surjective.preimage_subset_preimage_iff
 
 /-- Subsemigroups of a semigroup `Multiplicative A` are isomorphic to additive subsemigroups
 of `A`. -/
@@ -139,16 +139,16 @@ theorem AddSubsemigroup.toSubsemigroup_closure (S : Set A) :
       Subsemigroup.closure (Multiplicative.toAdd ⁻¹' S) :=
   le_antisymm
     (AddSubsemigroup.toSubsemigroup.to_galoisConnection.l_le <|
-      AddSubsemigroup.closure_le.2 <| Subsemigroup.subset_closure (M := Multiplicative A))
-    (Subsemigroup.closure_le.2 <| AddSubsemigroup.subset_closure (M := A))
+      AddSubsemigroup.closure_le.2 fun _ hx ↦ Subsemigroup.subset_closure hx)
+    (Subsemigroup.closure_le.2 <| Set.preimage_mono AddSubsemigroup.subset_closure)
 
 theorem Subsemigroup.toAddSubsemigroup'_closure (S : Set (Multiplicative A)) :
     Subsemigroup.toAddSubsemigroup' (Subsemigroup.closure S) =
       AddSubsemigroup.closure (Multiplicative.ofAdd ⁻¹' S) :=
   le_antisymm
     (Subsemigroup.toAddSubsemigroup'.to_galoisConnection.l_le <|
-      Subsemigroup.closure_le.2 <| AddSubsemigroup.subset_closure (M := A))
-    (AddSubsemigroup.closure_le.2 <| Subsemigroup.subset_closure (M := Multiplicative A))
+      Subsemigroup.closure_le.2 fun _ hx ↦ AddSubsemigroup.subset_closure hx)
+    (AddSubsemigroup.closure_le.2 <| Set.preimage_mono Subsemigroup.subset_closure)
 
 end
 

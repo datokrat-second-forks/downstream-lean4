@@ -103,7 +103,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
   | zero =>
     rw [map_zero]
     apply Eq.symm
-    apply DFinsupp.single_eq_zero.mpr; rfl
+    apply (map_eq_zero_iff _ (DirectSum.of_injective _)).mpr; rfl
   | add x y hx hy ihx ihy =>
     rw [map_add, ihx, ihy, ← map_add]; rfl
 

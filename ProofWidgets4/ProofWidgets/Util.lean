@@ -99,13 +99,19 @@ instance : MonadSaveCtx m m where
   saveCtxM := pure
 
 instance {ρ} : MonadSaveCtx (ReaderT ρ m) n where
-  saveCtxM act := fun ctx => saveCtxM (act ctx)
+  saveCtxM act := .mk fun ctx => saveCtxM (act.run ctx)
 
 instance {σ} : MonadSaveCtx (StateT σ m) n where
   saveCtxM act := do liftM <| saveCtxM <| act.run' (← get)
 
 instance {ω σ} [MonadLiftT (ST ω) m] : MonadSaveCtx (StateRefT' ω σ m) n where
   saveCtxM act := do liftM <| saveCtxM <| act.run' (← get)
+
+instance : MonadSaveCtx Lean.Core.CoreM (EIO Lean.Exception) where
+  saveCtxM act := .mk (saveCtxM act.toReaderT)
+
+instance : MonadSaveCtx Lean.Meta.MetaM (EIO Lean.Exception) where
+  saveCtxM act := .mk (saveCtxM act.toReaderT)
 
 end MonadSaveCtx
 

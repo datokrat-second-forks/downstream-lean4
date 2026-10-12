@@ -133,24 +133,19 @@ theorem valuation_of_unit_eq (x : Rˣ) :
 
 /-- The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/
 def valuationOfNeZeroMod (n : ℕ) : (K / n) →* Multiplicative (ZMod n) :=
-  -- TODO: this definition does a lot of defeq abuse between `Multiplicative` and `Additive`,
-  -- so we need `erw` below.
-  (Int.quotientZMultiplesNatEquivZMod n).toMultiplicative.toMonoidHom.comp <|
-    QuotientGroup.map (powMonoidHom n : Kˣ →* Kˣ).range
-      (AddSubgroup.toSubgroup (AddSubgroup.zmultiples (n : ℤ)))
-      v.valuationOfNeZero
-      (by
-        rintro _ ⟨x, rfl⟩
-        exact
-          ⟨v.valuationOfNeZero x, by simp only [powMonoidHom_apply, map_pow, Int.toAdd_pow]; rfl⟩)
+  QuotientGroup.lift (powMonoidHom n : Kˣ →* Kˣ).range
+    ((AddMonoidHom.toMultiplicative (Int.castAddHom (ZMod n))).comp v.valuationOfNeZero)
+    (by
+      rintro _ ⟨x, rfl⟩
+      simp only [MonoidHom.mem_ker, powMonoidHom_apply, map_pow, MonoidHom.coe_comp,
+        Function.comp_apply, AddMonoidHom.toMultiplicative_apply_apply, Int.coe_castAddHom]
+      rw [← ofAdd_nsmul, ofAdd_eq_one, nsmul_eq_mul, ZMod.natCast_self, zero_mul])
 
 @[simp]
 theorem valuation_of_unit_mod_eq (n : ℕ) (x : Rˣ) :
     v.valuationOfNeZeroMod n (Units.map (algebraMap R K : R →* K) x : K / n) = 1 := by
-  -- This used to be `rw`, but we need `erw` after https://github.com/leanprover/lean4/pull/2644
-  erw [valuationOfNeZeroMod, MonoidHom.comp_apply, ← QuotientGroup.coe_mk',
-    QuotientGroup.map_mk' (G := Kˣ) (N := MonoidHom.range (powMonoidHom n)),
-    valuation_of_unit_eq, QuotientGroup.mk_one, map_one]
+  rw [valuationOfNeZeroMod, QuotientGroup.lift_mk, MonoidHom.comp_apply, valuation_of_unit_eq,
+    map_one]
 
 end HeightOneSpectrum
 

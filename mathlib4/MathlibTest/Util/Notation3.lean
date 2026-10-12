@@ -46,7 +46,7 @@ def testTagAppFns (n : Name) : TermElabM Unit := do
     match info with
     | .ofTermInfo info | .ofDelabTermInfo info =>
       if info.expr.isConstOf n then
-        tags.push tag
+        tags.push tag.asNat
       else
         tags
     | _ => tags

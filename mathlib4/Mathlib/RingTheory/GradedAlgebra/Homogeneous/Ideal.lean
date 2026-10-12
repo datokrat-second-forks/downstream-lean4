@@ -159,7 +159,7 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, SetLike.IsHomogeneo
   rw [Ideal.span, Finsupp.span_eq_range_linearCombination] at hr
   rw [LinearMap.mem_range] at hr
   obtain ⟨s, rfl⟩ := hr
-  rw [Finsupp.linearCombination_apply, Finsupp.sum, decompose_sum, DFinsupp.finsetSum_apply,
+  rw [Finsupp.linearCombination_apply, Finsupp.sum, decompose_sum, DirectSum.sum_apply,
     AddSubmonoidClass.coe_finsetSum]
   refine Ideal.sum_mem _ ?_
   rintro z hz1

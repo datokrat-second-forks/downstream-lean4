@@ -72,8 +72,8 @@ end AddCommGrpCat
 def groupAddGroupEquivalence : GrpCat ≌ AddGrpCat where
   functor := GrpCat.toAddGrp
   inverse := AddGrpCat.toGrp
-  unitIso := Iso.refl _
-  counitIso := Iso.refl _
+  unitIso := NatIso.ofComponents fun X ↦ (MulEquiv.multiplicativeAdditive X).symm.toGrpIso
+  counitIso := NatIso.ofComponents fun X ↦ (AddEquiv.additiveMultiplicative X).toAddGrpIso
 
 /-- The equivalence of categories between `CommGrpCat` and `AddCommGrpCat`.
 -/
@@ -81,5 +81,5 @@ def groupAddGroupEquivalence : GrpCat ≌ AddGrpCat where
 def commGroupAddCommGroupEquivalence : CommGrpCat ≌ AddCommGrpCat where
   functor := CommGrpCat.toAddCommGrp
   inverse := AddCommGrpCat.toCommGrp
-  unitIso := Iso.refl _
-  counitIso := Iso.refl _
+  unitIso := NatIso.ofComponents fun X ↦ (MulEquiv.multiplicativeAdditive X).symm.toCommGrpIso
+  counitIso := NatIso.ofComponents fun X ↦ (AddEquiv.additiveMultiplicative X).toAddCommGrpIso

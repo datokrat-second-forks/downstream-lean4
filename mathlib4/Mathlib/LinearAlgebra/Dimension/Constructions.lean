@@ -194,7 +194,8 @@ theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommMon
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
     Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   let B i := chooseBasis R (M i)
-  let b : Basis _ R (⨁ i, M i) := DFinsupp.basis fun i => B i
+  let b : Basis _ R (⨁ i, M i) :=
+    (DFinsupp.basis fun i => B i).map (DirectSum.linearEquiv R M).symm
   simp [← b.mk_eq_rank'', fun i => (B i).mk_eq_rank'']
 
 /-- If `m` and `n` are finite, the rank of `m × n` matrices over a module `M` is

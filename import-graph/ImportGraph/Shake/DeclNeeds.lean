@@ -141,7 +141,7 @@ instance : ToString ImportNeedsKind where
     if k.isMeta then tks := tks.push "meta" else if k.allowMeta then tks := tks.push "(meta)"
     tks := tks.push "import"
     if k.isAll then tks := tks.push "all"
-    " ".intercalate tks.toList
+    return " ".intercalate tks.toList
 
 end ImportNeedsKind
 
@@ -210,7 +210,7 @@ def toNeeds (useMeta : Bool := false) (imp : ImportNeeds) : Needs where
 
 @[inline, expose] def has (needs : ImportNeeds) (k : ImportNeedsKind) (i : ModuleIdx) :
     Bool :=
-  needs.get k |>.has i
+  needs.get k |>.has i.toNat
 
 @[inline, expose] def set (needs : ImportNeeds) (k : ImportNeedsKind) (s : Bitset) :
     ImportNeeds :=
@@ -573,9 +573,9 @@ abbrev StanceM := MonadCacheT Name (Option Stance) CoreM
 
 nonrec abbrev StanceM.run {α} (x : StanceM α) (s : Std.HashMap Name (Option Stance) := ∅) :
     CoreM (α × Std.HashMap Name (Option Stance)) :=
-  StateRefT'.run x s
+  StateRefT'.run x.toStateRefT s
 nonrec abbrev StanceM.run' {α} (x : StanceM α) (s : Std.HashMap Name (Option Stance) := ∅) :
-    CoreM α := x.run' s
+    CoreM α := x.toStateRefT.run' s
 
 /-- Gets the stance of the given declaration. Records `none` if no stance could be found. This is
 insensitive to the `isExporting` flag on the ambient environment. -/
@@ -643,7 +643,7 @@ where
           declNeeds := declNeeds.insertAutoDeclLink c decl
         if (env.setExporting false).contains c && !(c == decl) then
           declNeeds := declNeeds.insertFreeDeclFor decl (.expr loc isReExported) c
-          calcDeclConstInfoNeeds c env declNeeds isReExported
+          return calcDeclConstInfoNeeds c env declNeeds isReExported
         else
           return declNeeds
 

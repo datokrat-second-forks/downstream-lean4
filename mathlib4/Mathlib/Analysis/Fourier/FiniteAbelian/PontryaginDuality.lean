@@ -105,13 +105,14 @@ def circleEquivComplex [Finite α] : AddChar α Circle ≃+ AddChar α ℂ where
   let f : α → AddChar α ℂ := fun a ↦ coeHom.compAddChar ((mkZModAux n <| e a).compAddMonoidHom e)
   have hf : Injective f := circleEquivComplex.injective.comp
     ((compAddMonoidHom_injective_left _ e.surjective).comp <| mkZModAux_injective.comp <|
-      DFunLike.coe_injective.comp <| e.injective.comp Additive.ofMul.injective)
+      DFunLike.coe_injective.comp <| e.injective)
   exact (card_addChar_le _ _).antisymm (Fintype.card_le_of_injective _ hf)
 
 /-- `ZMod n` is (noncanonically) isomorphic to its group of characters. -/
 def zmodAddEquiv : ZMod n ≃+ AddChar (ZMod n) ℂ := by
   refine AddEquiv.ofBijective
-    (circleEquivComplex.toAddMonoidHom.comp <| AddChar.toAddMonoidHom zmodHom) ?_
+    (circleEquivComplex.toAddMonoidHom.comp <|
+      AddChar.additiveEquiv.toAddMonoidHom.comp (AddChar.toAddMonoidHom zmodHom)) ?_
   rw [Fintype.bijective_iff_injective_and_card, card_eq]
   exact ⟨circleEquivComplex.injective.comp zmod_injective, rfl⟩
 
@@ -153,7 +154,7 @@ lemma forall_apply_eq_zero : (∀ ψ : AddChar α ℂ, ψ a = 1) ↔ a = 0 := by
 
 lemma doubleDualEmb_injective : Injective (doubleDualEmb : α → AddChar (AddChar α ℂ) ℂ) :=
   doubleDualEmb.ker_eq_bot_iff.1 <| eq_bot_iff.2 fun a ha ↦
-    forall_apply_eq_zero.1 fun ψ ↦ by simpa using! DFunLike.congr_fun ha (Additive.ofMul ψ)
+    forall_apply_eq_zero.1 fun ψ ↦ by simpa using! DFunLike.congr_fun ha ψ
 
 lemma doubleDualEmb_bijective : Bijective (doubleDualEmb : α → AddChar (AddChar α ℂ) ℂ) := by
   cases nonempty_fintype α

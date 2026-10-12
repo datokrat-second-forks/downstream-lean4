@@ -814,7 +814,7 @@ private def autoInstanceWantedName (stx : Syntax) (res : TSyntax `term) :
       for n in [1:10000] do
         let s := s!"{base}_{n}"
         if isFree s then return s
-      base  -- absurd fallback
+      return base  -- absurd fallback
   let ident : Ident := mkIdent (Name.mkSimple chosen)
   withRef stx `(Parser.Command.declId| $ident:ident)
 

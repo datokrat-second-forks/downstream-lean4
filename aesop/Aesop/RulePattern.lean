@@ -120,7 +120,7 @@ where
   abstractMVars' (e : Expr) :
       MetaM (AbstractMVarsResult × Std.HashMap MVarId Nat × Std.HashMap LMVarId Nat) := do
     let e ← instantiateMVars e
-    let (e, s) := AbstractMVars.abstractExprMVars e
+    let (e, s) := Id.run <| (AbstractMVars.abstractExprMVars e).run
       { mctx := (← getMCtx)
         lctx := (← getLCtx)
         ngen := (← getNGen)

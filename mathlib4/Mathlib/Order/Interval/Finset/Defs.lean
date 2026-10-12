@@ -9,6 +9,7 @@ public import Mathlib.Data.Finset.Preimage
 public import Mathlib.Data.Finset.Prod
 public import Mathlib.Order.Hom.WithTopBot
 public import Mathlib.Order.Interval.Set.UnorderedInterval
+public import Mathlib.Order.Transport
 
 /-!
 # Locally finite orders
@@ -611,6 +612,60 @@ instance : Subsingleton (LocallyFiniteOrderTop α) :=
       rw [h₀_finset_mem_Ioi, h₁_finset_mem_Ioi]
     simp_rw [hIci, hIoi]
 
+theorem Lean.CanonicalEquivalence.mem_map_toFun {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    {s : Finset X} {y : Y} : y ∈ s.map ⟨e.toFun, e.toFun_injective⟩ ↔ e.invFun y ∈ s := by
+  simp only [Finset.mem_map, Function.Embedding.coeFn_mk]
+  exact ⟨by rintro ⟨x, hx, rfl⟩; rwa [e.left_inv], fun h ↦ ⟨_, h, e.right_inv y⟩⟩
+
+theorem Lean.CanonicalEquivalence.mem_map_invFun {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    {s : Finset Y} {x : X} : x ∈ s.map ⟨e.invFun, e.invFun_injective⟩ ↔ e.toFun x ∈ s := by
+  simp only [Finset.mem_map, Function.Embedding.coeFn_mk]
+  exact ⟨by rintro ⟨y, hy, rfl⟩; rwa [e.right_inv], fun h ↦ ⟨_, h, e.left_inv x⟩⟩
+
+/-- `LocallyFiniteOrder` instances correspond along a canonical equivalence, for the transported
+order. -/
+@[transport]
+protected abbrev LocallyFiniteOrder.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [iY : Preorder Y] {iX : Preorder X}
+    (hi : iX = (Preorder.canonicalCongr e).invFun iY) :
+    Lean.CanonicalEquivalence (LocallyFiniteOrder X) (LocallyFiniteOrder Y) where
+  toFun i :=
+    { finsetIcc x y := (i.finsetIcc (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIco x y := (i.finsetIco (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIoc x y := (i.finsetIoc (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIoo x y := (i.finsetIoo (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finset_mem_Icc x y z := e.mem_map_toFun.trans <| (i.finset_mem_Icc _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ico x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ico _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ioc x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ioc _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ioo x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ioo _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl }
+  invFun i :=
+    { finsetIcc x y := (i.finsetIcc (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIco x y := (i.finsetIco (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIoc x y := (i.finsetIoc (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIoo x y := (i.finsetIoo (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finset_mem_Icc _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Icc _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ico _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ico _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ioc _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ioc _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ioo _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ioo _ _ _).trans <| by
+        subst hi; exact Iff.rfl }
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+
 -- Should this be called `LocallyFiniteOrder.lift`?
 /-- Given an order embedding `α ↪o β`, pulls back the `LocallyFiniteOrder` on `β` to `α`. -/
 @[instance_reducible]
@@ -629,62 +684,82 @@ protected noncomputable def OrderEmbedding.locallyFiniteOrder [LocallyFiniteOrde
 
 open OrderDual
 
+/-- `s` as a finset of `αᵒᵈ`. It compiles to a cast, see `Finset.mapToDual_eq_mapToDualImpl`. -/
+def Finset.mapToDual (s : Finset α) : Finset αᵒᵈ :=
+  s.map toDual.toEmbedding
+
+/-- The implementation of `Finset.mapToDual`. -/
+def Finset.mapToDualImpl (s : Finset α) : Finset αᵒᵈ :=
+  cast (congrArg Finset (OrderDual.eq_def α)).symm s
+
+@[csimp]
+theorem Finset.mapToDual_eq_mapToDualImpl : @Finset.mapToDual = @Finset.mapToDualImpl := by
+  unsealing_structure OrderDual =>
+    funext α s
+    exact map_refl
+
 section LocallyFiniteOrder
 
 variable [LocallyFiniteOrder α] (a b : α)
 
-/-- Note we define `Icc (toDual a) (toDual b)` as `Icc α _ _ b a` (which has type `Finset α` not
-`Finset αᵒᵈ`!) instead of `(Icc b a).map toDual.toEmbedding` as this means the
-following is defeq:
+/-- Note that `Icc (toDual a) (toDual b)` is `(Icc b a).map toDual.toEmbedding`: since `αᵒᵈ` is a
+one-field structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval has to be
+transported explicitly.  In particular
 ```
 lemma this : (Icc (toDual (toDual a)) (toDual (toDual b)) :) = (Icc a b :) := rfl
 ```
--/
+is **no longer** true by `rfl`; use `Finset.Icc_toDual` twice instead. -/
 instance OrderDual.instLocallyFiniteOrder : LocallyFiniteOrder αᵒᵈ where
-  finsetIcc a b := @Icc α _ _ (ofDual b) (ofDual a)
-  finsetIco a b := @Ioc α _ _ (ofDual b) (ofDual a)
-  finsetIoc a b := @Ico α _ _ (ofDual b) (ofDual a)
-  finsetIoo a b := @Ioo α _ _ (ofDual b) (ofDual a)
-  finset_mem_Icc _ _ _ := (mem_Icc (α := α)).trans and_comm
-  finset_mem_Ico _ _ _ := (mem_Ioc (α := α)).trans and_comm
-  finset_mem_Ioc _ _ _ := (mem_Ico (α := α)).trans and_comm
-  finset_mem_Ioo _ _ _ := (mem_Ioo (α := α)).trans and_comm
+  finsetIcc a b := (@Icc α _ _ (ofDual b) (ofDual a)).mapToDual
+  finsetIco a b := (@Ioc α _ _ (ofDual b) (ofDual a)).mapToDual
+  finsetIoc a b := (@Ico α _ _ (ofDual b) (ofDual a)).mapToDual
+  finsetIoo a b := (@Ioo α _ _ (ofDual b) (ofDual a)).mapToDual
+  finset_mem_Icc _ _ _ := mem_map_equiv.trans <| (mem_Icc (α := α)).trans and_comm
+  finset_mem_Ico _ _ _ := mem_map_equiv.trans <| (mem_Ioc (α := α)).trans and_comm
+  finset_mem_Ioc _ _ _ := mem_map_equiv.trans <| (mem_Ico (α := α)).trans and_comm
+  finset_mem_Ioo _ _ _ := mem_map_equiv.trans <| (mem_Ioo (α := α)).trans and_comm
 
 @[to_dual self]
 lemma Finset.Icc_orderDual_def (a b : αᵒᵈ) :
-    Icc a b = (Icc (ofDual b) (ofDual a)).map toDual.toEmbedding := map_refl.symm
+    Icc a b = (Icc (ofDual b) (ofDual a)).map toDual.toEmbedding := rfl
 
 @[to_dual (reorder := a b)]
 lemma Finset.Ico_orderDual_def (a b : αᵒᵈ) :
-    Ico a b = (Ioc (ofDual b) (ofDual a)).map toDual.toEmbedding := map_refl.symm
+    Ico a b = (Ioc (ofDual b) (ofDual a)).map toDual.toEmbedding := rfl
 
 @[to_dual self]
 lemma Finset.Ioo_orderDual_def (a b : αᵒᵈ) :
-    Ioo a b = (Ioo (ofDual b) (ofDual a)).map toDual.toEmbedding := map_refl.symm
+    Ioo a b = (Ioo (ofDual b) (ofDual a)).map toDual.toEmbedding := rfl
 
 @[to_dual self]
-lemma Finset.Icc_toDual : Icc (toDual a) (toDual b) = (Icc b a).map toDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Icc_toDual : Icc (toDual a) (toDual b) = (Icc b a).map toDual.toEmbedding := rfl
 
 @[to_dual (reorder := a b)]
-lemma Finset.Ico_toDual : Ico (toDual a) (toDual b) = (Ioc b a).map toDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Ico_toDual : Ico (toDual a) (toDual b) = (Ioc b a).map toDual.toEmbedding := rfl
 
 @[to_dual self]
-lemma Finset.Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).map toDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).map toDual.toEmbedding := rfl
 
 @[to_dual self]
 lemma Finset.Icc_ofDual (a b : αᵒᵈ) :
-    Icc (ofDual a) (ofDual b) = (Icc b a).map ofDual.toEmbedding := map_refl.symm
+    Icc (ofDual a) (ofDual b) = (Icc b a).map ofDual.toEmbedding := by
+  ext x
+  rw [mem_map_equiv, mem_Icc, mem_Icc, and_comm]
+  exact Iff.rfl
 
 @[to_dual (reorder := a b)]
 lemma Finset.Ico_ofDual (a b : αᵒᵈ) :
-    Ico (ofDual a) (ofDual b) = (Ioc b a).map ofDual.toEmbedding := map_refl.symm
+    Ico (ofDual a) (ofDual b) = (Ioc b a).map ofDual.toEmbedding := by
+  ext x
+  rw [mem_map_equiv, mem_Ioc, mem_Ico, and_comm]
+  exact Iff.rfl
 
 @[to_dual self]
 lemma Finset.Ioo_ofDual (a b : αᵒᵈ) :
-    Ioo (ofDual a) (ofDual b) = (Ioo b a).map ofDual.toEmbedding := map_refl.symm
+    Ioo (ofDual a) (ofDual b) = (Ioo b a).map ofDual.toEmbedding := by
+  ext x
+  rw [mem_map_equiv, mem_Ioo, mem_Ioo, and_comm]
+  exact Iff.rfl
 
 end LocallyFiniteOrder
 
@@ -692,46 +767,44 @@ section LocallyFiniteOrderTop
 
 variable [LocallyFiniteOrderTop α]
 
-/-- Note we define `Iic (toDual a)` as `Ici a` (which has type `Finset α` not `Finset αᵒᵈ`!)
-instead of `(Ici a).map toDual.toEmbedding` as this means the following is defeq:
-```
-lemma this : (Iic (toDual (toDual a)) :) = (Iic a :) := rfl
-```
--/
+/-- Note that `Iic (toDual a)` is `(Ici a).map toDual.toEmbedding`: since `αᵒᵈ` is a one-field
+structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval has to be transported
+explicitly.  In particular `(Iic (toDual (toDual a)) :) = (Iic a :)` is no longer true by `rfl`;
+use `Finset.Iic_toDual` twice instead. -/
 @[to_dual
-/-- Note we define `Ici (toDual a)` as `Iic a` (which has type `Finset α` not `Finset αᵒᵈ`!)
-instead of `(Iic a).map toDual.toEmbedding` as this means the following is defeq:
-```
-lemma this : (Ici (toDual (toDual a)) :) = (Ici a :) := rfl
-```
--/]
+/-- Note that `Ici (toDual a)` is `(Iic a).map toDual.toEmbedding`: since `αᵒᵈ` is a one-field
+structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval has to be transported
+explicitly.  In particular `(Ici (toDual (toDual a)) :) = (Ici a :)` is no longer true by `rfl`;
+use `Finset.Ici_toDual` twice instead. -/]
 instance OrderDual.instLocallyFiniteOrderBot : LocallyFiniteOrderBot αᵒᵈ where
-  finsetIic a := @Ici α _ _ (ofDual a)
-  finsetIio a := @Ioi α _ _ (ofDual a)
-  finset_mem_Iic _ _ := mem_Ici (α := α)
-  finset_mem_Iio _ _ := mem_Ioi (α := α)
+  finsetIic a := (@Ici α _ _ (ofDual a)).mapToDual
+  finsetIio a := (@Ioi α _ _ (ofDual a)).mapToDual
+  finset_mem_Iic _ _ := mem_map_equiv.trans <| mem_Ici (α := α)
+  finset_mem_Iio _ _ := mem_map_equiv.trans <| mem_Ioi (α := α)
 
 @[to_dual]
-lemma Iic_orderDual_def (a : αᵒᵈ) : Iic a = (Ici (ofDual a)).map toDual.toEmbedding := map_refl.symm
+lemma Iic_orderDual_def (a : αᵒᵈ) : Iic a = (Ici (ofDual a)).map toDual.toEmbedding := rfl
 
 @[to_dual]
-lemma Iio_orderDual_def (a : αᵒᵈ) : Iio a = (Ioi (ofDual a)).map toDual.toEmbedding := map_refl.symm
+lemma Iio_orderDual_def (a : αᵒᵈ) : Iio a = (Ioi (ofDual a)).map toDual.toEmbedding := rfl
 
 @[to_dual]
-lemma Finset.Iic_toDual (a : α) : Iic (toDual a) = (Ici a).map toDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Iic_toDual (a : α) : Iic (toDual a) = (Ici a).map toDual.toEmbedding := rfl
 
 @[to_dual]
-lemma Finset.Iio_toDual (a : α) : Iio (toDual a) = (Ioi a).map toDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Iio_toDual (a : α) : Iio (toDual a) = (Ioi a).map toDual.toEmbedding := rfl
 
 @[to_dual]
-lemma Finset.Ici_ofDual (a : αᵒᵈ) : Ici (ofDual a) = (Iic a).map ofDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Ici_ofDual (a : αᵒᵈ) : Ici (ofDual a) = (Iic a).map ofDual.toEmbedding := by
+  ext x
+  rw [mem_map_equiv, mem_Ici, mem_Iic]
+  exact Iff.rfl
 
 @[to_dual]
-lemma Finset.Ioi_ofDual (a : αᵒᵈ) : Ioi (ofDual a) = (Iio a).map ofDual.toEmbedding :=
-  map_refl.symm
+lemma Finset.Ioi_ofDual (a : αᵒᵈ) : Ioi (ofDual a) = (Iio a).map ofDual.toEmbedding := by
+  ext x
+  rw [mem_map_equiv, mem_Ioi, mem_Iio]
+  exact Iff.rfl
 
 end LocallyFiniteOrderTop
 

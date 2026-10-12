@@ -197,7 +197,6 @@ lemma addSubgroup_index_ne_zero_iff {H : AddSubgroup (ι → ℤ)} :
   convert! submodule_toAddSubgroup_index_ne_zero_iff (N := AddSubgroup.toIntSubmodule H) using 1
   exact ⟨fun ⟨e⟩ ↦ ⟨e.toIntLinearEquiv⟩, fun ⟨e⟩ ↦ ⟨e.toAddEquiv⟩⟩
 
-set_option backward.isDefEq.respectTransparency false in
 lemma subgroup_index_ne_zero_iff {H : Subgroup (ι → Multiplicative ℤ)} :
     H.index ≠ 0 ↔ Nonempty (H ≃* (ι → Multiplicative ℤ)) := by
   let em : Multiplicative (ι → ℤ) ≃* (ι → Multiplicative ℤ) :=
@@ -206,9 +205,18 @@ lemma subgroup_index_ne_zero_iff {H : Subgroup (ι → Multiplicative ℤ)} :
   let eH' : H' ≃* H := (MulEquiv.subgroupCongr <| Subgroup.comap_equiv_eq_map_symm em H).trans
     (MulEquiv.subgroupMap em.symm _).symm
   have h : H'.index = H.index := Subgroup.index_comap_of_surjective _ em.surjective
-  rw [← h, ← Subgroup.index_toAddSubgroup, addSubgroup_index_ne_zero_iff]
-  exact ⟨fun ⟨e⟩ ↦ ⟨(eH'.symm.trans (AddEquiv.toMultiplicative e)).trans em⟩,
-    fun ⟨e⟩ ↦ ⟨(MulEquiv.toAdditive ((eH'.trans e).trans em.symm)).trans
-      (AddEquiv.additiveMultiplicative _)⟩⟩
+  let K : AddSubgroup (ι → ℤ) := Subgroup.toAddSubgroup' H'
+  let eK : Multiplicative K ≃* H' :=
+    { toFun x := ⟨.ofAdd x.toAdd.1, x.toAdd.2⟩
+      invFun x := .ofAdd ⟨x.1.toAdd, x.2⟩
+      left_inv _ := rfl
+      right_inv _ := rfl
+      map_mul' _ _ := rfl }
+  have hK : K.index = H'.index := by
+    rw [← AddSubgroup.index_toSubgroup]
+    exact congrArg Subgroup.index (AddSubgroup.toSubgroup.apply_symm_apply H')
+  rw [← h, ← hK, addSubgroup_index_ne_zero_iff]
+  exact ⟨fun ⟨e⟩ ↦ ⟨((eH'.symm.trans eK.symm).trans (AddEquiv.toMultiplicative e)).trans em⟩,
+    fun ⟨e⟩ ↦ ⟨AddEquiv.toMultiplicative.symm (((eK.trans eH').trans e).trans em.symm)⟩⟩
 
 end Int

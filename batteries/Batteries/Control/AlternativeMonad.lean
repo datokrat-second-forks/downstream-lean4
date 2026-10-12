@@ -141,10 +141,11 @@ namespace OptionT
 instance (m) [Monad m] : AlternativeMonad (OptionT m) where
 
 instance (m) [Monad m] [LawfulMonad m] : LawfulAlternative (OptionT m) where
-  map_failure _ := pure_bind _ _
-  failure_seq _ := pure_bind _ _
-  orElse_failure x := (bind_congr (fun | some _ => rfl | none => rfl)).trans (bind_pure x)
-  failure_orElse _ := pure_bind _ _
+  map_failure _ := OptionT.ext (pure_bind _ _)
+  failure_seq _ := OptionT.ext (pure_bind _ _)
+  orElse_failure x := OptionT.ext <|
+    (bind_congr (fun | some _ => rfl | none => rfl)).trans (bind_pure x.run)
+  failure_orElse _ := OptionT.ext (pure_bind _ _)
   orElse_assoc _ _ _ := by
     simp only [OptionT.ext_iff, run_orElse, Option.elimM, bind_assoc]
     refine bind_congr fun | some _ => by simp | none => rfl

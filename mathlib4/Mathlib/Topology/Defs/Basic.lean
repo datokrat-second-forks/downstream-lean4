@@ -82,6 +82,35 @@ class TopologicalSpace (X : Type u) where
   Use `isOpen_sUnion` in the root namespace instead. -/
   protected isOpen_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
 
+/-- Topologies correspond along a canonical equivalence: a set is open if its preimage is. -/
+@[transport] protected abbrev TopologicalSpace.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) :
+    Lean.CanonicalEquivalence (TopologicalSpace X) (TopologicalSpace Y) where
+  toFun t :=
+    { IsOpen s := t.IsOpen (e.toFun ⁻¹' s)
+      isOpen_univ := t.isOpen_univ
+      isOpen_inter _ _ := t.isOpen_inter _ _
+      isOpen_sUnion S hS := by
+        have h : e.toFun ⁻¹' ⋃₀ S = ⋃₀ (preimage e.toFun '' S) := Set.ext fun _ ↦
+          ⟨fun ⟨s, hs, hx⟩ ↦ ⟨_, ⟨s, hs, rfl⟩, hx⟩, fun ⟨_, ⟨s, hs, rfl⟩, hx⟩ ↦ ⟨s, hs, hx⟩⟩
+        rw [h]
+        exact t.isOpen_sUnion _ (by rintro _ ⟨s, hs, rfl⟩; exact hS s hs) }
+  invFun t :=
+    { IsOpen s := t.IsOpen (e.invFun ⁻¹' s)
+      isOpen_univ := t.isOpen_univ
+      isOpen_inter _ _ := t.isOpen_inter _ _
+      isOpen_sUnion S hS := by
+        have h : e.invFun ⁻¹' ⋃₀ S = ⋃₀ (preimage e.invFun '' S) := Set.ext fun _ ↦
+          ⟨fun ⟨s, hs, hx⟩ ↦ ⟨_, ⟨s, hs, rfl⟩, hx⟩, fun ⟨_, ⟨s, hs, rfl⟩, hx⟩ ↦ ⟨s, hs, hx⟩⟩
+        rw [h]
+        exact t.isOpen_sUnion _ (by rintro _ ⟨s, hs, rfl⟩; exact hS s hs) }
+  left_inv := fun ⟨o, _, _, _⟩ ↦ by
+    dsimp only; congr; funext s; exact congrArg o <| Set.ext fun x ↦ by
+      change e.invFun (e.toFun x) ∈ s ↔ x ∈ s; rw [e.left_inv x]
+  right_inv := fun ⟨o, _, _, _⟩ ↦ by
+    dsimp only; congr; funext s; exact congrArg o <| Set.ext fun x ↦ by
+      change e.toFun (e.invFun x) ∈ s ↔ x ∈ s; rw [e.right_inv x]
+
 variable {X : Type u} {Y : Type v}
 
 /-! ### Predicates on sets -/

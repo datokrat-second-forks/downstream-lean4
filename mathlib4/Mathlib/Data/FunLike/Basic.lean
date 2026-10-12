@@ -150,6 +150,15 @@ class DFunLike (F : Sort*) (α : outParam (Sort*)) (β : outParam <| α → Sort
   /-- The coercion to functions must be injective. -/
   coe_injective : Function.Injective coe
 
+/-- `DFunLike` instances correspond along a canonical equivalence. -/
+@[transport] protected abbrev DFunLike.canonicalCongr {F F' α : Sort*} {β : α → Sort*}
+    (e : Lean.CanonicalEquivalence F F') :
+    Lean.CanonicalEquivalence (DFunLike F α β) (DFunLike F' α β) where
+  toFun i := ⟨fun f ↦ i.coe (e.invFun f), i.coe_injective.comp e.right_inv.injective⟩
+  invFun i := ⟨fun f ↦ i.coe (e.toFun f), i.coe_injective.comp e.left_inv.injective⟩
+  left_inv := fun ⟨coe, _⟩ ↦ by dsimp only; congr; funext f; exact congrArg coe (e.left_inv f)
+  right_inv := fun ⟨coe, _⟩ ↦ by dsimp only; congr; funext f; exact congrArg coe (e.right_inv f)
+
 /-- The class `FunLike F α β` (`Fun`ction-`Like`) expresses that terms of type `F`
 have an injective coercion to functions from `α` to `β`.
 `FunLike` is the non-dependent version of `DFunLike`.

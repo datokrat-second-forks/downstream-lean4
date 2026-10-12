@@ -192,13 +192,39 @@ theorem max'_union {s₁ s₂ : Finset α} (h₁ : s₁.Nonempty) (h₂ : s₂.N
 
 @[to_dual]
 theorem map_ofDual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min := by
-  rw [min_eq_inf_withTop, inf_image]
-  exact congr_fun WithTop.map_id _
+  classical
+  induction s using Finset.induction_on with
+  | empty => rfl
+  | insert a s _ ih =>
+    rw [image_insert, max_insert, min_insert, ← ih]
+    cases s.max with
+    | bot =>
+      simp only [max_bot_right, WithBot.map_bot, WithBot.map_coe]
+      exact (min_eq_left (le_top (α := WithTop α))).symm
+    | coe b =>
+      rcases le_total a b with h | h
+      · rw [max_eq_right (WithBot.coe_le_coe.2 h)]
+        exact (min_eq_right (WithTop.coe_le_coe.2 (show ofDual b ≤ ofDual a from h))).symm
+      · rw [max_eq_left (WithBot.coe_le_coe.2 h)]
+        exact (min_eq_left (WithTop.coe_le_coe.2 (show ofDual a ≤ ofDual b from h))).symm
 
 @[to_dual]
 theorem map_toDual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min := by
-  rw [min_eq_inf_withTop, inf_image]
-  exact congr_fun WithTop.map_id _
+  classical
+  induction s using Finset.induction_on with
+  | empty => rfl
+  | insert a s _ ih =>
+    rw [image_insert, max_insert, min_insert, ← ih]
+    cases s.max with
+    | bot =>
+      simp only [max_bot_right, WithBot.map_bot, WithBot.map_coe]
+      exact (min_eq_left (le_top (α := WithTop αᵒᵈ))).symm
+    | coe b =>
+      rcases le_total a b with h | h
+      · rw [max_eq_right (WithBot.coe_le_coe.2 h)]
+        exact (min_eq_right (WithTop.coe_le_coe.2 (show toDual b ≤ toDual a from h))).symm
+      · rw [max_eq_left (WithBot.coe_le_coe.2 h)]
+        exact (min_eq_left (WithTop.coe_le_coe.2 (show toDual a ≤ toDual b from h))).symm
 
 @[to_dual]
 theorem ofDual_max' {s : Finset αᵒᵈ} (hs : s.Nonempty) :

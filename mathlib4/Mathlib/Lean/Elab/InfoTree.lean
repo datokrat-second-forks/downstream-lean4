@@ -83,7 +83,7 @@ cause `findSome?` to always return `none`.
 -/
 def findSome? {α} (f : ContextInfo → Info → PersistentArray InfoTree → Option α)
     (t : InfoTree) (ctx? : Option ContextInfo := none) : Option α :=
-  Id.run <| t.findSomeM? f ctx?
+  Id.run <| t.findSomeM? (fun ctx info children => pure (f ctx info children)) ctx?
 
 /--
 Returns the value of `f ctx info children` on the outermost `.node info children` which has

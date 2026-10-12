@@ -199,8 +199,10 @@ def upperRightHom : AddChar R (GL (Fin 2) R) where
   map_add_eq_mul' a b := by simp [Units.ext_iff, add_comm]
 
 lemma injective_upperRightHom : Function.Injective (upperRightHom (R := R)) := by
-  refine (injective_iff_map_eq_zero (upperRightHom (R := R)).toAddMonoidHom).mpr ?_
-  simp [Units.ext_iff, one_fin_two]
+  have h : Function.Injective ⇑(upperRightHom (R := R)).toAddMonoidHom := by
+    refine (injective_iff_map_eq_zero _).mpr ?_
+    simp [Units.ext_iff, one_fin_two]
+  exact fun _ _ hab ↦ h (congrArg Additive.ofMul hab)
 
 end Ring
 

@@ -174,11 +174,30 @@ instance Subtype.totallyDisconnectedSpace {α : Type*} {p : α → Prop} [Topolo
     [TotallyDisconnectedSpace α] : TotallyDisconnectedSpace (Subtype p) :=
   totallyDisconnectedSpace_subtype_iff.2 (isTotallyDisconnected_of_totallyDisconnectedSpace _)
 
+/-- `TotallyDisconnectedSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev TotallyDisconnectedSpace.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (TotallyDisconnectedSpace X) (TotallyDisconnectedSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isEmbedding.isTotallyDisconnected_range.1 <| by
+      rw [e.homeomorph.symm.range_coe]
+      exact isTotallyDisconnected_of_totallyDisconnectedSpace _
+    invFun _ := e.homeomorph.isEmbedding.isTotallyDisconnected_range.1 <| by
+      rw [e.homeomorph.range_coe]
+      exact isTotallyDisconnected_of_totallyDisconnectedSpace _
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 instance [TotallyDisconnectedSpace α] : TotallyDisconnectedSpace (Additive α) :=
-  ‹TotallyDisconnectedSpace α›
+  inferInstanceAs (TotallyDisconnectedSpace α)
 
 instance [TotallyDisconnectedSpace α] : TotallyDisconnectedSpace (Multiplicative α) :=
-  ‹TotallyDisconnectedSpace α›
+  inferInstanceAs (TotallyDisconnectedSpace α)
 
 end TotallyDisconnected
 

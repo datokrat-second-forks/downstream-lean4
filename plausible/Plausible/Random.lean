@@ -46,7 +46,7 @@ abbrev RandT := RandGT StdGen
 abbrev Rand := RandG StdGen
 
 instance [MonadLift m n] : MonadLiftT (RandGT g m) (RandGT g n) where
-  monadLift x := fun s => x s
+  monadLift x := .mk fun s => x.run s
 
 /-- `Random m α` gives us machinery to generate values of type `α` in the monad `m`.
 
@@ -140,7 +140,7 @@ def randBound (α : Type u) [LE α] [BoundedRandom m α] (lo hi : α) (h : lo �
 Generate a random `Fin`.
 -/
 def randFin {n : Nat} [RandomGen g] : RandGT g m (Fin n.succ) :=
-  fun ⟨g⟩ => return randNat g 0 n |>.map (Fin.ofNat _) ULift.up
+  .mk fun ⟨g⟩ => return randNat g 0 n |>.map (Fin.ofNat _) ULift.up
 
 instance {n : Nat} : Random m (Fin n.succ) where
   random := randFin

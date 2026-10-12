@@ -306,7 +306,7 @@ def collectWithWhitespaceFromSource (newImps : Array Import)
     let mut totalLeading := ""
     -- Expect one trailing, but collect multiple for error reporting
     let mut trailings := #[]
-    let some existing := sourcesByName.get? newImp.module
+    let some existing := sourcesByName.find? newImp.module
       | impsWithWs := impsWithWs.push (newImp, .empty); continue
     for source@(ref, { leading, trailing }) in existing do
       if newImp == ref.toImport then
@@ -382,9 +382,9 @@ def prettyWithWhitespace (imps : Array (Import × Whitespace))
     let groups := imps.toList.splitBy fun (i₁,_) (i₂,_) =>
       i₁.isExported == i₂.isExported && i₁.importAll == i₂.importAll &&
         (!splitMeta || i₁.isMeta == i₂.isMeta)
-    f!"\n\n".joinSep (groups.map (f!"\n".joinSep ·))
+    return f!"\n\n".joinSep (groups.map (f!"\n".joinSep ·))
   else
-    f!"\n".joinSep imps.toList
+    return f!"\n".joinSep imps.toList
 
 /-- Formats the modified `imps` and attaches whitespace from the corresponding import in
 `sourceImps` when doing so is unambiguous. Ambiguity encountered while assigning nontrivial

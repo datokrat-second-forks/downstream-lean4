@@ -538,7 +538,7 @@ def getEnvelope (d : Diagram β) : Envelope :=
       for i in List.range (n - 1) do
         let t := (i + 1).toFloat / n.toFloat
         pts := sampleAt shaftSrc sc1 sc2 shaftTgt t :: pts
-      pts
+      return pts
     let curvePoints := sampleBezier 16
     let halfDiag := sw / 2
     let arrowEnv := Envelope.ofVertices curvePoints

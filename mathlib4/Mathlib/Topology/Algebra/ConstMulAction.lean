@@ -5,6 +5,7 @@ Authors: Alex Kontorovich, Heather Macbeth
 -/
 module
 
+public import Mathlib.Algebra.Group.Action.Transport
 public import Mathlib.Algebra.Group.Pointwise.Set.Lattice
 public import Mathlib.Algebra.GroupWithZero.Action.Pointwise.Set
 public import Mathlib.Algebra.Module.ULift
@@ -12,6 +13,7 @@ public import Mathlib.GroupTheory.GroupAction.Defs
 public import Mathlib.Order.Filter.Pointwise
 public import Mathlib.Topology.Algebra.Constructions
 public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Topology.Homeomorph.TransferInstance
 
 /-!
 # Monoid actions continuous in the second variable
@@ -122,13 +124,6 @@ instance MulOpposite.continuousConstSMul : ContinuousConstSMul M αᵐᵒᵖ :=
   ⟨fun c => MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.const_smul c⟩
 
 @[to_additive]
-instance : ContinuousConstSMul M αᵒᵈ := ‹ContinuousConstSMul M α›
-
-@[to_additive]
-instance OrderDual.continuousConstSMul' : ContinuousConstSMul Mᵒᵈ α :=
-  ‹ContinuousConstSMul M α›
-
-@[to_additive]
 instance Prod.continuousConstSMul [SMul M β] [ContinuousConstSMul M β] :
     ContinuousConstSMul M (α × β) :=
   ⟨fun _ => (continuous_fst.const_smul _).prodMk (continuous_snd.const_smul _)⟩
@@ -158,6 +153,34 @@ theorem Topology.IsInducing.continuousConstSMul {N β : Type*} [SMul N β] [Topo
     ContinuousConstSMul N β where
   continuous_const_smul c := by
     simpa only [Function.comp_def, hf, hg.continuous_iff] using hg.continuous.fun_const_smul (f c)
+
+/-- `ContinuousConstSMul` holds on both sides of canonical equivalences of the scalars and of the
+acted-on types, for the transported topology and action. -/
+@[to_additive (attr := transport) /-- `ContinuousConstVAdd` holds on both sides of canonical
+equivalences of the acting and of the acted-on types, for the transported topology and action. -/]
+protected abbrev ContinuousConstSMul.canonicalCongr {R R' α β : Type*}
+    (e₁ : Lean.CanonicalEquivalence R R') (e₂ : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] [sβ : SMul R' β] {tα : TopologicalSpace α} {sα : SMul R α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e₂).invFun tβ)
+    (hs : sα = (SMul.canonicalCongr e₁ e₂).invFun sβ) :
+    Lean.CanonicalEquivalence (ContinuousConstSMul R α) (ContinuousConstSMul R' β) := by
+  subst ht hs
+  letI := (TopologicalSpace.canonicalCongr e₂).invFun tβ
+  letI := (SMul.canonicalCongr e₁ e₂).invFun sβ
+  exact {
+    toFun _ := e₂.homeomorph.symm.isInducing.continuousConstSMul e₁.invFun fun {c x} ↦ by
+      change e₂.invFun (c • x) = e₂.invFun (e₁.toFun (e₁.invFun c) • e₂.toFun (e₂.invFun x))
+      rw [e₁.toFun_invFun, e₂.toFun_invFun]
+    invFun _ := e₂.homeomorph.isInducing.continuousConstSMul e₁.toFun (e₂.right_inv _)
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+@[to_additive]
+instance : ContinuousConstSMul M αᵒᵈ := inferInstanceAs (ContinuousConstSMul M α)
+
+@[to_additive]
+instance OrderDual.continuousConstSMul' : ContinuousConstSMul Mᵒᵈ α :=
+  inferInstanceAs (ContinuousConstSMul M α)
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=

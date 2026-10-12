@@ -143,6 +143,27 @@ lemma iff_of_equiv {R R' M M'} [Semiring R] [AddCommMonoid M] [Module R M]
     Module.Free R M ↔ Module.Free R' M' :=
   ⟨fun _ ↦ of_equiv e₂, fun _ ↦ of_equiv e₂.symm⟩
 
+/-- `Module.Free` holds on both sides of canonical equivalences of the scalars and of the modules,
+for the transported semiring and module structures. -/
+@[transport]
+protected abbrev canonicalCongr {S S' α β : Type*} (e₁ : Lean.CanonicalEquivalence S S')
+    (e₂ : Lean.CanonicalEquivalence α β) [iS' : Semiring S'] {iS : Semiring S}
+    (hS : iS = (Semiring.canonicalCongr e₁).invFun iS') [iβ : AddCommMonoid β]
+    {iα : AddCommMonoid α} (hα : iα = (AddCommMonoid.canonicalCongr e₂).invFun iβ)
+    [mβ : Module S' β] {mα : Module S α} (hm : mα = (Module.canonicalCongr e₁ e₂ hS hα).invFun mβ) :
+    Lean.CanonicalEquivalence (Module.Free S α) (Module.Free S' β) := by
+  subst hm hS hα
+  letI := (Semiring.canonicalCongr e₁).invFun iS'
+  letI := (AddCommMonoid.canonicalCongr e₂).invFun iβ
+  letI := (Module.canonicalCongr e₁ e₂ rfl rfl).invFun mβ
+  haveI := RingHomInvPair.of_ringEquiv e₁.ringEquiv
+  haveI := RingHomInvPair.of_ringEquiv_symm e₁.ringEquiv
+  exact {
+    toFun _ := of_equiv (e₁.semilinearEquiv e₂)
+    invFun _ := of_equiv (e₁.semilinearEquiv e₂).symm
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 instance shrink [Small.{w} M] : Module.Free R (Shrink.{w} M) :=
   Module.Free.of_equiv (Shrink.linearEquiv R M).symm
 

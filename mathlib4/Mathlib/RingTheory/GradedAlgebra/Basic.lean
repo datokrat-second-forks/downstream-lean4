@@ -99,7 +99,7 @@ end DirectSum
 /-- The projection maps of a graded ring -/
 def GradedRing.proj (i : ι) : A →+ A :=
   (AddSubmonoidClass.subtype (𝒜 i)).comp <|
-    (DFinsupp.evalAddMonoidHom i).comp <|
+    (DFinsupp.evalAddMonoidHom i).comp <| (DirectSum.addEquiv _).toAddMonoidHom.comp <|
       RingHom.toAddMonoidHom <| RingEquiv.toRingHom <| DirectSum.decomposeRingEquiv 𝒜
 
 @[simp]
@@ -113,7 +113,7 @@ theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
 
 theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
-  DFinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.not.symm
+  DirectSum.mem_support_iff.trans ZeroMemClass.coe_eq_zero.not.symm
 
 end GradedRing
 
@@ -227,7 +227,7 @@ open DirectSum
 
 /-- The projection maps of graded algebra -/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
-  (𝒜 i).subtype.comp <| (DFinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
+  (𝒜 i).subtype.comp <| (component R ι _ i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
 
 @[simp]
 theorem GradedAlgebra.proj_apply (i : ι) (r : A) :
@@ -240,7 +240,7 @@ theorem GradedAlgebra.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
 
 theorem GradedAlgebra.mem_support_iff [DecidableEq A] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedAlgebra.proj 𝒜 i r ≠ 0 :=
-  DFinsupp.mem_support_iff.trans Submodule.coe_eq_zero.not.symm
+  DirectSum.mem_support_iff.trans Submodule.coe_eq_zero.not.symm
 
 end GradedAlgebra
 

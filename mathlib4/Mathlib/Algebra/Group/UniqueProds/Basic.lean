@@ -273,21 +273,75 @@ lemma uniqueMul_of_twoUniqueMul {G} [Mul G] {A B : Finset G} (h : 1 < #A * #B �
 
 namespace Multiplicative
 
-instance {M} [Add M] [UniqueSums M] : UniqueProds (Multiplicative M) where
-  uniqueMul_of_nonempty := UniqueSums.uniqueAdd_of_nonempty (G := M)
+variable {M : Type*} [Add M]
 
-instance {M} [Add M] [TwoUniqueSums M] : TwoUniqueProds (Multiplicative M) where
-  uniqueMul_of_one_lt_card := TwoUniqueSums.uniqueAdd_of_one_lt_card (G := M)
+/-- `UniqueMul` in `Multiplicative M` is `UniqueAdd` in `M`, read through `Multiplicative.toAdd`. -/
+theorem uniqueMul_iff {A B : Finset (Multiplicative M)} {a0 b0 : Multiplicative M} :
+    UniqueMul A B a0 b0 ↔
+      UniqueAdd (A.map toAdd.toEmbedding) (B.map toAdd.toEmbedding) a0.toAdd b0.toAdd := by
+  constructor
+  · intro h a b ha hb hab
+    simp only [Finset.mem_map_equiv, toAdd_symm_eq] at ha hb
+    exact (h ha hb (congrArg (⇑ofAdd) hab)).imp (congrArg (⇑toAdd)) (congrArg (⇑toAdd))
+  · intro h a b ha hb hab
+    exact (h (Finset.mem_map_of_mem _ ha) (Finset.mem_map_of_mem _ hb)
+      (congrArg (⇑toAdd) hab)).imp Multiplicative.ext Multiplicative.ext
+
+instance [UniqueSums M] : UniqueProds (Multiplicative M) where
+  uniqueMul_of_nonempty {A B} hA hB := by
+    obtain ⟨a0, ha0, b0, hb0, h⟩ :=
+      UniqueSums.uniqueAdd_of_nonempty (hA.map (f := toAdd.toEmbedding))
+        (hB.map (f := toAdd.toEmbedding))
+    simp only [Finset.mem_map_equiv, toAdd_symm_eq] at ha0 hb0
+    exact ⟨ofAdd a0, ha0, ofAdd b0, hb0, uniqueMul_iff.2 h⟩
+
+instance [TwoUniqueSums M] : TwoUniqueProds (Multiplicative M) where
+  uniqueMul_of_one_lt_card {A B} hc := by
+    obtain ⟨p1, hp1, p2, hp2, hne, h1, h2⟩ :=
+      TwoUniqueSums.uniqueAdd_of_one_lt_card (A := A.map toAdd.toEmbedding)
+        (B := B.map toAdd.toEmbedding) (by simpa using hc)
+    simp only [Finset.mem_product, Finset.mem_map_equiv, toAdd_symm_eq] at hp1 hp2
+    refine ⟨(ofAdd p1.1, ofAdd p1.2), Finset.mem_product.2 hp1,
+      (ofAdd p2.1, ofAdd p2.2), Finset.mem_product.2 hp2, ?_,
+      uniqueMul_iff.2 h1, uniqueMul_iff.2 h2⟩
+    simpa [Prod.ext_iff, ofAdd.apply_eq_iff_eq, ← Prod.ext_iff] using hne
 
 end Multiplicative
 
 namespace Additive
 
-instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M) where
-  uniqueAdd_of_nonempty := UniqueProds.uniqueMul_of_nonempty (G := M)
+variable {M : Type*} [Mul M]
 
-instance {M} [Mul M] [TwoUniqueProds M] : TwoUniqueSums (Additive M) where
-  uniqueAdd_of_one_lt_card := TwoUniqueProds.uniqueMul_of_one_lt_card (G := M)
+/-- `UniqueAdd` in `Additive M` is `UniqueMul` in `M`, read through `Additive.toMul`. -/
+theorem uniqueAdd_iff {A B : Finset (Additive M)} {a0 b0 : Additive M} :
+    UniqueAdd A B a0 b0 ↔
+      UniqueMul (A.map toMul.toEmbedding) (B.map toMul.toEmbedding) a0.toMul b0.toMul := by
+  constructor
+  · intro h a b ha hb hab
+    simp only [Finset.mem_map_equiv, toMul_symm_eq] at ha hb
+    exact (h ha hb (congrArg (⇑ofMul) hab)).imp (congrArg (⇑toMul)) (congrArg (⇑toMul))
+  · intro h a b ha hb hab
+    exact (h (Finset.mem_map_of_mem _ ha) (Finset.mem_map_of_mem _ hb)
+      (congrArg (⇑toMul) hab)).imp Additive.ext Additive.ext
+
+instance [UniqueProds M] : UniqueSums (Additive M) where
+  uniqueAdd_of_nonempty {A B} hA hB := by
+    obtain ⟨a0, ha0, b0, hb0, h⟩ :=
+      UniqueProds.uniqueMul_of_nonempty (hA.map (f := toMul.toEmbedding))
+        (hB.map (f := toMul.toEmbedding))
+    simp only [Finset.mem_map_equiv, toMul_symm_eq] at ha0 hb0
+    exact ⟨ofMul a0, ha0, ofMul b0, hb0, uniqueAdd_iff.2 h⟩
+
+instance [TwoUniqueProds M] : TwoUniqueSums (Additive M) where
+  uniqueAdd_of_one_lt_card {A B} hc := by
+    obtain ⟨p1, hp1, p2, hp2, hne, h1, h2⟩ :=
+      TwoUniqueProds.uniqueMul_of_one_lt_card (A := A.map toMul.toEmbedding)
+        (B := B.map toMul.toEmbedding) (by simpa using hc)
+    simp only [Finset.mem_product, Finset.mem_map_equiv, toMul_symm_eq] at hp1 hp2
+    refine ⟨(ofMul p1.1, ofMul p1.2), Finset.mem_product.2 hp1,
+      (ofMul p2.1, ofMul p2.2), Finset.mem_product.2 hp2, ?_,
+      uniqueAdd_iff.2 h1, uniqueAdd_iff.2 h2⟩
+    simpa [Prod.ext_iff, ofMul.apply_eq_iff_eq, ← Prod.ext_iff] using hne
 
 end Additive
 

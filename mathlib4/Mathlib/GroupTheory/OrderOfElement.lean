@@ -65,11 +65,18 @@ additive monoid to be of finite order, i.e. there exists `n ≥ 1` such that `n 
 def IsOfFinOrder (x : G) : Prop :=
   (1 : G) ∈ periodicPts (x * ·)
 
-theorem isOfFinAddOrder_ofMul_iff : IsOfFinAddOrder (Additive.ofMul x) ↔ IsOfFinOrder x :=
-  Iff.rfl
+theorem isOfFinAddOrder_ofMul_iff : IsOfFinAddOrder (Additive.ofMul x) ↔ IsOfFinOrder x := by
+  simp only [IsOfFinAddOrder, IsOfFinOrder, mem_periodicPts]
+  refine exists_congr fun n ↦ and_congr_right fun _ ↦ ?_
+  rw [isPeriodicPt_add_iff_nsmul_eq_zero, isPeriodicPt_mul_iff_pow_eq_one, ← ofMul_pow,
+    ofMul_eq_zero]
 
 theorem isOfFinOrder_ofAdd_iff {α : Type*} [AddMonoid α] {x : α} :
-    IsOfFinOrder (Multiplicative.ofAdd x) ↔ IsOfFinAddOrder x := Iff.rfl
+    IsOfFinOrder (Multiplicative.ofAdd x) ↔ IsOfFinAddOrder x := by
+  simp only [IsOfFinAddOrder, IsOfFinOrder, mem_periodicPts]
+  refine exists_congr fun n ↦ and_congr_right fun _ ↦ ?_
+  rw [isPeriodicPt_add_iff_nsmul_eq_zero, isPeriodicPt_mul_iff_pow_eq_one, ← ofAdd_nsmul,
+    ofAdd_eq_one]
 
 @[to_additive]
 theorem isOfFinOrder_iff_pow_eq_one : IsOfFinOrder x ↔ ∃ n, 0 < n ∧ x ^ n = 1 := by
@@ -188,11 +195,16 @@ theorem Subsingleton.orderOf_eq [Subsingleton G] (x : G) : orderOf x = 1 := by
 
 @[simp]
 theorem addOrderOf_ofMul_eq_orderOf (x : G) : addOrderOf (Additive.ofMul x) = orderOf x :=
-  rfl
+  Function.minimalPeriod_eq_minimalPeriod_iff.2 fun n ↦ by
+    rw [isPeriodicPt_add_iff_nsmul_eq_zero, isPeriodicPt_mul_iff_pow_eq_one, ← ofMul_pow,
+      ofMul_eq_zero]
 
 @[simp]
 lemma orderOf_ofAdd_eq_addOrderOf {α : Type*} [AddMonoid α] (a : α) :
-    orderOf (Multiplicative.ofAdd a) = addOrderOf a := rfl
+    orderOf (Multiplicative.ofAdd a) = addOrderOf a :=
+  Function.minimalPeriod_eq_minimalPeriod_iff.2 fun n ↦ by
+    rw [isPeriodicPt_add_iff_nsmul_eq_zero, isPeriodicPt_mul_iff_pow_eq_one, ← ofAdd_nsmul,
+      ofAdd_eq_one]
 
 @[to_additive]
 protected lemma IsOfFinOrder.orderOf_pos (h : IsOfFinOrder x) : 0 < orderOf x :=
@@ -845,8 +857,10 @@ theorem smul_eq_self_of_mem_zpowers {α : Type*} [MulAction G α] (hx : x ∈ Su
   exact Function.IsFixedPt.perm_zpow (by exact hs) k -- Porting note: help elab'n with `by exact`
 
 theorem vadd_eq_self_of_mem_zmultiples {G : Type*} [AddGroup G] {x y : G} {α : Type*}
-    [AddAction G α] (hx : x ∈ AddSubgroup.zmultiples y) {a : α} (hs : y +ᵥ a = a) : x +ᵥ a = a :=
-  @smul_eq_self_of_mem_zpowers (Multiplicative G) _ _ _ α _ hx a hs
+    [AddAction G α] (hx : x ∈ AddSubgroup.zmultiples y) {a : α} (hs : y +ᵥ a = a) :
+    x +ᵥ a = a := by
+  obtain ⟨k, rfl⟩ := AddSubgroup.mem_zmultiples_iff.mp hx
+  exact smul_eq_self_of_mem_zpowers (x := Multiplicative.ofAdd (k • y)) (y := .ofAdd y) ⟨k, rfl⟩ hs
 
 attribute [to_additive existing] smul_eq_self_of_mem_zpowers
 

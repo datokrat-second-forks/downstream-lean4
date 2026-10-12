@@ -55,6 +55,27 @@ attribute [continuity, fun_prop] ContinuousInv.continuous_inv
 export ContinuousInv (continuous_inv)
 export ContinuousNeg (continuous_neg)
 
+/-- `ContinuousInv` holds on both sides of a canonical equivalence, for the transported topology
+and inversion. -/
+@[to_additive (attr := transport) /-- `ContinuousNeg` holds on both sides of a canonical
+equivalence, for the transported topology and negation. -/]
+protected abbrev ContinuousInv.canonicalCongr {α β : Type*} (e : Lean.CanonicalEquivalence α β)
+    [tβ : TopologicalSpace β] [iβ : Inv β] {tα : TopologicalSpace α} {iα : Inv α}
+    (ht : tα = (TopologicalSpace.canonicalCongr e).invFun tβ)
+    (hi : iα = (Inv.canonicalCongr e).invFun iβ) :
+    Lean.CanonicalEquivalence (ContinuousInv α) (ContinuousInv β) := by
+  subst ht hi
+  letI := (TopologicalSpace.canonicalCongr e).invFun tβ
+  letI := (Inv.canonicalCongr e).invFun iβ
+  exact {
+    toFun h := ⟨(e.homeomorph.continuous.comp <| h.continuous_inv.comp
+      e.homeomorph.symm.continuous).congr fun x ↦
+        (e.right_inv _).trans (congrArg (·⁻¹) (e.right_inv x))⟩
+    invFun h := ⟨e.homeomorph.symm.continuous.comp <| h.continuous_inv.comp
+      e.homeomorph.continuous⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 section ContinuousInv
 
 variable [TopologicalSpace G] [Inv G] [ContinuousInv G]

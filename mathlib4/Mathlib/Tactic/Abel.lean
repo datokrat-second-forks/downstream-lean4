@@ -497,7 +497,7 @@ It differs in
 def evalExpr (e : Expr) : AtomM Simp.Result := do
   let e ← withReducible <| whnf e
   guard !(isAtom e)
-  let (a, pa) ← eval e (← mkContext e)
+  let (a, pa) ← (eval e).run (← mkContext e)
   return { expr := a, proof? := pa }
 
 open Parser.Tactic

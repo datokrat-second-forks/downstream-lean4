@@ -95,7 +95,7 @@ def Submonoid.toAddSubmonoid : Submonoid M ≃o AddSubmonoid (Additive M) where
       mul_mem' := fun ha hb => S.add_mem' ha hb }
   left_inv x := by cases x; rfl
   right_inv x := by cases x; rfl
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Additive.toMul.surjective.preimage_subset_preimage_iff
 
 /-- Additive submonoids of an additive monoid `Additive M` are isomorphic to submonoids of `M`. -/
 abbrev AddSubmonoid.toSubmonoid' : AddSubmonoid (Additive M) ≃o Submonoid M :=
@@ -106,16 +106,16 @@ theorem Submonoid.toAddSubmonoid_closure (S : Set M) :
       = AddSubmonoid.closure (Additive.toMul ⁻¹' S) :=
   le_antisymm
     (Submonoid.toAddSubmonoid.le_symm_apply.1 <|
-      Submonoid.closure_le.2 (AddSubmonoid.subset_closure (M := Additive M)))
-    (AddSubmonoid.closure_le.2 <| Submonoid.subset_closure (M := M))
+      Submonoid.closure_le.2 fun _ hx ↦ AddSubmonoid.subset_closure hx)
+    (AddSubmonoid.closure_le.2 <| Set.preimage_mono Submonoid.subset_closure)
 
 theorem AddSubmonoid.toSubmonoid'_closure (S : Set (Additive M)) :
     AddSubmonoid.toSubmonoid' (AddSubmonoid.closure S)
       = Submonoid.closure (Additive.ofMul ⁻¹' S) :=
   le_antisymm
     (AddSubmonoid.toSubmonoid'.le_symm_apply.1 <|
-      AddSubmonoid.closure_le.2 (Submonoid.subset_closure (M := M)))
-    (Submonoid.closure_le.2 <| AddSubmonoid.subset_closure (M := Additive M))
+      AddSubmonoid.closure_le.2 fun _ hx ↦ Submonoid.subset_closure hx)
+    (Submonoid.closure_le.2 <| Set.preimage_mono AddSubmonoid.subset_closure)
 
 end
 
@@ -137,7 +137,7 @@ def AddSubmonoid.toSubmonoid : AddSubmonoid A ≃o Submonoid (Multiplicative A) 
       add_mem' := fun ha hb => S.mul_mem' ha hb }
   left_inv x := by cases x; rfl
   right_inv x := by cases x; rfl
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Multiplicative.toAdd.surjective.preimage_subset_preimage_iff
 
 /-- Submonoids of a monoid `Multiplicative A` are isomorphic to additive submonoids of `A`. -/
 abbrev Submonoid.toAddSubmonoid' : Submonoid (Multiplicative A) ≃o AddSubmonoid A :=
@@ -148,16 +148,16 @@ theorem AddSubmonoid.toSubmonoid_closure (S : Set A) :
       = Submonoid.closure (Multiplicative.toAdd ⁻¹' S) :=
   le_antisymm
     (AddSubmonoid.toSubmonoid.to_galoisConnection.l_le <|
-      AddSubmonoid.closure_le.2 <| Submonoid.subset_closure (M := Multiplicative A))
-    (Submonoid.closure_le.2 <| AddSubmonoid.subset_closure (M := A))
+      AddSubmonoid.closure_le.2 fun _ hx ↦ Submonoid.subset_closure hx)
+    (Submonoid.closure_le.2 <| Set.preimage_mono AddSubmonoid.subset_closure)
 
 theorem Submonoid.toAddSubmonoid'_closure (S : Set (Multiplicative A)) :
     Submonoid.toAddSubmonoid' (Submonoid.closure S)
       = AddSubmonoid.closure (Multiplicative.ofAdd ⁻¹' S) :=
   le_antisymm
     (Submonoid.toAddSubmonoid'.to_galoisConnection.l_le <|
-      Submonoid.closure_le.2 <| AddSubmonoid.subset_closure (M := A))
-    (AddSubmonoid.closure_le.2 <| Submonoid.subset_closure (M := Multiplicative A))
+      Submonoid.closure_le.2 fun _ hx ↦ AddSubmonoid.subset_closure hx)
+    (AddSubmonoid.closure_le.2 <| Set.preimage_mono Submonoid.subset_closure)
 
 end
 

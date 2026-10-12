@@ -34,7 +34,8 @@ open scoped Classical in
 noncomputable def ofDirectSumEquiv [Finite ι] :
     (⨂[R] i, (⨁ j : κ i, M i j)) ≃ₗ[R] ⨁ p : Π i, κ i, ⨂[R] i, M i (p i) :=
   have : Fintype ι := Fintype.ofFinite ι
-  ofDFinsuppEquiv
+  congr (fun i ↦ DirectSum.linearEquiv R (M i)) ≪≫ₗ ofDFinsuppEquiv ≪≫ₗ
+    (DirectSum.linearEquiv R _).symm
 
 @[simp]
 theorem ofDirectSumEquiv_tprod_lof [Fintype ι] [(i : ι) → DecidableEq (κ i)]
@@ -42,23 +43,23 @@ theorem ofDirectSumEquiv_tprod_lof [Fintype ι] [(i : ι) → DecidableEq (κ i)
     ofDirectSumEquiv (⨂ₜ[R] i, DirectSum.lof R _ _ (p i) (x i)) =
       DirectSum.lof R _ _ p (⨂ₜ[R] i, x i) := by
   classical
-  rw [ofDirectSumEquiv]
-  convert! ofDFinsuppEquiv_tprod_single p x
+  rw [ofDirectSumEquiv, LinearEquiv.trans_apply, LinearEquiv.trans_apply, congr_tprod,
+    DirectSum.linearEquiv_symm_apply]
+  convert! congrArg ofDFinsupp (ofDFinsuppEquiv_tprod_single p x)
 
 @[simp]
 theorem ofDirectSumEquiv_symm_lof_tprod [Fintype ι] [(i : ι) → DecidableEq (κ i)]
     (p : Π i, κ i) (x : Π i, M i (p i)) :
     ofDirectSumEquiv.symm (DirectSum.lof R _ _ p (tprod R x)) =
-      (⨂ₜ[R] i, DirectSum.lof R _ _ (p i) (x i)) := by
-  classical
-  rw [ofDirectSumEquiv]
-  convert! ofDFinsuppEquiv_symm_single_tprod p x
+      (⨂ₜ[R] i, DirectSum.lof R _ _ (p i) (x i)) :=
+  (LinearEquiv.symm_apply_eq _).2 (ofDirectSumEquiv_tprod_lof p x).symm
 
 @[simp]
 theorem ofDirectSumEquiv_tprod_apply [Finite ι]
     (x : Π i, ⨁ j, M i j) (p : Π i, κ i) :
     ofDirectSumEquiv (tprod R x) p = ⨂ₜ[R] i, x i (p i) := by
   have : Fintype ι := Fintype.ofFinite ι
+  rw [ofDirectSumEquiv, LinearEquiv.trans_apply, LinearEquiv.trans_apply, congr_tprod]
   convert! ofDFinsuppEquiv_tprod_apply _ _
 
 end PiTensorProduct

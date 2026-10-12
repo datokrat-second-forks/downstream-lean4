@@ -27,7 +27,7 @@ def AddAutEquivUnits : AddAut (ZMod n) ≃+ Additive (ZMod n)ˣ :=
   have h (f : AddAut (ZMod n)) (x : ZMod n) : f 1 * x = f x := by
     rw [mul_comm, ← x.intCast_zmod_cast, ← zsmul_eq_mul, ← map_zsmul, zsmul_one]
   { toFun f := .ofMul <| Units.mkOfMulEqOne (f 1) ((-f) 1) ((h f _).trans (f.apply_neg_self _ _))
-    invFun x := AddAut.mulLeft x.toMul
+    invFun x := (AddAut.mulLeft x.toMul).toAdd
     left_inv g := by simp [DFunLike.ext_iff, Units.smul_def, h]
     right_inv x := by simp [← Additive.toMul_symm_eq, Equiv.symm_apply_eq,
       Units.ext_iff, Units.smul_def, -toMul_smul]

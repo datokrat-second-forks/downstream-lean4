@@ -843,14 +843,17 @@ section Monoid
 
 variable [Monoid M]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem ofMul_list_prod (s : List M) : ofMul s.prod = (s.map ofMul).sum := by simp [ofMul]; rfl
+theorem ofMul_list_prod (s : List M) : ofMul s.prod = (s.map ofMul).sum := by
+  induction s with
+  | nil => rfl
+  | cons a s ih => simp [ih]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem toMul_list_sum (s : List (Additive M)) : s.sum.toMul = (s.map toMul).prod := by
-  simp [toMul, ofMul]; rfl
+  induction s with
+  | nil => rfl
+  | cons a s ih => simp [ih]
 
 end Monoid
 
@@ -858,14 +861,17 @@ section AddMonoid
 
 variable [AddMonoid M]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem ofAdd_list_prod (s : List M) : ofAdd s.sum = (s.map ofAdd).prod := by simp [ofAdd]; rfl
+theorem ofAdd_list_prod (s : List M) : ofAdd s.sum = (s.map ofAdd).prod := by
+  induction s with
+  | nil => rfl
+  | cons a s ih => simp [ih]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem toAdd_list_sum (s : List (Multiplicative M)) : s.prod.toAdd = (s.map toAdd).sum := by
-  simp [toAdd, ofAdd]; rfl
+  induction s with
+  | nil => rfl
+  | cons a s ih => simp [ih]
 
 end AddMonoid
 
@@ -873,24 +879,24 @@ section CommMonoid
 
 variable [CommMonoid M]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem ofMul_multiset_prod (s : Multiset M) : ofMul s.prod = (s.map ofMul).sum := by
-  simp [ofMul]; rfl
-
-set_option backward.isDefEq.respectTransparency false in
-@[simp]
-theorem toMul_multiset_sum (s : Multiset (Additive M)) : s.sum.toMul = (s.map toMul).prod := by
-  simp [toMul, ofMul]; rfl
+theorem ofMul_multiset_prod (s : Multiset M) : ofMul s.prod = (s.map ofMul).sum :=
+  Multiset.induction_on s rfl fun a s ih ↦ by simp [ih]
 
 @[simp]
-theorem ofMul_prod (s : Finset ι) (f : ι → M) : ofMul (∏ i ∈ s, f i) = ∑ i ∈ s, ofMul (f i) :=
-  rfl
+theorem toMul_multiset_sum (s : Multiset (Additive M)) : s.sum.toMul = (s.map toMul).prod :=
+  Multiset.induction_on s rfl fun a s ih ↦ by simp [ih]
+
+@[simp]
+theorem ofMul_prod (s : Finset ι) (f : ι → M) : ofMul (∏ i ∈ s, f i) = ∑ i ∈ s, ofMul (f i) := by
+  rw [Finset.prod_eq_multiset_prod, Finset.sum_eq_multiset_sum, ofMul_multiset_prod,
+    Multiset.map_map, Function.comp_def]
 
 @[simp]
 theorem toMul_sum (s : Finset ι) (f : ι → Additive M) :
-    (∑ i ∈ s, f i).toMul = ∏ i ∈ s, (f i).toMul :=
-  rfl
+    (∑ i ∈ s, f i).toMul = ∏ i ∈ s, (f i).toMul := by
+  rw [Finset.prod_eq_multiset_prod, Finset.sum_eq_multiset_sum, toMul_multiset_sum,
+    Multiset.map_map, Function.comp_def]
 
 end CommMonoid
 
@@ -898,24 +904,24 @@ section AddCommMonoid
 
 variable [AddCommMonoid M]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem ofAdd_multiset_prod (s : Multiset M) : ofAdd s.sum = (s.map ofAdd).prod := by
-  simp [ofAdd]; rfl
+theorem ofAdd_multiset_prod (s : Multiset M) : ofAdd s.sum = (s.map ofAdd).prod :=
+  Multiset.induction_on s rfl fun a s ih ↦ by simp [ih]
 
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem toAdd_multiset_sum (s : Multiset (Multiplicative M)) :
-    s.prod.toAdd = (s.map toAdd).sum := by
-  simp [toAdd, ofAdd]; rfl
+    s.prod.toAdd = (s.map toAdd).sum :=
+  Multiset.induction_on s rfl fun a s ih ↦ by simp [ih]
 
 @[simp]
-theorem ofAdd_sum (s : Finset ι) (f : ι → M) : ofAdd (∑ i ∈ s, f i) = ∏ i ∈ s, ofAdd (f i) :=
-  rfl
+theorem ofAdd_sum (s : Finset ι) (f : ι → M) : ofAdd (∑ i ∈ s, f i) = ∏ i ∈ s, ofAdd (f i) := by
+  rw [Finset.prod_eq_multiset_prod, Finset.sum_eq_multiset_sum, ofAdd_multiset_prod,
+    Multiset.map_map, Function.comp_def]
 
 @[simp]
 theorem toAdd_prod (s : Finset ι) (f : ι → Multiplicative M) :
-    (∏ i ∈ s, f i).toAdd = ∑ i ∈ s, (f i).toAdd :=
-  rfl
+    (∏ i ∈ s, f i).toAdd = ∑ i ∈ s, (f i).toAdd := by
+  rw [Finset.prod_eq_multiset_prod, Finset.sum_eq_multiset_sum, toAdd_multiset_sum,
+    Multiset.map_map, Function.comp_def]
 
 end AddCommMonoid

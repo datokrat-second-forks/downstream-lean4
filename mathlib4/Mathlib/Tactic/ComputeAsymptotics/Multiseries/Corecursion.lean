@@ -224,7 +224,7 @@ theorem FriendlyOperation.dist_le {op : Seq α → Seq α} (h : FriendlyOperatio
 
 theorem exists_fixed_point_of_contractible (F : (β →ᵤ Seq α) → (β →ᵤ Seq α))
     (h : LipschitzWith 2⁻¹ F) :
-    ∃ f : β → Seq α, Function.IsFixedPt F f := by
+    ∃ f : β →ᵤ Seq α, Function.IsFixedPt F f := by
   have hF : ContractingWith 2⁻¹ F := by
     constructor
     · norm_num
@@ -233,7 +233,6 @@ theorem exists_fixed_point_of_contractible (F : (β →ᵤ Seq α) → (β →�
   use f
   exact hF.fixedPoint_isFixedPt
 
-set_option backward.isDefEq.respectTransparency false in
 /-- Main theorem of this file. It shows that there exists a function satisfying the corecursive
 definition of the form `def foo (x : X) := hd x :: op (foo (tlArg x))` where `f` is friendly. -/
 theorem FriendlyOperation.exists_fixed_point (F : β → Option (α × γ × β)) (op : γ → Seq α → Seq α)
@@ -242,31 +241,30 @@ theorem FriendlyOperation.exists_fixed_point (F : β → Option (α × γ × β)
     match F b with
     | none => f b = nil
     | some (a, c, b') => f b = Seq.cons a (op c (f b')) := by
-  let T : (β →ᵤ Seq α) → (β →ᵤ Seq α) := fun f b =>
+  let T : (β →ᵤ Seq α) → (β →ᵤ Seq α) := fun f ↦ UniformFun.ofFun fun b =>
     match F b with
     | none => nil
-    | some (a, c, b') => Seq.cons a (op c (f b'))
+    | some (a, c, b') => Seq.cons a (op c (UniformFun.toFun f b'))
   have hT : LipschitzWith 2⁻¹ T := by
     rw [lipschitzWith_iff_dist_le_mul]
     intro f g
     rw [UniformFun.dist_le (by positivity)]
     intro b
-    simp only [UniformFun.toFun, UniformFun.ofFun, Equiv.coe_fn_symm_mk, NNReal.coe_inv,
-      NNReal.coe_ofNat, T]
+    simp only [UniformFun.toFun_ofFun, NNReal.coe_inv, NNReal.coe_ofNat, T]
     cases F b with
     | none => simp
     | some v =>
       obtain ⟨a, c, b'⟩ := v
       simp
       calc
-        _ ≤ dist (f b') (g b') := by
+        _ ≤ dist (UniformFun.toFun f b') (UniformFun.toFun g b') := by
           have := h.friend c
           rw [FriendlyOperation, lipschitzWith_iff_dist_le_mul] at this
-          specialize this (f b') (g b')
+          specialize this (UniformFun.toFun f b') (UniformFun.toFun g b')
           simpa using this
         _ ≤ _ := by
           simp only [UniformFun.dist_def]
-          apply le_ciSup (f := fun b ↦ dist (f b) (g b))
+          apply le_ciSup (f := fun b ↦ dist (UniformFun.toFun f b) (UniformFun.toFun g b))
           have : ∃ C, ∀ (a b : Seq α), dist a b ≤ C := by
             rw [← Metric.boundedSpace_iff]
             infer_instance
@@ -275,10 +273,10 @@ theorem FriendlyOperation.exists_fixed_point (F : β → Option (α × γ × β)
           simp [upperBounds]
           grind
   obtain ⟨f, hf⟩ := exists_fixed_point_of_contractible T hT
-  use f
+  use UniformFun.toFun f
   intro b
   rw [← hf]
-  simp only [T]
+  simp only [T, UniformFun.toFun_ofFun]
   cases hb : F b with
   | none =>
     simp
@@ -286,7 +284,7 @@ theorem FriendlyOperation.exists_fixed_point (F : β → Option (α × γ × β)
     obtain ⟨a, c, b'⟩ := v
     simp only [cons_eq_cons, true_and]
     congr
-    change f b' = T f b'
+    change UniformFun.toFun f b' = UniformFun.toFun (T f) b'
     rw [hf]
 
 /-- (General) non-primitive corecursor for `Seq α` that allows using a friendly operation in the

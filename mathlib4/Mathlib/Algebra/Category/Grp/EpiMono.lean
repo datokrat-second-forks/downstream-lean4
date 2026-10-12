@@ -315,7 +315,9 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   have i1 : Epi f ↔ Epi (groupAddGroupEquivalence.inverse.map f) := by
     refine ⟨?_, groupAddGroupEquivalence.inverse.epi_of_epi_map⟩
     apply groupAddGroupEquivalence.inverse.map_epi
-  rwa [GrpCat.epi_iff_surjective] at i1
+  rw [GrpCat.epi_iff_surjective] at i1
+  change Epi f ↔ Function.Surjective (Multiplicative.ofAdd ∘ f ∘ Multiplicative.toAdd) at i1
+  rwa [Equiv.comp_surjective, Equiv.surjective_comp] at i1
 
 theorem epi_iff_range_eq_top : Epi f ↔ f.hom.range = ⊤ :=
   Iff.trans (epi_iff_surjective _) (AddSubgroup.eq_top_iff' f.hom.range).symm

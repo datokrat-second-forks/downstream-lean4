@@ -49,8 +49,8 @@ For the bundled equivalences, we provide lemmas that they reduce to
 ## Implementation notes
 
 This file largely just copies the API of `Mathlib/Data/Finsupp/ToDFinsupp.lean`, and reuses the
-proofs. Recall that `AddMonoidAlgebra M ι` is defeq to `ι →₀ M` and `⨁ i : ι, M` is defeq to
-`Π₀ i : ι, M`.
+proofs. Recall that `AddMonoidAlgebra M ι` is defeq to `ι →₀ M` and `⨁ i : ι, M` wraps
+`Π₀ i : ι, M` (see `DirectSum.ofDFinsupp`).
 -/
 
 @[expose] public section
@@ -67,7 +67,7 @@ section Defs
 
 /-- Interpret an `AddMonoidAlgebra` as a homogeneous `DirectSum`. -/
 def AddMonoidAlgebra.toDirectSum [Semiring M] (f : AddMonoidAlgebra M ι) : ⨁ _ : ι, M :=
-  f.coeff.toDFinsupp
+  ofDFinsupp f.coeff.toDFinsupp
 
 section
 
@@ -75,12 +75,13 @@ variable [DecidableEq ι] [Semiring M]
 
 @[simp]
 lemma AddMonoidAlgebra.toDirectSum_single (i : ι) (m : M) : toDirectSum (single i m) = .of _ i m :=
-  Finsupp.toDFinsupp_single i m
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single i m
 
 variable [∀ m : M, Decidable (m ≠ 0)]
 
 /-- Interpret a homogeneous `DirectSum` as an `AddMonoidAlgebra`. -/
-def DirectSum.toAddMonoidAlgebra (f : ⨁ _ : ι, M) : AddMonoidAlgebra M ι := .ofCoeff f.toFinsupp
+def DirectSum.toAddMonoidAlgebra (f : ⨁ _ : ι, M) : AddMonoidAlgebra M ι :=
+  .ofCoeff f.toDFinsupp.toFinsupp
 
 @[simp]
 theorem DirectSum.toAddMonoidAlgebra_of (i : ι) (m : M) :
@@ -94,7 +95,7 @@ theorem AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra (f : AddMonoidAlgebra M 
 @[simp]
 theorem DirectSum.toAddMonoidAlgebra_toDirectSum (f : ⨁ _ : ι, M) :
     f.toAddMonoidAlgebra.toDirectSum = f :=
-  (DFinsupp.toFinsupp_toDFinsupp (show Π₀ _ : ι, M from f) :)
+  congrArg ofDFinsupp <| DFinsupp.toFinsupp_toDFinsupp f.toDFinsupp
 
 end
 
@@ -109,42 +110,42 @@ namespace AddMonoidAlgebra
 
 @[simp]
 theorem toDirectSum_zero [Semiring M] : (0 : AddMonoidAlgebra M ι).toDirectSum = 0 :=
-  Finsupp.toDFinsupp_zero
+  congrArg ofDFinsupp Finsupp.toDFinsupp_zero
 
 @[simp]
 theorem toDirectSum_add [Semiring M] (f g : AddMonoidAlgebra M ι) :
     (f + g).toDirectSum = f.toDirectSum + g.toDirectSum :=
-  Finsupp.toDFinsupp_add _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_add _ _
 
 @[simp]
 theorem toDirectSum_natCast [DecidableEq ι] [AddMonoid ι] [Semiring M] (n : ℕ) :
     (n : AddMonoidAlgebra M ι).toDirectSum = n :=
-  Finsupp.toDFinsupp_single _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single _ _
 
 @[simp]
 theorem toDirectSum_ofNat [DecidableEq ι] [AddMonoid ι] [Semiring M] (n : ℕ) [n.AtLeastTwo] :
     (ofNat(n) : AddMonoidAlgebra M ι).toDirectSum = ofNat(n) :=
-  Finsupp.toDFinsupp_single _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single _ _
 
 @[simp]
 theorem toDirectSum_sub [Ring M] (f g : AddMonoidAlgebra M ι) :
     (f - g).toDirectSum = f.toDirectSum - g.toDirectSum :=
-  Finsupp.toDFinsupp_sub _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_sub _ _
 
 @[simp]
 theorem toDirectSum_neg [Ring M] (f : AddMonoidAlgebra M ι) :
     (-f).toDirectSum = - f.toDirectSum :=
-  Finsupp.toDFinsupp_neg _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_neg _
 
 @[simp]
 theorem toDirectSum_intCast [DecidableEq ι] [AddMonoid ι] [Ring M] (z : ℤ) :
     (Int.cast z : AddMonoidAlgebra M ι).toDirectSum = z :=
-  Finsupp.toDFinsupp_single _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single _ _
 
 @[simp]
 theorem toDirectSum_one [DecidableEq ι] [Zero ι] [Semiring M] :
     (1 : AddMonoidAlgebra M ι).toDirectSum = 1 :=
-  Finsupp.toDFinsupp_single _ _
+  congrArg ofDFinsupp <| Finsupp.toDFinsupp_single _ _
 
 @[simp]
 theorem toDirectSum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : AddMonoidAlgebra M ι) :

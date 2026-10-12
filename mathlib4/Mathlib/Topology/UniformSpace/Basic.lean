@@ -563,7 +563,7 @@ instance ULift.uniformSpace [UniformSpace α] : UniformSpace (ULift α) :=
 
 /-- Uniform space structure on `αᵒᵈ`. -/
 instance OrderDual.instUniformSpace [UniformSpace α] : UniformSpace (αᵒᵈ) :=
-  ‹UniformSpace α›
+  inferInstanceAs (UniformSpace α)
 
 section UniformContinuousInfi
 
@@ -623,8 +623,8 @@ variable [UniformSpace α]
 
 open Additive Multiplicative
 
-instance : UniformSpace (Additive α) := ‹UniformSpace α›
-instance : UniformSpace (Multiplicative α) := ‹UniformSpace α›
+instance : UniformSpace (Additive α) := inferInstanceAs (UniformSpace α)
+instance : UniformSpace (Multiplicative α) := inferInstanceAs (UniformSpace α)
 
 @[fun_prop]
 theorem uniformContinuous_ofMul : UniformContinuous (ofMul : α → Additive α) :=

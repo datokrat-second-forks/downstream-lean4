@@ -48,7 +48,7 @@ structure DocstringValues where
   handlers : NameMap DocstringDataHandler := {}
 
 private def toBinaryElab (vals : DocstringValues) (name : Name) (val : Dynamic) (b : ByteArray) : ByteArray :=
-  match vals.handlers.get? name with
+  match vals.handlers.find? name with
   | none => b.push 0 |> ToBinary.serializer name
   | some s =>
     let payload := s.serialize val .empty
@@ -76,7 +76,7 @@ private def fromBinaryElab (vals : DocstringValues) (label : String) : Deseriali
   | 1 =>
     let name ← FromBinary.deserializer
     let len : Nat ← FromBinary.deserializer
-    match vals.handlers.get? name with
+    match vals.handlers.find? name with
     | none =>
       let _ ← Deserializer.nbytes len
       pure (.inl (.mk Unknown.mk))
@@ -336,6 +336,6 @@ def builtinDocstringValues : DocstringValues where
       mkHandler Data.SetOption
     ] do
       m := m.insert n h
-    m
+    return m
 
 end BuiltinHandlers

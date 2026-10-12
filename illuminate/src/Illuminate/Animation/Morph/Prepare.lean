@@ -404,7 +404,7 @@ partial def matchOneLevel {β : Type} [Backend β] (a b : Diagram β) :
   let skelA := normalizeSkeleton (toSkeleton a shared)
   let skelB := normalizeSkeleton (toSkeleton b shared)
   let residual := matchSkeletons refXforms skelA skelB
-  (residual, pairs)
+  return (residual, pairs)
 
 /--
 Prepares a morph plan between two diagrams.

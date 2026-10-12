@@ -29,4 +29,5 @@ instance (priority := low) AffineAddMonoid.to_twoUniqueSums [AddCancelCommMonoid
 @[to_additive existing AffineAddMonoid.to_twoUniqueSums]
 instance (priority := low) AffineMonoid.to_twoUniqueProds [CancelCommMonoid M] [Monoid.FG M]
     [IsMulTorsionFree M] : TwoUniqueProds M :=
-  Multiplicative.instTwoUniqueProdsOfTwoUniqueSums (M := Additive M)
+  (MulEquiv.multiplicativeAdditive M).twoUniqueProds_iff.1
+    (Multiplicative.instTwoUniqueProdsOfTwoUniqueSums (M := Additive M))

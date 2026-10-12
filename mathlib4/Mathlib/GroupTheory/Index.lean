@@ -632,22 +632,34 @@ lemma index_pi {ι : Type*} [Fintype ι] (H : ι → Subgroup G) :
 
 @[simp]
 lemma index_toAddSubgroup : (Subgroup.toAddSubgroup H).index = H.index :=
-  rfl
+  Nat.card_congr (Quotient.congr Additive.toMul fun _ _ ↦ by
+    simp [QuotientAddGroup.leftRel_apply, QuotientGroup.leftRel_apply,
+      Additive.mem_toAddSubgroup])
 
 @[simp]
 lemma _root_.AddSubgroup.index_toSubgroup {G : Type*} [AddGroup G] (H : AddSubgroup G) :
     (AddSubgroup.toSubgroup H).index = H.index :=
-  rfl
+  Nat.card_congr (Quotient.congr Multiplicative.toAdd fun _ _ ↦ by
+    simp [QuotientAddGroup.leftRel_apply, QuotientGroup.leftRel_apply,
+      Multiplicative.mem_toSubgroup])
 
 @[simp]
 lemma relIndex_toAddSubgroup :
     (Subgroup.toAddSubgroup H).relIndex (Subgroup.toAddSubgroup K) = H.relIndex K :=
-  rfl
+  Nat.card_congr
+    (Quotient.congr (Equiv.subtypeEquiv Additive.toMul fun _ ↦ Iff.rfl) fun _ _ ↦ by
+      simp only [QuotientAddGroup.leftRel_apply, QuotientGroup.leftRel_apply,
+        AddSubgroup.mem_addSubgroupOf, Subgroup.mem_subgroupOf, Additive.mem_toAddSubgroup]
+      rfl)
 
 @[simp]
 lemma _root_.AddSubgroup.relIndex_toSubgroup {G : Type*} [AddGroup G] (H K : AddSubgroup G) :
     (AddSubgroup.toSubgroup H).relIndex (AddSubgroup.toSubgroup K) = H.relIndex K :=
-  rfl
+  Nat.card_congr
+    (Quotient.congr (Equiv.subtypeEquiv Multiplicative.toAdd fun _ ↦ Iff.rfl) fun _ _ ↦ by
+      simp only [QuotientAddGroup.leftRel_apply, QuotientGroup.leftRel_apply,
+        AddSubgroup.mem_addSubgroupOf, Subgroup.mem_subgroupOf, Multiplicative.mem_toSubgroup]
+      rfl)
 
 section FiniteIndex
 
@@ -869,7 +881,11 @@ instance finiteIndex_normalCore [H.FiniteIndex] : H.normalCore.FiniteIndex := by
 
 instance _root_.AddSubgroup.finiteIndex_normalCore {G : Type*} [AddGroup G] (H : AddSubgroup G)
     [h : H.FiniteIndex] : H.normalCore.FiniteIndex := by
+  have : AddSubgroup.toSubgroup H.normalCore = H.toSubgroup.normalCore := by
+    ext
+    exact ⟨fun h b ↦ h b.toAdd, fun h b ↦ h (.ofAdd b)⟩
   rw [← AddSubgroup.finiteIndex_toSubgroup_iff] at h ⊢
+  rw [this]
   exact H.toSubgroup.finiteIndex_normalCore
 
 attribute [to_additive existing] finiteIndex_normalCore

@@ -147,7 +147,7 @@ def EuclideanDisplay.rpc (props : PanelWidgetProps) : RequestM (RequestTask Html
       -- Execute the next part using the metavariable context and local context of the goal.
       g.ctx.val.runMetaM {} do
         let md ← g.mvarId.getDecl
-        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)}
+        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)} |>.run
         Meta.withLCtx lctx md.localInstances do
           -- Which hypotheses have been selected in the UI,
           -- meaning they should *not* be shown in the display.
@@ -276,7 +276,7 @@ def EuclideanConstructions.rpc (props : PanelWidgetProps) : RequestM (RequestTas
       -- Execute the next part using the metavariable context and local context of the goal.
       g.ctx.val.runMetaM {} do
         let md ← g.mvarId.getDecl
-        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)}
+        let lctx := md.lctx |>.sanitizeNames.run' {options := (← getOptions)} |>.run
         Meta.withLCtx lctx md.localInstances do
 
           -- Grab all hypotheses from the local context.

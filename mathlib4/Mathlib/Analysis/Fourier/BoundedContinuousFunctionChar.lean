@@ -104,7 +104,7 @@ noncomputable def charMonoidHom (he : Continuous e) (hL : Continuous fun p : V �
     Multiplicative W →* (V →ᵇ ℂ) where
   toFun w := char he hL w.toAdd
   map_one' := char_zero_eq_one
-  map_mul' := char_add_eq_mul (he := he) (hL := hL)
+  map_mul' x y := char_add_eq_mul (he := he) (hL := hL) x.toAdd y.toAdd
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]

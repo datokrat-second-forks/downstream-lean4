@@ -70,8 +70,12 @@ if the codomain of `f` is a conditionally complete linear order or a complete la
 -/]
 theorem _root_.Antitone.ciSup_comp_tendsto_atBot [Preorder β] [ConditionallyCompleteLattice γ]
     {l : Filter α} [l.NeBot] {f : β → γ} (hf : Antitone f) (hb : BddAbove (range f))
-    {g : α → β} (hg : Tendsto g l atBot) : ⨆ a, f (g a) = ⨆ b, f b :=
-  hf.dual_left.ciSup_comp_tendsto_atTop hb hg
+    {g : α → β} (hg : Tendsto g l atBot) : ⨆ a, f (g a) = ⨆ b, f b := by
+  have : Nonempty α := nonempty_of_neBot l
+  have : Nonempty β := .map g ‹_›
+  rw [← csInf_upperBounds_range, ← csInf_upperBounds_range,
+    ← hf.upperBounds_range_comp_tendsto_atBot hg, Function.comp_def]
+  exacts [hb, hb.mono <| range_comp_subset_range _ _]
 
 /-- If `f` is a monotone function taking values in a conditionally complete linear order
 and `g` tends to `atTop` along a nontrivial filter,
@@ -98,8 +102,12 @@ and `g` tends to `atBot` along a nontrivial filter,
 then the indexed supremum of `f ∘ g` is equal to the indexed supremum of `f`. -/]
 theorem _root_.Antitone.ciInf_comp_tendsto_atTop_of_linearOrder [Preorder β]
     [ConditionallyCompleteLinearOrder γ] {l : Filter α} [l.NeBot] {f : β → γ} (hf : Antitone f)
-    {g : α → β} (hg : Tendsto g l atTop) : ⨅ a, f (g a) = ⨅ b, f b :=
-  hf.dual_left.ciInf_comp_tendsto_atBot_of_linearOrder hg
+    {g : α → β} (hg : Tendsto g l atTop) : ⨅ a, f (g a) = ⨅ b, f b := by
+  if hb : BddBelow (range f) then
+    exact hf.ciInf_comp_tendsto_atTop hb hg
+  else
+    rw [iInf, iInf, csInf_of_not_bddBelow, csInf_of_not_bddBelow hb]
+    rwa [BddBelow, ← Function.comp_def f g, hf.lowerBounds_range_comp_tendsto_atTop hg]
 
 /-- If `f` is a monotone function taking values in a complete lattice
 and `g` tends to `atTop` along a nontrivial filter,

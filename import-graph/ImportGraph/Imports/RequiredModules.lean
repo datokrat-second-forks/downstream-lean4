@@ -42,7 +42,7 @@ def NameSet.transitivelyUsedConstants (s : NameSet) : CoreM NameSet := do
   let mut usedConstants : NameSet := {}
   let mut toProcess : NameSet := s
   while !toProcess.isEmpty do
-    let current := toProcess.min!
+    let current := toProcess.toTreeSet.min!
     toProcess := toProcess.erase current
     usedConstants := usedConstants.insert current
     for m in (← getConstInfo current).getUsedConstantsAsSet do

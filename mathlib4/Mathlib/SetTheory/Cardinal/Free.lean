@@ -57,7 +57,10 @@ instance : Countable (FreeMonoid α) := inferInstanceAs <| Countable (List α)
 @[to_additive]
 instance : Countable (FreeGroup α) := inferInstanceAs <| Countable (Quot _)
 
-instance : Countable (FreeAbelianGroup α) := inferInstanceAs <| Countable (Quot _)
+instance : Countable (FreeAbelianGroup α) :=
+  have : Countable (Abelianization (FreeGroup α)) := inferInstanceAs <| Countable (Quot _)
+  have : Countable (Additive (Abelianization (FreeGroup α))) := .of_equiv _ Additive.ofMul
+  inferInstanceAs <| Countable (Additive (Abelianization (FreeGroup α)))
 
 instance : Countable (FreeRing α) := inferInstanceAs <| Countable (MonoidAlgebra ℤ _)
 

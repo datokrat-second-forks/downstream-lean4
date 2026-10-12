@@ -113,6 +113,8 @@ end AddCommMonCat
 namespace CommMonCat
 
 instance : (forget CommMonCat.{u}).IsRightAdjoint :=
-  ⟨_, ⟨AddCommMonCat.adj.comp AddCommMonCat.equivalence.toAdjunction⟩⟩
+  ⟨_, ⟨Adjunction.ofNatIsoRight
+    (AddCommMonCat.adj.comp AddCommMonCat.equivalence.toAdjunction)
+    (NatIso.ofComponents fun _ ↦ Additive.toMul.toIso)⟩⟩
 
 end CommMonCat

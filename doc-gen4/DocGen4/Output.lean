@@ -49,13 +49,13 @@ def htmlOutputSetup (config : SiteBaseContext) (tacticInfo : Array (Process.Tact
   FS.createDirAll <| declarationsBasePath config.buildDir
 
   -- All the doc-gen static stuff
-  let indexHtml := ReaderT.run index config |>.toString
-  let notFoundHtml := ReaderT.run notFound config |>.toString
-  let foundationalTypesHtml := ReaderT.run foundationalTypes config |>.toString
-  let navbarHtml := ReaderT.run navbar config |>.toString
-  let searchHtml := ReaderT.run search config |>.toString
-  let referencesHtml := ReaderT.run (references (← collectBackrefs config.buildDir)) config |>.toString
-  let tacticsHtml := ReaderT.run (tactics tacticInfo) config |>.toString
+  let indexHtml := ReaderT.run index config |>.run |>.toString
+  let notFoundHtml := ReaderT.run notFound config |>.run |>.toString
+  let foundationalTypesHtml := ReaderT.run foundationalTypes config |>.run |>.toString
+  let navbarHtml := ReaderT.run navbar config |>.run |>.toString
+  let searchHtml := ReaderT.run search config |>.run |>.toString
+  let referencesHtml := ReaderT.run (references (← collectBackrefs config.buildDir)) config |>.run |>.toString
+  let tacticsHtml := ReaderT.run (tactics tacticInfo) config |>.run |>.toString
   let docGenStatic := #[
     ("style.css", styleCss),
     ("favicon.svg", faviconSvg),
@@ -80,7 +80,7 @@ def htmlOutputSetup (config : SiteBaseContext) (tacticInfo : Array (Process.Tact
   for (fileName, content) in docGenStatic do
     writeFileAtomic (basePath config.buildDir / fileName) content
 
-  let findHtml := ReaderT.run find { config with depthToRoot := 1 } |>.toString
+  let findHtml := ReaderT.run find { config with depthToRoot := 1 } |>.run |>.toString
   let findStatic := #[
     ("index.html", findHtml),
     ("find.js", findJs)
@@ -223,7 +223,7 @@ def htmlOutputIndex (baseConfig : SiteBaseContext) (modules : Array JsonModule) 
   let allModules := modules ++ diskModules
   let mut index : JsonIndex := {}
   for module in allModules do
-    index := index.addModule module |>.run baseConfig
+    index := index.addModule module |>.run baseConfig |>.run
 
   let finalJson := toJson index
   -- The root JSON for find
@@ -335,7 +335,7 @@ def updateNavbarFromDisk (buildDir : System.FilePath) : IO Unit := do
     refs := refs
   }
   -- Regenerate navbar
-  let navbarHtml := ReaderT.run navbar baseConfig |>.toString
+  let navbarHtml := ReaderT.run navbar baseConfig |>.run |>.toString
   writeFileAtomic (docDir / "navbar.html") navbarHtml
 
 end DocGen4

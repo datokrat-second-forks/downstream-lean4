@@ -96,7 +96,7 @@ elab tk:"#print" &"dependents" ids:(ppSpace colGt ident)* : command => do
   let mut state := init
   let mut out := #[]
   for (c, _) in env.constants.map₂ do
-    let (b, state') := CollectDependents.collect c |>.run env |>.run state
+    let (b, state') := CollectDependents.collect c |>.run env |>.run state |>.run
     state := state'
     if b then
       if let some ranges ← findDeclarationRanges? c then

@@ -123,7 +123,7 @@ private def extractParams {β : Type} [BackendRender β]
           frameParams := frameParams.push val
       allParams := allParams.push frameParams
 
-    (paramMap, allParams)
+    return (paramMap, allParams)
 
 /-!
 # Segmentation and full compilation
@@ -187,7 +187,7 @@ def compileAnimation (steps : List Step)
     let vb : ViewBox :=
       if first then ViewBox.fallback
       else { minX := minX, minY := minY, width := maxX - minX, height := maxY - minY }
-    (drawLists, vb)
+    return (drawLists, vb)
   let clipPfx := s!"{clipHash.toNat % 65536}_"
   -- Compute step boundary frames
   let stepFrames : Array Nat := Id.run do

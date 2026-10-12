@@ -42,4 +42,4 @@ def mapM [Monad m] (a : FloatArray) (f : Float → m Float) : m FloatArray := do
 /-- `map f a` applies the function `f` to each element of the array. -/
 @[inline]
 def map (a : FloatArray) (f : Float → Float) : FloatArray :=
-  mapM (m:=Id) a f
+  Id.run <| mapM a (fun x => pure (f x))

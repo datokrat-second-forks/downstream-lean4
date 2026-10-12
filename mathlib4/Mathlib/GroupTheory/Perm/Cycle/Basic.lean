@@ -405,7 +405,7 @@ theorem isCycle_swap_mul_aux₂ {α : Type*} [DecidableEq α] :
 
 theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type*} [DecidableEq α] {f : Perm α}
     (hf : IsCycle f) {x : α} (hfx : f x ≠ x) (hffx : f (f x) = x) : f = swap x (f x) :=
-  Equiv.ext fun y =>
+  Equiv.Perm.ext fun y =>
     let ⟨z, hz⟩ := hf
     let ⟨i, hi⟩ := hz.2 hfx
     if hyx : y = x then by simp [hyx]

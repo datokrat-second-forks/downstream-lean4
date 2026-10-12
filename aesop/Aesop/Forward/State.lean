@@ -269,7 +269,7 @@ def modifyM [Monad m] (vmap : VariableMap) (var : PremiseIndex)
 @[inherit_doc modifyM]
 def modify (vmap : VariableMap) (var : PremiseIndex) (f : InstMap → InstMap × α) :
     VariableMap × α :=
-  modifyM (m := Id) vmap var f
+  Id.run <| modifyM vmap var (fun m => pure (f m))
 
 /-- Add a hypothesis `hyp`. Precondition: `hyp` matches the premise of slot
 `slot` with substitution `hyp.subst` (and hence `hyp.subst` contains a mapping
@@ -752,7 +752,7 @@ where
             loop { m with clusterMatches := m.clusterMatches.push cm } (i + 1)
       else
         modify fun ms => ms.push <| { rule := rs.rule, «match» := m }
-    return loop ∅ 0 |>.run #[] |>.2
+    return loop ∅ 0 |>.run #[] |>.run |>.2
 
 /-- Extract stats from a `RuleState`. -/
 def stats (rs : RuleState) : ForwardRuleStateStats where
@@ -828,7 +828,7 @@ def enqueuePatSubst (r : ForwardRule) (patSubst : Substitution)
     patSubstSources
   }
   let patSubstsVal := fs.patSubsts[source].getD {} |>.push (r.name, patSubst)
-  { fs with
+  return { fs with
     ruleStates := fs.ruleStates.insert r.name rs
     patSubsts := fs.patSubsts.insert source patSubstsVal }
 
@@ -869,7 +869,7 @@ def eraseHyp (h : FVarId) (fs : ForwardState) : ForwardState := Id.run do
     let rs := rs.eraseHyp h i
     ruleStates := ruleStates.insert r rs
   let fs := { fs with hyps := fs.hyps.erase h, ruleStates }
-  fs.erasePatSubsts (.hyp h)
+  return fs.erasePatSubsts (.hyp h)
 
 /-- Erase all pattern substitutions whose source is the target. -/
 def eraseTargetPatSubsts (fs : ForwardState) : ForwardState :=

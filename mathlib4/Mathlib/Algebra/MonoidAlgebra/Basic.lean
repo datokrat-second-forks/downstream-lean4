@@ -551,7 +551,7 @@ variable (R) [Semiring R] [Add M] [NonUnitalNonAssocSemiring A]
 @[ext high]
 theorem nonUnitalAlgHom_ext' [DistribMulAction R A] {φ₁ φ₂ : R[M] →ₙₐ[R] A}
     (h : φ₁.toMulHom.comp (ofMagma R M) = φ₂.toMulHom.comp (ofMagma R M)) : φ₁ = φ₂ :=
-  nonUnitalAlgHom_ext R <| DFunLike.congr_fun h
+  nonUnitalAlgHom_ext R fun x ↦ DFunLike.congr_fun h (.ofAdd x)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The functor `M ↦ R[M]`, from the category of magmas to the category of
@@ -593,7 +593,7 @@ def liftNCAlgHom (f : A →ₐ[R] B) (g : Multiplicative M →* B) (h_comm : ∀
 lemma algHom_ext' ⦃φ₁ φ₂ : A[M] →ₐ[R] B⦄
     (single_one_right : (φ₁ : A[M] →* B).comp (of A M) = (φ₂ : A[M] →* B).comp (of A M))
     (single_one_left : φ₁.comp singleZeroAlgHom = φ₂.comp singleZeroAlgHom) : φ₁ = φ₂ :=
-  algHom_ext (congr($single_one_right ·)) single_one_left
+  algHom_ext (fun m ↦ DFunLike.congr_fun single_one_right (.ofAdd m)) single_one_left
 
 set_option backward.isDefEq.respectTransparency false in
 variable (R M A) in
@@ -621,17 +621,18 @@ theorem lift_symm_apply (F : R[M] →ₐ[R] A) (x : Multiplicative M) :
     (lift R A M).symm F x = F (single x.toAdd 1) :=
   rfl
 
-theorem lift_of (F : Multiplicative M →* A) (x : Multiplicative M) :
-    lift R A M F (of R M x) = F x := MonoidAlgebra.lift_of F x
-
 @[simp]
 theorem lift_single (F : Multiplicative M →* A) (a b) :
-    lift R A M F (single a b) = b • F (Multiplicative.ofAdd a) :=
-  MonoidAlgebra.lift_single F (.ofAdd a) b
+    lift R A M F (single a b) = b • F (Multiplicative.ofAdd a) := by
+  rw [lift_def, liftNC_single, Algebra.smul_def, AddMonoidHom.coe_coe]
+
+theorem lift_of (F : Multiplicative M →* A) (x : Multiplicative M) :
+    lift R A M F (of R M x) = F x := by
+  rw [of_apply, lift_single, one_smul, ofAdd_toAdd]
 
 lemma lift_of' (F : Multiplicative M →* A) (x : M) :
     lift R A M F (of' R M x) = F (Multiplicative.ofAdd x) :=
-  lift_of F x
+  lift_of F (.ofAdd x)
 
 theorem lift_unique' (F : R[M] →ₐ[R] A) :
     F = lift R A M ((F : R[M] →* A).comp (of R M)) :=

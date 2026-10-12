@@ -244,9 +244,9 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R M] (hM : Module.IsTor
     ⟨Σ i, Fin (this i).choose, inferInstance, fun ⟨i, _⟩ => p i, fun ⟨i, _⟩ => hp i, fun ⟨i, j⟩ =>
       (this i).choose_spec.choose j,
       ⟨(LinearEquiv.ofBijective (DirectSum.coeLinearMap _) h).symm.trans <|
-          (DFinsupp.mapRange.linearEquiv fun i => (this i).choose_spec.choose_spec.some).trans <|
+          (DirectSum.congrLinearEquiv fun i => (this i).choose_spec.choose_spec.some).trans <|
             (DirectSum.sigmaLcurryEquiv R).symm.trans
-              (DFinsupp.mapRange.linearEquiv fun i => quotEquivOfEq _ _ ?_)⟩⟩
+              (DirectSum.congrLinearEquiv fun i => quotEquivOfEq _ _ ?_)⟩⟩
   simp only
 
 variable (R M)
@@ -271,13 +271,15 @@ open LinearMap in
 theorem exists_ker_toSpanSingleton_eq_annihilator [Module.Finite R M] :
     ∃ x : M, ker (toSpanSingleton R _ x) = annihilator R M := by
   have ⟨m, ι, _, p, irr, n, ⟨e⟩⟩ := equiv_free_prod_directSum (R := R) (M := M)
-  refine ⟨e.symm (Finsupp.equivFunOnFinite.symm fun _ ↦ 1, DFinsupp.equivFunOnFintype.symm
-    fun _ ↦ mkQ _ 1), le_antisymm (fun x h ↦ ?_) fun x h ↦ mem_annihilator.mp h _⟩
+  refine ⟨e.symm (Finsupp.equivFunOnFinite.symm fun _ ↦ 1, DirectSum.ofDFinsupp <|
+    DFinsupp.equivFunOnFintype.symm fun _ ↦ mkQ _ 1), le_antisymm (fun x h ↦ ?_) fun x h ↦
+      mem_annihilator.mp h _⟩
   rw [mem_ker, toSpanSingleton_apply, ← map_smul,
-    e.symm.map_eq_zero_iff, Prod.ext_iff, Finsupp.ext_iff, DFinsupp.ext_iff] at h
+    e.symm.map_eq_zero_iff, Prod.ext_iff, Finsupp.ext_iff, DirectSum.ext_iff] at h
   obtain _ | m := m
   · rw [← mul_one x, ← smul_eq_mul, e.annihilator_eq, annihilator_prod]
-    simp_rw [annihilator_eq_top_iff.mpr inferInstance, DirectSum, annihilator_dfinsupp,
+    simp_rw [annihilator_eq_top_iff.mpr inferInstance,
+      (DirectSum.linearEquiv R fun i ↦ R ⧸ R ∙ p i ^ n i).annihilator_eq, annihilator_dfinsupp,
       top_inf_eq, mem_iInf, Ideal.annihilator_quotient, ← Quotient.mk_eq_zero]
     exact h.2
   · rw [show x = 0 by simpa using h.1 0]

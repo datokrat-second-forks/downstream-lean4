@@ -27,7 +27,7 @@ variable [Semiring R] {r : R[X]}
 theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} :
     (monomial i 1 : R[X]) = monomial j 1 ↔ i = j := by
   simp_rw [← ofFinsupp_single, ofFinsupp.injEq]
-  exact AddMonoidAlgebra.of_injective.eq_iff
+  exact (AddMonoidAlgebra.of_injective.comp Multiplicative.ofAdd.injective).eq_iff
 
 instance infinite [Nontrivial R] : Infinite R[X] :=
   Infinite.of_injective (fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h

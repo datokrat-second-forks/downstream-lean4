@@ -220,11 +220,23 @@ theorem apply_ofInjective_symm {f : G →* N} (hf : Function.Injective f) (x : f
 
 @[simp]
 theorem coe_toAdditive_range (f : G →* G') :
-    (MonoidHom.toAdditive f).range = Subgroup.toAddSubgroup f.range := rfl
+    (MonoidHom.toAdditive f).range = Subgroup.toAddSubgroup f.range :=
+  SetLike.ext fun _ ↦ by
+    constructor
+    · rintro ⟨a, rfl⟩
+      exact ⟨a.toMul, rfl⟩
+    · rintro ⟨a, ha⟩
+      exact ⟨.ofMul a, Additive.ext ha⟩
 
 @[simp]
 theorem coe_toMultiplicative_range {A A' : Type*} [AddGroup A] [AddGroup A'] (f : A →+ A') :
-    (AddMonoidHom.toMultiplicative f).range = AddSubgroup.toSubgroup f.range := rfl
+    (AddMonoidHom.toMultiplicative f).range = AddSubgroup.toSubgroup f.range :=
+  SetLike.ext fun _ ↦ by
+    constructor
+    · rintro ⟨a, rfl⟩
+      exact ⟨a.toAdd, rfl⟩
+    · rintro ⟨a, ha⟩
+      exact ⟨.ofAdd a, Multiplicative.ext ha⟩
 
 section Ker
 
@@ -371,11 +383,13 @@ instance (priority := 100) normal_ker (f : G →* M) : f.ker.Normal :=
 
 @[simp]
 theorem coe_toAdditive_ker (f : G →* G') :
-    (MonoidHom.toAdditive f).ker = Subgroup.toAddSubgroup f.ker := rfl
+    (MonoidHom.toAdditive f).ker = Subgroup.toAddSubgroup f.ker :=
+  SetLike.ext fun _ ↦ ⟨fun h ↦ congrArg Additive.toMul h, fun h ↦ Additive.ext h⟩
 
 @[simp]
 theorem coe_toMultiplicative_ker {A A' : Type*} [AddGroup A] [AddZeroClass A'] (f : A →+ A') :
-    (AddMonoidHom.toMultiplicative f).ker = AddSubgroup.toSubgroup f.ker := rfl
+    (AddMonoidHom.toMultiplicative f).ker = AddSubgroup.toSubgroup f.ker :=
+  SetLike.ext fun _ ↦ ⟨fun h ↦ congrArg Multiplicative.toAdd h, fun h ↦ Multiplicative.ext h⟩
 
 end Ker
 

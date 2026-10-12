@@ -243,7 +243,8 @@ def monomialOneHom : Multiplicative (σ →₀ ℕ) →* MvPolynomial σ R :=
 variable {σ R}
 
 @[simp]
-theorem monomialOneHom_apply : monomialOneHom R σ s = (monomial s 1 : MvPolynomial σ R) :=
+theorem monomialOneHom_apply :
+    monomialOneHom R σ (.ofAdd s) = (monomial s 1 : MvPolynomial σ R) :=
   rfl
 
 theorem X_pow_eq_monomial : X n ^ e = monomial (Finsupp.single n e) (1 : R) := by
@@ -283,8 +284,9 @@ theorem sum_C {A : Type*} [AddCommMonoid A] {b : (σ →₀ ℕ) → R → A} (w
   sum_monomial_eq w
 
 theorem monomial_sum_one {α : Type*} (s : Finset α) (f : α → σ →₀ ℕ) :
-    (monomial (∑ i ∈ s, f i) 1 : MvPolynomial σ R) = ∏ i ∈ s, monomial (f i) 1 :=
-  map_prod (monomialOneHom R σ) (fun i => Multiplicative.ofAdd (f i)) s
+    (monomial (∑ i ∈ s, f i) 1 : MvPolynomial σ R) = ∏ i ∈ s, monomial (f i) 1 := by
+  simpa only [← ofAdd_sum, monomialOneHom_apply] using
+    map_prod (monomialOneHom R σ) (fun i => Multiplicative.ofAdd (f i)) s
 
 theorem monomial_sum_index {α : Type*} (s : Finset α) (f : α → σ →₀ ℕ) (a : R) :
     monomial (∑ i ∈ s, f i) a = C a * ∏ i ∈ s, monomial (f i) 1 := by

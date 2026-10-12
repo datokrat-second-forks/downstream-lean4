@@ -56,7 +56,7 @@ protected def EqualUpToIdsM.run' (x : EqualUpToIdsM α)
     (commonMCtx? : Option MetavarContext) (mctx₁ mctx₂ : MetavarContext)
     (allowAssignmentDiff : Bool) :
     MetaM (α × EqualUpToIdsM.State) :=
-  x { commonMCtx?, mctx₁, mctx₂, allowAssignmentDiff, } |>.run {}
+  x.run { commonMCtx?, mctx₁, mctx₂, allowAssignmentDiff, } |>.run {}
 
 protected def EqualUpToIdsM.run (x : EqualUpToIdsM α)
     (commonMCtx? : Option MetavarContext) (mctx₁ mctx₂ : MetavarContext)

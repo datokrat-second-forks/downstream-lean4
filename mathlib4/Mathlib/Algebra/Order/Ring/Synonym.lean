@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Order.Group.Synonym
 public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Algebra.Ring.Transport
 
 /-!
 # Ring structure on the order type synonyms

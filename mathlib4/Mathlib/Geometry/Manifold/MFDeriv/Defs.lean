@@ -284,6 +284,28 @@ def OpenPartialHomeomorph.MDifferentiable (f : OpenPartialHomeomorph M M') :=
   MDifferentiableOn I I' f f.source ∧ MDifferentiableOn I' I f.symm f.target
 
 variable (I I') in
+/-- Continuous linear maps between the tangent spaces at `x` and `y` correspond to continuous linear
+maps between the model spaces, through `tangentSpaceCastModel` at both ends. This is
+`inTangentCoordinates` with equal base and evaluation points, see
+`tangentSpaceCastModelHom_eq_inTangentCoordinates`. -/
+def tangentSpaceCastModelHom (x : M) (y : M') :
+    (TangentSpace I x →L[𝕜] TangentSpace I' y) ≃ (E →L[𝕜] E') :=
+  ContinuousLinearEquiv.arrowCongrEquiv (tangentSpaceCastModel I x) (tangentSpaceCastModel I' y)
+
+theorem tangentSpaceCastModelHom_apply {x : M} {y : M'}
+    (ϕ : TangentSpace I x →L[𝕜] TangentSpace I' y) :
+    tangentSpaceCastModelHom I I' x y ϕ =
+      (tangentSpaceCastModel I' y : TangentSpace I' y →L[𝕜] E') ∘L ϕ ∘L
+        ((tangentSpaceCastModel I x).symm : E →L[𝕜] TangentSpace I x) :=
+  rfl
+
+theorem tangentSpaceCastModelHom_symm_apply {x : M} {y : M'} (ϕ : E →L[𝕜] E') :
+    (tangentSpaceCastModelHom I I' x y).symm ϕ =
+      ((tangentSpaceCastModel I' y).symm : E' →L[𝕜] TangentSpace I' y) ∘L ϕ ∘L
+        (tangentSpaceCastModel I x : TangentSpace I x →L[𝕜] E) :=
+  rfl
+
+variable (I I') in
 /-- `HasMFDerivWithinAt I I' f s x f'` indicates that the function `f` between manifolds
 has, at the point `x` and within the set `s`, the derivative `f'`. Here, `f'` is a continuous linear
 map from the tangent space at `x` to the tangent space at `f x`.

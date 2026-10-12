@@ -6,6 +6,7 @@ Authors: Yaël Dillies
 module
 
 public import Mathlib.Algebra.GroupWithZero.Action.Defs
+public import Mathlib.Algebra.GroupWithZero.Action.Transport
 public import Mathlib.Algebra.Order.Group.Action.Synonym
 public import Mathlib.Algebra.Order.GroupWithZero.Synonym
 public import Mathlib.Tactic.Common

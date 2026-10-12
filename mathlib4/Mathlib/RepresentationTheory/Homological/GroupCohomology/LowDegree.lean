@@ -342,12 +342,14 @@ def cocycles₁IsoOfIsTrivial [hA : A.IsTrivial] :
   { toFun f :=
       { toFun := f ∘ Additive.toMul
         map_zero' := cocycles₁_map_one f
-        map_add' := cocycles₁_map_mul_of_isTrivial f }
+        map_add' x y := cocycles₁_map_mul_of_isTrivial f x.toMul y.toMul }
     map_add' _ _ := rfl
     map_smul' _ _ := rfl
     invFun f :=
-      { val := f
-        property := mem_cocycles₁_of_addMonoidHom f } }
+      { val := f ∘ Additive.ofMul
+        property := mem_cocycles₁_of_addMonoidHom f }
+    left_inv _ := rfl
+    right_inv _ := rfl }
 
 @[macro_inline]
 instance : FunLike (cocycles₂ A) (G × G) A := ⟨Subtype.val, Subtype.val_injective⟩
@@ -693,12 +695,13 @@ representation on `Additive M` induced by the `MulDistribMulAction`. -/
 @[simps]
 def cocyclesOfIsMulCocycle₁ {f : G → M} (hf : IsMulCocycle₁ f) :
     cocycles₁ (Rep.ofMulDistribMulAction G M) :=
-  ⟨Additive.ofMul ∘ f, (mem_cocycles₁_iff (A := Rep.ofMulDistribMulAction G M) f).2 hf⟩
+  ⟨Additive.ofMul ∘ f, (mem_cocycles₁_iff (A := Rep.ofMulDistribMulAction G M) _).2
+    fun g h ↦ congrArg Additive.ofMul (hf g h)⟩
 
 theorem isMulCocycle₁_of_mem_cocycles₁
-    (f : G → M) (hf : f ∈ cocycles₁ (Rep.ofMulDistribMulAction G M)) :
-    IsMulCocycle₁ (Additive.toMul ∘ f) :=
-  (mem_cocycles₁_iff (A := Rep.ofMulDistribMulAction G M) f).1 hf
+    (f : G → Additive M) (hf : f ∈ cocycles₁ (Rep.ofMulDistribMulAction G M)) :
+    IsMulCocycle₁ (Additive.toMul ∘ f) := fun g h ↦
+  congrArg Additive.toMul ((mem_cocycles₁_iff (A := Rep.ofMulDistribMulAction G M) f).1 hf g h)
 
 /-- Given an abelian group `M` with a `MulDistribMulAction` of `G`, and a function
 `f : G → M` satisfying the multiplicative 1-coboundary condition, produces a
@@ -706,13 +709,14 @@ theorem isMulCocycle₁_of_mem_cocycles₁
 @[simps]
 def coboundariesOfIsMulCoboundary₁ {f : G → M} (hf : IsMulCoboundary₁ f) :
     coboundaries₁ (Rep.ofMulDistribMulAction G M) :=
-  ⟨Additive.ofMul ∘ f, hf.choose, funext hf.choose_spec⟩
+  ⟨Additive.ofMul ∘ f, Additive.ofMul hf.choose,
+    funext fun g ↦ congrArg Additive.ofMul (hf.choose_spec g)⟩
 
 theorem isMulCoboundary₁_of_mem_coboundaries₁
-    (f : G → M) (hf : f ∈ coboundaries₁ (Rep.ofMulDistribMulAction G M)) :
-    IsMulCoboundary₁ (M := M) (Additive.ofMul ∘ f) := by
+    (f : G → Additive M) (hf : f ∈ coboundaries₁ (Rep.ofMulDistribMulAction G M)) :
+    IsMulCoboundary₁ (Additive.toMul ∘ f) := by
   rcases hf with ⟨x, rfl⟩
-  exact ⟨x, fun _ =>  rfl⟩
+  exact ⟨x.toMul, fun _ => rfl⟩
 
 /-- Given an abelian group `M` with a `MulDistribMulAction` of `G`, and a function
 `f : G × G → M` satisfying the multiplicative 2-cocycle condition, produces a 2-cocycle for the
@@ -720,25 +724,28 @@ representation on `cochainsIso₁Additive M` induced by the `MulDistribMulAction
 @[simps]
 def cocyclesOfIsMulCocycle₂ {f : G × G → M} (hf : IsMulCocycle₂ f) :
     cocycles₂ (Rep.ofMulDistribMulAction G M) :=
-  ⟨Additive.ofMul ∘ f, (mem_cocycles₂_iff (A := Rep.ofMulDistribMulAction G M) f).2 hf⟩
+  ⟨Additive.ofMul ∘ f, (mem_cocycles₂_iff (A := Rep.ofMulDistribMulAction G M) _).2
+    fun g h j ↦ congrArg Additive.ofMul (hf g h j)⟩
 
 theorem isMulCocycle₂_of_mem_cocycles₂
-    (f : G × G → M) (hf : f ∈ cocycles₂ (Rep.ofMulDistribMulAction G M)) :
-    IsMulCocycle₂ (Additive.toMul ∘ f) :=
-  (mem_cocycles₂_iff (A := Rep.ofMulDistribMulAction G M) f).1 hf
+    (f : G × G → Additive M) (hf : f ∈ cocycles₂ (Rep.ofMulDistribMulAction G M)) :
+    IsMulCocycle₂ (Additive.toMul ∘ f) := fun g h j ↦
+  congrArg Additive.toMul
+    ((mem_cocycles₂_iff (A := Rep.ofMulDistribMulAction G M) f).1 hf g h j)
 
 /-- Given an abelian group `M` with a `MulDistribMulAction` of `G`, and a function
 `f : G × G → M` satisfying the multiplicative 2-coboundary condition, produces a
 2-coboundary for the representation on `M` induced by the `MulDistribMulAction`. -/
 def coboundariesOfIsMulCoboundary₂ {f : G × G → M} (hf : IsMulCoboundary₂ f) :
     coboundaries₂ (Rep.ofMulDistribMulAction G M) :=
-  ⟨Additive.ofMul ∘ f, hf.choose, funext fun g ↦ hf.choose_spec g.1 g.2⟩
+  ⟨Additive.ofMul ∘ f, Additive.ofMul ∘ hf.choose,
+    funext fun g ↦ congrArg Additive.ofMul (hf.choose_spec g.1 g.2)⟩
 
 theorem isMulCoboundary₂_of_mem_coboundaries₂
-    (f : G × G → M) (hf : f ∈ coboundaries₂ (Rep.ofMulDistribMulAction G M)) :
-    IsMulCoboundary₂ (M := M) (Additive.toMul ∘ f) := by
+    (f : G × G → Additive M) (hf : f ∈ coboundaries₂ (Rep.ofMulDistribMulAction G M)) :
+    IsMulCoboundary₂ (Additive.toMul ∘ f) := by
   rcases hf with ⟨x, rfl⟩
-  exact ⟨x, fun _ _ => rfl⟩
+  exact ⟨Additive.toMul ∘ x, fun _ _ => rfl⟩
 
 end ofMulDistribMulAction
 

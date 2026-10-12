@@ -154,19 +154,31 @@ variable [SemilatticeSup α]
 
 @[to_dual (attr := simp)]
 theorem infIrred_toDual {a : α} : InfIrred (toDual a) ↔ SupIrred a :=
-  Iff.rfl
+  and_congr (not_congr isMax_toDual_iff)
+    ⟨fun h b c hbc => (h (b := toDual b) (c := toDual c) (congrArg toDual hbc)).imp
+        (congrArg ofDual) (congrArg ofDual),
+      fun h b c hbc => (h (b := ofDual b) (c := ofDual c) (congrArg ofDual hbc)).imp
+        (congrArg toDual) (congrArg toDual)⟩
 
 @[to_dual (attr := simp)]
 theorem infPrime_toDual {a : α} : InfPrime (toDual a) ↔ SupPrime a :=
-  Iff.rfl
+  and_congr (not_congr isMax_toDual_iff)
+    ⟨fun h b c hbc => h (b := toDual b) (c := toDual c) hbc,
+      fun h b c hbc => h (b := ofDual b) (c := ofDual c) hbc⟩
 
 @[to_dual (attr := simp)]
 theorem supIrred_ofDual {a : αᵒᵈ} : SupIrred (ofDual a) ↔ InfIrred a :=
-  Iff.rfl
+  and_congr (not_congr isMin_ofDual_iff)
+    ⟨fun h b c hbc => (h (b := ofDual b) (c := ofDual c) (congrArg ofDual hbc)).imp
+        (congrArg toDual) (congrArg toDual),
+      fun h b c hbc => (h (b := toDual b) (c := toDual c) (congrArg toDual hbc)).imp
+        (congrArg ofDual) (congrArg ofDual)⟩
 
 @[to_dual (attr := simp)]
 theorem supPrime_ofDual {a : αᵒᵈ} : SupPrime (ofDual a) ↔ InfPrime a :=
-  Iff.rfl
+  and_congr (not_congr isMin_ofDual_iff)
+    ⟨fun h b c hbc => h (b := ofDual b) (c := ofDual c) hbc,
+      fun h b c hbc => h (b := toDual b) (c := toDual c) hbc⟩
 
 @[to_dual] alias ⟨_, SupIrred.dual⟩ := infIrred_toDual
 

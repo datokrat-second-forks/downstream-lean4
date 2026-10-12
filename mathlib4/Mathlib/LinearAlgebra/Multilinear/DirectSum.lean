@@ -38,7 +38,8 @@ theorem directSum_ext [Finite ι] [(i : ι) → DecidableEq (κ i)]
     (h : ∀ p : (i : ι) → κ i,
       f.compLinearMap (fun i => DirectSum.lof _ _ _ (p i)) =
       g.compLinearMap (fun i => DirectSum.lof _ _ _ (p i))) : f = g :=
-  dfinsupp_ext h
+  (LinearEquiv.multilinearMapCongrLeft fun i ↦ (DirectSum.linearEquiv R (M i)).symm).injective <|
+    dfinsupp_ext h
 
 variable [DecidableEq ι]
 
@@ -49,7 +50,8 @@ noncomputable def fromDirectSumEquiv [Finite ι] :
     MultilinearMap R (fun i ↦ ⨁ j : κ i, M i j) M' :=
   haveI : Fintype ι := Fintype.ofFinite ι
   haveI : (i : ι) → DecidableEq (κ i) := fun i ↦ Classical.typeDecidableEq (κ i)
-  fromDFinsuppEquiv _ _
+  fromDFinsuppEquiv _ _ ≪≫ₗ
+    LinearEquiv.multilinearMapCongrLeft fun i ↦ DirectSum.linearEquiv R (M i)
 
 @[simp]
 theorem fromDirectSumEquiv_lof [Finite ι] [(i : ι) → DecidableEq (κ i)]
@@ -57,8 +59,9 @@ theorem fromDirectSumEquiv_lof [Finite ι] [(i : ι) → DecidableEq (κ i)]
     (p : (i : ι) → κ i) (x : (i : ι) → M i (p i)) :
     fromDirectSumEquiv f (fun i => lof R _ _ _ (x i)) = f p x := by
   have : Fintype ι := Fintype.ofFinite ι
-  rw [fromDirectSumEquiv, ← fromDFinsuppEquiv_single]
-  convert! rfl
+  rw [fromDirectSumEquiv, LinearEquiv.trans_apply, LinearEquiv.multilinearMapCongrLeft_apply,
+    compLinearMap_apply]
+  convert! fromDFinsuppEquiv_single (R := R) f p x
 
 /-- Prefer using `fromDirectSumEquiv_lof` where possible. -/
 theorem fromDirectSumEquiv_apply [Fintype ι] [(i : ι) → DecidableEq (κ i)]
@@ -67,16 +70,18 @@ theorem fromDirectSumEquiv_apply [Fintype ι] [(i : ι) → DecidableEq (κ i)]
     (x : ⨁ i, ⨁ (j : κ i), M i j) :
     fromDirectSumEquiv f x =
       ∑ p ∈ Fintype.piFinset (fun i ↦ (x i).support), f p (fun i ↦ x i (p i)) := by
-  rw [fromDirectSumEquiv, ← fromDFinsuppEquiv_apply]
-  convert! rfl
+  rw [fromDirectSumEquiv, LinearEquiv.trans_apply, LinearEquiv.multilinearMapCongrLeft_apply,
+    compLinearMap_apply]
+  convert! fromDFinsuppEquiv_apply (R := R) f fun i ↦ (x i).toDFinsupp
 
 @[simp]
 theorem fromDirectSumEquiv_symm_apply [Finite ι] [(i : ι) → DecidableEq (κ i)]
     (f : MultilinearMap R (fun i ↦ ⨁ j : κ i, M i j) M')
     (p : (i : ι) → κ i) :
     fromDirectSumEquiv.symm f p = f.compLinearMap (fun i ↦ DirectSum.lof _ _ _ (p i)) := by
-  have : Fintype ι := Fintype.ofFinite ι
-  simp_rw [fromDirectSumEquiv, DirectSum.lof, ← fromDFinsuppEquiv_symm_apply]
-  convert! rfl
+  suffices fromDirectSumEquiv.symm f = fun p ↦ f.compLinearMap fun i ↦ lof _ _ _ (p i) from
+    congrFun this p
+  rw [LinearEquiv.symm_apply_eq]
+  exact directSum_ext fun q ↦ MultilinearMap.ext fun x ↦ by simp
 
 end MultilinearMap

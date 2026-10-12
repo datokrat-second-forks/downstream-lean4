@@ -114,6 +114,7 @@ structure Cert {u : Level} {α : Q(Type u)} (rα : Q(CommRing $α)) where
   result : CertResult rα subject
   /-- `true` when `norm` is zero, used as a hint to the evaluator. -/
   isZero : Bool
+  deriving Nonempty
 
 namespace Cert
 

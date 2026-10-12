@@ -38,19 +38,37 @@ universe u v
 variable {α : Type u} {β : Type v}
 
 /-- If `α` carries some multiplicative structure, then `Additive α` carries the corresponding
-additive structure. -/
-def Additive (α : Type*) := α
+additive structure.
+
+`Additive α` and `α` are different types: convert between them with `Additive.ofMul` and
+`Additive.toMul`. -/
+structure +defeq Additive (α : Type*) where
+  /-- Reinterpret `x : α` as an element of `Additive α`. This is the raw constructor; the bundled
+  equivalence `Additive.ofMul` should be preferred. -/
+  ofMul' ::
+  /-- Reinterpret `x : Additive α` as an element of `α`. This is the raw projection; the bundled
+  equivalence `Additive.toMul` should be preferred. -/
+  toMul' : α
 
 /-- If `α` carries some additive structure, then `Multiplicative α` carries the corresponding
-multiplicative structure. -/
-def Multiplicative (α : Type*) := α
+multiplicative structure.
+
+`Multiplicative α` and `α` are different types: convert between them with `Multiplicative.ofAdd`
+and `Multiplicative.toAdd`. -/
+structure +defeq Multiplicative (α : Type*) where
+  /-- Reinterpret `x : α` as an element of `Multiplicative α`. This is the raw constructor; the
+  bundled equivalence `Multiplicative.ofAdd` should be preferred. -/
+  ofAdd' ::
+  /-- Reinterpret `x : Multiplicative α` as an element of `α`. This is the raw projection; the
+  bundled equivalence `Multiplicative.toAdd` should be preferred. -/
+  toAdd' : α
 
 namespace Additive
 
 /-- Reinterpret `x : α` as an element of `Additive α`. -/
 @[implicit_reducible]
 def ofMul : α ≃ Additive α :=
-  ⟨fun x => x, fun x => x, fun _ => rfl, fun _ => rfl⟩
+  ⟨ofMul', toMul', fun _ => rfl, fun _ => rfl⟩
 
 /-- Reinterpret `x : Additive α` as an element of `α`. -/
 @[implicit_reducible]
@@ -64,13 +82,15 @@ theorem ofMul_symm_eq : (@ofMul α).symm = toMul :=
 theorem toMul_symm_eq : (@toMul α).symm = ofMul :=
   rfl
 
-@[ext] lemma ext {a b : Additive α} (hab : a.toMul = b.toMul) : a = b := hab
+@[ext] lemma ext {a b : Additive α} (hab : a.toMul = b.toMul) : a = b := toMul.injective hab
 
 @[simp]
-protected lemma «forall» {p : Additive α → Prop} : (∀ a, p a) ↔ ∀ a, p (ofMul a) := Iff.rfl
+protected lemma «forall» {p : Additive α → Prop} : (∀ a, p a) ↔ ∀ a, p (ofMul a) :=
+  ofMul.forall_congr_right.symm
 
 @[simp]
-protected lemma «exists» {p : Additive α → Prop} : (∃ a, p a) ↔ ∃ a, p (ofMul a) := Iff.rfl
+protected lemma «exists» {p : Additive α → Prop} : (∃ a, p a) ↔ ∃ a, p (ofMul a) :=
+  ofMul.exists_congr_right.symm
 
 /-- Recursion principle for `Additive`, supported by `cases` and `induction`. -/
 @[elab_as_elim, cases_eliminator, induction_eliminator]
@@ -84,7 +104,7 @@ namespace Multiplicative
 /-- Reinterpret `x : α` as an element of `Multiplicative α`. -/
 @[implicit_reducible]
 def ofAdd : α ≃ Multiplicative α :=
-  ⟨fun x => x, fun x => x, fun _ => rfl, fun _ => rfl⟩
+  ⟨ofAdd', toAdd', fun _ => rfl, fun _ => rfl⟩
 
 /-- Reinterpret `x : Multiplicative α` as an element of `α`. -/
 @[implicit_reducible]
@@ -98,13 +118,16 @@ theorem ofAdd_symm_eq : (@ofAdd α).symm = toAdd :=
 theorem toAdd_symm_eq : (@toAdd α).symm = ofAdd :=
   rfl
 
-@[ext] lemma ext {a b : Multiplicative α} (hab : a.toAdd = b.toAdd) : a = b := hab
+@[ext] lemma ext {a b : Multiplicative α} (hab : a.toAdd = b.toAdd) : a = b :=
+  toAdd.injective hab
 
 @[simp]
-protected lemma «forall» {p : Multiplicative α → Prop} : (∀ a, p a) ↔ ∀ a, p (ofAdd a) := Iff.rfl
+protected lemma «forall» {p : Multiplicative α → Prop} : (∀ a, p a) ↔ ∀ a, p (ofAdd a) :=
+  ofAdd.forall_congr_right.symm
 
 @[simp]
-protected lemma «exists» {p : Multiplicative α → Prop} : (∃ a, p a) ↔ ∃ a, p (ofAdd a) := Iff.rfl
+protected lemma «exists» {p : Multiplicative α → Prop} : (∃ a, p a) ↔ ∃ a, p (ofAdd a) :=
+  ofAdd.exists_congr_right.symm
 
 /-- Recursion principle for `Multiplicative`, supported by `cases` and `induction`. -/
 @[elab_as_elim, cases_eliminator, induction_eliminator]
@@ -144,9 +167,9 @@ instance [Inhabited α] : Inhabited (Multiplicative α) :=
 instance [Unique α] : Unique (Additive α) := toMul.unique
 instance [Unique α] : Unique (Multiplicative α) := toAdd.unique
 
-instance [h : DecidableEq α] : DecidableEq (Multiplicative α) := h
+instance [DecidableEq α] : DecidableEq (Multiplicative α) := inferInstanceAs (DecidableEq α)
 
-instance [h : DecidableEq α] : DecidableEq (Additive α) := h
+instance [DecidableEq α] : DecidableEq (Additive α) := inferInstanceAs (DecidableEq α)
 
 instance Additive.instNontrivial [Nontrivial α] : Nontrivial (Additive α) :=
   ofMul.injective.nontrivial
@@ -173,30 +196,31 @@ theorem ofMul_mul [Mul α] (x y : α) : ofMul (x * y) = ofMul x + ofMul y := rfl
 theorem toMul_add [Mul α] (x y : Additive α) : (x + y).toMul = x.toMul * y.toMul := rfl
 
 instance Additive.addSemigroup [Semigroup α] : AddSemigroup (Additive α) :=
-  { Additive.add with add_assoc := @mul_assoc α _ }
+  { Additive.add with add_assoc a b c := Additive.ext (mul_assoc a.toMul b.toMul c.toMul) }
 
 instance Multiplicative.semigroup [AddSemigroup α] : Semigroup (Multiplicative α) :=
-  { Multiplicative.mul with mul_assoc := @add_assoc α _ }
+  { Multiplicative.mul with
+    mul_assoc a b c := Multiplicative.ext (add_assoc a.toAdd b.toAdd c.toAdd) }
 
 instance Additive.addCommSemigroup [CommSemigroup α] : AddCommSemigroup (Additive α) :=
-  { Additive.addSemigroup with add_comm := @mul_comm α _ }
+  { Additive.addSemigroup with add_comm a b := Additive.ext (mul_comm a.toMul b.toMul) }
 
 instance Multiplicative.commSemigroup [AddCommSemigroup α] : CommSemigroup (Multiplicative α) :=
-  { Multiplicative.semigroup with mul_comm := @add_comm α _ }
+  { Multiplicative.semigroup with mul_comm a b := Multiplicative.ext (add_comm a.toAdd b.toAdd) }
 
 instance Additive.isLeftCancelAdd [Mul α] [IsLeftCancelMul α] : IsLeftCancelAdd (Additive α) :=
-  ⟨@mul_left_cancel α _ _⟩
+  ⟨fun _ _ _ h ↦ Additive.ext (mul_left_cancel (congrArg (⇑toMul) h))⟩
 
 instance Multiplicative.isLeftCancelMul [Add α] [IsLeftCancelAdd α] :
     IsLeftCancelMul (Multiplicative α) :=
-  ⟨@add_left_cancel α _ _⟩
+  ⟨fun _ _ _ h ↦ Multiplicative.ext (add_left_cancel (congrArg (⇑toAdd) h))⟩
 
 instance Additive.isRightCancelAdd [Mul α] [IsRightCancelMul α] : IsRightCancelAdd (Additive α) :=
-  ⟨fun _ _ _ ↦ mul_right_cancel (G := α)⟩
+  ⟨fun _ _ _ h ↦ Additive.ext (mul_right_cancel (congrArg (⇑toMul) h))⟩
 
 instance Multiplicative.isRightCancelMul [Add α] [IsRightCancelAdd α] :
     IsRightCancelMul (Multiplicative α) :=
-  ⟨fun _ _ _ ↦ add_right_cancel (G := α)⟩
+  ⟨fun _ _ _ h ↦ Multiplicative.ext (add_right_cancel (congrArg (⇑toAdd) h))⟩
 
 instance Additive.isCancelAdd [Mul α] [IsCancelMul α] : IsCancelAdd (Additive α) :=
   ⟨⟩
@@ -227,7 +251,8 @@ instance [One α] : Zero (Additive α) :=
 theorem ofMul_one [One α] : @Additive.ofMul α 1 = 0 := rfl
 
 @[simp]
-theorem ofMul_eq_zero {A : Type*} [One A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 := Iff.rfl
+theorem ofMul_eq_zero {A : Type*} [One A] {x : A} : Additive.ofMul x = 0 ↔ x = 1 :=
+  ⟨fun h ↦ ofMul.injective h, fun h ↦ h ▸ rfl⟩
 
 @[simp]
 theorem toMul_zero [One α] : (0 : Additive α).toMul = 1 := rfl
@@ -235,7 +260,7 @@ theorem toMul_zero [One α] : (0 : Additive α).toMul = 1 := rfl
 @[simp]
 lemma toMul_eq_one {α : Type*} [One α] {x : Additive α} :
     x.toMul = 1 ↔ x = 0 :=
-  Iff.rfl
+  ⟨fun h ↦ Additive.ext h, fun h ↦ h ▸ rfl⟩
 
 instance [Zero α] : One (Multiplicative α) :=
   ⟨Multiplicative.ofAdd 0⟩
@@ -246,7 +271,7 @@ theorem ofAdd_zero [Zero α] : @Multiplicative.ofAdd α 0 = 1 :=
 
 @[simp]
 theorem ofAdd_eq_one {A : Type*} [Zero A] {x : A} : Multiplicative.ofAdd x = 1 ↔ x = 0 :=
-  Iff.rfl
+  ⟨fun h ↦ ofAdd.injective h, fun h ↦ h ▸ rfl⟩
 
 @[simp]
 theorem toAdd_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
@@ -255,25 +280,25 @@ theorem toAdd_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
 @[simp]
 lemma toAdd_eq_zero {α : Type*} [Zero α] {x : Multiplicative α} :
     x.toAdd = 0 ↔ x = 1 :=
-  Iff.rfl
+  ⟨fun h ↦ Multiplicative.ext h, fun h ↦ h ▸ rfl⟩
 
 instance Additive.addZeroClass [MulOneClass α] : AddZeroClass (Additive α) where
-  zero_add := @one_mul α _
-  add_zero := @mul_one α _
+  zero_add a := Additive.ext (one_mul a.toMul)
+  add_zero a := Additive.ext (mul_one a.toMul)
 
 instance Multiplicative.mulOneClass [AddZeroClass α] : MulOneClass (Multiplicative α) where
-  one_mul := @zero_add α _
-  mul_one := @add_zero α _
+  one_mul a := Multiplicative.ext (zero_add a.toAdd)
+  mul_one a := Multiplicative.ext (add_zero a.toAdd)
 
 instance Additive.addMonoid [h : Monoid α] : AddMonoid (Additive α) where
   nsmul n a := ofMul (a.toMul ^ n)
-  nsmul_zero := h.npow_zero
-  nsmul_succ := h.npow_succ
+  nsmul_zero a := Additive.ext (h.npow_zero a.toMul)
+  nsmul_succ n a := Additive.ext (h.npow_succ n a.toMul)
 
 instance Multiplicative.monoid [h : AddMonoid α] : Monoid (Multiplicative α) where
   npow n a := ofAdd (n • a.toAdd)
-  npow_zero := h.nsmul_zero
-  npow_succ := h.nsmul_succ
+  npow_zero a := Multiplicative.ext (h.nsmul_zero a.toAdd)
+  npow_succ n a := Multiplicative.ext (h.nsmul_succ n a.toAdd)
 
 @[simp]
 theorem ofMul_pow [Monoid α] (n : ℕ) (a : α) : ofMul (a ^ n) = n • ofMul a :=
@@ -295,17 +320,22 @@ section Monoid
 variable [Monoid α]
 
 @[simp]
-lemma isAddLeftRegular_ofMul {a : α} : IsAddLeftRegular (Additive.ofMul a) ↔ IsLeftRegular a := .rfl
+lemma isAddLeftRegular_ofMul {a : α} : IsAddLeftRegular (Additive.ofMul a) ↔ IsLeftRegular a :=
+  ⟨fun h _ _ hxy ↦ ofMul.injective (h (congrArg (⇑ofMul) hxy)),
+    fun h _ _ hxy ↦ toMul.injective (h (congrArg (⇑toMul) hxy))⟩
 
 @[simp]
-lemma isLeftRegular_toMul {a : Additive α} : IsLeftRegular a.toMul ↔ IsAddLeftRegular a := .rfl
+lemma isLeftRegular_toMul {a : Additive α} : IsLeftRegular a.toMul ↔ IsAddLeftRegular a :=
+  isAddLeftRegular_ofMul.symm
 
 @[simp]
 lemma isAddRightRegular_ofMul {a : α} : IsAddRightRegular (Additive.ofMul a) ↔ IsRightRegular a :=
-  .rfl
+  ⟨fun h _ _ hxy ↦ ofMul.injective (h (congrArg (⇑ofMul) hxy)),
+    fun h _ _ hxy ↦ toMul.injective (h (congrArg (⇑toMul) hxy))⟩
 
 @[simp]
-lemma isRightRegular_toMul {a : Additive α} : IsRightRegular a.toMul ↔ IsAddRightRegular a := .rfl
+lemma isRightRegular_toMul {a : Additive α} : IsRightRegular a.toMul ↔ IsAddRightRegular a :=
+  isAddRightRegular_ofMul.symm
 
 @[simp] lemma isAddRegular_ofMul {a : α} : IsAddRegular (Additive.ofMul a) ↔ IsRegular a := by
   simp [isAddRegular_iff, isRegular_iff]
@@ -320,18 +350,22 @@ variable [AddMonoid α]
 
 @[simp]
 lemma isLeftRegular_ofAdd {a : α} : IsLeftRegular (Multiplicative.ofAdd a) ↔ IsAddLeftRegular a :=
-  .rfl
+  ⟨fun h _ _ hxy ↦ ofAdd.injective (h (congrArg (⇑ofAdd) hxy)),
+    fun h _ _ hxy ↦ toAdd.injective (h (congrArg (⇑toAdd) hxy))⟩
 
 @[simp]
 lemma isAddLeftRegular_toAdd {a : Multiplicative α} : IsAddLeftRegular a.toAdd ↔ IsLeftRegular a :=
-  .rfl
+  isLeftRegular_ofAdd.symm
 
 @[simp]
 lemma isRightRegular_ofAdd {a : α} :
-    IsRightRegular (Multiplicative.ofAdd a) ↔ IsAddRightRegular a := .rfl
+    IsRightRegular (Multiplicative.ofAdd a) ↔ IsAddRightRegular a :=
+  ⟨fun h _ _ hxy ↦ ofAdd.injective (h (congrArg (⇑ofAdd) hxy)),
+    fun h _ _ hxy ↦ toAdd.injective (h (congrArg (⇑toAdd) hxy))⟩
 
 @[simp] lemma isAddRightRegular_toAdd {a : Multiplicative α} :
-    IsAddRightRegular a.toAdd ↔ IsRightRegular a := .rfl
+    IsAddRightRegular a.toAdd ↔ IsRightRegular a :=
+  isRightRegular_ofAdd.symm
 
 @[simp] lemma isRegular_ofAdd {a : α} : IsRegular (Multiplicative.ofAdd a) ↔ IsAddRegular a := by
   simp [isAddRegular_iff, isRegular_iff]
@@ -368,7 +402,7 @@ instance Multiplicative.instCancelCommMonoid [AddCancelCommMonoid α] :
     CancelCommMonoid (Multiplicative α) where
 
 instance Additive.neg [Inv α] : Neg (Additive α) :=
-  ⟨fun x => ofAdd x.toMul⁻¹⟩
+  ⟨fun x => ofMul x.toMul⁻¹⟩
 
 @[simp]
 theorem ofMul_inv [Inv α] (x : α) : ofMul x⁻¹ = -ofMul x :=
@@ -379,7 +413,7 @@ theorem toMul_neg [Inv α] (x : Additive α) : (-x).toMul = x.toMul⁻¹ :=
   rfl
 
 instance Multiplicative.inv [Neg α] : Inv (Multiplicative α) :=
-  ⟨fun x => ofMul (-x.toAdd)⟩
+  ⟨fun x => ofAdd (-x.toAdd)⟩
 
 @[simp]
 theorem ofAdd_neg [Neg α] (x : α) : ofAdd (-x) = (ofAdd x)⁻¹ :=
@@ -412,24 +446,24 @@ theorem toMul_sub [Div α] (x y : Additive α) : (x - y).toMul = x.toMul / y.toM
   rfl
 
 instance Additive.involutiveNeg [InvolutiveInv α] : InvolutiveNeg (Additive α) :=
-  { Additive.neg with neg_neg := @inv_inv α _ }
+  { Additive.neg with neg_neg a := Additive.ext (inv_inv a.toMul) }
 
 instance Multiplicative.involutiveInv [InvolutiveNeg α] : InvolutiveInv (Multiplicative α) :=
-  { Multiplicative.inv with inv_inv := @neg_neg α _ }
+  { Multiplicative.inv with inv_inv a := Multiplicative.ext (neg_neg a.toAdd) }
 
 instance Additive.subNegMonoid [h : DivInvMonoid α] : SubNegMonoid (Additive α) where
-  sub_eq_add_neg := h.div_eq_mul_inv
+  sub_eq_add_neg a b := Additive.ext (h.div_eq_mul_inv a.toMul b.toMul)
   zsmul n a := ofMul (a.toMul ^ n)
-  zsmul_zero' := h.zpow_zero'
-  zsmul_succ' := h.zpow_succ'
-  zsmul_neg' := h.zpow_neg'
+  zsmul_zero' a := Additive.ext (h.zpow_zero' a.toMul)
+  zsmul_succ' n a := Additive.ext (h.zpow_succ' n a.toMul)
+  zsmul_neg' n a := Additive.ext (h.zpow_neg' n a.toMul)
 
 instance Multiplicative.divInvMonoid [h : SubNegMonoid α] : DivInvMonoid (Multiplicative α) where
-  div_eq_mul_inv := h.sub_eq_add_neg
+  div_eq_mul_inv a b := Multiplicative.ext (h.sub_eq_add_neg a.toAdd b.toAdd)
   zpow n a := ofAdd (n • a.toAdd)
-  zpow_zero' := h.zsmul_zero'
-  zpow_succ' := h.zsmul_succ'
-  zpow_neg' := h.zsmul_neg'
+  zpow_zero' a := Multiplicative.ext (h.zsmul_zero' a.toAdd)
+  zpow_succ' n a := Multiplicative.ext (h.zsmul_succ' n a.toAdd)
+  zpow_neg' n a := Multiplicative.ext (h.zsmul_neg' n a.toAdd)
 
 @[simp]
 theorem ofMul_zpow [DivInvMonoid α] (z : ℤ) (a : α) : ofMul (a ^ z) = z • ofMul a :=
@@ -449,13 +483,13 @@ theorem toAdd_zpow [SubNegMonoid α] (a : Multiplicative α) (z : ℤ) : (a ^ z)
 
 instance Additive.subtractionMonoid [DivisionMonoid α] : SubtractionMonoid (Additive α) :=
   { Additive.subNegMonoid, Additive.involutiveNeg with
-    neg_add_rev := @mul_inv_rev α _
-    neg_eq_of_add := @inv_eq_of_mul_eq_one_right α _ }
+    neg_add_rev a b := Additive.ext (mul_inv_rev a.toMul b.toMul)
+    neg_eq_of_add _ _ h := Additive.ext (inv_eq_of_mul_eq_one_right (congrArg (⇑toMul) h)) }
 
 instance Multiplicative.divisionMonoid [SubtractionMonoid α] : DivisionMonoid (Multiplicative α) :=
   { Multiplicative.divInvMonoid, Multiplicative.involutiveInv with
-    mul_inv_rev := @neg_add_rev α _
-    inv_eq_of_mul := @neg_eq_of_add_eq_zero_right α _ }
+    mul_inv_rev a b := Multiplicative.ext (neg_add_rev a.toAdd b.toAdd)
+    inv_eq_of_mul _ _ h := Multiplicative.ext (neg_eq_of_add_eq_zero_right (congrArg (⇑toAdd) h)) }
 
 instance Additive.subtractionCommMonoid [DivisionCommMonoid α] :
     SubtractionCommMonoid (Additive α) :=
@@ -466,10 +500,11 @@ instance Multiplicative.divisionCommMonoid [SubtractionCommMonoid α] :
   { Multiplicative.divisionMonoid, Multiplicative.commSemigroup with }
 
 instance Additive.addGroup [Group α] : AddGroup (Additive α) :=
-  { Additive.subNegMonoid with neg_add_cancel := @inv_mul_cancel α _ }
+  { Additive.subNegMonoid with neg_add_cancel a := Additive.ext (inv_mul_cancel a.toMul) }
 
 instance Multiplicative.group [AddGroup α] : Group (Multiplicative α) :=
-  { Multiplicative.divInvMonoid with inv_mul_cancel := @neg_add_cancel α _ }
+  { Multiplicative.divInvMonoid with
+    inv_mul_cancel a := Multiplicative.ext (neg_add_cancel a.toAdd) }
 
 instance Additive.addCommGroup [CommGroup α] : AddCommGroup (Additive α) :=
   { Additive.addGroup, Additive.addCommMonoid with }
@@ -478,10 +513,11 @@ instance Multiplicative.commGroup [AddCommGroup α] : CommGroup (Multiplicative 
   { Multiplicative.group, Multiplicative.commMonoid with }
 
 instance [Monoid α] [IsMulTorsionFree α] : IsAddTorsionFree (Additive α) where
-  nsmul_right_injective _ := pow_left_injective (M := α)
+  nsmul_right_injective _ hn _ _ h := Additive.ext (pow_left_injective hn (congrArg (⇑toMul) h))
 
 instance [AddMonoid α] [IsAddTorsionFree α] : IsMulTorsionFree (Multiplicative α) where
-  pow_left_injective _ := nsmul_right_injective (M := α)
+  pow_left_injective _ hn _ _ h :=
+    Multiplicative.ext (nsmul_right_injective hn (congrArg (⇑toAdd) h))
 
 /-- If `α` has some multiplicative structure and coerces to a function,
 then `Additive α` should also coerce to the same function.

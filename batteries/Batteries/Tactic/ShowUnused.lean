@@ -54,7 +54,7 @@ elab tk:"#show_unused" ids:(ppSpace colGt ident)* : command => do
   let decls := env.constants.map₂.foldl (fun m n _ => m.insert n) {}
   let mut unused := #[]
   let fileMap ← getFileMap
-  for c in ((ns.forM (visit env)).run decls).2 do
+  for c in ((ns.forM (visit env)).run decls).run.2 do
     if let some { selectionRange := range, .. } := declRangeExt.find? env c then
       unused := unused.push (c, {
         start := fileMap.ofPosition range.pos

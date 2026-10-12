@@ -296,8 +296,7 @@ theorem Projective.directSum_iff : Projective R (⨁ i, M i) ↔ ∀ (i : ι), P
   classical
   refine ⟨fun H i ↦ ?_, fun H ↦ ?_⟩
   · exact .of_split (DirectSum.lof ..) (DirectSum.component ..) (by simp)
-  · let e : (⨁ i, M i) ≃ₗ[R] Π₀ i, M i := .refl ..
-    exact Projective.of_equiv' e.symm
+  · exact Projective.of_equiv' (DirectSum.linearEquiv R M).symm
 
 instance Projective.directSum [∀ (i : ι), Projective R (M i)] : Projective R (⨁ i, M i) :=
   directSum_iff.mpr ‹_›

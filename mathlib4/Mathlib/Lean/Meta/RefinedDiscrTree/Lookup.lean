@@ -262,10 +262,10 @@ where
   /-- Drop the keys corresponding to the next `n` expressions. -/
   drop (dropped rest : List Key) (n : Nat) : (List Key × List Key) := Id.run do
     match n with
-    | 0 => (dropped, rest)
+    | 0 => return (dropped, rest)
     | n + 1 =>
       let key :: rest := rest | panic! "too few keys"
-      drop (key :: dropped) rest (n + key.arity)
+      return drop (key :: dropped) rest (n + key.arity)
 
   isEq (lhs rhs : List Key) : Option (List Key × List Key) := do
     match lhs with

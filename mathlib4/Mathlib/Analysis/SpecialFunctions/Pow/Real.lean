@@ -242,7 +242,10 @@ theorem le_rpow_add {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ y * x ^ z ≤ x ^
 
 theorem rpow_sum_of_pos {ι : Type*} {a : ℝ} (ha : 0 < a) (f : ι → ℝ) (s : Finset ι) :
     (a ^ ∑ x ∈ s, f x) = ∏ x ∈ s, a ^ f x :=
-  map_sum (⟨⟨fun (x : ℝ) => (a ^ x : ℝ), rpow_zero a⟩, rpow_add ha⟩ : ℝ →+ (Additive ℝ)) f s
+  Additive.ofMul.injective <|
+    (map_sum (⟨⟨fun x : ℝ ↦ Additive.ofMul (a ^ x), congrArg Additive.ofMul (rpow_zero a)⟩,
+        fun x y ↦ congrArg Additive.ofMul (rpow_add ha x y)⟩ : ℝ →+ Additive ℝ) f s).trans
+      (ofMul_prod s fun x ↦ a ^ f x).symm
 
 theorem rpow_sum_of_nonneg {ι : Type*} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι} {f : ι → ℝ}
     (h : ∀ x ∈ s, 0 ≤ f x) : (a ^ ∑ x ∈ s, f x) = ∏ x ∈ s, a ^ f x := by

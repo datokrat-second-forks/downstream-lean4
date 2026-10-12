@@ -70,8 +70,7 @@ lemma nonempty_rankOne_iff_mulArchimedean {v : Valuation R Γ₀} [v.IsNontrivia
     let e := AddMonoidHom.toMultiplicativeRight (α := (ValueGroup₀ (.ofClass v))ˣ) (β := ℝ) f
     have he : StrictMono e := by
       simp only [AddMonoidHom.coe_toMultiplicativeRight, AddMonoidHom.coe_coe, e]
-      -- toAdd_strictMono is already in an applied form, do defeq abuse instead
-      exact StrictMono.comp strictMono_id (f.monotone'.strictMono_of_injective hf)
+      exact (f.monotone'.strictMono_of_injective hf).comp fun _ _ h ↦ Additive.ofMul_strictMono h
     let rf : Multiplicative ℝ →* ℝ≥0ˣ := {
       toFun x := Units.mk0 (.mk ((2 : ℝ) ^ (log (M := ℝ) x)) (by positivity)) <| by
         simp only [ne_eq, NNReal.eq_iff, NNReal.coe_mk, NNReal.coe_zero]

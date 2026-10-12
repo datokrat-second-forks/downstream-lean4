@@ -140,4 +140,4 @@ def mapM [Monad m] (a : ByteArray) (f : UInt8 → m UInt8) : m ByteArray := do
 /-- `map f a` applies the function `f` to each element of the array. -/
 @[inline]
 def map (a : ByteArray) (f : UInt8 → UInt8) : ByteArray :=
-  mapM (m:=Id) a f
+  Id.run <| mapM a (fun x => pure (f x))

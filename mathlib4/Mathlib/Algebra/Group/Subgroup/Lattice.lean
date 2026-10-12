@@ -65,10 +65,10 @@ variable {A : Type*} [AddGroup A]
 @[simps!]
 def Subgroup.toAddSubgroup : Subgroup G ≃o AddSubgroup (Additive G) where
   toFun S := { Submonoid.toAddSubmonoid S.toSubmonoid with neg_mem' := S.inv_mem' }
-  invFun S := { AddSubmonoid.toSubmonoid S.toAddSubmonoid with inv_mem' := S.neg_mem' }
+  invFun S := { AddSubmonoid.toSubmonoid' S.toAddSubmonoid with inv_mem' := S.neg_mem' }
   left_inv x := by cases x; rfl
   right_inv x := by cases x; rfl
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Additive.toMul.surjective.preimage_subset_preimage_iff
 
 @[simp] lemma Additive.mem_toAddSubgroup (S : Subgroup G) (g : Additive G) :
     g ∈ S.toAddSubgroup ↔ Additive.toMul g ∈ S :=
@@ -87,10 +87,10 @@ abbrev AddSubgroup.toSubgroup' : AddSubgroup (Additive G) ≃o Subgroup G :=
 @[simps!]
 def AddSubgroup.toSubgroup : AddSubgroup A ≃o Subgroup (Multiplicative A) where
   toFun S := { AddSubmonoid.toSubmonoid S.toAddSubmonoid with inv_mem' := S.neg_mem' }
-  invFun S := { Submonoid.toAddSubmonoid S.toSubmonoid with neg_mem' := S.inv_mem' }
+  invFun S := { Submonoid.toAddSubmonoid' S.toSubmonoid with neg_mem' := S.inv_mem' }
   left_inv x := by cases x; rfl
   right_inv x := by cases x; rfl
-  map_rel_iff' := Iff.rfl
+  map_rel_iff' := Multiplicative.toAdd.surjective.preimage_subset_preimage_iff
 
 @[simp] lemma Multiplicative.mem_toSubgroup (S : AddSubgroup A) (a : Multiplicative A) :
     a ∈ S.toSubgroup ↔ Multiplicative.toAdd a ∈ S :=
@@ -513,22 +513,26 @@ theorem closure_sdiff_one (s : Set G) : closure (s \ {1}) = closure s := by
 theorem toAddSubgroup_closure (S : Set G) :
     (Subgroup.closure S).toAddSubgroup = AddSubgroup.closure (Additive.toMul ⁻¹' S) :=
   le_antisymm (toAddSubgroup.le_symm_apply.mp <|
-      (closure_le _).mpr (AddSubgroup.subset_closure (G := Additive G)))
-    ((AddSubgroup.closure_le _).mpr (subset_closure (G := G)))
+      (closure_le _).mpr fun _ hx ↦ AddSubgroup.subset_closure hx)
+    ((AddSubgroup.closure_le _).mpr fun _ hx ↦ subset_closure hx)
 
 theorem _root_.AddSubgroup.toSubgroup_closure {A : Type*} [AddGroup A] (S : Set A) :
     (AddSubgroup.closure S).toSubgroup = Subgroup.closure (Multiplicative.toAdd ⁻¹' S) :=
-  Subgroup.toAddSubgroup.injective (Subgroup.toAddSubgroup_closure _).symm
+  le_antisymm (AddSubgroup.toSubgroup.le_symm_apply.mp <|
+      (AddSubgroup.closure_le _).mpr fun _ hx ↦ Subgroup.subset_closure (G := Multiplicative A) hx)
+    ((Subgroup.closure_le _).mpr fun _ hx ↦ AddSubgroup.subset_closure (G := A) hx)
 
 theorem toAddSubgroup'_closure {A : Type*} [AddGroup A] (S : Set (Multiplicative A)) :
     (closure S).toAddSubgroup' = AddSubgroup.closure (Multiplicative.ofAdd ⁻¹' S) :=
   le_antisymm (toAddSubgroup'.to_galoisConnection.l_le <|
-      (closure_le _).mpr <| AddSubgroup.subset_closure (G := A))
-    ((AddSubgroup.closure_le _).mpr <| Subgroup.subset_closure (G := Multiplicative A))
+      (closure_le _).mpr fun _ hx ↦ AddSubgroup.subset_closure (G := A) hx)
+    ((AddSubgroup.closure_le _).mpr fun _ hx ↦ Subgroup.subset_closure (G := Multiplicative A) hx)
 
 theorem _root_.AddSubgroup.toSubgroup'_closure (S : Set (Additive G)) :
     (AddSubgroup.closure S).toSubgroup' = Subgroup.closure (Additive.ofMul ⁻¹' S) :=
-  congr_arg AddSubgroup.toSubgroup' (toAddSubgroup'_closure _).symm
+  le_antisymm (AddSubgroup.toSubgroup'.le_symm_apply.mp <|
+      (AddSubgroup.closure_le _).mpr fun _ hx ↦ Subgroup.subset_closure (G := G) hx)
+    ((Subgroup.closure_le _).mpr fun _ hx ↦ AddSubgroup.subset_closure (G := Additive G) hx)
 
 @[to_additive]
 theorem mem_biSup_of_directedOn {ι} {p : ι → Prop} {K : ι → Subgroup G} {i : ι} (hp : p i)

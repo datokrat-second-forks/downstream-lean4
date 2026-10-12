@@ -211,7 +211,8 @@ theorem directSum_iff : Flat R (⨁ i, M i) ↔ ∀ i, Flat R (M i) := by
     EquivLike.injective_comp, lmap_injective]
   constructor <;> (intro h; intros; apply h)
 
-theorem dfinsupp_iff : Flat R (Π₀ i, M i) ↔ ∀ i, Flat R (M i) := directSum_iff ..
+theorem dfinsupp_iff : Flat R (Π₀ i, M i) ↔ ∀ i, Flat R (M i) :=
+  (equiv_iff (DirectSum.linearEquiv R M)).symm.trans directSum_iff
 
 /-- A direct sum of flat `R`-modules is flat. -/
 instance directSum [∀ i, Flat R (M i)] : Flat R (⨁ i, M i) := directSum_iff.mpr ‹_›
