@@ -19,21 +19,21 @@ public section
 
 variable {X : Type*}
 
-instance [Preorder X] [h : SuccOrder X] : SuccOrder (Multiplicative X) := h
-instance [Preorder X] [h : SuccOrder X] : SuccOrder (Additive X) := h
+instance [Preorder X] [SuccOrder X] : SuccOrder (Multiplicative X) := inferInstanceAs (SuccOrder X)
+instance [Preorder X] [SuccOrder X] : SuccOrder (Additive X) := inferInstanceAs (SuccOrder X)
 
-instance [Preorder X] [h : PredOrder X] : PredOrder (Multiplicative X) := h
-instance [Preorder X] [h : PredOrder X] : PredOrder (Additive X) := h
+instance [Preorder X] [PredOrder X] : PredOrder (Multiplicative X) := inferInstanceAs (PredOrder X)
+instance [Preorder X] [PredOrder X] : PredOrder (Additive X) := inferInstanceAs (PredOrder X)
 
-instance [Preorder X] [SuccOrder X] [h : IsSuccArchimedean X] :
-    IsSuccArchimedean (Multiplicative X) := h
-instance [Preorder X] [SuccOrder X] [h : IsSuccArchimedean X] :
-    IsSuccArchimedean (Additive X) := h
+instance [Preorder X] [SuccOrder X] [IsSuccArchimedean X] :
+    IsSuccArchimedean (Multiplicative X) := inferInstanceAs (IsSuccArchimedean X)
+instance [Preorder X] [SuccOrder X] [IsSuccArchimedean X] :
+    IsSuccArchimedean (Additive X) := inferInstanceAs (IsSuccArchimedean X)
 
-instance [Preorder X] [PredOrder X] [h : IsPredArchimedean X] :
-    IsPredArchimedean (Multiplicative X) := h
-instance [Preorder X] [PredOrder X] [h : IsPredArchimedean X] :
-    IsPredArchimedean (Additive X) := h
+instance [Preorder X] [PredOrder X] [IsPredArchimedean X] :
+    IsPredArchimedean (Multiplicative X) := inferInstanceAs (IsPredArchimedean X)
+instance [Preorder X] [PredOrder X] [IsPredArchimedean X] :
+    IsPredArchimedean (Additive X) := inferInstanceAs (IsPredArchimedean X)
 
 namespace Order
 

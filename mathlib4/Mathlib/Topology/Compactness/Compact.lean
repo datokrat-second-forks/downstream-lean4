@@ -11,6 +11,7 @@ public import Mathlib.Topology.Bornology.Basic
 public import Mathlib.Topology.ContinuousOn
 public import Mathlib.Topology.Ultrafilter
 public import Mathlib.Topology.Defs.Ultrafilter
+public import Mathlib.Topology.Homeomorph.TransferInstance
 
 /-!
 # Compact sets and compact spaces
@@ -1256,3 +1257,47 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace X] {S : Set
   rw [← this, compl_compl]
 
 end Compact
+
+/-! ### Transport -/
+
+/-- `CompactSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev CompactSpace.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (CompactSpace X) (CompactSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isClosedEmbedding.compactSpace
+    invFun _ := e.homeomorph.isClosedEmbedding.compactSpace
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-- `NoncompactSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev NoncompactSpace.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (NoncompactSpace X) (NoncompactSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.isClosedEmbedding.noncompactSpace
+    invFun _ := e.homeomorph.symm.isClosedEmbedding.noncompactSpace
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-! ### Type tags
+
+These instances are not with the other instances on the type tags in
+`Mathlib/Topology/Constructions.lean`, which is upstream of the transport congruences above. -/
+
+instance [CompactSpace X] : CompactSpace (Additive X) := inferInstanceAs (CompactSpace X)
+instance [CompactSpace X] : CompactSpace (Multiplicative X) := inferInstanceAs (CompactSpace X)
+
+instance [NoncompactSpace X] : NoncompactSpace (Additive X) := inferInstanceAs (NoncompactSpace X)
+instance [NoncompactSpace X] : NoncompactSpace (Multiplicative X) :=
+  inferInstanceAs (NoncompactSpace X)

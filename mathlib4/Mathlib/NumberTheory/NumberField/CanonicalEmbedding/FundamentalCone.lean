@@ -231,7 +231,8 @@ theorem exists_unit_smul_mem (hx : mixedEmbedding.norm x ≠ 0) :
   classical
   let B := (basisUnitLattice K).ofZLatticeBasis ℝ
   rsuffices ⟨⟨_, ⟨u, _, rfl⟩⟩, hu⟩ : ∃ e : unitLattice K, e + logMap x ∈ ZSpan.fundamentalDomain B
-  · exact ⟨u, by rwa [Set.mem_preimage, logMap_unit_smul u hx], by simp [hx]⟩
+  · exact ⟨u.toMul, by rwa [Set.mem_preimage, logMap_unit_smul u.toMul hx],
+      by rw [Set.mem_ofPred_eq, unitSMul_smul, map_mul, norm_unit, one_mul]; exact hx⟩
   · obtain ⟨⟨e, h₁⟩, h₂, -⟩ := ZSpan.exist_unique_vadd_mem_fundamentalDomain B (logMap x)
     exact ⟨⟨e, by rwa [← Module.Basis.ofZLatticeBasis_span ℝ (unitLattice K)]⟩, h₂⟩
 
@@ -252,7 +253,7 @@ theorem unit_smul_mem_iff_mem_torsion (hx : x ∈ fundamentalCone K) (u : (𝓞 
   refine (Subtype.mk_eq_mk (h := ?_) (h' := Submodule.zero_mem _)).mp <|
     (ZSpan.exist_unique_vadd_mem_fundamentalDomain B (logMap x)).unique ?_ ?_
   · rw [Module.Basis.ofZLatticeBasis_span ℝ (unitLattice K)]
-    exact ⟨u, trivial, rfl⟩
+    exact ⟨Additive.ofMul u, trivial, rfl⟩
   · rw [AddSubmonoid.mk_vadd, vadd_eq_add, ← logMap_unit_smul _ hx.2]
     exact h.1
   · rw [AddSubmonoid.mk_vadd, vadd_eq_add, zero_add]

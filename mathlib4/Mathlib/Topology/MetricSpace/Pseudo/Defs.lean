@@ -1310,8 +1310,8 @@ end Metric
 
 open Additive Multiplicative
 
-instance : PseudoMetricSpace (Additive α) := ‹_›
-instance : PseudoMetricSpace (Multiplicative α) := ‹_›
+instance : PseudoMetricSpace (Additive α) := inferInstanceAs (PseudoMetricSpace α)
+instance : PseudoMetricSpace (Multiplicative α) := inferInstanceAs (PseudoMetricSpace α)
 
 section
 

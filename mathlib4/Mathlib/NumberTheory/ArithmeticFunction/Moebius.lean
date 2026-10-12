@@ -244,8 +244,10 @@ theorem sum_eq_iff_sum_mul_moebius_eq [NonAssocRing R] {f g : ℕ → R} :
 /-- Möbius inversion for functions to a `CommGroup`. -/
 theorem prod_eq_iff_prod_pow_moebius_eq [CommGroup R] {f g : ℕ → R} :
     (∀ n > 0, ∏ i ∈ n.divisors, f i = g n) ↔
-      ∀ n > 0, ∏ x ∈ n.divisorsAntidiagonal, g x.snd ^ μ x.fst = f n :=
-  @sum_eq_iff_sum_smul_moebius_eq (Additive R) _ _ _
+      ∀ n > 0, ∏ x ∈ n.divisorsAntidiagonal, g x.snd ^ μ x.fst = f n := by
+  simpa only [← _root_.ofMul_prod, ← _root_.ofMul_zpow, EmbeddingLike.apply_eq_iff_eq] using
+    sum_eq_iff_sum_smul_moebius_eq (R := Additive R)
+      (f := fun n ↦ Additive.ofMul (f n)) (g := fun n ↦ Additive.ofMul (g n))
 
 /-- Möbius inversion for functions to a `CommGroupWithZero`. -/
 theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : ℕ → R}
@@ -325,8 +327,10 @@ well-behaved set. -/
 theorem prod_eq_iff_prod_pow_moebius_eq_on [CommGroup R] {f g : ℕ → R}
     (s : Set ℕ) (hs : ∀ m n, m ∣ n → n ∈ s → m ∈ s) :
     (∀ n > 0, n ∈ s → (∏ i ∈ n.divisors, f i) = g n) ↔
-      ∀ n > 0, n ∈ s → (∏ x ∈ n.divisorsAntidiagonal, g x.snd ^ μ x.fst) = f n :=
-  @sum_eq_iff_sum_smul_moebius_eq_on (Additive R) _ _ _ s hs
+      ∀ n > 0, n ∈ s → (∏ x ∈ n.divisorsAntidiagonal, g x.snd ^ μ x.fst) = f n := by
+  simpa only [← _root_.ofMul_prod, ← _root_.ofMul_zpow, EmbeddingLike.apply_eq_iff_eq] using
+    sum_eq_iff_sum_smul_moebius_eq_on (R := Additive R)
+      (f := fun n ↦ Additive.ofMul (f n)) (g := fun n ↦ Additive.ofMul (g n)) s hs
 
 /-- Möbius inversion for functions to a `CommGroupWithZero`, where the equalities only hold on
 a well-behaved set. -/

@@ -79,12 +79,24 @@ theorem _root_.AddMonoidHom.coe_toIntLinearMap_map {A A₂ : Type*} [AddCommGrou
 @[simp]
 theorem _root_.MonoidHom.coe_toAdditive_map {G G₂ : Type*} [Group G] [Group G₂] (f : G →* G₂)
     (s : Subgroup G) :
-    s.toAddSubgroup.map (MonoidHom.toAdditive f) = Subgroup.toAddSubgroup (s.map f) := rfl
+    s.toAddSubgroup.map (MonoidHom.toAdditive f) = Subgroup.toAddSubgroup (s.map f) :=
+  SetLike.ext fun _ ↦ by
+    constructor
+    · rintro ⟨a, ha, rfl⟩
+      exact ⟨a.toMul, ha, rfl⟩
+    · rintro ⟨a, ha, h⟩
+      exact ⟨.ofMul a, ha, Additive.ext h⟩
 
 @[simp]
 theorem _root_.AddMonoidHom.coe_toMultiplicative_map {G G₂ : Type*} [AddGroup G] [AddGroup G₂]
     (f : G →+ G₂) (s : AddSubgroup G) :
-    s.toSubgroup.map (AddMonoidHom.toMultiplicative f) = AddSubgroup.toSubgroup (s.map f) := rfl
+    s.toSubgroup.map (AddMonoidHom.toMultiplicative f) = AddSubgroup.toSubgroup (s.map f) :=
+  SetLike.ext fun _ ↦ by
+    constructor
+    · rintro ⟨a, ha, rfl⟩
+      exact ⟨a.toAdd, ha, rfl⟩
+    · rintro ⟨a, ha, h⟩
+      exact ⟨.ofAdd a, ha, Multiplicative.ext h⟩
 
 @[simp]
 theorem mem_map {f : M →ₛₗ[σ₁₂] M₂} {p : Submodule R M} {x : M₂} :

@@ -86,8 +86,8 @@ def of (x : α) : FreeCommRing α :=
   MonoidAlgebra.single (Multiplicative.ofAdd ({x} : Multiset α)) 1
 
 theorem of_injective : Function.Injective (of : α → FreeCommRing α) :=
-  MonoidAlgebra.of_injective.comp fun _ _ =>
-    (Multiset.coe_eq_coe.trans List.singleton_perm_singleton).mp
+  MonoidAlgebra.of_injective.comp fun _ _ h =>
+    (Multiset.coe_eq_coe.trans List.singleton_perm_singleton).mp (congrArg Multiplicative.toAdd h)
 
 @[simp]
 theorem of_ne_zero (x : α) : of x ≠ 0 := MonoidAlgebra.single_ne_zero.2 Int.one_ne_zero
@@ -97,11 +97,11 @@ theorem zero_ne_of (x : α) : 0 ≠ of x := (of_ne_zero x).symm
 
 @[simp]
 theorem of_ne_one (x : α) : of x ≠ 1 :=
-  MonoidAlgebra.of_injective.ne <| Multiset.singleton_ne_zero _
+  MonoidAlgebra.of_injective.ne <| ofAdd_eq_one.not.2 <| Multiset.singleton_ne_zero _
 
 @[simp]
 theorem one_ne_of (x : α) : 1 ≠ of x :=
-  MonoidAlgebra.of_injective.ne <| Multiset.zero_ne_singleton _
+  MonoidAlgebra.of_injective.ne (Ne.symm <| ofAdd_eq_one.not.2 <| Multiset.singleton_ne_zero _)
 
 @[elab_as_elim, induction_eliminator]
 protected theorem induction_on {motive : FreeCommRing α → Prop} (z : FreeCommRing α)
@@ -138,7 +138,7 @@ private def liftToMultiset : (α → R) ≃ (Multiplicative (Multiset α) →* R
     { toFun := fun s => (s.toAdd.map f).prod
       map_mul' := fun x y =>
         calc
-          _ = Multiset.prod (Multiset.map f x + Multiset.map f y) := by
+          _ = Multiset.prod (Multiset.map f x.toAdd + Multiset.map f y.toAdd) := by
             rw [← Multiset.map_add]
             rfl
           _ = _ := Multiset.prod_add _ _
@@ -148,10 +148,12 @@ private def liftToMultiset : (α → R) ≃ (Multiplicative (Multiset α) →* R
   right_inv F := MonoidHom.ext fun x =>
     let F' := F.toAdditiveRight
     let x' := x.toAdd
-    show (Multiset.map (fun a => F' {a}) x').sum = F' x' by
+    have h : (Multiset.map (fun a => F' {a}) x').sum = F' x' := by
       rw [← Function.comp_def (fun x => F' x) (fun x => {x}), ← Multiset.map_map,
         ← AddMonoidHom.map_multiset_sum]
-      exact DFunLike.congr_arg F (Multiset.sum_map_singleton x')
+      exact DFunLike.congr_arg F' (Multiset.sum_map_singleton x')
+    by simpa [F', x', MonoidHom.coe_toAdditiveRight, toMul_multiset_sum, Multiset.map_map,
+      Function.comp_def] using congrArg Additive.toMul h
 
 set_option backward.privateInPublic true in
 set_option backward.privateInPublic.warn false in

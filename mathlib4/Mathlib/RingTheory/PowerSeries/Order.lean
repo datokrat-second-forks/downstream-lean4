@@ -433,18 +433,21 @@ variable [Nontrivial R]
 /-- `PowerSeries.order` as a `MonoidHom`. -/
 def orderHom : R⟦X⟧ →* Multiplicative ℕ∞ where
   toFun g := .ofAdd g.order
-  map_one' := order_one
-  map_mul' := order_mul
+  map_one' := congrArg Multiplicative.ofAdd order_one
+  map_mul' _ _ := congrArg Multiplicative.ofAdd (order_mul _ _)
 
-@[simp, norm_cast]
-lemma coe_orderHom : (orderHom : R⟦X⟧ → ℕ∞) = order := rfl
+@[simp]
+lemma coe_orderHom : ⇑(orderHom : R⟦X⟧ →* Multiplicative ℕ∞) = Multiplicative.ofAdd ∘ order :=
+  rfl
 
 theorem order_pow (φ : R⟦X⟧) (n : ℕ) : order (φ ^ n) = n • order φ :=
-  map_pow orderHom φ n
+  congrArg Multiplicative.toAdd (map_pow orderHom φ n)
 
 theorem order_prod {R : Type*} [CommSemiring R] [NoZeroDivisors R] [Nontrivial R] {ι : Type*}
     (φ : ι → R⟦X⟧) (s : Finset ι) : (∏ i ∈ s, φ i).order = ∑ i ∈ s, (φ i).order :=
-  map_prod orderHom φ s
+  Multiplicative.ofAdd.injective <| by
+    rw [ofAdd_sum]
+    exact map_prod orderHom φ s
 
 /-- `PowerSeries.divXPowOrder` as a `MonoidHom`. -/
 def divXPowOrderHom : R⟦X⟧ →* R⟦X⟧ where

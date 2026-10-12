@@ -353,7 +353,9 @@ the sum of the degrees, where the degree of the zero polynomial is ⊥.
 `[Nontrivial R]` is needed, otherwise for `l = []` we have `⊥` in the LHS and `0` in the RHS.
 -/
 theorem degree_list_prod [Nontrivial R] (l : List R[X]) : l.prod.degree = (l.map degree).sum :=
-  map_list_prod (@degreeMonoidHom R _ _ _) l
+  Multiplicative.ofAdd.injective <| by
+    rw [ofAdd_list_prod, List.map_map]
+    exact map_list_prod (@degreeMonoidHom R _ _ _) l
 
 end Semiring
 
@@ -386,13 +388,17 @@ theorem natDegree_multiset_prod (h : (0 : R[X]) ∉ t) :
 the sum of the degrees, where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_multiset_prod [Nontrivial R] : t.prod.degree = (t.map fun f => degree f).sum :=
-  map_multiset_prod (@degreeMonoidHom R _ _ _) _
+  Multiplicative.ofAdd.injective <| by
+    rw [ofAdd_multiset_prod, Multiset.map_map]
+    exact map_multiset_prod (@degreeMonoidHom R _ _ _) t
 
 /-- The degree of a product of polynomials is equal to
 the sum of the degrees, where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_prod [Nontrivial R] : (∏ i ∈ s, f i).degree = ∑ i ∈ s, (f i).degree :=
-  map_prod (@degreeMonoidHom R _ _ _) _ _
+  Multiplicative.ofAdd.injective <| by
+    rw [ofAdd_sum]
+    exact map_prod (@degreeMonoidHom R _ _ _) f s
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The leading coefficient of a product of polynomials is equal to

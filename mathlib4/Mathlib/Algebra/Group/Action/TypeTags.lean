@@ -43,19 +43,19 @@ instance Multiplicative.smul [VAdd α β] : SMul (Multiplicative α) β where sm
 
 instance Additive.addAction [Monoid α] [MulAction α β] : AddAction (Additive α) β where
   zero_vadd := MulAction.one_smul
-  add_vadd := mul_smul (α := α)
+  add_vadd a b := mul_smul a.toMul b.toMul
 
 instance Multiplicative.mulAction [AddMonoid α] [AddAction α β] :
     MulAction (Multiplicative α) β where
   one_smul := AddAction.zero_vadd
-  mul_smul := add_vadd (G := α)
+  mul_smul a b := add_vadd a.toAdd b.toAdd
 
 instance Additive.vaddCommClass [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     VAddCommClass (Additive α) (Additive β) γ :=
-  ⟨@smul_comm α β _ _ _ _⟩
+  ⟨fun a b ↦ smul_comm a.toMul b.toMul⟩
 
 instance Multiplicative.smulCommClass [VAdd α γ] [VAdd β γ] [VAddCommClass α β γ] :
     SMulCommClass (Multiplicative α) (Multiplicative β) γ :=
-  ⟨@vadd_comm α β _ _ _ _⟩
+  ⟨fun a b ↦ vadd_comm a.toAdd b.toAdd⟩
 
 end

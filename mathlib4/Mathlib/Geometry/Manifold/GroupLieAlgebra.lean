@@ -105,28 +105,20 @@ lemma inverse_mfderiv_mul_left {g h : G} :
       (TangentSpace.cast I (inv_mul_cancel_left g h)).toContinuousLinearMap ∘L
         mfderiv% (fun b ↦ g⁻¹ * b) (g * h) := by
   have M : minSmoothness 𝕜 3 ≠ 0 := lt_of_lt_of_le (by simp) le_minSmoothness |>.ne'
-  have hd (a b : G) : MDiffAt (fun x ↦ a * x) b :=
-    contMDiff_mul_left.contMDiffAt.mdifferentiableAt M
   have A : mfderiv% ((fun x ↦ g⁻¹ * x) ∘ (fun x ↦ g * x)) h =
       (TangentSpace.cast I (inv_mul_cancel_left g h).symm).toContinuousLinearMap := by
-    rw [mfderiv_congr (f' := id) (by ext x; simp), mfderiv_id, ContinuousLinearMap.comp_id]
-  rw [mfderiv_comp (I' := I) _ (hd _ _) (hd _ _)] at A
+    have : (fun x ↦ g⁻¹ * x) ∘ (fun x ↦ g * x) = id := by ext x; simp
+    rw [mfderiv_congr this, mfderiv_id, ContinuousLinearMap.comp_id]
+  rw [mfderiv_comp (I' := I) _ (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)
+    (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)] at A
   have A' : mfderiv% ((fun x ↦ g * x) ∘ (fun x ↦ g⁻¹ * x)) (g * h) =
       (TangentSpace.cast I (mul_inv_cancel_left g (g * h)).symm).toContinuousLinearMap := by
-    rw [mfderiv_congr (f' := id) (by ext x; simp), mfderiv_id, ContinuousLinearMap.comp_id]
-  rw [mfderiv_comp (I' := I) _ (hd _ _) (hd _ _)] at A'
-  refine ContinuousLinearMap.inverse_eq ?_ ?_
-  · rw [mfderiv_congr_point (f := fun b ↦ g * b) (inv_mul_cancel_left g h).symm]
-    ext v
-    have := congr($A' v)
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
-      TangentSpace.cast_cast, TangentSpace.cast_rfl, this, ContinuousLinearMap.id_apply]
-  · ext v
-    have := congr($A v)
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe] at this
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, this,
-      TangentSpace.cast_cast, TangentSpace.cast_rfl, ContinuousLinearMap.id_apply]
+    have : (fun x ↦ g * x) ∘ (fun x ↦ g⁻¹ * x) = id := by ext x; simp
+    rw [mfderiv_congr this, mfderiv_id, ContinuousLinearMap.comp_id]
+  rw [mfderiv_comp (I' := I) _ (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M)
+    (contMDiff_mul_left.contMDiffAt.mdifferentiableAt M),
+    mfderiv_congr_point (inv_mul_cancel_left g h)] at A'
+  apply ContinuousLinearMap.inverse_eq <;> simp_all [ContinuousLinearMap.ext_iff]
 
 /-- Invariant vector fields are invariant under pullbacks. -/
 @[to_additive /-- Invariant vector fields are invariant under pullbacks. -/]

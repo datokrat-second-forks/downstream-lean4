@@ -26,13 +26,13 @@ def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     (α →+ β) ≃ (Multiplicative α →* Multiplicative β) where
   toFun f := {
     toFun := fun a => ofAdd (f a.toAdd)
-    map_mul' := f.map_add
-    map_one' := f.map_zero
+    map_mul' x y := congrArg ofAdd (f.map_add x.toAdd y.toAdd)
+    map_one' := congrArg ofAdd f.map_zero
   }
   invFun f := {
     toFun := fun a => f (ofAdd a) |>.toAdd
-    map_add' := f.map_mul
-    map_zero' := f.map_one
+    map_add' x y := congrArg toAdd (f.map_mul (ofAdd x) (ofAdd y))
+    map_zero' := congrArg toAdd f.map_one
   }
 
 @[simp, norm_cast]
@@ -48,13 +48,13 @@ def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] :
     (α →* β) ≃ (Additive α →+ Additive β) where
   toFun f := {
     toFun := fun a => ofMul (f a.toMul)
-    map_add' := f.map_mul
-    map_zero' := f.map_one
+    map_add' x y := congrArg ofMul (f.map_mul x.toMul y.toMul)
+    map_zero' := congrArg ofMul f.map_one
   }
   invFun f := {
     toFun := fun a => (f (ofMul a)).toMul
-    map_mul' := f.map_add
-    map_one' := f.map_zero
+    map_mul' x y := congrArg toMul (f.map_add (ofMul x) (ofMul y))
+    map_one' := congrArg toMul f.map_zero
   }
 
 @[simp, norm_cast]
@@ -69,13 +69,13 @@ def AddMonoidHom.toMultiplicativeRight [MulOneClass α] [AddZeroClass β] :
     (Additive α →+ β) ≃ (α →* Multiplicative β) where
   toFun f := {
     toFun := fun a => ofAdd (f (ofMul a))
-    map_mul' := f.map_add
-    map_one' := f.map_zero
+    map_mul' x y := congrArg ofAdd (f.map_add (ofMul x) (ofMul y))
+    map_one' := congrArg ofAdd f.map_zero
   }
   invFun f := {
     toFun := fun a => (f a.toMul).toAdd
-    map_add' := f.map_mul
-    map_zero' := f.map_one
+    map_add' x y := congrArg toAdd (f.map_mul x.toMul y.toMul)
+    map_zero' := congrArg toAdd f.map_one
   }
 
 @[simp, norm_cast]
@@ -98,13 +98,13 @@ def AddMonoidHom.toMultiplicativeLeft [AddZeroClass α] [MulOneClass β] :
     (α →+ Additive β) ≃ (Multiplicative α →* β) where
   toFun f := {
     toFun := fun a => (f a.toAdd).toMul
-    map_mul' := f.map_add
-    map_one' := f.map_zero
+    map_mul' x y := congrArg toMul (f.map_add x.toAdd y.toAdd)
+    map_one' := congrArg toMul f.map_zero
   }
   invFun f := {
     toFun := fun a => ofMul (f (ofAdd a))
-    map_add' := f.map_mul
-    map_zero' := f.map_one
+    map_add' x y := congrArg ofMul (f.map_mul (ofAdd x) (ofAdd y))
+    map_zero' := congrArg ofMul f.map_one
   }
 
 @[simp, norm_cast]

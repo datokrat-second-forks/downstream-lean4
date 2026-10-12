@@ -473,11 +473,12 @@ def zmodEquivZPowers (h : IsPrimitiveRoot ζ k) : ZMod k ≃+ Additive (Subgroup
       constructor
       · rw [injective_iff_map_eq_zero]
         intro i hi
-        rw [Subtype.ext_iff] at hi
+        rw [← _root_.toMul_eq_one, Subtype.ext_iff] at hi
         have := (h.zpow_eq_one_iff_dvd _).mp hi
         rw [← (CharP.intCast_eq_zero_iff (ZMod k) k _).mpr this, eq_comm]
         exact ZMod.intCast_rightInverse i
-      · rintro ⟨ξ, i, rfl⟩
+      · refine Additive.rec fun ⟨ξ, i, hi⟩ ↦ ?_
+        subst hi
         refine ⟨Int.castAddHom (ZMod k) i, ?_⟩
         rw [AddMonoidHom.liftOfRightInverse_comp_apply]
         rfl)
@@ -499,18 +500,16 @@ theorem zmodEquivZPowers_symm_apply_zpow (i : ℤ) :
     h.zmodEquivZPowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmodEquivZPowers.symm_apply_apply i, zmodEquivZPowers_apply_coe_int]
 
-@[simp]
-theorem zmodEquivZPowers_symm_apply_zpow' (i : ℤ) : h.zmodEquivZPowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmodEquivZPowers_symm_apply_zpow i
+@[deprecated zmodEquivZPowers_symm_apply_zpow (since := "2026-10-12")]
+alias zmodEquivZPowers_symm_apply_zpow' := zmodEquivZPowers_symm_apply_zpow
 
 @[simp]
 theorem zmodEquivZPowers_symm_apply_pow (i : ℕ) :
     h.zmodEquivZPowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmodEquivZPowers.symm_apply_apply i, zmodEquivZPowers_apply_coe_nat]
 
-@[simp]
-theorem zmodEquivZPowers_symm_apply_pow' (i : ℕ) : h.zmodEquivZPowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmodEquivZPowers_symm_apply_pow i
+@[deprecated zmodEquivZPowers_symm_apply_pow (since := "2026-10-12")]
+alias zmodEquivZPowers_symm_apply_pow' := zmodEquivZPowers_symm_apply_pow
 
 variable [IsDomain R]
 
@@ -520,7 +519,8 @@ theorem zpowers_eq {k : ℕ} [NeZero k] {ζ : Rˣ} (h : IsPrimitiveRoot ζ k) :
   calc
     Nat.card (rootsOfUnity k R) ≤ k := card_rootsOfUnity R k
     _ = Nat.card (ZMod k) := (Nat.card_zmod k).symm
-    _ = Nat.card (Subgroup.zpowers ζ) := Nat.card_congr h.zmodEquivZPowers.toEquiv
+    _ = Nat.card (Subgroup.zpowers ζ) :=
+        Nat.card_congr (h.zmodEquivZPowers.toEquiv.trans Additive.toMul)
 
 lemma map_rootsOfUnity {S F} [CommRing S] [IsDomain S] [FunLike F R S] [MonoidHomClass F R S]
     {ζ : R} {n : ℕ} [NeZero n] (hζ : IsPrimitiveRoot ζ n) {f : F} (hf : Function.Injective f) :

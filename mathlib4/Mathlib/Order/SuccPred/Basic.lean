@@ -8,6 +8,7 @@ module
 public import Mathlib.Order.ConditionallyCompleteLattice.Basic
 public import Mathlib.Order.Cover
 public import Mathlib.Order.Iterate
+public import Mathlib.Order.Transport
 
 /-!
 # Successor and predecessor
@@ -846,6 +847,54 @@ protected abbrev SuccOrder.ofOrderIso [SuccOrder X] (f : X ≃o Y) : SuccOrder Y
   succ_le_of_lt h := by rw [← le_map_inv_iff]; exact succ_le_of_lt (by simp [h])
 
 end OrderIso
+
+/-- `SuccOrder` instances correspond along a canonical equivalence, for the transported
+preorder. The successor is computed on the other side, like the operations of the algebraic
+congruences; the order axioms come from `SuccOrder.ofOrderIso`. -/
+@[to_dual (attr := transport)
+/-- `PredOrder` instances correspond along a canonical equivalence, for the transported
+preorder. The predecessor is computed on the other side, like the operations of the algebraic
+congruences; the order axioms come from `PredOrder.ofOrderIso`. -/]
+protected abbrev SuccOrder.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [iY : Preorder Y] {iX : Preorder X} (hi : iX = (Preorder.canonicalCongr e).invFun iY) :
+    Lean.CanonicalEquivalence (SuccOrder X) (SuccOrder Y) where
+  toFun i :=
+    { succ y := e.toFun (i.succ (e.invFun y))
+      le_succ y := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y)).le_succ y
+      max_of_succ_le {a} := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y)).max_of_succ_le (a := a)
+      succ_le_of_lt {a b} := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y)).succ_le_of_lt (a := a) (b := b) }
+  invFun i :=
+    { succ x := e.invFun (i.succ (e.toFun x))
+      le_succ x := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y).symm).le_succ x
+      max_of_succ_le {a} := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y).symm).max_of_succ_le (a := a)
+      succ_le_of_lt {a b} := by
+        subst hi
+        let := (Preorder.canonicalCongr e).invFun iY
+        exact (SuccOrder.ofOrderIso (⟨e.toEquiv, .rfl⟩ : X ≃o Y).symm).succ_le_of_lt (a := a)
+          (b := b) }
+  left_inv i := by
+    ext x
+    change e.invFun (e.toFun (i.succ (e.invFun (e.toFun x)))) = i.succ x
+    rw [e.left_inv, e.left_inv]
+  right_inv i := by
+    ext y
+    change e.toFun (e.invFun (i.succ (e.toFun (e.invFun y)))) = i.succ y
+    rw [e.right_inv, e.right_inv]
 
 section OrdConnected
 

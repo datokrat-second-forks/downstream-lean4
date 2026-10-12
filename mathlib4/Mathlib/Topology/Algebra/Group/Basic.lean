@@ -434,11 +434,11 @@ end FilterMul
 
 instance {G} [TopologicalSpace G] [Group G] [IsTopologicalGroup G] :
     IsTopologicalAddGroup (Additive G) where
-  continuous_neg := @continuous_inv G _ _ _
+  continuous_neg := continuous_ofMul.comp <| continuous_inv.comp continuous_toMul
 
 instance {G} [TopologicalSpace G] [AddGroup G] [IsTopologicalAddGroup G] :
     IsTopologicalGroup (Multiplicative G) where
-  continuous_inv := @continuous_neg G _ _ _
+  continuous_inv := continuous_ofAdd.comp <| continuous_neg.comp continuous_toAdd
 
 section LatticeOps
 

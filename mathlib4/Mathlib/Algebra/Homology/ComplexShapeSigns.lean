@@ -121,12 +121,12 @@ class TensorSigns where
   ε' : Multiplicative I →* ℤˣ
   rel_add (p q r : I) (hpq : c.Rel p q) : c.Rel (p + r) (q + r)
   add_rel (p q r : I) (hpq : c.Rel p q) : c.Rel (r + p) (r + q)
-  ε'_succ (p q : I) (hpq : c.Rel p q) : ε' q = - ε' p
+  ε'_succ (p q : I) (hpq : c.Rel p q) : ε' (.ofAdd q) = - ε' (.ofAdd p)
 
 variable [TensorSigns c]
 
 /-- The signs which appear in the vertical differential of the total complex. -/
-abbrev ε (i : I) : ℤˣ := TensorSigns.ε' c i
+abbrev ε (i : I) : ℤˣ := TensorSigns.ε' c (.ofAdd i)
 
 lemma rel_add {p q : I} (hpq : c.Rel p q) (r : I) : c.Rel (p + r) (q + r) :=
   TensorSigns.rel_add _ _ _ hpq
@@ -135,14 +135,14 @@ lemma add_rel (r : I) {p q : I} (hpq : c.Rel p q) : c.Rel (r + p) (r + q) :=
   TensorSigns.add_rel _ _ _ hpq
 
 @[simp]
-lemma ε_zero : c.ε 0 = 1 := by
-  apply map_one
+lemma ε_zero : c.ε 0 = 1 :=
+  (congrArg (TensorSigns.ε' c) ofAdd_zero).trans (map_one _)
 
 lemma ε_succ {p q : I} (hpq : c.Rel p q) : c.ε q = - c.ε p :=
   TensorSigns.ε'_succ p q hpq
 
-lemma ε_add (p q : I) : c.ε (p + q) = c.ε p * c.ε q := by
-  apply map_mul
+lemma ε_add (p q : I) : c.ε (p + q) = c.ε p * c.ε q :=
+  (congrArg (TensorSigns.ε' c) (ofAdd_add p q)).trans (map_mul _ _ _)
 
 lemma next_add (p q : I) (hp : c.Rel p (c.next p)) :
     c.next (p + q) = c.next p + q :=
@@ -166,7 +166,8 @@ instance : TotalComplexShape c c c where
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance : TensorSigns (ComplexShape.down ℕ) where
-  ε' := MonoidHom.mk' (fun (i : ℕ) => (-1 : ℤˣ) ^ i) (pow_add (-1 : ℤˣ))
+  ε' := MonoidHom.mk' (fun i : Multiplicative ℕ => (-1 : ℤˣ) ^ i.toAdd)
+    fun a b => pow_add (-1 : ℤˣ) a.toAdd b.toAdd
   rel_add p q r (hpq : q + 1 = p) := by dsimp; lia
   add_rel p q r (hpq : q + 1 = p) := by dsimp; lia
   ε'_succ := by
@@ -180,7 +181,8 @@ lemma ε_down_ℕ (n : ℕ) : (ComplexShape.down ℕ).ε n = (-1 : ℤˣ) ^ n :=
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 instance : TensorSigns (ComplexShape.up ℤ) where
-  ε' := MonoidHom.mk' Int.negOnePow Int.negOnePow_add
+  ε' := MonoidHom.mk' (fun i : Multiplicative ℤ => i.toAdd.negOnePow)
+    fun a b => Int.negOnePow_add a.toAdd b.toAdd
   rel_add p q r (hpq : p + 1 = q) := by dsimp; lia
   add_rel p q r (hpq : p + 1 = q) := by dsimp; lia
   ε'_succ := by

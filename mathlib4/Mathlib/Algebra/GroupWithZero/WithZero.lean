@@ -368,7 +368,7 @@ def exp (a : M) : Mᵐ⁰ := coe <| .ofAdd a
 lemma exp_eq_coe_ofAdd (a : M) : exp a = coe (Multiplicative.ofAdd a) := rfl
 
 lemma exp_injective : Injective (exp : M → Mᵐ⁰) :=
-  Multiplicative.ofAdd.injective.comp WithZero.coe_injective
+  WithZero.coe_injective.comp Multiplicative.ofAdd.injective
 
 @[simp] lemma exp_inj {x y : M} : exp x = exp y ↔ x = y := exp_injective.eq_iff
 
@@ -378,7 +378,7 @@ construct its value at `0` and its value at `exp a` for all `a : M`. -/
 -- See https://github.com/leanprover-community/mathlib4/issues/31213
 @[elab_as_elim] -- , induction_eliminator, cases_eliminator]
 def expRecOn {motive : Mᵐ⁰ → Sort*} (x : Mᵐ⁰) (zero : motive 0) (exp : ∀ a, motive (exp a)) :
-    motive x := Option.recOn x zero exp
+    motive x := Option.recOn x zero fun a ↦ exp a.toAdd
 
 @[simp] lemma expRecOn_zero {motive : Mᵐ⁰ → Sort*} (zero : motive 0) (exp : ∀ a, motive (exp a)) :
     expRecOn 0 zero exp = zero := rfl
@@ -387,7 +387,8 @@ def expRecOn {motive : Mᵐ⁰ → Sort*} (x : Mᵐ⁰) (zero : motive 0) (exp :
     (exp : ∀ a, motive (exp a)) :
     expRecOn (M := M) (motive := motive) (.exp x) zero exp = exp x := rfl
 
-instance : CanLift Mᵐ⁰ M exp (· ≠ 0) where prf | (.exp a : Mᵐ⁰), _ => ⟨a, rfl⟩
+instance : CanLift Mᵐ⁰ M exp (· ≠ 0) where
+  prf x := expRecOn x (fun h ↦ (h rfl).elim) fun a _ ↦ ⟨a, rfl⟩
 
 variable [AddMonoid M]
 

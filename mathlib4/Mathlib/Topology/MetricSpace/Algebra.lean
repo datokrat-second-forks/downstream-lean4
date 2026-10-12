@@ -301,10 +301,12 @@ instance IsBoundedSMul.op [SMul αᵐᵒᵖ β] [IsCentralScalar α β] : IsBoun
 end IsBoundedSMul
 
 instance [Monoid α] [LipschitzMul α] : LipschitzAdd (Additive α) :=
-  ⟨@LipschitzMul.lipschitz_mul α _ _ _⟩
+  let ⟨C, hC⟩ := LipschitzMul.lipschitz_mul (β := α)
+  ⟨C, fun p q ↦ hC (p.1.toMul, p.2.toMul) (q.1.toMul, q.2.toMul)⟩
 
 instance [AddMonoid α] [LipschitzAdd α] : LipschitzMul (Multiplicative α) :=
-  ⟨@LipschitzAdd.lipschitz_add α _ _ _⟩
+  let ⟨C, hC⟩ := LipschitzAdd.lipschitz_add (β := α)
+  ⟨C, fun p q ↦ hC (p.1.toAdd, p.2.toAdd) (q.1.toAdd, q.2.toAdd)⟩
 
 @[to_additive]
 instance [Monoid α] [LipschitzMul α] : LipschitzMul αᵒᵈ :=

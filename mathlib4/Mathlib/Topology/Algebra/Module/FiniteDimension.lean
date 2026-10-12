@@ -708,9 +708,18 @@ theorem HasCompactSupport.eq_zero_or_finiteDimensional {X : Type*} [TopologicalS
 or the space is finite-dimensional. -/
 theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type*} [TopologicalSpace X] [One X]
     [T1Space X] {f : E → X} (hf : HasCompactMulSupport f) (h'f : Continuous f) :
-    f = 1 ∨ FiniteDimensional 𝕜 E :=
-  have : T1Space (Additive X) := ‹_›
-  HasCompactSupport.eq_zero_or_finiteDimensional 𝕜 (X := Additive X) hf h'f
+    f = 1 ∨ FiniteDimensional 𝕜 E := by
+  have : T1Space (Additive X) :=
+    ⟨fun x ↦ by simpa using isClosedMap_ofMul _ (isClosed_singleton (x := x.toMul))⟩
+  have hsupp : Function.support (Additive.ofMul ∘ f) = Function.mulSupport f := by
+    ext x; simp [Function.support, Function.mulSupport]
+  have hf' : HasCompactSupport (Additive.ofMul ∘ f) := by
+    unfold HasCompactSupport tsupport
+    rw [hsupp]
+    exact hf
+  refine (HasCompactSupport.eq_zero_or_finiteDimensional 𝕜 hf'
+    (continuous_ofMul.comp h'f)).imp_left fun h ↦ funext fun x ↦ ?_
+  exact ofMul_eq_zero.1 (congrFun h x)
 
 end Riesz
 

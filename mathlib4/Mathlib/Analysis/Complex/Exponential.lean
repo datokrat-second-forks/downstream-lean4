@@ -137,14 +137,16 @@ noncomputable def expMonoidHom : MonoidHom (Multiplicative ℂ) ℂ :=
     map_mul' := by simp [exp_add] }
 
 theorem exp_list_sum (l : List ℂ) : exp l.sum = (l.map exp).prod :=
-  map_list_prod (M := Multiplicative ℂ) expMonoidHom l
+  (congrArg expMonoidHom (ofAdd_list_prod l)).trans <|
+    (map_list_prod expMonoidHom _).trans <| by rw [List.map_map]; rfl
 
 theorem exp_multiset_sum (s : Multiset ℂ) : exp s.sum = (s.map exp).prod :=
-  @MonoidHom.map_multiset_prod (Multiplicative ℂ) ℂ _ _ expMonoidHom s
+  (congrArg expMonoidHom (ofAdd_multiset_prod s)).trans <|
+    (map_multiset_prod expMonoidHom _).trans <| by rw [Multiset.map_map]; rfl
 
 theorem exp_sum {α : Type*} (s : Finset α) (f : α → ℂ) :
     exp (∑ x ∈ s, f x) = ∏ x ∈ s, exp (f x) :=
-  map_prod (M := Multiplicative ℂ) expMonoidHom f s
+  (congrArg expMonoidHom (ofAdd_sum s f)).trans (map_prod expMonoidHom _ s)
 
 lemma exp_nsmul (x : ℂ) (n : ℕ) : exp (n • x) = exp x ^ n :=
   @MonoidHom.map_pow (Multiplicative ℂ) ℂ _ _ expMonoidHom _ _
@@ -218,14 +220,16 @@ noncomputable def expMonoidHom : MonoidHom (Multiplicative ℝ) ℝ :=
     map_mul' := by simp [exp_add] }
 
 theorem exp_list_sum (l : List ℝ) : exp l.sum = (l.map exp).prod :=
-  map_list_prod (M := Multiplicative ℝ) expMonoidHom l
+  (congrArg expMonoidHom (ofAdd_list_prod l)).trans <|
+    (map_list_prod expMonoidHom _).trans <| by rw [List.map_map]; rfl
 
 theorem exp_multiset_sum (s : Multiset ℝ) : exp s.sum = (s.map exp).prod :=
-  @MonoidHom.map_multiset_prod (Multiplicative ℝ) ℝ _ _ expMonoidHom s
+  (congrArg expMonoidHom (ofAdd_multiset_prod s)).trans <|
+    (map_multiset_prod expMonoidHom _).trans <| by rw [Multiset.map_map]; rfl
 
 theorem exp_sum {α : Type*} (s : Finset α) (f : α → ℝ) :
     exp (∑ x ∈ s, f x) = ∏ x ∈ s, exp (f x) :=
-  map_prod (M := Multiplicative ℝ) expMonoidHom f s
+  (congrArg expMonoidHom (ofAdd_sum s f)).trans (map_prod expMonoidHom _ s)
 
 lemma exp_nsmul (x : ℝ) (n : ℕ) : exp (n • x) = exp x ^ n :=
   @MonoidHom.map_pow (Multiplicative ℝ) ℝ _ _ expMonoidHom _ _

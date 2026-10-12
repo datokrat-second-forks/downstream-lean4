@@ -619,9 +619,9 @@ theorem mk_pnat : #ℕ+ = ℵ₀ :=
 
 /-! ### Cardinalities of basic sets and types -/
 
-@[simp] theorem mk_additive : #(Additive α) = #α := rfl
+@[simp] theorem mk_additive : #(Additive α) = #α := mk_congr Additive.toMul
 
-@[simp] theorem mk_multiplicative : #(Multiplicative α) = #α := rfl
+@[simp] theorem mk_multiplicative : #(Multiplicative α) = #α := mk_congr Multiplicative.toAdd
 
 @[to_additive (attr := simp)] theorem mk_mulOpposite : #(MulOpposite α) = #α :=
   mk_congr MulOpposite.opEquiv.symm

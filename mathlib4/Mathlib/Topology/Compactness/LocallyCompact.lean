@@ -224,3 +224,49 @@ protected theorem IsClosed.locallyCompactSpace [LocallyCompactSpace X] {s : Set 
 protected theorem IsOpen.locallyCompactSpace [LocallyCompactSpace X] {s : Set X} (hs : IsOpen s) :
     LocallyCompactSpace s :=
   hs.isLocallyClosed.locallyCompactSpace
+
+/-! ### Transport -/
+
+/-- `WeaklyLocallyCompactSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev WeaklyLocallyCompactSpace.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (WeaklyLocallyCompactSpace X) (WeaklyLocallyCompactSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isClosedEmbedding.weaklyLocallyCompactSpace
+    invFun _ := e.homeomorph.isClosedEmbedding.weaklyLocallyCompactSpace
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-- `LocallyCompactSpace` holds on both sides of a canonical equivalence, for the transported
+topology. -/
+@[transport]
+protected abbrev LocallyCompactSpace.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [tY : TopologicalSpace Y] {tX : TopologicalSpace X}
+    (ht : tX = (TopologicalSpace.canonicalCongr e).invFun tY) :
+    Lean.CanonicalEquivalence (LocallyCompactSpace X) (LocallyCompactSpace Y) := by
+  subst ht
+  letI := (TopologicalSpace.canonicalCongr e).invFun tY
+  exact {
+    toFun _ := e.homeomorph.symm.isClosedEmbedding.locallyCompactSpace
+    invFun _ := e.homeomorph.isClosedEmbedding.locallyCompactSpace
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-! ### Type tags
+
+See the note on the type tags in `Mathlib/Topology/Compactness/Compact.lean`. -/
+
+instance [WeaklyLocallyCompactSpace X] : WeaklyLocallyCompactSpace (Additive X) :=
+  inferInstanceAs (WeaklyLocallyCompactSpace X)
+instance [WeaklyLocallyCompactSpace X] : WeaklyLocallyCompactSpace (Multiplicative X) :=
+  inferInstanceAs (WeaklyLocallyCompactSpace X)
+
+instance [LocallyCompactSpace X] : LocallyCompactSpace (Additive X) :=
+  inferInstanceAs (LocallyCompactSpace X)
+instance [LocallyCompactSpace X] : LocallyCompactSpace (Multiplicative X) :=
+  inferInstanceAs (LocallyCompactSpace X)

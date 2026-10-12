@@ -170,7 +170,8 @@ namespace CommGroup
 
 @[to_additive existing]
 theorem finite_of_fg_isMulTorsion [CommGroup G] [Group.FG G] (hG : IsMulTorsion G) : Finite G :=
-  @Finite.of_equiv _ _ (AddCommGroup.finite_of_fg_isAddTorsion (Additive G) hG) Multiplicative.ofAdd
+  @Finite.of_equiv _ _ (AddCommGroup.finite_of_fg_isAddTorsion (Additive G)
+    fun g ↦ isOfFinAddOrder_ofMul_iff.2 (hG g.toMul)) Additive.toMul
 
 @[deprecated (since := "2026-07-01")] alias finite_of_fg_torsion := finite_of_fg_isMulTorsion
 
@@ -194,7 +195,9 @@ theorem equiv_free_prod_prod_multiplicative_zmod (G : Type*) [CommGroup G] [hG :
   exact ⟨ι, Fin n, inst, inferInstance, x, p, e, ⟨MulEquiv.toAdditive.symm <| equiv.some.trans <|
     ((Finsupp.addEquivFunOnFinite.trans <| ((AddEquiv.piAdditive _).trans <|
         (AddEquiv.additiveMultiplicative ℤ).arrowCongr (Equiv.refl _)).symm).prodCongr
-          (DirectSum.addEquivProd _ )).trans <| (AddEquiv.prodAdditive _ _).symm⟩⟩
+          ((DirectSum.addEquivProd _).trans <| ((AddEquiv.piAdditive _).trans <|
+            AddEquiv.piCongrRight fun _ ↦ AddEquiv.additiveMultiplicative _).symm)).trans <|
+      (AddEquiv.prodAdditive _ _).symm⟩⟩
 
 end CommGroup
 

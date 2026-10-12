@@ -774,7 +774,7 @@ variable (A) [Add A]
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
 def toPerm : AddAut A →+ Additive (Equiv.Perm A) where
-  toFun := AddEquiv.toEquiv
+  toFun e := Additive.ofMul e.toEquiv
   map_zero' := rfl
   map_add' _ _ := rfl
 
@@ -794,9 +794,9 @@ variable (G)
 /-- `Multiplicative G` and `G` have isomorphic automorphism groups. -/
 @[simps!]
 def MulAutMultiplicative [AddGroup G] : MulAut (Multiplicative G) ≃* Multiplicative (AddAut G) :=
-  { AddEquiv.toMultiplicative.symm with map_mul' := fun _ _ ↦ rfl }
+  { AddEquiv.toMultiplicative.symm.trans Multiplicative.ofAdd with map_mul' := fun _ _ ↦ rfl }
 
 /-- `Additive G` and `G` have isomorphic automorphism groups. -/
 @[simps!]
 def AddAutAdditive [Group G] : AddAut (Additive G) ≃+ Additive (MulAut G) :=
-  { MulEquiv.toAdditive.symm with map_add' := fun _ _ ↦ rfl }
+  { MulEquiv.toAdditive.symm.trans Additive.ofMul with map_add' := fun _ _ ↦ rfl }

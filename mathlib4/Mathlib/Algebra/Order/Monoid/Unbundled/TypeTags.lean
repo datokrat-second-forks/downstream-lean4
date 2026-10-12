@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Algebra.Order.Monoid.Unbundled.ExistsOfLE
 public import Mathlib.Algebra.Group.TypeTags.Basic
-public import Mathlib.Order.BoundedOrder.Basic
+public import Mathlib.Order.Transport
 
 /-! # Ordered monoid structures on `Multiplicative α` and `Additive α`. -/
 
@@ -65,10 +65,14 @@ instance Additive.boundedOrder [LE α] [BoundedOrder α] : BoundedOrder (Additiv
 
 instance Multiplicative.existsMulOfLe [Add α] [LE α] [ExistsAddOfLE α] :
     ExistsMulOfLE (Multiplicative α) :=
-  ⟨@exists_add_of_le α _ _ _⟩
+  ⟨fun {a b} h ↦
+    let ⟨c, hc⟩ := exists_add_of_le (a := a.toAdd) (b := b.toAdd) h
+    ⟨ofAdd c, Multiplicative.ext hc⟩⟩
 
 instance Additive.existsAddOfLe [Mul α] [LE α] [ExistsMulOfLE α] : ExistsAddOfLE (Additive α) :=
-  ⟨@exists_mul_of_le α _ _ _⟩
+  ⟨fun {a b} h ↦
+    let ⟨c, hc⟩ := exists_mul_of_le (a := a.toMul) (b := b.toMul) h
+    ⟨ofMul c, Additive.ext hc⟩⟩
 
 namespace Additive
 section Preorder
@@ -103,8 +107,10 @@ variable [LE α] [OrderTop α]
 @[simp] lemma ofMul_top : ofMul (⊤ : α) = ⊤ := rfl
 @[simp] lemma toMul_top : toMul ⊤ = (⊤ : α) := rfl
 
-@[simp] lemma ofMul_eq_top {a : α} : ofMul a = ⊤ ↔ a = ⊤ := .rfl
-@[simp] lemma toMul_eq_top {a : Additive α} : toMul a = ⊤ ↔ a = ⊤ := .rfl
+@[simp] lemma ofMul_eq_top {a : α} : ofMul a = ⊤ ↔ a = ⊤ :=
+  ⟨fun h ↦ ofMul.injective h, fun h ↦ h ▸ rfl⟩
+@[simp] lemma toMul_eq_top {a : Additive α} : toMul a = ⊤ ↔ a = ⊤ :=
+  ⟨fun h ↦ Additive.ext h, fun h ↦ h ▸ rfl⟩
 
 end OrderTop
 
@@ -114,8 +120,10 @@ variable [LE α] [OrderBot α]
 @[simp] lemma ofMul_bot : ofMul (⊥ : α) = ⊥ := rfl
 @[simp] lemma toMul_bot : toMul ⊥ = (⊥ : α) := rfl
 
-@[simp] lemma ofMul_eq_bot {a : α} : ofMul a = ⊥ ↔ a = ⊥ := .rfl
-@[simp] lemma toMul_eq_bot {a : Additive α} : toMul a = ⊥ ↔ a = ⊥ := .rfl
+@[simp] lemma ofMul_eq_bot {a : α} : ofMul a = ⊥ ↔ a = ⊥ :=
+  ⟨fun h ↦ ofMul.injective h, fun h ↦ h ▸ rfl⟩
+@[simp] lemma toMul_eq_bot {a : Additive α} : toMul a = ⊥ ↔ a = ⊥ :=
+  ⟨fun h ↦ Additive.ext h, fun h ↦ h ▸ rfl⟩
 
 end OrderBot
 end Additive
@@ -153,8 +161,10 @@ variable [LE α] [OrderTop α]
 @[simp] lemma ofAdd_top : ofAdd (⊤ : α) = ⊤ := rfl
 @[simp] lemma toAdd_top : toAdd ⊤ = (⊤ : α) := rfl
 
-@[simp] lemma ofAdd_eq_top {a : α} : ofAdd a = ⊤ ↔ a = ⊤ := .rfl
-@[simp] lemma toAdd_eq_top {a : Multiplicative α} : toAdd a = ⊤ ↔ a = ⊤ := .rfl
+@[simp] lemma ofAdd_eq_top {a : α} : ofAdd a = ⊤ ↔ a = ⊤ :=
+  ⟨fun h ↦ ofAdd.injective h, fun h ↦ h ▸ rfl⟩
+@[simp] lemma toAdd_eq_top {a : Multiplicative α} : toAdd a = ⊤ ↔ a = ⊤ :=
+  ⟨fun h ↦ Multiplicative.ext h, fun h ↦ h ▸ rfl⟩
 
 end OrderTop
 
@@ -164,8 +174,10 @@ variable [LE α] [OrderBot α]
 @[simp] lemma ofAdd_bot : ofAdd (⊥ : α) = ⊥ := rfl
 @[simp] lemma toAdd_bot : toAdd ⊥ = (⊥ : α) := rfl
 
-@[simp] lemma ofAdd_eq_bot {a : α} : ofAdd a = ⊥ ↔ a = ⊥ := .rfl
-@[simp] lemma toAdd_eq_bot {a : Multiplicative α} : toAdd a = ⊥ ↔ a = ⊥ := .rfl
+@[simp] lemma ofAdd_eq_bot {a : α} : ofAdd a = ⊥ ↔ a = ⊥ :=
+  ⟨fun h ↦ ofAdd.injective h, fun h ↦ h ▸ rfl⟩
+@[simp] lemma toAdd_eq_bot {a : Multiplicative α} : toAdd a = ⊥ ↔ a = ⊥ :=
+  ⟨fun h ↦ Multiplicative.ext h, fun h ↦ h ▸ rfl⟩
 
 end OrderBot
 

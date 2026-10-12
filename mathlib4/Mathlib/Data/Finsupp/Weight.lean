@@ -331,7 +331,6 @@ lemma nsmul_single_one_image {α : Type*} {n : ℕ} {s : Set α} :
       (show single i 1 ≤ f by simpa [Nat.one_le_iff_ne_zero] using hi)
     exact ⟨x, by aesop (add simp Set.subset_def), _, ⟨_, f_supp (by simp_all), rfl⟩, hx.symm⟩
 
-set_option backward.isDefEq.respectTransparency false in
 open scoped Pointwise in
 theorem image_pow_eq_finsuppProd_image {α β : Type*} [CommMonoid β] {f : α → β} {n} {s : Set α} :
     (f '' s) ^ n = (·.prod (f · ^ ·)) '' {x : α →₀ ℕ | x.degree = n ∧ ↑x.support ⊆ s} := by
@@ -339,9 +338,11 @@ theorem image_pow_eq_finsuppProd_image {α β : Type*} [CommMonoid β] {f : α �
   suffices ∀ (s : Set (α →₀ ℕ)), ((·.prod (f · ^ ·)) '' s) ^ n = (·.prod (f · ^ ·)) '' (n • s) by
     simp [← nsmul_single_one_image, ← this, Set.image_image]
   intro s
-  refine (Set.image_pow (⟨⟨(·.prod (f · ^ ·)) ∘ Multiplicative.toAdd, by simp⟩,
-    by simp [Finsupp.prod_add_index, pow_add]⟩ : Multiplicative (α →₀ ℕ) →* β) _ _).symm.trans ?_
-  simp [-Function.comp_apply, Set.image_comp, show Multiplicative.toAdd '' s = s from
-    Set.image_id _]
+  induction n with
+  | zero => simp [Set.singleton_one]
+  | succ n ih =>
+    rw [pow_succ, succ_nsmul, ih, ← Set.image2_mul, ← Set.image2_add, Set.image_image2_distrib]
+    intro a b
+    exact Finsupp.prod_add_index' (by simp) (by simp [pow_add])
 
 end Finsupp

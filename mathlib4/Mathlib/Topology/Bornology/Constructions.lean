@@ -172,16 +172,16 @@ The bornology on those type synonyms is inherited without change.
 
 
 instance : Bornology (Additive α) :=
-  ‹Bornology α›
+  inferInstanceAs (Bornology α)
 
 instance : Bornology (Multiplicative α) :=
-  ‹Bornology α›
+  inferInstanceAs (Bornology α)
 
 instance [BoundedSpace α] : BoundedSpace (Additive α) :=
-  ‹BoundedSpace α›
+  inferInstanceAs (BoundedSpace α)
 
 instance [BoundedSpace α] : BoundedSpace (Multiplicative α) :=
-  ‹BoundedSpace α›
+  inferInstanceAs (BoundedSpace α)
 
 /-!
 ### Order dual

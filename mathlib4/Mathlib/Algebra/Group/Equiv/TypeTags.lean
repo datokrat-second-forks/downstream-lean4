@@ -27,15 +27,15 @@ def AddEquiv.toMultiplicative [Add G] [Add H] :
   toFun f :=
   { toFun x := Multiplicative.ofAdd (f (Multiplicative.toAdd x))
     invFun x := Multiplicative.ofAdd (f.symm (Multiplicative.toAdd x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_mul' := map_add f }
+    left_inv x := congrArg Multiplicative.ofAdd (f.left_inv x.toAdd)
+    right_inv x := congrArg Multiplicative.ofAdd (f.right_inv x.toAdd)
+    map_mul' x y := congrArg Multiplicative.ofAdd (map_add f x.toAdd y.toAdd) }
   invFun f :=
   { toFun x := Multiplicative.toAdd (f (Multiplicative.ofAdd x))
     invFun x := Multiplicative.toAdd (f.symm (Multiplicative.ofAdd x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_add' := map_mul f }
+    left_inv x := congrArg Multiplicative.toAdd (f.left_inv (Multiplicative.ofAdd x))
+    right_inv x := congrArg Multiplicative.toAdd (f.right_inv (Multiplicative.ofAdd x))
+    map_add' x y := congrArg Multiplicative.toAdd (map_mul f (.ofAdd x) (.ofAdd y)) }
 
 /-- Reinterpret `G ≃* H` as `Additive G ≃+ Additive H`. -/
 @[simps]
@@ -44,15 +44,15 @@ def MulEquiv.toAdditive [Mul G] [Mul H] :
   toFun f :=
   { toFun x := Additive.ofMul (f (Additive.toMul x))
     invFun x := Additive.ofMul (f.symm (Additive.toMul x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_add' := map_mul f }
+    left_inv x := congrArg Additive.ofMul (f.left_inv x.toMul)
+    right_inv x := congrArg Additive.ofMul (f.right_inv x.toMul)
+    map_add' x y := congrArg Additive.ofMul (map_mul f x.toMul y.toMul) }
   invFun f :=
   { toFun x := Additive.toMul (f (Additive.ofMul x))
     invFun x := Additive.toMul (f.symm (Additive.ofMul x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_mul' := map_add f }
+    left_inv x := congrArg Additive.toMul (f.left_inv (Additive.ofMul x))
+    right_inv x := congrArg Additive.toMul (f.right_inv (Additive.ofMul x))
+    map_mul' x y := congrArg Additive.toMul (map_add f (Additive.ofMul x) (Additive.ofMul y)) }
 
 /-- Reinterpret `Additive G ≃+ H` as `G ≃* Multiplicative H`. -/
 @[simps]
@@ -61,15 +61,15 @@ def AddEquiv.toMultiplicativeRight [Mul G] [Add H] :
   toFun f :=
   { toFun x := Multiplicative.ofAdd (f (Additive.ofMul x))
     invFun x := Additive.toMul (f.symm (Multiplicative.toAdd x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_mul' := map_add f }
+    left_inv x := congrArg Additive.toMul (f.left_inv (Additive.ofMul x))
+    right_inv x := congrArg Multiplicative.ofAdd (f.right_inv x.toAdd)
+    map_mul' x y := congrArg Multiplicative.ofAdd (map_add f (.ofMul x) (.ofMul y)) }
   invFun f :=
   { toFun x := Multiplicative.toAdd (f (Additive.toMul x))
     invFun x := Additive.ofMul (f.symm (Multiplicative.ofAdd x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_add' := map_mul f }
+    left_inv x := congrArg Additive.ofMul (f.left_inv x.toMul)
+    right_inv x := congrArg Multiplicative.toAdd (f.right_inv (Multiplicative.ofAdd x))
+    map_add' x y := congrArg Multiplicative.toAdd (map_mul f x.toMul y.toMul) }
 
 /-- Reinterpret `G ≃* Multiplicative H` as `Additive G ≃+ H`. -/
 abbrev MulEquiv.toAdditiveLeft [Mul G] [Add H] :
@@ -83,15 +83,15 @@ def AddEquiv.toMultiplicativeLeft [Add G] [Mul H] :
   toFun f :=
   { toFun x := Additive.toMul (f (Multiplicative.toAdd x))
     invFun x := Multiplicative.ofAdd (f.symm (Additive.ofMul x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_mul' := map_add f }
+    left_inv x := congrArg Multiplicative.ofAdd (f.left_inv x.toAdd)
+    right_inv x := congrArg Additive.toMul (f.right_inv (Additive.ofMul x))
+    map_mul' x y := congrArg Additive.toMul (map_add f x.toAdd y.toAdd) }
   invFun f :=
   { toFun x := Additive.ofMul (f (Multiplicative.ofAdd x))
     invFun x := Multiplicative.toAdd (f.symm (Additive.toMul x))
-    left_inv := f.left_inv
-    right_inv := f.right_inv
-    map_add' := map_mul f }
+    left_inv x := congrArg Multiplicative.toAdd (f.left_inv (Multiplicative.ofAdd x))
+    right_inv x := congrArg Additive.ofMul (f.right_inv x.toMul)
+    map_add' x y := congrArg Additive.ofMul (map_mul f (.ofAdd x) (.ofAdd y)) }
 
 /-- Reinterpret `Multiplicative G ≃* H` as `G ≃+ Additive H` as. -/
 abbrev MulEquiv.toAdditiveRight [Add G] [Mul H] :

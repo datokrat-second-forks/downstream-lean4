@@ -241,8 +241,8 @@ section
 
 variable [Dist X]
 
-instance : Dist (Additive X) := ‹Dist X›
-instance : Dist (Multiplicative X) := ‹Dist X›
+instance : Dist (Additive X) := inferInstanceAs (Dist X)
+instance : Dist (Multiplicative X) := inferInstanceAs (Dist X)
 
 @[simp] theorem dist_ofMul (a b : X) : dist (ofMul a) (ofMul b) = dist a b := rfl
 
@@ -254,8 +254,8 @@ instance : Dist (Multiplicative X) := ‹Dist X›
 
 end
 
-instance [MetricSpace X] : MetricSpace (Additive X) := ‹MetricSpace X›
-instance [MetricSpace X] : MetricSpace (Multiplicative X) := ‹MetricSpace X›
+instance [MetricSpace X] : MetricSpace (Additive X) := inferInstanceAs (MetricSpace X)
+instance [MetricSpace X] : MetricSpace (Multiplicative X) := inferInstanceAs (MetricSpace X)
 
 /-!
 ### Order dual

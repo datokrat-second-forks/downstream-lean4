@@ -60,10 +60,16 @@ noncomputable def inverseAux : (C ⥤ₗ Type v) ⥤ C ⥤ AddCommGrpCat.{v} :=
       (Functor.whiskeringRight _ _ _).obj
         (commGrpTypeEquivalenceCommGrp.functor ⋙ commGroupAddCommGroupEquivalence.functor)
 
+/-- Forgetting the group structure on `inverseAux.obj F` gives back `F`: the underlying type of
+`(inverseAux.obj F).obj X` is `Additive (F.obj X)`. -/
+noncomputable def inverseAuxCompForget (F : C ⥤ₗ Type v) :
+    F.1 ≅ inverseAux.obj F ⋙ forget AddCommGrpCat :=
+  NatIso.ofComponents (fun _ ↦ Additive.ofMul.toIso) (by cat_disch)
+
 instance (F : C ⥤ₗ Type v) : PreservesFiniteLimits (inverseAux.obj F) where
   preservesFiniteLimits J _ _ :=
     have : PreservesLimitsOfShape J (inverseAux.obj F ⋙ forget AddCommGrpCat) :=
-      inferInstanceAs (PreservesLimitsOfShape J F.1)
+      preservesLimitsOfShape_of_natIso (inverseAuxCompForget F)
     preservesLimitsOfShape_of_reflects_of_preserves _ (forget AddCommGrpCat)
 
 /-- Implementation, see `leftExactFunctorForgetEquivalence`. -/
@@ -107,7 +113,7 @@ noncomputable def unitIsoAux (F : C ⥤ AddCommGrpCat.{v}) [PreservesFiniteLimit
 noncomputable def unitIso : 𝟭 (C ⥤ₗ AddCommGrpCat) ≅
     (LeftExactFunctor.whiskeringRight _ _ _).obj (LeftExactFunctor.of (forget _)) ⋙ inverse :=
   NatIso.ofComponents (fun F => InducedCategory.isoMk (NatIso.ofComponents (fun X =>
-    commGroupAddCommGroupEquivalence.counitIso.app _ ≪≫
+    (commGroupAddCommGroupEquivalence.counitIso.app _).symm ≪≫
       (CommGrpCat.toAddCommGrp.mapIso (commGrpTypeEquivalenceCommGrp.counitIso.app
         (AddCommGrpCat.toCommGrp.obj (F.obj.obj X)))).symm ≪≫
       CommGrpCat.toAddCommGrp.mapIso
@@ -123,7 +129,8 @@ noncomputable def leftExactFunctorForgetEquivalence :
   functor := (LeftExactFunctor.whiskeringRight _ _ _).obj (LeftExactFunctor.of (forget _))
   inverse := leftExactFunctorForgetEquivalence.inverse
   unitIso := leftExactFunctorForgetEquivalence.unitIso
-  counitIso := Iso.refl _
+  counitIso := NatIso.ofComponents fun G ↦
+    InducedCategory.isoMk (leftExactFunctorForgetEquivalence.inverseAuxCompForget G).symm
 
 end
 

@@ -166,7 +166,9 @@ lemma ProperSpace.of_isClosed {X : Type*} [PseudoMetricSpace X] [ProperSpace X]
 
 end ProperSpace
 
-instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Additive X) := ‹ProperSpace X›
-instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Multiplicative X) := ‹ProperSpace X›
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Additive X) :=
+  inferInstanceAs (ProperSpace X)
+instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace (Multiplicative X) :=
+  inferInstanceAs (ProperSpace X)
 instance [PseudoMetricSpace X] [ProperSpace X] : ProperSpace Xᵒᵈ :=
   inferInstanceAs (ProperSpace X)

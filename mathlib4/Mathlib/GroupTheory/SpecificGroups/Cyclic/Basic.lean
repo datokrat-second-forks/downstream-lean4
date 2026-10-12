@@ -56,15 +56,23 @@ instance (priority := 100) isCyclic_of_subsingleton [Group α] [Subsingleton α]
 
 @[simp]
 theorem isCyclic_multiplicative_iff [SubNegMonoid α] :
-    IsCyclic (Multiplicative α) ↔ IsAddCyclic α :=
-  ⟨fun H ↦ ⟨H.1⟩, fun H ↦ ⟨H.1⟩⟩
+    IsCyclic (Multiplicative α) ↔ IsAddCyclic α := by
+  constructor
+  · rintro ⟨g, hg⟩
+    exact ⟨g.toAdd, fun x ↦ (hg (.ofAdd x)).imp fun _ h ↦ congrArg Multiplicative.toAdd h⟩
+  · rintro ⟨g, hg⟩
+    exact ⟨.ofAdd g, fun x ↦ (hg x.toAdd).imp fun _ h ↦ congrArg Multiplicative.ofAdd h⟩
 
 instance isCyclic_multiplicative [AddGroup α] [IsAddCyclic α] : IsCyclic (Multiplicative α) :=
   isCyclic_multiplicative_iff.mpr inferInstance
 
 @[simp]
-theorem isAddCyclic_additive_iff [DivInvMonoid α] : IsAddCyclic (Additive α) ↔ IsCyclic α :=
-  ⟨fun H ↦ ⟨H.1⟩, fun H ↦ ⟨H.1⟩⟩
+theorem isAddCyclic_additive_iff [DivInvMonoid α] : IsAddCyclic (Additive α) ↔ IsCyclic α := by
+  constructor
+  · rintro ⟨g, hg⟩
+    exact ⟨g.toMul, fun x ↦ (hg (Additive.ofMul x)).imp fun _ h ↦ congrArg Additive.toMul h⟩
+  · rintro ⟨g, hg⟩
+    exact ⟨Additive.ofMul g, fun x ↦ (hg x.toMul).imp fun _ h ↦ congrArg Additive.ofMul h⟩
 
 instance isAddCyclic_additive [Group α] [IsCyclic α] : IsAddCyclic (Additive α) :=
   isAddCyclic_additive_iff.mpr inferInstance

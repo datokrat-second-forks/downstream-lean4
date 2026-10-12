@@ -64,11 +64,11 @@ instance : IsAddKleinFour (ZMod 2 × ZMod 2) where
   exponent_two := by simp [AddMonoid.exponent_prod]
 
 instance {G : Type*} [Group G] [IsKleinFour G] : IsAddKleinFour (Additive G) where
-  card_four := by rw [← IsKleinFour.card_four (G := G)]; congr!
+  card_four := (Nat.card_congr Additive.toMul).trans IsKleinFour.card_four
   exponent_two := by simp
 
 instance {G : Type*} [AddGroup G] [IsAddKleinFour G] : IsKleinFour (Multiplicative G) where
-  card_four := by rw [← IsAddKleinFour.card_four (G := G)]; congr!
+  card_four := (Nat.card_congr Multiplicative.toAdd).trans IsAddKleinFour.card_four
   exponent_two := by simp
 
 namespace IsKleinFour

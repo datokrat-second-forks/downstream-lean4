@@ -205,7 +205,7 @@ variable (G α) [AddGroup G] [AddAction G α]
 def AddAction.toPermHom : G →+ Additive (Equiv.Perm α) := (MulAction.toPermHom ..).toAdditiveRight
 
 lemma AddAction.coe_toPermHom :
-    ⇑(AddAction.toPermHom G α) = AddAction.toPerm :=
+    ⇑(AddAction.toPermHom G α) = Additive.ofMul ∘ AddAction.toPerm :=
   rfl
 
 theorem AddAction.toPerm_zero :

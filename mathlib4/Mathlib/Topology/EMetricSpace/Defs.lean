@@ -1006,8 +1006,8 @@ section
 
 variable [EDist X]
 
-instance : EDist (Additive X) := ‹EDist X›
-instance : EDist (Multiplicative X) := ‹EDist X›
+instance : EDist (Additive X) := inferInstanceAs (EDist X)
+instance : EDist (Multiplicative X) := inferInstanceAs (EDist X)
 
 @[simp]
 theorem edist_ofMul (a b : X) : edist (ofMul a) (ofMul b) = edist a b :=
@@ -1027,10 +1027,12 @@ theorem edist_toAdd (a b : Multiplicative X) : edist a.toAdd b.toAdd = edist a b
 
 end
 
-instance [PseudoEMetricSpace X] : PseudoEMetricSpace (Additive X) := ‹PseudoEMetricSpace X›
-instance [PseudoEMetricSpace X] : PseudoEMetricSpace (Multiplicative X) := ‹PseudoEMetricSpace X›
-instance [EMetricSpace X] : EMetricSpace (Additive X) := ‹EMetricSpace X›
-instance [EMetricSpace X] : EMetricSpace (Multiplicative X) := ‹EMetricSpace X›
+instance [PseudoEMetricSpace X] : PseudoEMetricSpace (Additive X) :=
+  inferInstanceAs (PseudoEMetricSpace X)
+instance [PseudoEMetricSpace X] : PseudoEMetricSpace (Multiplicative X) :=
+  inferInstanceAs (PseudoEMetricSpace X)
+instance [EMetricSpace X] : EMetricSpace (Additive X) := inferInstanceAs (EMetricSpace X)
+instance [EMetricSpace X] : EMetricSpace (Multiplicative X) := inferInstanceAs (EMetricSpace X)
 
 /-!
 ### Order dual

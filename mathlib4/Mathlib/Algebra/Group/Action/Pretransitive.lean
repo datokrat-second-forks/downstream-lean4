@@ -128,10 +128,10 @@ open Additive Multiplicative
 
 instance Additive.addAction_isPretransitive [Monoid α] [MulAction α β]
     [MulAction.IsPretransitive α β] : AddAction.IsPretransitive (Additive α) β :=
-  ⟨@MulAction.exists_smul_eq α _ _ _⟩
+  ⟨fun x y ↦ let ⟨m, hm⟩ := MulAction.exists_smul_eq α x y; ⟨ofMul m, hm⟩⟩
 
 instance Multiplicative.mulAction_isPretransitive [AddMonoid α] [AddAction α β]
     [AddAction.IsPretransitive α β] : MulAction.IsPretransitive (Multiplicative α) β :=
-  ⟨@AddAction.exists_vadd_eq α _ _ _⟩
+  ⟨fun x y ↦ let ⟨m, hm⟩ := AddAction.exists_vadd_eq α x y; ⟨ofAdd m, hm⟩⟩
 
 end

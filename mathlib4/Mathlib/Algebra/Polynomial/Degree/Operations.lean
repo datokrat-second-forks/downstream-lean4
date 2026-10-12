@@ -685,13 +685,13 @@ lemma degree_mul : degree (p * q) = degree p + degree q :=
 /-- `degree` as a monoid homomorphism between `R[X]` and `Multiplicative (WithBot ℕ)`.
   This is useful to prove results about multiplication and degree. -/
 def degreeMonoidHom [Nontrivial R] : R[X] →* Multiplicative (WithBot ℕ) where
-  toFun := degree
-  map_one' := degree_one
-  map_mul' _ _ := degree_mul
+  toFun p := .ofAdd (degree p)
+  map_one' := congrArg Multiplicative.ofAdd degree_one
+  map_mul' _ _ := congrArg Multiplicative.ofAdd degree_mul
 
 @[simp]
 lemma degree_pow [Nontrivial R] (p : R[X]) (n : ℕ) : degree (p ^ n) = n • degree p :=
-  map_pow (@degreeMonoidHom R _ _ _) _ _
+  congrArg Multiplicative.toAdd (map_pow (@degreeMonoidHom R _ _ _) p n)
 
 @[simp]
 lemma leadingCoeff_mul (p q : R[X]) : leadingCoeff (p * q) = leadingCoeff p * leadingCoeff q := by

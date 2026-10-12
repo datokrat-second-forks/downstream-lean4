@@ -115,9 +115,9 @@ lemma map_add_eq_mul (ψ : AddChar A M) (x y : A) : ψ (x + y) = ψ x * ψ y := 
 
 /-- Interpret an additive character as a monoid homomorphism. -/
 def toMonoidHom (φ : AddChar A M) : Multiplicative A →* M where
-  toFun := φ.toFun
+  toFun a := φ a.toAdd
   map_one' := φ.map_zero_eq_one'
-  map_mul' := φ.map_add_eq_mul'
+  map_mul' a b := φ.map_add_eq_mul' a.toAdd b.toAdd
 
 -- this instance was a bad idea and conflicted with `instFunLike` above
 
@@ -127,16 +127,16 @@ def toMonoidHom (φ : AddChar A M) : Multiplicative A →* M where
 
 /-- An additive character maps multiples by natural numbers to powers. -/
 lemma map_nsmul_eq_pow (ψ : AddChar A M) (n : ℕ) (x : A) : ψ (n • x) = ψ x ^ n :=
-  ψ.toMonoidHom.map_pow x n
+  ψ.toMonoidHom.map_pow (.ofAdd x) n
 
 /-- Additive characters `A → M` are the same thing as monoid homomorphisms from `Multiplicative A`
 to `M`. -/
 def toMonoidHomEquiv : AddChar A M ≃ (Multiplicative A →* M) where
   toFun φ := φ.toMonoidHom
   invFun f :=
-  { toFun := f.toFun
+  { toFun a := f (.ofAdd a)
     map_zero_eq_one' := f.map_one'
-    map_add_eq_mul' := f.map_mul' }
+    map_add_eq_mul' a b := f.map_mul' (.ofAdd a) (.ofAdd b) }
 
 @[simp, norm_cast] lemma coe_toMonoidHomEquiv (ψ : AddChar A M) :
     ⇑(toMonoidHomEquiv ψ) = ψ ∘ Multiplicative.toAdd := rfl
@@ -152,9 +152,9 @@ def toMonoidHomEquiv : AddChar A M ≃ (Multiplicative A →* M) where
 
 /-- Interpret an additive character as a monoid homomorphism. -/
 def toAddMonoidHom (φ : AddChar A M) : A →+ Additive M where
-  toFun := φ.toFun
-  map_zero' := φ.map_zero_eq_one'
-  map_add' := φ.map_add_eq_mul'
+  toFun a := .ofMul (φ a)
+  map_zero' := congrArg Additive.ofMul φ.map_zero_eq_one'
+  map_add' a b := congrArg Additive.ofMul (φ.map_add_eq_mul' a b)
 
 @[simp] lemma coe_toAddMonoidHom (ψ : AddChar A M) : ⇑ψ.toAddMonoidHom = Additive.ofMul ∘ ψ := rfl
 
@@ -166,9 +166,9 @@ def toAddMonoidHom (φ : AddChar A M) : A →+ Additive M where
 def toAddMonoidHomEquiv : AddChar A M ≃ (A →+ Additive M) where
   toFun φ := φ.toAddMonoidHom
   invFun f :=
-  { toFun := f.toFun
-    map_zero_eq_one' := f.map_zero'
-    map_add_eq_mul' := f.map_add' }
+  { toFun a := (f a).toMul
+    map_zero_eq_one' := congrArg Additive.toMul f.map_zero'
+    map_add_eq_mul' a b := congrArg Additive.toMul (f.map_add' a b) }
 
 @[simp, norm_cast]
 lemma coe_toAddMonoidHomEquiv (ψ : AddChar A M) :
@@ -265,9 +265,20 @@ variable {ι A M : Type*} [AddMonoid A] [CommMonoid M]
 instance instCommMonoid : CommMonoid (AddChar A M) :=
   fast_instance% toMonoidHomEquiv.commMonoid
 
-/-- When `M` is commutative, `AddChar A M` is an additive commutative monoid. -/
-instance instAddCommMonoid : AddCommMonoid (AddChar A M) :=
-  inferInstanceAs (AddCommMonoid (Additive (AddChar A M)))
+/-- When `M` is commutative, `AddChar A M` is an additive commutative monoid.
+
+This is the `CommMonoid` structure above, written additively; the fields are chosen to be
+definitionally the multiplicative ones, so that `⇑(ψ + χ) = ψ * χ` and friends hold by `rfl`. -/
+instance instAddCommMonoid : AddCommMonoid (AddChar A M) where
+  add ψ χ := ψ * χ
+  add_assoc := mul_assoc
+  zero := 1
+  zero_add := one_mul
+  add_zero := mul_one
+  add_comm := mul_comm
+  nsmul n ψ := ψ ^ n
+  nsmul_zero := pow_zero
+  nsmul_succ n ψ := pow_succ ψ n
 
 @[simp, norm_cast] lemma coe_mul (ψ χ : AddChar A M) : ⇑(ψ * χ) = ψ * χ := rfl
 @[simp, norm_cast] lemma coe_add (ψ χ : AddChar A M) : ⇑(ψ + χ) = ψ * χ := rfl
@@ -309,7 +320,19 @@ def toMonoidHomMulEquiv : AddChar A M ≃* (Multiplicative A →* M) :=
 /-- Additive characters `A → M` are the same thing as additive homomorphisms from `A` to
 `Additive M`. -/
 def toAddMonoidAddEquiv : Additive (AddChar A M) ≃+ (A →+ Additive M) :=
-  { toAddMonoidHomEquiv with map_add' := fun φ ψ ↦ by rfl }
+  { Additive.toMul.trans toAddMonoidHomEquiv with map_add' := fun φ ψ ↦ by rfl }
+
+/-- The additive structure on `AddChar A M` is the multiplicative one written additively, so
+`Additive (AddChar A M)` is canonically isomorphic to `AddChar A M`. -/
+def additiveEquiv : Additive (AddChar A M) ≃+ AddChar A M where
+  __ := Additive.toMul
+  map_add' _ _ := rfl
+
+@[simp] lemma additiveEquiv_apply (ψ : Additive (AddChar A M)) :
+    additiveEquiv ψ = Additive.toMul ψ := rfl
+
+@[simp] lemma additiveEquiv_symm_apply (ψ : AddChar A M) :
+    additiveEquiv.symm ψ = Additive.ofMul ψ := rfl
 
 /-- The double dual embedding. -/
 def doubleDualEmb : A →+ AddChar (AddChar A M) M where
@@ -360,8 +383,19 @@ instance instCommGroup : CommGroup (AddChar A M) where
   inv ψ := ψ.compAddMonoidHom negAddMonoidHom
   inv_mul_cancel ψ := by ext1 x; simp [negAddMonoidHom, ← map_add_eq_mul]
 
-/-- The additive characters on a commutative additive group form a commutative group. -/
-instance : AddCommGroup (AddChar A M) := inferInstanceAs <| AddCommGroup (Additive (AddChar A M))
+/-- The additive characters on a commutative additive group form a commutative group.
+
+As for `AddChar.instAddCommMonoid`, this is the `CommGroup` structure above written additively. -/
+instance : AddCommGroup (AddChar A M) where
+  __ := instAddCommMonoid
+  neg ψ := ψ⁻¹
+  sub ψ χ := ψ / χ
+  sub_eq_add_neg := div_eq_mul_inv
+  zsmul n ψ := ψ ^ n
+  zsmul_zero' := DivInvMonoid.zpow_zero'
+  zsmul_succ' := DivInvMonoid.zpow_succ'
+  zsmul_neg' := DivInvMonoid.zpow_neg'
+  neg_add_cancel := inv_mul_cancel
 
 @[simp] lemma inv_apply (ψ : AddChar A M) (a : A) : ψ⁻¹ a = ψ (-a) := rfl
 @[simp] lemma neg_apply (ψ : AddChar A M) (a : A) : (-ψ) a = ψ (-a) := rfl
@@ -389,7 +423,7 @@ lemma map_neg_eq_inv (ψ : AddChar A M) (a : A) : ψ (-a) = (ψ a)⁻¹ := by
 
 /-- An additive character maps integer scalar multiples to integer powers. -/
 lemma map_zsmul_eq_zpow (ψ : AddChar A M) (n : ℤ) (a : A) : ψ (n • a) = (ψ a) ^ n :=
-  ψ.toMonoidHom.map_zpow a n
+  ψ.toMonoidHom.map_zpow (.ofAdd a) n
 
 end fromAddGrouptoDivisionMonoid
 
@@ -413,8 +447,9 @@ lemma sub_apply' (ψ χ : AddChar A M) (a : A) : (ψ - χ) a = ψ a / χ a := by
 lemma map_sub_eq_div (ψ : AddChar A M) (a b : A) : ψ (a - b) = ψ a / ψ b :=
   ψ.toMonoidHom.map_div _ _
 
-lemma injective_iff {ψ : AddChar A M} : Injective ψ ↔ ∀ ⦃x⦄, ψ x = 1 → x = 0 :=
-  ψ.toMonoidHom.ker_eq_bot_iff.symm.trans eq_bot_iff
+lemma injective_iff {ψ : AddChar A M} : Injective ψ ↔ ∀ ⦃x⦄, ψ x = 1 → x = 0 := by
+  refine ⟨fun h x hx ↦ h (hx.trans ψ.map_zero_eq_one.symm), fun h x y hxy ↦ sub_eq_zero.1 (h ?_)⟩
+  rw [sub_eq_add_neg, map_add_eq_mul, hxy, ← map_add_eq_mul, add_neg_cancel, map_zero_eq_one]
 
 end fromAddCommGrouptoDivisionCommMonoid
 

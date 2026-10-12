@@ -82,57 +82,73 @@ variable [TopologicalSpace X]
 
 open Additive Multiplicative
 
-instance : TopologicalSpace (Additive X) := ‹TopologicalSpace X›
-instance : TopologicalSpace (Multiplicative X) := ‹TopologicalSpace X›
+instance : TopologicalSpace (Additive X) := inferInstanceAs (TopologicalSpace X)
+instance : TopologicalSpace (Multiplicative X) := inferInstanceAs (TopologicalSpace X)
 
-instance [DiscreteTopology X] : DiscreteTopology (Additive X) := ‹DiscreteTopology X›
-instance [DiscreteTopology X] : DiscreteTopology (Multiplicative X) := ‹DiscreteTopology X›
+instance [DiscreteTopology X] : DiscreteTopology (Additive X) :=
+  inferInstanceAs (DiscreteTopology X)
+instance [DiscreteTopology X] : DiscreteTopology (Multiplicative X) :=
+  inferInstanceAs (DiscreteTopology X)
 
-instance [CompactSpace X] : CompactSpace (Additive X) := ‹CompactSpace X›
-instance [CompactSpace X] : CompactSpace (Multiplicative X) := ‹CompactSpace X›
+-- The compactness instances are in `Mathlib/Topology/Compactness/{Compact,LocallyCompact}.lean`.
 
-instance [NoncompactSpace X] : NoncompactSpace (Additive X) := ‹NoncompactSpace X›
-instance [NoncompactSpace X] : NoncompactSpace (Multiplicative X) := ‹NoncompactSpace X›
+@[simp] theorem Additive.isOpen_preimage_ofMul {s : Set (Additive X)} :
+    IsOpen (ofMul ⁻¹' s) ↔ IsOpen s := Iff.rfl
 
-instance [WeaklyLocallyCompactSpace X] : WeaklyLocallyCompactSpace (Additive X) :=
-  ‹WeaklyLocallyCompactSpace X›
-instance [WeaklyLocallyCompactSpace X] : WeaklyLocallyCompactSpace (Multiplicative X) :=
-  ‹WeaklyLocallyCompactSpace X›
+@[simp] theorem Additive.isClosed_preimage_ofMul {s : Set (Additive X)} :
+    IsClosed (ofMul ⁻¹' s) ↔ IsClosed s := ⟨fun h ↦ ⟨h.isOpen_compl⟩, fun h ↦ ⟨h.isOpen_compl⟩⟩
 
-instance [LocallyCompactSpace X] : LocallyCompactSpace (Additive X) := ‹LocallyCompactSpace X›
-instance [LocallyCompactSpace X] : LocallyCompactSpace (Multiplicative X) := ‹LocallyCompactSpace X›
+theorem continuous_ofMul : Continuous (ofMul : X → Additive X) := continuous_coinduced_rng
 
-theorem continuous_ofMul : Continuous (ofMul : X → Additive X) := continuous_id
+theorem continuous_toMul : Continuous (toMul : Additive X → X) :=
+  continuous_coinduced_dom.2 continuous_id
 
-theorem continuous_toMul : Continuous (toMul : Additive X → X) := continuous_id
+theorem isOpenMap_ofMul : IsOpenMap (ofMul : X → Additive X) := fun s hs ↦ by
+  rwa [← Additive.isOpen_preimage_ofMul, Equiv.preimage_image]
 
-theorem continuous_ofAdd : Continuous (ofAdd : X → Multiplicative X) := continuous_id
+theorem isOpenMap_toMul : IsOpenMap (toMul : Additive X → X) := fun s hs ↦ by
+  rwa [Equiv.image_eq_preimage_symm, Additive.toMul_symm_eq, Additive.isOpen_preimage_ofMul]
 
-theorem continuous_toAdd : Continuous (toAdd : Multiplicative X → X) := continuous_id
+theorem isClosedMap_ofMul : IsClosedMap (ofMul : X → Additive X) := fun s hs ↦ by
+  rwa [← Additive.isClosed_preimage_ofMul, Equiv.preimage_image]
 
-theorem isOpenMap_ofMul : IsOpenMap (ofMul : X → Additive X) := IsOpenMap.id
+theorem isClosedMap_toMul : IsClosedMap (toMul : Additive X → X) := fun s hs ↦ by
+  rwa [Equiv.image_eq_preimage_symm, Additive.toMul_symm_eq, Additive.isClosed_preimage_ofMul]
 
-theorem isOpenMap_toMul : IsOpenMap (toMul : Additive X → X) := IsOpenMap.id
+theorem nhds_ofMul (x : X) : 𝓝 (ofMul x) = map ofMul (𝓝 x) :=
+  (isOpenMap_ofMul.nhds_le x).antisymm continuous_ofMul.continuousAt
 
-theorem isOpenMap_ofAdd : IsOpenMap (ofAdd : X → Multiplicative X) := IsOpenMap.id
+theorem nhds_toMul (x : Additive X) : 𝓝 x.toMul = map toMul (𝓝 x) :=
+  (isOpenMap_toMul.nhds_le x).antisymm continuous_toMul.continuousAt
 
-theorem isOpenMap_toAdd : IsOpenMap (toAdd : Multiplicative X → X) := IsOpenMap.id
+@[simp] theorem Multiplicative.isOpen_preimage_ofAdd {s : Set (Multiplicative X)} :
+    IsOpen (ofAdd ⁻¹' s) ↔ IsOpen s := Iff.rfl
 
-theorem isClosedMap_ofMul : IsClosedMap (ofMul : X → Additive X) := IsClosedMap.id
+@[simp] theorem Multiplicative.isClosed_preimage_ofAdd {s : Set (Multiplicative X)} :
+    IsClosed (ofAdd ⁻¹' s) ↔ IsClosed s := ⟨fun h ↦ ⟨h.isOpen_compl⟩, fun h ↦ ⟨h.isOpen_compl⟩⟩
 
-theorem isClosedMap_toMul : IsClosedMap (toMul : Additive X → X) := IsClosedMap.id
+theorem continuous_ofAdd : Continuous (ofAdd : X → Multiplicative X) := continuous_coinduced_rng
 
-theorem isClosedMap_ofAdd : IsClosedMap (ofAdd : X → Multiplicative X) := IsClosedMap.id
+theorem continuous_toAdd : Continuous (toAdd : Multiplicative X → X) :=
+  continuous_coinduced_dom.2 continuous_id
 
-theorem isClosedMap_toAdd : IsClosedMap (toAdd : Multiplicative X → X) := IsClosedMap.id
+theorem isOpenMap_ofAdd : IsOpenMap (ofAdd : X → Multiplicative X) := fun s hs ↦ by
+  rwa [← Multiplicative.isOpen_preimage_ofAdd, Equiv.preimage_image]
 
-theorem nhds_ofMul (x : X) : 𝓝 (ofMul x) = map ofMul (𝓝 x) := rfl
+theorem isOpenMap_toAdd : IsOpenMap (toAdd : Multiplicative X → X) := fun s hs ↦ by
+  rwa [Equiv.image_eq_preimage_symm, toAdd_symm_eq, isOpen_preimage_ofAdd]
 
-theorem nhds_ofAdd (x : X) : 𝓝 (ofAdd x) = map ofAdd (𝓝 x) := rfl
+theorem isClosedMap_ofAdd : IsClosedMap (ofAdd : X → Multiplicative X) := fun s hs ↦ by
+  rwa [← Multiplicative.isClosed_preimage_ofAdd, Equiv.preimage_image]
 
-theorem nhds_toMul (x : Additive X) : 𝓝 x.toMul = map toMul (𝓝 x) := rfl
+theorem isClosedMap_toAdd : IsClosedMap (toAdd : Multiplicative X → X) := fun s hs ↦ by
+  rwa [Equiv.image_eq_preimage_symm, toAdd_symm_eq, isClosed_preimage_ofAdd]
 
-theorem nhds_toAdd (x : Multiplicative X) : 𝓝 x.toAdd = map toAdd (𝓝 x) := rfl
+theorem nhds_ofAdd (x : X) : 𝓝 (ofAdd x) = map ofAdd (𝓝 x) :=
+  (isOpenMap_ofAdd.nhds_le x).antisymm continuous_ofAdd.continuousAt
+
+theorem nhds_toAdd (x : Multiplicative X) : 𝓝 x.toAdd = map toAdd (𝓝 x) :=
+  (isOpenMap_toAdd.nhds_le x).antisymm continuous_toAdd.continuousAt
 
 end
 

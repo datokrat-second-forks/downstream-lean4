@@ -9,6 +9,7 @@ public import Mathlib.Data.Finset.Preimage
 public import Mathlib.Data.Finset.Prod
 public import Mathlib.Order.Hom.WithTopBot
 public import Mathlib.Order.Interval.Set.UnorderedInterval
+public import Mathlib.Order.Transport
 
 /-!
 # Locally finite orders
@@ -610,6 +611,60 @@ instance : Subsingleton (LocallyFiniteOrderTop α) :=
       ext a b
       rw [h₀_finset_mem_Ioi, h₁_finset_mem_Ioi]
     simp_rw [hIci, hIoi]
+
+theorem Lean.CanonicalEquivalence.mem_map_toFun {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    {s : Finset X} {y : Y} : y ∈ s.map ⟨e.toFun, e.toFun_injective⟩ ↔ e.invFun y ∈ s := by
+  simp only [Finset.mem_map, Function.Embedding.coeFn_mk]
+  exact ⟨by rintro ⟨x, hx, rfl⟩; rwa [e.left_inv], fun h ↦ ⟨_, h, e.right_inv y⟩⟩
+
+theorem Lean.CanonicalEquivalence.mem_map_invFun {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    {s : Finset Y} {x : X} : x ∈ s.map ⟨e.invFun, e.invFun_injective⟩ ↔ e.toFun x ∈ s := by
+  simp only [Finset.mem_map, Function.Embedding.coeFn_mk]
+  exact ⟨by rintro ⟨y, hy, rfl⟩; rwa [e.right_inv], fun h ↦ ⟨_, h, e.left_inv x⟩⟩
+
+/-- `LocallyFiniteOrder` instances correspond along a canonical equivalence, for the transported
+order. -/
+@[transport]
+protected abbrev LocallyFiniteOrder.canonicalCongr {X Y : Type*}
+    (e : Lean.CanonicalEquivalence X Y) [iY : Preorder Y] {iX : Preorder X}
+    (hi : iX = (Preorder.canonicalCongr e).invFun iY) :
+    Lean.CanonicalEquivalence (LocallyFiniteOrder X) (LocallyFiniteOrder Y) where
+  toFun i :=
+    { finsetIcc x y := (i.finsetIcc (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIco x y := (i.finsetIco (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIoc x y := (i.finsetIoc (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finsetIoo x y := (i.finsetIoo (e.invFun x) (e.invFun y)).map ⟨e.toFun, e.toFun_injective⟩
+      finset_mem_Icc x y z := e.mem_map_toFun.trans <| (i.finset_mem_Icc _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ico x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ico _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ioc x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ioc _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl
+      finset_mem_Ioo x y z := e.mem_map_toFun.trans <| (i.finset_mem_Ioo _ _ _).trans <| by
+        subst hi
+        conv_rhs => rw [← e.right_inv x, ← e.right_inv y, ← e.right_inv z]
+        exact Iff.rfl }
+  invFun i :=
+    { finsetIcc x y := (i.finsetIcc (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIco x y := (i.finsetIco (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIoc x y := (i.finsetIoc (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finsetIoo x y := (i.finsetIoo (e.toFun x) (e.toFun y)).map ⟨e.invFun, e.invFun_injective⟩
+      finset_mem_Icc _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Icc _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ico _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ico _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ioc _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ioc _ _ _).trans <| by
+        subst hi; exact Iff.rfl
+      finset_mem_Ioo _ _ _ := e.mem_map_invFun.trans <| (i.finset_mem_Ioo _ _ _).trans <| by
+        subst hi; exact Iff.rfl }
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
 
 -- Should this be called `LocallyFiniteOrder.lift`?
 /-- Given an order embedding `α ↪o β`, pulls back the `LocallyFiniteOrder` on `β` to `α`. -/

@@ -15,22 +15,24 @@ public section
 variable {α : Type*}
 
 instance Multiplicative.isOrderedMonoid [AddCommMonoid α] [Preorder α] [IsOrderedAddMonoid α] :
-    IsOrderedMonoid (Multiplicative α) :=
-  { mul_le_mul_left := @IsOrderedAddMonoid.add_le_add_left α _ _ _ }
+    IsOrderedMonoid (Multiplicative α) where
+  mul_le_mul_left a b h c := IsOrderedAddMonoid.add_le_add_left a.toAdd b.toAdd h c.toAdd
 
 instance Additive.isOrderedAddMonoid [CommMonoid α] [Preorder α] [IsOrderedMonoid α] :
-    IsOrderedAddMonoid (Additive α) :=
-  { add_le_add_left := @IsOrderedMonoid.mul_le_mul_left α _ _ _ }
+    IsOrderedAddMonoid (Additive α) where
+  add_le_add_left a b h c := IsOrderedMonoid.mul_le_mul_left a.toMul b.toMul h c.toMul
 
 instance Multiplicative.isOrderedCancelMonoid
     [AddCommMonoid α] [Preorder α] [IsOrderedCancelAddMonoid α] :
-    IsOrderedCancelMonoid (Multiplicative α) :=
-  { le_of_mul_le_mul_left := @IsOrderedCancelAddMonoid.le_of_add_le_add_left α _ _ _ }
+    IsOrderedCancelMonoid (Multiplicative α) where
+  le_of_mul_le_mul_left a b c h :=
+    IsOrderedCancelAddMonoid.le_of_add_le_add_left a.toAdd b.toAdd c.toAdd h
 
 instance Additive.isOrderedCancelAddMonoid
     [CommMonoid α] [Preorder α] [IsOrderedCancelMonoid α] :
-    IsOrderedCancelAddMonoid (Additive α) :=
-  { le_of_add_le_add_left := @IsOrderedCancelMonoid.le_of_mul_le_mul_left α _ _ _ }
+    IsOrderedCancelAddMonoid (Additive α) where
+  le_of_add_le_add_left a b c h :=
+    IsOrderedCancelMonoid.le_of_mul_le_mul_left a.toMul b.toMul c.toMul h
 
 instance Multiplicative.canonicallyOrderedMul
     [AddMonoid α] [Preorder α] [CanonicallyOrderedAdd α] :

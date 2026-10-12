@@ -362,8 +362,8 @@ end
 
 @[simp] lemma Multiplicative.mulAction_orbit {α β : Type*} [VAdd α β] (b : β) :
     MulAction.orbit (Multiplicative α) b = AddAction.orbit α b :=
-  rfl
+  Set.ext fun _ ↦ ⟨fun ⟨g, hg⟩ ↦ ⟨g.toAdd, hg⟩, fun ⟨g, hg⟩ ↦ ⟨.ofAdd g, hg⟩⟩
 
 @[simp] lemma Additive.mulAction_orbit {α β : Type*} [SMul α β] (b : β) :
     AddAction.orbit (Additive α) b = MulAction.orbit α b :=
-  rfl
+  Set.ext fun _ ↦ ⟨fun ⟨g, hg⟩ ↦ ⟨g.toMul, hg⟩, fun ⟨g, hg⟩ ↦ ⟨.ofMul g, hg⟩⟩

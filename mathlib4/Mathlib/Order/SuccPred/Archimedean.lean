@@ -38,6 +38,54 @@ class IsPredArchimedean (α : Type*) [Preorder α] [PredOrder α] : Prop where
 export IsSuccArchimedean (exists_succ_iterate_of_le)
 export IsPredArchimedean (exists_pred_iterate_of_le)
 
+/-- `IsSuccArchimedean` holds on both sides of a canonical equivalence, for the transported
+preorder and successor. -/
+@[transport]
+protected abbrev IsSuccArchimedean.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [iY : Preorder Y] {iX : Preorder X} (hi : iX = (Preorder.canonicalCongr e).invFun iY)
+    [sY : SuccOrder Y] {sX : SuccOrder X} (hs : sX = (SuccOrder.canonicalCongr e hi).invFun sY) :
+    Lean.CanonicalEquivalence (IsSuccArchimedean X) (IsSuccArchimedean Y) := by
+  subst hi hs
+  letI := (Preorder.canonicalCongr e).invFun iY
+  letI := (SuccOrder.canonicalCongr e rfl).invFun sY
+  have hc : Function.Semiconj e.toFun (Order.succ : X → X) Order.succ := fun _ ↦ e.right_inv _
+  exact {
+    toFun _ := ⟨fun {a b} hab ↦ by
+      obtain ⟨n, hn⟩ := exists_succ_iterate_of_le (α := X) (a := e.invFun a) (b := e.invFun b) <| by
+        change e.toFun (e.invFun a) ≤ e.toFun (e.invFun b)
+        rwa [e.right_inv, e.right_inv]
+      refine ⟨n, ?_⟩
+      rw [← e.right_inv a, ← hc.iterate_right n (e.invFun a), hn, e.right_inv]⟩
+    invFun _ := ⟨fun {a b} hab ↦
+      let ⟨n, hn⟩ := exists_succ_iterate_of_le (α := Y) hab
+      ⟨n, e.toFun_injective ((hc.iterate_right n a).trans hn)⟩⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
+/-- `IsPredArchimedean` holds on both sides of a canonical equivalence, for the transported
+preorder and predecessor. -/
+@[transport]
+protected abbrev IsPredArchimedean.canonicalCongr {X Y : Type*} (e : Lean.CanonicalEquivalence X Y)
+    [iY : Preorder Y] {iX : Preorder X} (hi : iX = (Preorder.canonicalCongr e).invFun iY)
+    [sY : PredOrder Y] {sX : PredOrder X} (hs : sX = (PredOrder.canonicalCongr e hi).invFun sY) :
+    Lean.CanonicalEquivalence (IsPredArchimedean X) (IsPredArchimedean Y) := by
+  subst hi hs
+  letI := (Preorder.canonicalCongr e).invFun iY
+  letI := (PredOrder.canonicalCongr e rfl).invFun sY
+  have hc : Function.Semiconj e.toFun (Order.pred : X → X) Order.pred := fun _ ↦ e.right_inv _
+  exact {
+    toFun _ := ⟨fun {a b} hab ↦ by
+      obtain ⟨n, hn⟩ := exists_pred_iterate_of_le (α := X) (a := e.invFun a) (b := e.invFun b) <| by
+        change e.toFun (e.invFun a) ≤ e.toFun (e.invFun b)
+        rwa [e.right_inv, e.right_inv]
+      refine ⟨n, ?_⟩
+      rw [← e.right_inv b, ← hc.iterate_right n (e.invFun b), hn, e.right_inv]⟩
+    invFun _ := ⟨fun {a b} hab ↦
+      let ⟨n, hn⟩ := exists_pred_iterate_of_le (α := Y) hab
+      ⟨n, e.toFun_injective ((hc.iterate_right n b).trans hn)⟩⟩
+    left_inv _ := rfl
+    right_inv _ := rfl }
+
 section Preorder
 
 variable [Preorder α]

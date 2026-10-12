@@ -896,31 +896,35 @@ variable [AddGroup α] (x y : FreeGroup α)
 /-- If `α` is a group, then any function from `α` to `α` extends uniquely to a homomorphism from the
 free group over `α` to `α`. This is the additive version of `Prod`. -/
 def sum : α :=
-  @prod (Multiplicative _) _ x
+  (lift (Multiplicative.ofAdd : α → Multiplicative α) x).toAdd
 
 variable {x y}
 
 @[simp]
-theorem sum_mk : sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) :=
-  rfl
+theorem sum_mk : sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) := by
+  induction L with
+  | nil => rfl
+  | cons a L ih =>
+    rw [List.map_cons, List.sum_cons, ← ih]
+    obtain ⟨x, _ | _⟩ := a <;> rfl
 
 @[simp]
 theorem sum.of {x : α} : sum (of x) = x :=
-  @prod.of _ (_) _
+  congrArg Multiplicative.toAdd lift_apply_of
 
 -- note: there are no bundled homs with different notation in the domain and codomain, so we copy
 -- these manually
 @[simp]
 theorem sum.map_mul : sum (x * y) = sum x + sum y :=
-  (@prod (Multiplicative _) _).map_mul _ _
+  congrArg Multiplicative.toAdd ((lift _).map_mul x y)
 
 @[simp]
 theorem sum.map_one : sum (1 : FreeGroup α) = 0 :=
-  (@prod (Multiplicative _) _).map_one
+  congrArg Multiplicative.toAdd (lift _).map_one
 
 @[simp]
 theorem sum.map_inv : sum x⁻¹ = -sum x :=
-  (prod : FreeGroup (Multiplicative α) →* Multiplicative α).map_inv _
+  congrArg Multiplicative.toAdd ((lift (Multiplicative.ofAdd : α → Multiplicative α)).map_inv x)
 
 end Sum
 

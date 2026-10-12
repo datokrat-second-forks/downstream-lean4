@@ -1153,6 +1153,7 @@ public import Mathlib.Algebra.Order.SuccPred.TypeTags
 public import Mathlib.Algebra.Order.SuccPred.WithBot
 public import Mathlib.Algebra.Order.Sum
 public import Mathlib.Algebra.Order.ToIntervalMod
+public import Mathlib.Algebra.Order.TypeTags
 public import Mathlib.Algebra.Order.UpperLower
 public import Mathlib.Algebra.Order.WithTop.Untop0
 public import Mathlib.Algebra.Order.ZeroLEOne
@@ -6428,6 +6429,7 @@ public import Mathlib.Order.SymmDiff
 public import Mathlib.Order.Synonym
 public import Mathlib.Order.TeichmullerTukey
 public import Mathlib.Order.TransfiniteIteration
+public import Mathlib.Order.Transport
 public import Mathlib.Order.TypeTags
 public import Mathlib.Order.Types.Arithmetic
 public import Mathlib.Order.Types.Defs

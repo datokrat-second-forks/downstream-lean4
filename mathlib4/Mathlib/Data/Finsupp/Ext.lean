@@ -61,18 +61,16 @@ theorem addHom_ext' [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
 theorem mulHom_ext [MulOneClass N] ⦃f g : Multiplicative (α →₀ M) →* N⦄
     (H : ∀ x y, f (Multiplicative.ofAdd <| single x y) = g (Multiplicative.ofAdd <| single x y)) :
     f = g :=
-  MonoidHom.ext <|
-    DFunLike.congr_fun <| by
-      have := addHom_ext (f := f.toAdditiveRight) (g := g.toAdditiveRight) H
-      ext
-      rw [DFunLike.ext_iff] at this
-      apply this
+  MonoidHom.ext fun a ↦ by
+    have := addHom_ext (f := f.toAdditiveRight) (g := g.toAdditiveRight)
+      fun x y ↦ congrArg Additive.ofMul (H x y)
+    exact congrArg Additive.toMul (DFunLike.congr_fun this a.toAdd)
 
 @[ext]
 theorem mulHom_ext' [MulOneClass N] {f g : Multiplicative (α →₀ M) →* N}
     (H : ∀ x, f.comp (AddMonoidHom.toMultiplicative (singleAddHom x)) =
               g.comp (AddMonoidHom.toMultiplicative (singleAddHom x))) :
     f = g :=
-  mulHom_ext fun x => DFunLike.congr_fun (H x)
+  mulHom_ext fun x y => DFunLike.congr_fun (H x) (.ofAdd y)
 
 end Finsupp

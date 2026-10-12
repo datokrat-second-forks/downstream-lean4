@@ -656,6 +656,18 @@ theorem mvfderiv_eq_fderiv :
     d% f x = fderiv 𝕜 f x ∘L (NormedSpace.fromTangentSpace x).toContinuousLinearMap := by
   rw [← mvfderivWithin_univ, ← fderivWithin_univ, mvfderivWithin_eq_fderivWithin]
 
+/-- For maps between vector spaces, `fderivWithin` is `mvfderivWithin` read on the model space. -/
+theorem fderivWithin_eq_mvfderivWithin_comp :
+    fderivWithin 𝕜 f s x =
+      d[s] f x ∘L (NormedSpace.fromTangentSpace x).symm.toContinuousLinearMap := by
+  ext v
+  simp [mvfderivWithin_eq_fderivWithin]
+
+/-- For maps between vector spaces, `fderiv` is `mvfderiv` read on the model space. -/
+theorem fderiv_eq_mvfderiv_comp :
+    fderiv 𝕜 f x = d% f x ∘L (NormedSpace.fromTangentSpace x).symm.toContinuousLinearMap := by
+  rw [← fderivWithin_univ, ← mvfderivWithin_univ, fderivWithin_eq_mvfderivWithin_comp]
+
 /-- For maps between vector spaces, `mfderivWithin` and `fderivWithin` coincide. -/
 theorem mfderivWithin_eq_fderivWithin :
     mfderiv[s] f x = (NormedSpace.fromTangentSpace (f x)).symm.toContinuousLinearMap ∘L

@@ -6,6 +6,7 @@ Authors: Kim Morrison
 module
 
 public import Mathlib.Algebra.Group.PUnit
+public import Mathlib.Algebra.Group.Equiv.TypeTags
 public import Mathlib.Algebra.Group.TypeTags.Hom
 public import Mathlib.Algebra.Group.ULift
 public import Mathlib.CategoryTheory.ConcreteCategory.Forget
@@ -537,13 +538,15 @@ example : (forget₂ CommMonCat MonCat).ReflectsIsomorphisms := inferInstance
 def AddMonCat.equivalence : AddMonCat ≌ MonCat where
   functor := { obj X := ↧(Multiplicative X), map f := MonCat.ofHom f.hom.toMultiplicative }
   inverse := { obj X := ↧(Additive X), map f := ofHom f.hom.toAdditive }
-  unitIso := Iso.refl _
-  counitIso := Iso.refl _
+  unitIso := NatIso.ofComponents fun X ↦
+    (AddEquiv.additiveMultiplicative X).symm.toAddMonCatIso
+  counitIso := NatIso.ofComponents fun X ↦ (MulEquiv.multiplicativeAdditive X).toMonCatIso
 
 /-- The equivalence between `AddCommMonCat` and `CommMonCat`. -/
 @[simps]
 def AddCommMonCat.equivalence : AddCommMonCat ≌ CommMonCat where
   functor := { obj X := ↧(Multiplicative X), map f := CommMonCat.ofHom f.hom.toMultiplicative }
   inverse := { obj X := ↧(Additive X), map f := ofHom f.hom.toAdditive }
-  unitIso := Iso.refl _
-  counitIso := Iso.refl _
+  unitIso := NatIso.ofComponents fun X ↦
+    (AddEquiv.additiveMultiplicative X).symm.toAddCommMonCatIso
+  counitIso := NatIso.ofComponents fun X ↦ (MulEquiv.multiplicativeAdditive X).toCommMonCatIso

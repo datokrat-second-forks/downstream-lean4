@@ -50,7 +50,7 @@ instance : Inhabited (RingAut R) :=
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
 def toAddAut : RingAut R →* Multiplicative (AddAut R) where
-  toFun := RingEquiv.toAddEquiv
+  toFun e := Multiplicative.ofAdd e.toAddEquiv
   map_one' := rfl
   map_mul' _ _ := rfl
 

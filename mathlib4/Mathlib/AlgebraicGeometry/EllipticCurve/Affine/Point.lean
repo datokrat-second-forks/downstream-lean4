@@ -752,16 +752,18 @@ the class of the non-zero fractional ideal `⟨X - x, Y - y⟩` in the ideal cla
 noncomputable def toClass : W.Point →+ Additive (ClassGroup W.CoordinateRing) where
   toFun P := match P with
     | 0 => 0
-    | some _ _ h => ClassGroup.mk W.FunctionField <| CoordinateRing.XYIdeal' h
+    | some _ _ h =>
+      Additive.ofMul <| ClassGroup.mk W.FunctionField <| CoordinateRing.XYIdeal' h
   map_zero' := rfl
   map_add' := by
     rintro (_ | ⟨x₁, y₁, h₁⟩) (_ | ⟨x₂, y₂, h₂⟩)
     any_goals simp only [← zero_def, zero_add, add_zero]
     by_cases hxy : x₁ = x₂ ∧ y₁ = W.negY x₂ y₂
     · simp only [hxy.left, hxy.right, add_of_Y_eq rfl rfl]
-      exact (CoordinateRing.mk_XYIdeal'_neg_mul h₂).symm
+      exact congrArg Additive.ofMul (CoordinateRing.mk_XYIdeal'_neg_mul h₂).symm
     · simp only [add_some hxy]
-      exact (CoordinateRing.mk_XYIdeal'_mul_mk_XYIdeal' h₁ h₂ hxy).symm
+      exact congrArg Additive.ofMul
+        (CoordinateRing.mk_XYIdeal'_mul_mk_XYIdeal' h₁ h₂ hxy).symm
 
 lemma toClass_zero : toClass (0 : W.Point) = 0 :=
   rfl
@@ -769,7 +771,8 @@ lemma toClass_zero : toClass (0 : W.Point) = 0 :=
 -- note: giving `W` to `XYIdeal'` explicitly hugely speeds up elaboration for some reason.
 -- see https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Field.20.28FunctionField.20.3Fm.2E19.29/near/594011283
 lemma toClass_some {x y : F} (h : W.Nonsingular x y) :
-    toClass (some _ _ h) = ClassGroup.mk W.FunctionField (CoordinateRing.XYIdeal' (W := W) h) :=
+    toClass (some _ _ h) =
+      Additive.ofMul (ClassGroup.mk W.FunctionField (CoordinateRing.XYIdeal' (W := W) h)) :=
   rfl
 
 private lemma add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q := by
@@ -787,7 +790,8 @@ lemma toClass_eq_zero (P : W.Point) : toClass P = 0 ↔ P = 0 := by
   · intro hP
     rcases P with (_ | ⟨_, _, h, _⟩)
     · rfl
-    · rcases (ClassGroup.mk_eq_one_of_coe_ideal <| by rfl).mp hP with ⟨p, h0, hp⟩
+    · rcases (ClassGroup.mk_eq_one_of_coe_ideal <| by rfl).mp (ofMul_eq_zero.1 hP) with
+        ⟨p, h0, hp⟩
       apply (p.natDegree_norm_ne_one _).elim
       rw [← finrank_quotient_span_eq_natDegree_norm (CoordinateRing.basis W) h0,
         ← (quotientEquivAlgOfEq F hp).toLinearEquiv.finrank_eq,
@@ -798,7 +802,7 @@ lemma toClass_injective : Function.Injective <| toClass (W := W) := by
   rintro (_ | ⟨_, _, h⟩) _ hP
   all_goals rw [← neg_inj, ← add_eq_zero, ← toClass_eq_zero, map_add, ← hP]
   · exact zero_add 0
-  · exact CoordinateRing.mk_XYIdeal'_neg_mul h
+  · exact congrArg Additive.ofMul (CoordinateRing.mk_XYIdeal'_neg_mul h)
 
 instance : AddCommSemigroup W.Point where
   add_comm _ _ := toClass_injective <| by simp only [map_add, add_comm]

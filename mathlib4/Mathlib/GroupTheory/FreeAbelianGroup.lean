@@ -110,8 +110,9 @@ def of (x : α) : FreeAbelianGroup α :=
 
 /-- The map `FreeAbelianGroup α →+ A` induced by a map of types `α → A`. -/
 def lift {β : Type v} [AddCommGroup β] : (α → β) ≃ (FreeAbelianGroup α →+ β) :=
-  (@FreeGroup.lift _ (Multiplicative β) _).trans <|
-    (@Abelianization.lift _ _ (Multiplicative β) _).trans MonoidHom.toAdditive
+  ((Equiv.refl α).arrowCongr Multiplicative.ofAdd).trans <|
+    (@FreeGroup.lift _ (Multiplicative β) _).trans <|
+      (@Abelianization.lift _ _ (Multiplicative β) _).trans MonoidHom.toAdditiveLeft
 
 section lift
 
@@ -121,9 +122,9 @@ open FreeAbelianGroup
 
 -- Porting note: needed to add `(β := Multiplicative β)`
 @[simp]
-theorem lift_apply_of (x : α) : lift f (of x) = f x := by
-  convert! Abelianization.lift_apply_of (FreeGroup.lift f (β := Multiplicative β)) (FreeGroup.of x)
-  exact (FreeGroup.lift_apply_of (β := Multiplicative β)).symm
+theorem lift_apply_of (x : α) : lift f (of x) = f x :=
+  congrArg Multiplicative.toAdd <|
+    (Abelianization.lift_apply_of _ _).trans (FreeGroup.lift_apply_of (β := Multiplicative β))
 
 theorem lift_unique (g : FreeAbelianGroup α →+ β) (hg : ∀ x, g (of x) = f x) {x} :
     g x = lift f x :=
@@ -176,8 +177,11 @@ protected theorem induction_on
     {motive : FreeAbelianGroup α → Prop} (z : FreeAbelianGroup α) (zero : motive 0)
     (of : ∀ x, motive (of x)) (neg : ∀ x, motive (.of x) → motive (-.of x))
     (add : ∀ x y, motive x → motive y → motive (x + y)) : motive z :=
-  Quotient.inductionOn' z fun x ↦ Quot.inductionOn x fun L ↦
-    List.recOn L zero fun ⟨x, b⟩ _ ih ↦ Bool.recOn b (add _ _ (neg _ (of x)) ih) (add _ _ (of x) ih)
+  have H : ∀ x : Abelianization (FreeGroup α), motive (Additive.ofMul x) := fun x ↦
+    Quotient.inductionOn' x fun y ↦ Quot.inductionOn y fun L ↦
+      List.recOn L zero fun ⟨x, b⟩ _ ih ↦
+        Bool.recOn b (add _ _ (neg _ (of x)) ih) (add _ _ (of x) ih)
+  H (Additive.toMul z)
 
 theorem lift_add_apply [AddCommGroup G] (f g : α → G) (a : FreeAbelianGroup α) :
     lift (f + g) a = lift f a + lift g a := by

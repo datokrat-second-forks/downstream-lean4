@@ -1027,20 +1027,26 @@ theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀
 end
 
 instance [TopologicalSpace M] [Mul M] [ContinuousMul M] : ContinuousAdd (Additive M) where
-  continuous_add := @continuous_mul M _ _ _
+  continuous_add :=
+    continuous_ofMul.comp <| continuous_mul.comp <| continuous_toMul.prodMap continuous_toMul
 
 instance [TopologicalSpace M] [Add M] [ContinuousAdd M] : ContinuousMul (Multiplicative M) where
-  continuous_mul := @continuous_add M _ _ _
+  continuous_mul :=
+    continuous_ofAdd.comp <| continuous_add.comp <| continuous_toAdd.prodMap continuous_toAdd
 
 instance [TopologicalSpace M] [Mul M] [SeparatelyContinuousMul M] :
     SeparatelyContinuousAdd (Additive M) where
-  continuous_const_add := @continuous_const_mul M _ _ _
-  continuous_add_const := @continuous_mul_const M _ _ _
+  continuous_const_add {a} :=
+    continuous_ofMul.comp <| (continuous_const_mul a.toMul).comp continuous_toMul
+  continuous_add_const {a} :=
+    continuous_ofMul.comp <| (continuous_mul_const a.toMul).comp continuous_toMul
 
 instance [TopologicalSpace M] [Add M] [SeparatelyContinuousAdd M] :
     SeparatelyContinuousMul (Multiplicative M) where
-  continuous_const_mul := @continuous_const_add M _ _ _
-  continuous_mul_const := @continuous_add_const M _ _ _
+  continuous_const_mul {a} :=
+    continuous_ofAdd.comp <| (continuous_const_add a.toAdd).comp continuous_toAdd
+  continuous_mul_const {a} :=
+    continuous_ofAdd.comp <| (continuous_add_const a.toAdd).comp continuous_toAdd
 
 section LatticeOps
 

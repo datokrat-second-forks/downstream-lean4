@@ -169,10 +169,7 @@ protected theorem ContMDiffWithinAt.mfderivWithin {x₀ : N} {f : N → M → M'
     (mdifferentiableWithinAt_extChartAt_symm (PartialEquiv.map_source _ h2)).mono
       (inter_subset_left.trans (extChartAt_target_subset_range (g x₀)))
   rw [inTangentCoordinates_eq_mfderiv_comp (by simpa using h2) (by simpa using h'x), A,
-    ← ContinuousLinearMap.comp_id (fderivWithin 𝕜 _ _ _),
-    ← ContinuousLinearEquiv.coe_comp_coe_symm
-      (NormedSpace.fromTangentSpace (extChartAt I (g x₀) (g x))),
-    ← ContinuousLinearMap.comp_assoc (fderivWithin 𝕜 _ _ _), ← mvfderivWithin_eq_fderivWithin,
+    fderivWithin_eq_mvfderivWithin_comp,
     mvfderiv_comp_mfderivWithin_of_eq (mdifferentiableAt_extChartAt (by simpa using h'x))
       (hmf.comp_of_eq _ hsymm inter_subset_right hgx) h3 (congrArg (f x) hgx),
     mfderivWithin_comp_of_eq hmf hsymm inter_subset_right h3 hgx]

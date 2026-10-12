@@ -377,7 +377,7 @@ theorem prod_hom_add_index [AddZeroClass M] [CommMonoid N] {f g : α →₀ M}
     ((f + g).prod fun a b => h a (Multiplicative.ofAdd b)) =
       (f.prod fun a b => h a (Multiplicative.ofAdd b)) *
         g.prod fun a b => h a (Multiplicative.ofAdd b) :=
-  prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_mul
+  prod_add_index' (fun a => (h a).map_one) fun a b₁ b₂ => (h a).map_mul (.ofAdd b₁) (.ofAdd b₂)
 
 /-- The canonical isomorphism between families of additive monoid homomorphisms `α → (M →+ N)`
 and monoid homomorphisms `(α →₀ M) →+ N`. -/

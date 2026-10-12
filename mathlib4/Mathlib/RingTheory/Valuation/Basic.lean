@@ -1089,7 +1089,7 @@ variable {Γ₀ : Type*} {Γ'₀ : Type*}
 Needed throughout because `Multiplicative Γᵒᵈ` is no longer the type `Γ`. -/
 private lemma val_congr {Γ : Type*} {a b : Multiplicative Γᵒᵈ} (h : a = b) :
     OrderDual.ofDual (Multiplicative.toAdd a) = OrderDual.ofDual (Multiplicative.toAdd b) :=
-  congrArg _ h
+  congrArg (fun x ↦ OrderDual.ofDual (Multiplicative.toAdd x)) h
 
 /-- Transporting an equation between `Γ` values up to `Valuation R (Multiplicative Γᵒᵈ)` values. -/
 private lemma addVal_congr {Γ : Type*} {a b : Γ} (h : a = b) :
@@ -1189,22 +1189,22 @@ theorem map_add' : ∀ (x y : R), v x ≤ v (x + y) ∨ v y ≤ v (x + y) := by
   apply map_add
 
 theorem map_le_add {x y : R} {g : Γ₀} (hx : g ≤ v x) (hy : g ≤ v y) : g ≤ v (x + y) :=
-  Valuation.map_add_le v hx hy
+  Valuation.map_add_le v (g := Multiplicative.ofAdd (OrderDual.toDual g)) hx hy
 
 theorem map_lt_add {x y : R} {g : Γ₀} (hx : g < v x) (hy : g < v y) : g < v (x + y) :=
-  Valuation.map_add_lt v hx hy
+  Valuation.map_add_lt v (g := Multiplicative.ofAdd (OrderDual.toDual g)) hx hy
 
 theorem map_le_sum {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, g ≤ v (f i)) :
     g ≤ v (∑ i ∈ s, f i) :=
-  v.map_sum_le hf
+  v.map_sum_le (g := Multiplicative.ofAdd (OrderDual.toDual g)) hf
 
 theorem map_lt_sum {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤)
     (hf : ∀ i ∈ s, g < v (f i)) : g < v (∑ i ∈ s, f i) :=
-  v.map_sum_lt (fun h ↦ hg (val_congr h)) hf
+  v.map_sum_lt (g := Multiplicative.ofAdd (OrderDual.toDual g)) (fun h ↦ hg (val_congr h)) hf
 
 theorem map_lt_sum' {ι : Type*} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤)
     (hf : ∀ i ∈ s, g < v (f i)) : g < v (∑ i ∈ s, f i) :=
-  v.map_sum_lt' hg hf
+  v.map_sum_lt' (g := Multiplicative.ofAdd (OrderDual.toDual g)) hg hf
 
 @[simp]
 theorem map_pow (x : R) (n : ℕ) : v (x ^ n) = n • (v x) :=
@@ -1275,7 +1275,7 @@ theorem map_sub (x y : R) : min (v x) (v y) ≤ v (x - y) :=
   Valuation.map_sub v x y
 
 theorem map_le_sub {x y : R} {g : Γ₀} (hx : g ≤ v x) (hy : g ≤ v y) : g ≤ v (x - y) :=
-  Valuation.map_sub_le v hx hy
+  Valuation.map_sub_le v (g := Multiplicative.ofAdd (OrderDual.toDual g)) hx hy
 
 variable {x y : R}
 

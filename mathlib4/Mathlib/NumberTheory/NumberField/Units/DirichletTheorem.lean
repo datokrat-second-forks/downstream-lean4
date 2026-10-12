@@ -134,7 +134,8 @@ theorem map_logEmbedding_sup_torsion (s : AddSubgroup (Additive (𝓞 K)ˣ)) :
   rw [← logEmbedding_ker, AddSubgroup.map_eq_map_iff, sup_right_idem]
 
 open scoped Classical in
-theorem logEmbedding_component_le {r : ℝ} {x : (𝓞 K)ˣ} (hr : 0 ≤ r) (h : ‖logEmbedding K x‖ ≤ r)
+theorem logEmbedding_component_le {r : ℝ} {x : (𝓞 K)ˣ} (hr : 0 ≤ r)
+    (h : ‖logEmbedding K (Additive.ofMul x)‖ ≤ r)
     (w : {w : InfinitePlace K // w ≠ w₀}) : |logEmbedding K (Additive.ofMul x) w| ≤ r := by
   lift r to NNReal using hr
   simp_rw [Pi.norm_def, NNReal.coe_le_coe, Finset.sup_le_iff, ← NNReal.coe_le_coe] at h
@@ -184,10 +185,11 @@ theorem unitLattice_inter_ball_finite (r : ℝ) :
     exact Set.inter_empty _
   · suffices {x : (𝓞 K)ˣ | IsIntegral ℤ (x : K) ∧
         ∀ (φ : K →+* ℂ), ‖φ x‖ ≤ Real.exp ((Fintype.card (InfinitePlace K)) * r)}.Finite by
-      refine (Set.Finite.image (logEmbedding K) this).subset ?_
+      refine (Set.Finite.image (logEmbedding K ∘ Additive.ofMul) this).subset ?_
       rintro _ ⟨⟨x, ⟨_, rfl⟩⟩, hx⟩
-      refine ⟨x, ⟨x.val.prop, (le_iff_le _ _).mp (fun w ↦ (Real.log_le_iff_le_exp ?_).mp ?_)⟩, rfl⟩
-      · exact pos_iff.mpr (coe_ne_zero x)
+      refine ⟨x.toMul, ⟨x.toMul.val.prop,
+        (le_iff_le _ _).mp (fun w ↦ (Real.log_le_iff_le_exp ?_).mp ?_)⟩, rfl⟩
+      · exact pos_iff.mpr (coe_ne_zero x.toMul)
       · rw [mem_closedBall_zero_iff] at hx
         exact (le_abs_self _).trans (log_le_of_logEmbedding_le hr hx w)
     refine Set.Finite.of_finite_image ?_ (coe_injective K).injOn
@@ -328,7 +330,8 @@ theorem unitLattice_span_eq_top :
   suffices B.det v ≠ 0 by
     rw [← isUnit_iff_ne_zero, ← Basis.is_basis_iff_det] at this
     rw [← this.2]
-    refine Submodule.span_monotone fun _ ⟨w, hw⟩ ↦ ⟨(exists_unit K w).choose, trivial, hw⟩
+    refine Submodule.span_monotone fun _ ⟨w, hw⟩ ↦
+      ⟨Additive.ofMul (exists_unit K w).choose, trivial, hw⟩
   rw [Basis.det_apply]
   -- We use a specific lemma to prove that this determinant is nonzero
   refine det_ne_zero_of_sum_col_lt_diag (fun w ↦ ?_)
@@ -408,7 +411,8 @@ theorem logEmbeddingQuot_injective :
   intro _ _ h
   simp_rw [MonoidHom.toAdditiveLeft_apply_apply, MonoidHom.coe_comp, MulEquiv.coe_toMonoidHom,
     Function.comp_apply, EmbeddingLike.apply_eq_iff_eq] at h
-  exact (EmbeddingLike.apply_eq_iff_eq _).mp <| (QuotientGroup.kerLift_injective _).eq_iff.mp h
+  exact Additive.toMul.injective <| (EmbeddingLike.apply_eq_iff_eq _).mp <|
+    (QuotientGroup.kerLift_injective _).eq_iff.mp h
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The linear equivalence between `(𝓞 K)ˣ ⧸ (torsion K)` as an additive `ℤ`-module and
@@ -416,12 +420,15 @@ set_option backward.isDefEq.respectTransparency.types false in
 def logEmbeddingEquiv :
     Additive ((𝓞 K)ˣ ⧸ (torsion K)) ≃ₗ[ℤ] (unitLattice K) :=
   LinearEquiv.ofBijective ((logEmbeddingQuot K).codRestrict (unitLattice K)
-    (Quotient.ind fun _ ↦ logEmbeddingQuot_apply K _ ▸
-      Submodule.mem_map_of_mem trivial)).toIntLinearMap
+    (fun x ↦ Quotient.ind
+      (motive := fun q ↦ logEmbeddingQuot K (Additive.ofMul q) ∈ unitLattice K)
+      (fun _ ↦ logEmbeddingQuot_apply K _ ▸ Submodule.mem_map_of_mem trivial)
+      x.toMul)).toIntLinearMap
     ⟨fun _ _ ↦ by
       rw [AddMonoidHom.coe_toIntLinearMap, AddMonoidHom.codRestrict_apply,
         AddMonoidHom.codRestrict_apply, Subtype.mk.injEq]
-      apply logEmbeddingQuot_injective K, fun ⟨a, ⟨b, _, ha⟩⟩ ↦ ⟨⟦b⟧, by simpa using! ha⟩⟩
+      apply logEmbeddingQuot_injective K,
+     fun ⟨a, ⟨b, _, ha⟩⟩ ↦ ⟨Additive.ofMul ⟦b.toMul⟧, by simpa using! ha⟩⟩
 
 @[simp]
 theorem logEmbeddingEquiv_apply (x : (𝓞 K)ˣ) :
@@ -441,13 +448,17 @@ instance : Module.Finite ℤ (Additive (𝓞 K)ˣ) := by
   rw [Module.finite_def]
   refine Submodule.fg_of_fg_map_of_fg_inf_ker
     (MonoidHom.toAdditive (QuotientGroup.mk' (torsion K))).toIntLinearMap ?_ ?_
-  · rw [Submodule.map_top, LinearMap.range_eq_top.mpr
-      (by exact QuotientGroup.mk'_surjective (torsion K)), ← Module.finite_def]
+  · have hsurj : Function.Surjective
+        ⇑(MonoidHom.toAdditive (QuotientGroup.mk' (torsion K))).toIntLinearMap :=
+      Additive.ofMul.surjective.comp
+        ((QuotientGroup.mk'_surjective (torsion K)).comp Additive.toMul.surjective)
+    rw [Submodule.map_top, LinearMap.range_eq_top.mpr hsurj, ← Module.finite_def]
     infer_instance
   · rw [inf_of_le_right le_top, AddMonoidHom.coe_toIntLinearMap_ker, MonoidHom.coe_toAdditive_ker,
       QuotientGroup.ker_mk', Submodule.fg_iff_addSubgroup_fg,
       AddSubgroup.toIntSubmodule_toAddSubgroup, ← AddGroup.fg_iff_addSubgroup_fg]
-    have : Finite (Subgroup.toAddSubgroup (torsion K)) := (inferInstance : Finite (torsion K))
+    have : Finite (Subgroup.toAddSubgroup (torsion K)) :=
+      Finite.of_equiv (torsion K) (Equiv.subtypeEquiv Additive.ofMul fun _ ↦ Iff.rfl)
     exact AddGroup.fg_of_finite
 
 instance : Monoid.FG (𝓞 K)ˣ := by
@@ -460,7 +471,13 @@ theorem finrank_modTorsion : finrank ℤ (Additive ((𝓞 K)ˣ ⧸ (torsion K)))
 @[deprecated (since := "2026-06-05")] alias rank_modTorsion := finrank_modTorsion
 
 theorem finrank_eq : finrank ℤ (Additive (𝓞 K)ˣ) = rank K := by
-  simpa [← finrank_modTorsion] using! finrank_quotient_torsion_eq.symm
+  have hle : (Subgroup.toAddSubgroup (torsion K)).toIntSubmodule ≤
+      Submodule.torsion ℤ (Additive (𝓞 K)ˣ) := fun x hx ↦ by
+    rw [← Submodule.mem_toAddSubgroup, Submodule.torsion_int]
+    exact isOfFinAddOrder_ofMul_iff.2 hx
+  rw [← finrank_modTorsion,
+    ← LinearEquiv.finrank_eq (QuotientGroup.additiveQuotientAddEquiv (torsion K)).toIntLinearEquiv]
+  exact (finrank_quotient_eq_of_le_torsion hle).symm
 
 /-- A basis of the quotient `(𝓞 K)ˣ ⧸ (torsion K)` seen as an additive ℤ-module. -/
 def basisModTorsion : Basis (Fin (rank K)) ℤ (Additive ((𝓞 K)ˣ ⧸ (torsion K))) :=
