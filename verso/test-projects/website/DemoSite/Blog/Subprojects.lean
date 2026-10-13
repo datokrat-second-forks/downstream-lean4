@@ -29,6 +29,8 @@ categories := [examples, other]
 This post demonstrates mixing highlighted examples from multiple Lean versions.
 The example project is made up of ordinary Lean modules, with examples indicated via `-- ANCHOR:` comments.
 
+`{leanExampleModule exampleMod "test-projects/website-examples" Examples}` (TODO: restore)
+
 
 # Foo
 
@@ -113,3 +115,7 @@ Tree.branch
 
 
 Here's a name from the standard library, highlighted from an example in an anchor: {anchorName natRec}`Nat.rec`.
+
+Here's a command included from a line number:
+
+`{leanCommandAt exampleMod 30}` (TODO: restore)
