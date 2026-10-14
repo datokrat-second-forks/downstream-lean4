@@ -15,11 +15,6 @@ source_url = "https://github.com/dupuisf/BibtexQuery"
 source_rev = "master"
 critical = false
 
-[comparator]
-source_url = "https://github.com/leanprover/comparator"
-source_rev = "master"
-critical = false
-
 [cslib]
 source_url = "https://github.com/leanprover/cslib"
 source_rev = "main"
