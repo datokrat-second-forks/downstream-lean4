@@ -114,8 +114,18 @@ class Updater:
             *("restore", "--worktree", f"--source={tree}", "."),
         )
 
-    def fixup_subrepo_toolchain(self, subrepo: Subrepo) -> None:
-        Paths(subrepo.path).override_toolchains_with_symlinks(Paths().toolchain)
+    def fixup_subrepo_toolchain(self, subrepo: Subrepo, source_tree: str) -> None:
+        # The root toolchain will have usually been replaced with a symlink
+        # already at this point, so we need to look at the upstream's original
+        # toolchain file.
+        source_toolchain = run(
+            *("git", "show", f"{source_tree}:lean-toolchain"),
+            capture=True,
+        ).stdout
+
+        Paths(subrepo.path).override_toolchains_with_symlinks(
+            Paths().toolchain, source_toolchain
+        )
 
     def fixup_manifest_dependencies(self, manifest_path: Path) -> None:
         manifest = json.loads(manifest_path.read_text())
@@ -165,8 +175,8 @@ class Updater:
             committed = True
         return CommitStatus(empty=empty, committed=committed)
 
-    def fixup_subrepo_and_stage(self, subrepo: Subrepo) -> None:
-        self.fixup_subrepo_toolchain(subrepo)
+    def fixup_subrepo_and_stage(self, subrepo: Subrepo, source_tree: str) -> None:
+        self.fixup_subrepo_toolchain(subrepo, source_tree)
         self.fixup_subrepo_dependencies(subrepo)
 
         run("git", "add", subrepo.path)
@@ -174,9 +184,9 @@ class Updater:
             run("git", "add", "--force", override_path)
 
     def fixup_subrepo_and_commit(
-        self, subrepo: Subrepo, sha: str, msg: str
+        self, subrepo: Subrepo, sha: str, tree: str, msg: str
     ) -> CommitStatus:
-        self.fixup_subrepo_and_stage(subrepo)
+        self.fixup_subrepo_and_stage(subrepo, tree)
 
         message = "\n".join([
             f"downstream: {msg}",
@@ -241,7 +251,7 @@ class Updater:
                 rev_sha, rev_tree = self.local_sha_tree(sha)
             self.restore_tree_to(rev_tree, subrepo.path)
             return self.fixup_subrepo_and_commit(
-                subrepo, rev_sha, f"add repo {subrepo.name}"
+                subrepo, rev_sha, rev_tree, f"add repo {subrepo.name}"
             )
 
     def reset_subrepo(self, subrepo: Subrepo) -> CommitStatus:
@@ -253,7 +263,7 @@ class Updater:
             )
             self.restore_tree_to(rev_tree, subrepo.path)
             return self.fixup_subrepo_and_commit(
-                subrepo, rev_sha, f"reset repo {subrepo.name}"
+                subrepo, rev_sha, rev_tree, f"reset repo {subrepo.name}"
             )
 
     # Like reset_subrepo, but from an arbitrary repo and rev, and without
@@ -266,7 +276,7 @@ class Updater:
 
             rev_sha, rev_tree = self.fetch_sha_tree(url, rev)
             self.restore_tree_to(rev_tree, subrepo.path)
-            self.fixup_subrepo_and_stage(subrepo)
+            self.fixup_subrepo_and_stage(subrepo, rev_tree)
 
             msg = f"downstream: import repo {subrepo.name}"
             if source:
@@ -293,7 +303,7 @@ class Updater:
 
             self.restore_tree_to(merged_tree, subrepo.path)
             return self.fixup_subrepo_and_commit(
-                subrepo, rev_sha, f"update repo {subrepo.name}"
+                subrepo, rev_sha, rev_tree, f"update repo {subrepo.name}"
             )
 
     def fixup_subrepo(self, subrepo: Subrepo) -> CommitStatus:
@@ -301,8 +311,9 @@ class Updater:
             self.reset()
 
             base_sha = self.find_latest_base_commit(subrepo).sha
+            _, base_tree = self.fetch_sha_tree(subrepo.source_url, base_sha)
             return self.fixup_subrepo_and_commit(
-                subrepo, base_sha, f"fixup repo {subrepo.name}"
+                subrepo, base_sha, base_tree, f"fixup repo {subrepo.name}"
             )
 
     def remove_subrepo(self, path: Path) -> CommitStatus:
@@ -398,7 +409,8 @@ class Updater:
         )
 
         if update_toolchains:
-            Paths().override_toolchains_with_values(our_toolchain)
+            root_toolchain = Path("lean-toolchain").read_text()
+            Paths().override_toolchains_with_values(root_toolchain, our_toolchain)
 
         if lakefile_edits:
             for lakefile in Paths().lakefiles():
