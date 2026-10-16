@@ -238,6 +238,8 @@ jobs:
             chore: downstream-lean4 adaptations for ${{ steps.toolchain.outputs.toolchain }}
           update-toolchains: true
           update-manifests: true
+          lakefile-edits: |
+            ^(name = "mathlib"\nscope = "leanprover-community"\nrev =) ".*"$ -> \1 "<mathlib4 target_rev>"
 
       - name: Post message to Zulip
         if: ${{ fromJSON(steps.export-pr.outputs.pr-created) }}
