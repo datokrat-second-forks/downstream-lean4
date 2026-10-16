@@ -70,9 +70,8 @@ build_options = ["--wfail"]
 test_options = ["--wfail"]
 
 [mathlib4]
-source_url = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-source_rev = "nightly-testing"
-alias_urls = ["https://github.com/leanprover-community/mathlib4"]
+source_url = "https://github.com/leanprover-community/mathlib4"
+source_rev = "master"
 critical = true
 build_targets = ["Mathlib", "Archive", "Counterexamples", "Wanted", "cache"]
 build_options = ["--wfail"]
