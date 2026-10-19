@@ -112,6 +112,14 @@ theorem map_toFinset [DecidableEq α] [DecidableEq β] {s : Multiset α} :
 theorem map_refl : s.map (Embedding.refl _) = s :=
   ext fun _ => by simpa only [mem_map, exists_prop] using! exists_eq_right
 
+theorem congrMap_eq_map.{u} {α β : Type u} (f : α → β) [h : Function.IsCast f] (s : Finset α) :
+    s.congrMap f = s.map ⟨f, Function.IsCast.injective f⟩ := by
+  obtain ⟨e, hf⟩ := h
+  subst e
+  obtain rfl : f = id := funext fun a ↦ (hf a).trans (cast_eq _ _)
+  unfold Finset.congrMap
+  exact (cast_eq _ _).trans map_refl.symm
+
 @[simp]
 theorem map_cast_heq {α β} (h : α = β) (s : Finset α) :
     s.map (Equiv.cast h).toEmbedding ≍ s := by

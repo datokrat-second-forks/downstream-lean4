@@ -78,6 +78,12 @@ structure Finset (α : Type*) where
   /-- `val` contains no duplicates -/
   nodup : Nodup val
 
+/-- `s` as a finset of `β`, along a cast function `f`. -/
+@[congr_map, irreducible]
+def Finset.congrMap {α β : Type u} (f : α → β) [h : Function.IsCast f] (s : Finset α) :
+    Finset β :=
+  cast (congrArg Finset h.eq) s
+
 instance Multiset.canLiftFinset {α} : CanLift (Multiset α) (Finset α) Finset.val Multiset.Nodup :=
   ⟨fun m hm => ⟨⟨m, hm⟩, rfl⟩⟩
 

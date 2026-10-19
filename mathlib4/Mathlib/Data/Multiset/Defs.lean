@@ -6,6 +6,7 @@ Authors: Mario Carneiro
 module
 
 public import Mathlib.Data.List.Perm.Subperm
+public import Mathlib.Logic.Function.IsCast
 public import Mathlib.Data.Nat.Basic
 public import Mathlib.Data.Quot
 public import Mathlib.Order.Monotone.Defs
@@ -70,6 +71,17 @@ variable {α : Type*} {β : Type v}
   is a type of finite sets with duplicates allowed. -/
 def Multiset.{u} (α : Type u) : Type u :=
   Quotient (List.isSetoid α)
+
+/-- `s` as a multiset of `β`, along a cast function `f`. -/
+@[congr_map, irreducible]
+def Multiset.congrMap.{u} {α β : Type u} (f : α → β) [h : Function.IsCast f] (s : Multiset α) :
+    Multiset β :=
+  cast (congrArg Multiset h.eq) s
+
+instance Multiset.isCast_congrMap.{u} {α β : Type u} (f : α → β) [h : Function.IsCast f] :
+    Function.IsCast (Multiset.congrMap f) where
+  eq := congrArg Multiset h.eq
+  apply_eq _ := by unfold Multiset.congrMap; rfl
 
 namespace Multiset
 

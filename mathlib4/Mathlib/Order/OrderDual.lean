@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Mario Carneiro
 module
 
 public import Mathlib.Logic.Equiv.Defs
+public import Mathlib.Logic.Function.IsCast
 public import Mathlib.Order.Basic
 
 /-!
@@ -55,6 +56,12 @@ def toDual : α ≃ αᵒᵈ :=
 @[implicit_reducible]
 def ofDual : αᵒᵈ ≃ α :=
   toDual.symm
+
+instance isCast_toDual' : Function.IsCast (@toDual' α) :=
+  ⟨by unsealing_structure OrderDual => rfl, fun _ ↦ by unsealing_structure OrderDual => rfl⟩
+
+instance isCast_ofDual' : Function.IsCast (@ofDual' α) :=
+  ⟨by unsealing_structure OrderDual => rfl, fun _ ↦ by unsealing_structure OrderDual => rfl⟩
 
 instance (α : Type*) [Nonempty α] : Nonempty αᵒᵈ :=
   inferInstanceAs (Nonempty α)

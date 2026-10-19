@@ -519,7 +519,8 @@ lemma mu_toDual (a b : α) : mu 𝕜 (toDual a) (toDual b) = mu 𝕜 b a := by
   calc
     ∑ x ∈ Icc a b, (if x ≤ b then mud a x else 0) = ∑ x ∈ Icc a b, mud a x := by
       congr! with x hx; exact ite_eq_left (mem_Icc.1 hx).2
-    _ = ∑ x ∈ Icc (ofDual b) (ofDual a), mu 𝕜 x (ofDual a) := by simp [Icc_orderDual_def, mud]
+    _ = ∑ x ∈ Icc (ofDual b) (ofDual a), mu 𝕜 x (ofDual a) := by
+      simp [Icc_orderDual_def, mud, Finset.congrMap_eq_map]; rfl
     _ = if ofDual b = ofDual a then 1 else 0 := sum_Icc_mu_left ..
     _ = if a = b then 1 else 0 := by simp [eq_comm]
 

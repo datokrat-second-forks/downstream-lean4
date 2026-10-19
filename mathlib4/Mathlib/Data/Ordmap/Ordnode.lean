@@ -5,6 +5,7 @@ Authors: Mario Carneiro
 -/
 module
 
+public import Mathlib.Logic.Function.IsCast
 public import Mathlib.Order.Compare
 public import Mathlib.Data.Nat.PSub
 public import Mathlib.Data.Tree.Basic
@@ -76,6 +77,12 @@ inductive Ordnode (α : Type u) : Type u
   | nil : Ordnode α
   | node (size : ℕ) (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α
 compile_inductive% Ordnode
+
+/-- `t` as a tree over `β`, along a cast function `f`. -/
+@[congr_map, irreducible]
+def Ordnode.congrMap {α β : Type u} (f : α → β) [h : Function.IsCast f] (t : Ordnode α) :
+    Ordnode β :=
+  cast (congrArg Ordnode h.eq) t
 
 namespace Ordnode
 
