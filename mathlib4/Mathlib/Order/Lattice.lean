@@ -165,7 +165,7 @@ theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
 
 @[to_dual]
 instance OrderDual.instSemilatticeSup (α) [h : SemilatticeInf α] : SemilatticeSup αᵒᵈ where
-  sup a b := h.inf a b
+  sup a b := toDual (h.inf (ofDual a) (ofDual b))
   le_sup_left := h.inf_le_left
   le_sup_right := h.inf_le_right
   sup_le _ _ _ := h.le_inf _ _ _
