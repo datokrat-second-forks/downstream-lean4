@@ -390,7 +390,7 @@ lemma Walk.exists_adj_adj_not_adj_ne {p : G.Walk v w} (hp : p.length = G.dist v 
     lia
   by_cases hadj : G.Adj v (p.getVert 2)
   · have : G.dist v w ≤ p.tail.tail.length + 1 :=
-      dist_le <| p.tail.tail.cons <| p.getVert_tail ▸ hadj
+      dist_le <| p.tail.tail.cons (p.getVert_tail ▸ hadj :)
     lia
   exact ⟨p.adj_snd hnp, p.adj_getVert_succ (hp ▸ hl), hadj, hv⟩
 
