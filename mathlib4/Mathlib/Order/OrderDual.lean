@@ -25,6 +25,8 @@ coercions should be inserted:
 * `OrderDual.toDual : α → αᵒᵈ` and `OrderDual.ofDual : αᵒᵈ → α`
 -/
 
+set_option elaborator.implicitTransparency true
+
 @[expose] public section
 
 assert_not_exists Lex
@@ -41,24 +43,32 @@ notation:max α "ᵒᵈ" => OrderDual α
 
 namespace OrderDual
 
-instance (α : Type*) [h : Nonempty α] : Nonempty αᵒᵈ :=
-  h
+/-- `toDual` is the identity function to the `OrderDual` of a linear order. -/
+@[implicit_reducible] def toDual : α ≃ αᵒᵈ :=
+  smartCast (α ≃ α) (α ≃ αᵒᵈ) (by with_semireducible rfl) (Equiv.refl α)
 
-instance (α : Type*) [h : Subsingleton α] : Subsingleton αᵒᵈ :=
-  h
+/-- `ofDual` is the identity function from the `OrderDual` of a linear order. -/
+@[implicit_reducible] def ofDual : αᵒᵈ ≃ α :=
+  smartCast (αᵒᵈ ≃ αᵒᵈ) (αᵒᵈ ≃ α) (by with_semireducible rfl) (Equiv.refl αᵒᵈ)
+
+instance (α : Type*) [Nonempty α] : Nonempty αᵒᵈ :=
+  inferInstanceAs (Nonempty α)
+
+instance (α : Type*) [Subsingleton α] : Subsingleton αᵒᵈ :=
+  inferInstanceAs (Subsingleton α)
 
 instance (α : Type*) [h : LE α] : LE αᵒᵈ :=
-  ⟨fun a b ↦ h.le b a⟩
+  ⟨fun a b ↦ h.le (ofDual b) (ofDual a)⟩
 
 instance (α : Type*) [h : LT α] : LT αᵒᵈ :=
-  ⟨fun a b ↦ h.lt b a⟩
+  ⟨fun a b ↦ h.lt (ofDual b) (ofDual a)⟩
 
 instance (α : Type*) [h : Ord α] : Ord αᵒᵈ :=
-  ⟨fun a b ↦ h.compare b a⟩
+  ⟨fun a b ↦ h.compare (ofDual b) (ofDual a)⟩
 
 @[to_dual]
 instance (α : Type*) [h : Min α] : Max αᵒᵈ :=
-  ⟨fun a b ↦ h.min a b⟩
+  ⟨fun a b ↦ toDual (h.min (ofDual a) (ofDual b))⟩
 
 instance [LE α] [T : IsTrans α LE.le] : IsTrans αᵒᵈ LE.le where
   trans _ _ _ hab hbc := T.trans _ _ _ hbc hab
@@ -67,7 +77,7 @@ instance [LT α] [T : IsTrans α LT.lt] : IsTrans αᵒᵈ LT.lt where
   trans _ _ _ hab hbc := T.trans _ _ _ hbc hab
 
 instance [LT α] [T : @Std.Trichotomous α LT.lt] : @Std.Trichotomous αᵒᵈ LT.lt where
-  trichotomous a b := by rw [eq_comm]; exact T.trichotomous b a
+  trichotomous a b hab hba := congrArg toDual (T.trichotomous (ofDual b) (ofDual a) hab hba).symm
 
 instance (α : Type*) [Preorder α] : Preorder αᵒᵈ where
   le_refl _ := le_refl _
@@ -75,27 +85,27 @@ instance (α : Type*) [Preorder α] : Preorder αᵒᵈ where
   lt_iff_le_not_ge _ _ := lt_iff_le_not_ge
 
 instance (α : Type*) [PartialOrder α] : PartialOrder αᵒᵈ where
-  le_antisymm a b hab hba := @le_antisymm α _ a b hba hab
+  le_antisymm _ _ hab hba := congrArg toDual (le_antisymm (α := α) hba hab)
 
-instance (α : Type*) [DecidableEq α] : DecidableEq αᵒᵈ := ‹DecidableEq α›
+instance (α : Type*) [DecidableEq α] : DecidableEq αᵒᵈ := inferInstanceAs (DecidableEq α)
 
 instance (α : Type*) [LT α] [h : DecidableLT α] : DecidableLT (αᵒᵈ) :=
-  fun a b ↦ h b a
+  fun a b ↦ h (ofDual b) (ofDual a)
 
 instance (α : Type*) [LE α] [h : DecidableLE α] : DecidableLE (αᵒᵈ) :=
-  fun a b ↦ h b a
+  fun a b ↦ h (ofDual b) (ofDual a)
 
 set_option backward.isDefEq.respectTransparency false in
 instance (α : Type*) [LinearOrder α] : LinearOrder αᵒᵈ where
-  le_total a b := le_total (α := α) b a
-  min_def := max_def' (α := α)
-  max_def := min_def' (α := α)
+  le_total a b := le_total (ofDual b) (ofDual a)
+  min_def a b := (congrArg toDual (max_def' (ofDual a) (ofDual b))).trans (apply_ite toDual ..)
+  max_def a b := (congrArg toDual (min_def' (ofDual a) (ofDual b))).trans (apply_ite toDual ..)
   toDecidableLE := inferInstance
   toDecidableLT := inferInstance
   toDecidableEq := inferInstance
   compare_eq_compareOfLessAndEq a b := by
     simp only [compare, LinearOrder.compare_eq_compareOfLessAndEq, compareOfLessAndEq, eq_comm]
-    rfl
+    exact if_congr .rfl rfl (if_congr ⟨congrArg ofDual, congrArg toDual⟩ rfl rfl)
 
 set_option linter.style.setOption false in
 set_option backward.inferInstanceAs.wrap.reuseSubInstances false in  -- otherwise we get an identity!
@@ -104,40 +114,35 @@ set_option backward.inferInstanceAs.wrap.reuseSubInstances false in  -- otherwis
 def _root_.LinearOrder.swap (α : Type*) (_ : LinearOrder α) : LinearOrder α :=
   inferInstanceAs <| LinearOrder (OrderDual α)
 
-instance [h : Inhabited α] : Inhabited αᵒᵈ := ⟨h.default⟩
+instance [h : Inhabited α] : Inhabited αᵒᵈ := ⟨toDual h.default⟩
 
-theorem Ord.dual_dual (α : Type*) [H : Ord α] : OrderDual.instOrd αᵒᵈ = H :=
+theorem Ord.dual_dual (α : Type*) [H : Ord α] : (inferInstanceAs (Ord αᵒᵈᵒᵈ) : Ord α) = H :=
   rfl
 
-theorem Preorder.dual_dual (α : Type*) [H : Preorder α] : OrderDual.instPreorder αᵒᵈ = H :=
+theorem Preorder.dual_dual (α : Type*) [H : Preorder α] :
+    (inferInstanceAs (Preorder αᵒᵈᵒᵈ) : Preorder α) = H :=
   rfl
 
 theorem instPartialOrder.dual_dual (α : Type*) [H : PartialOrder α] :
-    OrderDual.instPartialOrder αᵒᵈ = H :=
+    (inferInstanceAs (PartialOrder αᵒᵈᵒᵈ) : PartialOrder α) = H :=
   rfl
 
 theorem instLinearOrder.dual_dual (α : Type*) [H : LinearOrder α] :
-    OrderDual.instLinearOrder αᵒᵈ = H :=
+    (inferInstanceAs (LinearOrder αᵒᵈᵒᵈ) : LinearOrder α) = H :=
   rfl
 
-instance [h : Nontrivial α] : Nontrivial αᵒᵈ := h
+instance [Nontrivial α] : Nontrivial αᵒᵈ := inferInstanceAs (Nontrivial α)
 instance [h : Unique α] : Unique αᵒᵈ where
-  uniq := h.uniq
-
-/-- `toDual` is the identity function to the `OrderDual` of a linear order. -/
-def toDual : α ≃ αᵒᵈ :=
-  Equiv.refl _
-
-/-- `ofDual` is the identity function from the `OrderDual` of a linear order. -/
-def ofDual : αᵒᵈ ≃ α :=
-  Equiv.refl _
+  uniq a := congrArg toDual (h.uniq (ofDual a))
 
 @[simp] theorem toDual_symm_eq : (@toDual α).symm = ofDual := rfl
 @[simp] theorem ofDual_symm_eq : (@ofDual α).symm = toDual := rfl
 @[simp] theorem toDual_ofDual (a : αᵒᵈ) : toDual (ofDual a) = a := rfl
 @[simp] theorem ofDual_toDual (a : α) : ofDual (toDual a) = a := rfl
 
+set_option elaborator.implicitTransparency false in
 @[simp] theorem toDual_trans_ofDual : (toDual (α := α)).trans ofDual = Equiv.refl _ := rfl
+set_option elaborator.implicitTransparency false in
 @[simp] theorem ofDual_trans_toDual : (ofDual (α := α)).trans toDual = Equiv.refl _ := rfl
 @[simp] theorem toDual_comp_ofDual : (toDual (α := α)) ∘ ofDual = id := rfl
 @[simp] theorem ofDual_comp_toDual : (ofDual (α := α)) ∘ toDual = id := rfl
@@ -145,7 +150,7 @@ def ofDual : αᵒᵈ ≃ α :=
 theorem toDual_inj {a b : α} : toDual a = toDual b ↔ a = b := by simp
 theorem ofDual_inj {a b : αᵒᵈ} : ofDual a = ofDual b ↔ a = b := by simp
 
-@[ext] lemma ext {a b : αᵒᵈ} (h : ofDual a = ofDual b) : a = b := h
+@[ext] lemma ext {a b : αᵒᵈ} (h : ofDual a = ofDual b) : a = b := congrArg toDual h
 
 @[to_dual self, simp]
 theorem toDual_le_toDual [LE α] {a b : α} : toDual a ≤ toDual b ↔ b ≤ a := .rfl
@@ -168,10 +173,12 @@ theorem lt_toDual [LT α] {a : αᵒᵈ} {b : α} : a < toDual b ↔ b < ofDual 
 /-- Recursor for `αᵒᵈ`. -/
 @[elab_as_elim]
 protected def rec {motive : αᵒᵈ → Sort*} (toDual : ∀ a : α, motive (toDual a)) :
-    ∀ a : αᵒᵈ, motive a := toDual
+    ∀ a : αᵒᵈ, motive a := fun a ↦ toDual (ofDual a)
 
-@[simp] protected theorem «forall» {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (toDual a) := .rfl
-@[simp] protected theorem «exists» {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) := .rfl
+@[simp] protected theorem «forall» {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (toDual a) :=
+  ⟨fun h a ↦ h (toDual a), fun h a ↦ h (ofDual a)⟩
+@[simp] protected theorem «exists» {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) :=
+  ⟨fun ⟨a, ha⟩ ↦ ⟨ofDual a, ha⟩, fun ⟨a, ha⟩ ↦ ⟨toDual a, ha⟩⟩
 
 @[to_dual self] alias ⟨_, _root_.LE.le.dual⟩ := toDual_le_toDual
 @[to_dual self] alias ⟨_, _root_.LT.lt.dual⟩ := toDual_lt_toDual
@@ -184,11 +191,12 @@ end OrderDual
 
 instance OrderDual.denselyOrdered (α : Type*) [LT α] [h : DenselyOrdered α] :
     DenselyOrdered αᵒᵈ :=
-  ⟨fun _ _ ha ↦ (@exists_between α _ h _ _ ha).imp fun _ ↦ And.symm⟩
+  ⟨fun _ _ ha ↦ (@exists_between α _ h _ _ ha).elim fun c hc ↦ ⟨toDual c, hc.symm⟩⟩
 
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
-  ⟨by convert! @OrderDual.denselyOrdered αᵒᵈ _, @OrderDual.denselyOrdered α _⟩
+  ⟨fun _ ↦ ⟨fun a b hab ↦ (exists_between (α := αᵒᵈ) (a₁ := .toDual b) (a₂ := .toDual a) hab).elim
+    fun c hc ↦ ⟨OrderDual.ofDual c, hc.symm⟩⟩, @OrderDual.denselyOrdered α _⟩
 
 /-! ### Pushing order definitions through `Equiv` -/
 

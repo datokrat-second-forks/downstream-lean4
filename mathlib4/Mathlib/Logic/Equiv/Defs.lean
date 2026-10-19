@@ -135,7 +135,8 @@ protected theorem Perm.congr_fun {f g : Equiv.Perm α} (h : f = g) (x : α) : f 
   Equiv.congr_fun h x
 
 /-- Any type is equivalent to itself. -/
-@[refl] protected def refl (α : Sort*) : α ≃ α := ⟨id, id, fun _ => rfl, fun _ => rfl⟩
+@[refl, implicit_reducible]
+protected def refl (α : Sort*) : α ≃ α := ⟨id, id, fun _ => rfl, fun _ => rfl⟩
 
 instance inhabited' : Inhabited (α ≃ α) := ⟨Equiv.refl α⟩
 
