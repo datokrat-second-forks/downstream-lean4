@@ -12,9 +12,9 @@ public import Mathlib.Init
 
 `Function.IsCast f` says that `f : α → β` is a cast along a type equality `α = β`. A map along a
 cast function, such as `List.congrMap f`, is a cast as well. Maps are registered with
-`@[congr_map]`: when `f` is the constructor or projection of a `+defeq` structure, the elaborator
-reduces them like the identity. For example,
-`List.congrMap OrderDual.ofDual' (List.congrMap OrderDual.toDual' l)` is `l` by `rfl`.
+`@[congr_map]`: when `f` is the constructor or projection of a `+defeq` structure, or unfolds to
+one like `OrderDual.toDual`, the elaborator reduces them like the identity. For example,
+`List.congrMap OrderDual.ofDual (List.congrMap OrderDual.toDual l)` is `l` by `rfl`.
 -/
 
 @[expose] public section

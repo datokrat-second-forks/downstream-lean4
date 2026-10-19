@@ -57,10 +57,10 @@ def toDual : α ≃ αᵒᵈ :=
 def ofDual : αᵒᵈ ≃ α :=
   toDual.symm
 
-instance isCast_toDual' : Function.IsCast (@toDual' α) :=
+instance isCast_toDual : Function.IsCast ⇑(@toDual α) :=
   ⟨by unsealing_structure OrderDual => rfl, fun _ ↦ by unsealing_structure OrderDual => rfl⟩
 
-instance isCast_ofDual' : Function.IsCast (@ofDual' α) :=
+instance isCast_ofDual : Function.IsCast ⇑(@ofDual α) :=
   ⟨by unsealing_structure OrderDual => rfl, fun _ ↦ by unsealing_structure OrderDual => rfl⟩
 
 instance (α : Type*) [Nonempty α] : Nonempty αᵒᵈ :=

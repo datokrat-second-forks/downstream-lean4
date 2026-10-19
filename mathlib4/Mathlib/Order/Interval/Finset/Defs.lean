@@ -685,64 +685,64 @@ protected noncomputable def OrderEmbedding.locallyFiniteOrder [LocallyFiniteOrde
 open OrderDual
 
 omit [Preorder α] in
-theorem Finset.mem_congrMap_toDual' {s : Finset α} {x : αᵒᵈ} :
-    x ∈ s.congrMap toDual' ↔ ofDual x ∈ s := by
+theorem Finset.mem_congrMap_toDual {s : Finset α} {x : αᵒᵈ} :
+    x ∈ s.congrMap toDual ↔ ofDual x ∈ s := by
   with_unfolding_all exact Iff.rfl
 
 section LocallyFiniteOrder
 
 variable [LocallyFiniteOrder α] (a b : α)
 
-/-- Note that `Icc (toDual a) (toDual b)` is `(Icc b a).congrMap toDual'`: since `αᵒᵈ` is a
+/-- Note that `Icc (toDual a) (toDual b)` is `(Icc b a).congrMap toDual`: since `αᵒᵈ` is a
 one-field structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval is cast explicitly.
-Maps along `toDual'` and `ofDual'` cancel, so for example
+Maps along `toDual` and `ofDual` cancel, so for example
 ```
-lemma this : ((Icc (toDual (toDual a)) (toDual (toDual b))).congrMap ofDual').congrMap ofDual' =
+lemma this : ((Icc (toDual (toDual a)) (toDual (toDual b))).congrMap ofDual).congrMap ofDual =
     Icc a b := rfl
 ```
 -/
 instance OrderDual.instLocallyFiniteOrder : LocallyFiniteOrder αᵒᵈ where
-  finsetIcc a b := (@Icc α _ _ (ofDual b) (ofDual a)).congrMap toDual'
-  finsetIco a b := (@Ioc α _ _ (ofDual b) (ofDual a)).congrMap toDual'
-  finsetIoc a b := (@Ico α _ _ (ofDual b) (ofDual a)).congrMap toDual'
-  finsetIoo a b := (@Ioo α _ _ (ofDual b) (ofDual a)).congrMap toDual'
-  finset_mem_Icc _ _ _ := mem_congrMap_toDual'.trans <| (mem_Icc (α := α)).trans and_comm
-  finset_mem_Ico _ _ _ := mem_congrMap_toDual'.trans <| (mem_Ioc (α := α)).trans and_comm
-  finset_mem_Ioc _ _ _ := mem_congrMap_toDual'.trans <| (mem_Ico (α := α)).trans and_comm
-  finset_mem_Ioo _ _ _ := mem_congrMap_toDual'.trans <| (mem_Ioo (α := α)).trans and_comm
+  finsetIcc a b := (@Icc α _ _ (ofDual b) (ofDual a)).congrMap toDual
+  finsetIco a b := (@Ioc α _ _ (ofDual b) (ofDual a)).congrMap toDual
+  finsetIoc a b := (@Ico α _ _ (ofDual b) (ofDual a)).congrMap toDual
+  finsetIoo a b := (@Ioo α _ _ (ofDual b) (ofDual a)).congrMap toDual
+  finset_mem_Icc _ _ _ := mem_congrMap_toDual.trans <| (mem_Icc (α := α)).trans and_comm
+  finset_mem_Ico _ _ _ := mem_congrMap_toDual.trans <| (mem_Ioc (α := α)).trans and_comm
+  finset_mem_Ioc _ _ _ := mem_congrMap_toDual.trans <| (mem_Ico (α := α)).trans and_comm
+  finset_mem_Ioo _ _ _ := mem_congrMap_toDual.trans <| (mem_Ioo (α := α)).trans and_comm
 
 @[to_dual self]
 lemma Finset.Icc_orderDual_def (a b : αᵒᵈ) :
-    Icc a b = (Icc (ofDual b) (ofDual a)).congrMap toDual' := rfl
+    Icc a b = (Icc (ofDual b) (ofDual a)).congrMap toDual := rfl
 
 @[to_dual (reorder := a b)]
 lemma Finset.Ico_orderDual_def (a b : αᵒᵈ) :
-    Ico a b = (Ioc (ofDual b) (ofDual a)).congrMap toDual' := rfl
+    Ico a b = (Ioc (ofDual b) (ofDual a)).congrMap toDual := rfl
 
 @[to_dual self]
 lemma Finset.Ioo_orderDual_def (a b : αᵒᵈ) :
-    Ioo a b = (Ioo (ofDual b) (ofDual a)).congrMap toDual' := rfl
+    Ioo a b = (Ioo (ofDual b) (ofDual a)).congrMap toDual := rfl
 
 @[to_dual self]
-lemma Finset.Icc_toDual : Icc (toDual a) (toDual b) = (Icc b a).congrMap toDual' := rfl
+lemma Finset.Icc_toDual : Icc (toDual a) (toDual b) = (Icc b a).congrMap toDual := rfl
 
 @[to_dual (reorder := a b)]
-lemma Finset.Ico_toDual : Ico (toDual a) (toDual b) = (Ioc b a).congrMap toDual' := rfl
+lemma Finset.Ico_toDual : Ico (toDual a) (toDual b) = (Ioc b a).congrMap toDual := rfl
 
 @[to_dual self]
-lemma Finset.Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).congrMap toDual' := rfl
+lemma Finset.Ioo_toDual : Ioo (toDual a) (toDual b) = (Ioo b a).congrMap toDual := rfl
 
 @[to_dual self]
 lemma Finset.Icc_ofDual (a b : αᵒᵈ) :
-    Icc (ofDual a) (ofDual b) = (Icc b a).congrMap ofDual' := rfl
+    Icc (ofDual a) (ofDual b) = (Icc b a).congrMap ofDual := rfl
 
 @[to_dual (reorder := a b)]
 lemma Finset.Ico_ofDual (a b : αᵒᵈ) :
-    Ico (ofDual a) (ofDual b) = (Ioc b a).congrMap ofDual' := rfl
+    Ico (ofDual a) (ofDual b) = (Ioc b a).congrMap ofDual := rfl
 
 @[to_dual self]
 lemma Finset.Ioo_ofDual (a b : αᵒᵈ) :
-    Ioo (ofDual a) (ofDual b) = (Ioo b a).congrMap ofDual' := rfl
+    Ioo (ofDual a) (ofDual b) = (Ioo b a).congrMap ofDual := rfl
 
 end LocallyFiniteOrder
 
@@ -750,38 +750,38 @@ section LocallyFiniteOrderTop
 
 variable [LocallyFiniteOrderTop α]
 
-/-- Note that `Iic (toDual a)` is `(Ici a).congrMap toDual'`: since `αᵒᵈ` is a one-field
+/-- Note that `Iic (toDual a)` is `(Ici a).congrMap toDual`: since `αᵒᵈ` is a one-field
 structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval is cast explicitly. Maps along
-`toDual'` and `ofDual'` cancel, so `((Iic (toDual (toDual a))).congrMap ofDual').congrMap ofDual'`
+`toDual` and `ofDual` cancel, so `((Iic (toDual (toDual a))).congrMap ofDual).congrMap ofDual`
 is `Iic a` by `rfl`. -/
 @[to_dual
-/-- Note that `Ici (toDual a)` is `(Iic a).congrMap toDual'`: since `αᵒᵈ` is a one-field
+/-- Note that `Ici (toDual a)` is `(Iic a).congrMap toDual`: since `αᵒᵈ` is a one-field
 structure over `α`, `Finset αᵒᵈ` is not `Finset α`, so the interval is cast explicitly. Maps along
-`toDual'` and `ofDual'` cancel, so `((Ici (toDual (toDual a))).congrMap ofDual').congrMap ofDual'`
+`toDual` and `ofDual` cancel, so `((Ici (toDual (toDual a))).congrMap ofDual).congrMap ofDual`
 is `Ici a` by `rfl`. -/]
 instance OrderDual.instLocallyFiniteOrderBot : LocallyFiniteOrderBot αᵒᵈ where
-  finsetIic a := (@Ici α _ _ (ofDual a)).congrMap toDual'
-  finsetIio a := (@Ioi α _ _ (ofDual a)).congrMap toDual'
-  finset_mem_Iic _ _ := mem_congrMap_toDual'.trans <| mem_Ici (α := α)
-  finset_mem_Iio _ _ := mem_congrMap_toDual'.trans <| mem_Ioi (α := α)
+  finsetIic a := (@Ici α _ _ (ofDual a)).congrMap toDual
+  finsetIio a := (@Ioi α _ _ (ofDual a)).congrMap toDual
+  finset_mem_Iic _ _ := mem_congrMap_toDual.trans <| mem_Ici (α := α)
+  finset_mem_Iio _ _ := mem_congrMap_toDual.trans <| mem_Ioi (α := α)
 
 @[to_dual]
-lemma Iic_orderDual_def (a : αᵒᵈ) : Iic a = (Ici (ofDual a)).congrMap toDual' := rfl
+lemma Iic_orderDual_def (a : αᵒᵈ) : Iic a = (Ici (ofDual a)).congrMap toDual := rfl
 
 @[to_dual]
-lemma Iio_orderDual_def (a : αᵒᵈ) : Iio a = (Ioi (ofDual a)).congrMap toDual' := rfl
+lemma Iio_orderDual_def (a : αᵒᵈ) : Iio a = (Ioi (ofDual a)).congrMap toDual := rfl
 
 @[to_dual]
-lemma Finset.Iic_toDual (a : α) : Iic (toDual a) = (Ici a).congrMap toDual' := rfl
+lemma Finset.Iic_toDual (a : α) : Iic (toDual a) = (Ici a).congrMap toDual := rfl
 
 @[to_dual]
-lemma Finset.Iio_toDual (a : α) : Iio (toDual a) = (Ioi a).congrMap toDual' := rfl
+lemma Finset.Iio_toDual (a : α) : Iio (toDual a) = (Ioi a).congrMap toDual := rfl
 
 @[to_dual]
-lemma Finset.Ici_ofDual (a : αᵒᵈ) : Ici (ofDual a) = (Iic a).congrMap ofDual' := rfl
+lemma Finset.Ici_ofDual (a : αᵒᵈ) : Ici (ofDual a) = (Iic a).congrMap ofDual := rfl
 
 @[to_dual]
-lemma Finset.Ioi_ofDual (a : αᵒᵈ) : Ioi (ofDual a) = (Iio a).congrMap ofDual' := rfl
+lemma Finset.Ioi_ofDual (a : αᵒᵈ) : Ioi (ofDual a) = (Iio a).congrMap ofDual := rfl
 
 end LocallyFiniteOrderTop
 

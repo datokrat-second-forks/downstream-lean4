@@ -384,9 +384,9 @@ theorem Valid'.eraseMin_aux {s l} {x : α} {r o₁ o₂} (H : Valid' o₁ (.node
     Valid' ↑(findMin' l x) (@eraseMin α (.node' l x r)) o₂ ∧
       size (.node' l x r) = size (eraseMin (.node' l x r)) + 1 := by
   have := H.dual.eraseMax_aux
-  rw [← toDual_node', ← dual_node', size_toDual, size_dual, ← toDual_eraseMax, ← dual_eraseMin,
-    size_toDual, size_dual, findMax'_toDual, findMax'_dual] at this
-  exact ⟨Valid'.dual_iff.2 this.1, this.2⟩
+  rwa [← toDual_node', ← dual_node', size_toDual, size_dual, ← toDual_eraseMax, ← dual_eraseMin,
+    size_toDual, size_dual, findMax'_toDual, findMax'_dual, ← WithBot.toDual_apply_coe,
+    ← Valid'.dual_iff] at this
 
 theorem eraseMin.valid : ∀ {t}, @Valid α _ t → Valid (eraseMin t)
   | nil, _ => valid_nil

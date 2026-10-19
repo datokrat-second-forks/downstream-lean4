@@ -943,7 +943,7 @@ section Lattice
 
 variable [Lattice α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ x : α}
 
-theorem uIcc_toDual (a b : α) : [[toDual a, toDual b]] = [[a, b]].congrMap toDual' :=
+theorem uIcc_toDual (a b : α) : [[toDual a, toDual b]] = [[a, b]].congrMap toDual :=
   Icc_toDual (a ⊔ b) (a ⊓ b)
 
 @[simp]

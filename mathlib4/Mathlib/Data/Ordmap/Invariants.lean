@@ -129,7 +129,7 @@ theorem size_dual (t : Ordnode α) : size (dual t) = size t := by cases t <;> rf
 
 /-- `t` as a tree over `αᵒᵈ`. -/
 abbrev toDual (t : Ordnode α) : Ordnode αᵒᵈ :=
-  t.congrMap OrderDual.toDual'
+  t.congrMap OrderDual.toDual
 
 @[simp]
 theorem size_toDual (t : Ordnode α) : size t.toDual = size t := by cases t <;> rfl
@@ -319,31 +319,31 @@ theorem dual_balanceR (l : Ordnode α) (x : α) (r : Ordnode α) :
   rw [← dual_dual (balanceL _ _ _), dual_balanceL, dual_dual, dual_dual]
 
 theorem toDual_node (s : ℕ) (l : Ordnode α) (x : α) (r : Ordnode α) :
-    (node s l x r).toDual = node s l.toDual (OrderDual.toDual' x) r.toDual :=
+    (node s l x r).toDual = node s l.toDual (OrderDual.toDual x) r.toDual :=
   rfl
 
 theorem toDual_node' (l : Ordnode α) (x : α) (r : Ordnode α) :
-    (node' l x r).toDual = node' l.toDual (OrderDual.toDual' x) r.toDual := by
+    (node' l x r).toDual = node' l.toDual (OrderDual.toDual x) r.toDual := by
   with_unfolding_all rfl
 
 theorem toDual_rotateL (l : Ordnode α) (x : α) (r : Ordnode α) :
-    (rotateL l x r).toDual = rotateL l.toDual (OrderDual.toDual' x) r.toDual := by
+    (rotateL l x r).toDual = rotateL l.toDual (OrderDual.toDual x) r.toDual := by
   with_unfolding_all rfl
 
 theorem toDual_balanceL (l : Ordnode α) (x : α) (r : Ordnode α) :
-    (balanceL l x r).toDual = balanceL l.toDual (OrderDual.toDual' x) r.toDual := by
+    (balanceL l x r).toDual = balanceL l.toDual (OrderDual.toDual x) r.toDual := by
   with_unfolding_all rfl
 
 theorem toDual_balanceR (l : Ordnode α) (x : α) (r : Ordnode α) :
-    (balanceR l x r).toDual = balanceR l.toDual (OrderDual.toDual' x) r.toDual := by
+    (balanceR l x r).toDual = balanceR l.toDual (OrderDual.toDual x) r.toDual := by
   with_unfolding_all rfl
 
 theorem dual_insert [LE α] [@Std.Total α (· ≤ ·)] [DecidableLE α] (x : α) :
     ∀ t : Ordnode α, (dual (Ordnode.insert x t)).toDual =
-      Ordnode.insert (OrderDual.toDual' x) (dual t).toDual
+      Ordnode.insert (OrderDual.toDual x) (dual t).toDual
   | nil => rfl
   | node _ l y r => by
-    have : cmpLE (OrderDual.toDual' x) (OrderDual.toDual' y) = cmpLE y x := rfl
+    have : cmpLE (OrderDual.toDual x) (OrderDual.toDual y) = cmpLE y x := rfl
     rw [Ordnode.insert, dual, toDual_node, Ordnode.insert, this, ← cmpLE_swap x y]
     cases cmpLE x y <;>
       simp [Ordering.swap, dual_balanceL, dual_balanceR, toDual_balanceL, toDual_balanceR,
@@ -538,7 +538,7 @@ theorem findMax_dual (t : Ordnode α) : findMax (dual t) = findMin t := by
   rw [← findMin_dual, dual_dual]
 
 theorem findMax'_toDual (x : α) (t : Ordnode α) :
-    findMax' (OrderDual.toDual' x) t.toDual = OrderDual.toDual' (findMax' x t) := by
+    findMax' (OrderDual.toDual x) t.toDual = OrderDual.toDual (findMax' x t) := by
   with_unfolding_all rfl
 
 theorem dual_eraseMin : ∀ t : Ordnode α, dual (eraseMin t) = eraseMax (dual t)
