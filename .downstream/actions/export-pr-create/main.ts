@@ -425,7 +425,7 @@ async function createExportPr(
     base: config.targetBranch,
     head: `${config.prRepo.owner}:${config.prBranch}`,
     // Required for cross-repo PRs when both repos have the same owner.
-    head_repo: config.prRepo.repo,
+    head_repo: config.prRepo.fullName,
     title: prTitle,
     body,
   });
