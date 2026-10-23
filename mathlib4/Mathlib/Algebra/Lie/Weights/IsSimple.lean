@@ -367,7 +367,8 @@ private theorem chi_not_in_q_aux (h_chi_not_in_q : ↑χ ∉ q) :
       obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp <| by
         rw [← coe_corootSpace_eq_span_singleton α, LieSubmodule.mem_toSubmodule]
         exact hy
-      rw [← hc, map_smul, h_chi_coroot_zero, smul_zero]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [← hc, map_smul, h_chi_coroot_zero, smul_zero])
     have h_bracket_elem : ⁅x_χ, (y : L)⁆ = 0 := by
       rw [← lie_skew, h_lie_eq_smul, h_chi_h_zero, zero_smul, neg_zero]
     exact h_bracket_elem

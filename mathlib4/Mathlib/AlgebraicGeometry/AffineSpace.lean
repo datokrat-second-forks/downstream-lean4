@@ -502,7 +502,8 @@ boundary, since these instances are not definitionally equal.
 -/
 example (R : CommRingCat) :
     inferInstance (α := Preorder (Spec R)) = inferInstance (α := Preorder (PrimeSpectrum R)ᵒᵈ) := by
-  aesop (add simp spec_le_iff)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  aesop (add simp spec_le_iff))
 
 end instances
 

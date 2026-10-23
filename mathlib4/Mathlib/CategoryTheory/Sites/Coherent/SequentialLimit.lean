@@ -88,9 +88,10 @@ private noncomputable def cone (X : C) (y : (F.obj ⟨0⟩).obj.obj ⟨X⟩) : C
     simp only [Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, Category.id_comp,
       Category.assoc, ← limit.w (preimageDiagram hF X y) (homOfLE (n.le_add_right 1)).op,
       homOfLE_leOfHom, Functor.map_comp]
+    (set_option backward.dsimp.instanceTypes false in
     simp [GrothendieckTopology.yonedaEquiv_symm_naturality_left,
       GrothendieckTopology.yonedaEquiv_symm_naturality_right,
-      preimageDiagram, (preimageStruct hF X y).w n])
+      preimageDiagram, (preimageStruct hF X y).w n]))
 
 variable (h : ∀ (G : ℕᵒᵖ ⥤ C),
   (∀ n, EffectiveEpi (G.map (homOfLE (Nat.le_succ n)).op)) → EffectiveEpi (limit.π G ⟨0⟩))

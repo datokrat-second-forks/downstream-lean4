@@ -157,6 +157,7 @@ lemma essentiallySmall_costructuredArrow_Spec
       exact fun R ⟨S, e⟩ ↦ ⟨_, ⟨S, rfl⟩, ⟨e.some.unop⟩⟩
     refine CommRingCat.essentiallySmall_of_localizationAway (Q := Q'.isoClosure) ?_
     rintro _ ⟨S, rfl⟩
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     have (q : Spec (F.obj S).unop) : ∃ f, q ∈ PrimeSpectrum.basicOpen f ∧
         Q' Γ(Spec (F.obj S).unop, PrimeSpectrum.basicOpen f) := by
       obtain ⟨_, ⟨U, hU, rfl⟩, hqU, -⟩ :=
@@ -165,13 +166,15 @@ lemma essentiallySmall_costructuredArrow_Spec
         PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open hqU (S.hom ⁻¹ᵁ U).isOpen
       have : LocallyOfFiniteType S.hom := hP _ S.prop
       exact ⟨f, hqf, _, ⟨U, rfl⟩, S.hom.appLE _ _ hfU,
-        (S.hom.finiteType_appLE hU (.Spec_basicOpen _)) _⟩
+        (S.hom.finiteType_appLE hU (.Spec_basicOpen _)) _⟩)
     choose f hqf hf using this
     refine ⟨Set.range f, PrimeSpectrum.iSup_basicOpen_eq_top_iff.mp ?_, Set.forall_mem_range.mpr ?_⟩
     · exact top_le_iff.mp fun x _ ↦ TopologicalSpace.Opens.mem_iSup.mpr ⟨x, hqf _⟩
-    · dsimp
-      exact fun q ↦ ⟨_, hf q, ⟨(IsLocalization.algEquiv (.powers (f q)) _
-        ((Spec.structureSheaf _).obj.obj (op _))).toRingEquiv.toCommRingCatIso⟩⟩
+    · (set_option backward.dsimp.instanceTypes false in dsimp)
+      exact fun q ↦ ⟨_, hf q,
+        ⟨(set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        (IsLocalization.algEquiv (.powers (f q)) _
+        ((Spec.structureSheaf _).obj.obj (op _))).toRingEquiv.toCommRingCatIso)⟩⟩
   · intro R
     refine ⟨.ofObj fun f : { f : Spec R.unop ⟶ X // P f } ↦ .mk _ f.1 f.2, inferInstance, ?_⟩
     refine fun S ⟨e⟩ ↦ ⟨_, .mk ⟨Spec.map e.inv.unop ≫ S.hom, ?_⟩,

@@ -140,11 +140,13 @@ instance : CommRing (AlgebraicClosure k) where
   __ : CommRing (AlgebraicClosure k) := inferInstanceAs <| CommRing (_ ⧸ _)
 
 instance instAlgebra {R : Type*} [CommSemiring R] [Algebra R k] : Algebra R (AlgebraicClosure k) :=
-  inferInstanceAs <| Algebra R (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra R (_ ⧸ _))
 
 instance {R S : Type*} [CommSemiring R] [CommSemiring S] [Algebra R S] [Algebra S k] [Algebra R k]
     [IsScalarTower R S k] : IsScalarTower R S (AlgebraicClosure k) :=
-  inferInstanceAs <| IsScalarTower R S (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower R S (_ ⧸ _))
 
 attribute [local instance] Ideal.Quotient.field in
 instance instGroupWithZero : GroupWithZero (AlgebraicClosure k) :=
@@ -170,9 +172,10 @@ theorem Monics.map_eq_prod {f : Monics k} :
     f.1.map (algebraMap k (AlgebraicClosure k)) =
       ∏ i, map (Ideal.Quotient.mk <| maxIdeal k) (X - C (MvPolynomial.X ⟨f, i⟩)) := by
   ext
-  dsimp [AlgebraicClosure]
+  (set_option backward.dsimp.instanceTypes false in dsimp [AlgebraicClosure])
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [← Ideal.Quotient.mk_comp_algebraMap, ← map_map, ← Polynomial.map_prod, ← sub_eq_zero,
-    ← coeff_sub, ← Polynomial.map_sub, ← subProdXSubC, coeff_map, Ideal.Quotient.eq_zero_iff_mem]
+    ← coeff_sub, ← Polynomial.map_sub, ← subProdXSubC, coeff_map, Ideal.Quotient.eq_zero_iff_mem])
   refine le_maxIdeal _ (Ideal.subset_span ⟨⟨f, _⟩, rfl⟩)
 
 set_option backward.isDefEq.respectTransparency false in

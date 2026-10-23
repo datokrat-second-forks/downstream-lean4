@@ -75,7 +75,9 @@ lemma exists_affine_le_of_lt {x : E} {a : ℝ} (hx : x ∈ s) (hax : a < φ x) (
   let u := L.comp (.inl 𝕜 E 𝕜)
   let c := (re (L (0, 1)))⁻¹
   refine ⟨- c • u, c * re (u x) + a, fun z => ?_, ?_⟩
-  · have hv (v : 𝕜) : v * L (0, 1) = L (0, v) := by rw [← smul_eq_mul, ← map_smul]; simp
+  · have hv (v : 𝕜) : v * L (0, 1) = L (0, v) := by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [← smul_eq_mul, ← map_smul]); simp
     have hine {w : E} (h : w ∈ s) : re (L (x, 0)) + re (L (0, 1)) * a
       < re (L (w, 0)) + re (L (0, 1)) * φ w := by
       have hw := hLb.1.trans (hLb.2 _ (by simp [A, h] : (w, ofReal (φ w)) ∈ A))
@@ -91,7 +93,9 @@ lemma exists_affine_le_of_lt_real {s : Set ℝ} {f : ℝ → ℝ} {x : ℝ} {a :
     (hax : a < f x) (hsc : IsClosed s) (hfc : LowerSemicontinuousOn f s) (hf : ConvexOn ℝ s f) :
     ∃ (c c' : ℝ), (∀ y ∈ s, c * y + c' ≤ f y) ∧ c * x + c' = a := by
   obtain ⟨l, c', hlc'_le, hlc'_eq⟩ := exists_affine_le_of_lt (𝕜 := ℝ) hx hax hsc hfc hf
-  have h1 y : l 1 * y = l y := by rw [mul_comm, ← smul_eq_mul, ← map_smul, smul_eq_mul, mul_one]
+  have h1 y : l 1 * y = l y := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [mul_comm, ← smul_eq_mul, ← map_smul, smul_eq_mul, mul_one])
   exact ⟨l 1, c', fun y hy ↦ by simpa [h1] using hlc'_le ⟨y, hy⟩, by simpa [h1] using hlc'_eq⟩
 
 lemma exists_affine_le_real {s : Set ℝ} {f : ℝ → ℝ}

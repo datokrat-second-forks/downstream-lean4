@@ -98,7 +98,7 @@ separably closed field, this is the canonical map
 @[simps]
 noncomputable def pointSmallEtaleFiberObjToPreimage {X : S.Etale}
     (t : (pointSmallEtale s).fiber.obj X) :
-    X.hom ⁻¹' {s₀} :=
+    X.hom ⁻¹' (set_option backward.isDefEq.respectTransparency.instanceTypes false in {s₀}) :=
   ⟨t.left (default : Spec (.of Ω)), by
     have := (Over.w t).symm
     cat_disch⟩

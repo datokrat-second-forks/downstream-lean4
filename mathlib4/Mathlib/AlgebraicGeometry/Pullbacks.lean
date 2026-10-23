@@ -222,14 +222,15 @@ set_option backward.defeqAttrib.useBackward true in
 /-- The first projection from the glued scheme into `X`. -/
 def p1 : (gluing 𝒰 f g).glued ⟶ X := by
   apply Multicoequalizer.desc (gluing 𝒰 f g).diagram _ fun i ↦ pullback.fst _ _ ≫ 𝒰.f i
-  simp [t_fst_fst_assoc, ← pullback.condition]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [t_fst_fst_assoc, ← pullback.condition])
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The second projection from the glued scheme into `Y`. -/
 def p2 : (gluing 𝒰 f g).glued ⟶ Y := by
   apply Multicoequalizer.desc _ _ fun i ↦ pullback.snd _ _
-  simp [t_fst_snd]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [t_fst_snd])
 
 set_option backward.isDefEq.respectTransparency false in
 theorem p_comm : p1 𝒰 f g ≫ f = p2 𝒰 f g ≫ g := by
@@ -246,7 +247,8 @@ This is used in `gluedLift`. -/
 def gluedLiftPullbackMap (i j : 𝒰.I₀) :
     pullback ((𝒰.pullback₁ s.fst).f i) ((𝒰.pullback₁ s.fst).f j) ⟶
       (gluing 𝒰 f g).V ⟨i, j⟩ := by
-  refine (pullbackRightPullbackFstIso _ _ _).hom ≫ ?_
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  refine (pullbackRightPullbackFstIso _ _ _).hom ≫ ?_)
   refine pullback.map _ _ _ _ ?_ (𝟙 _) (𝟙 _) ?_ ?_
   · exact (pullbackSymmetry _ _).hom ≫
       pullback.map _ _ _ _ (𝟙 _) s.snd f (Category.id_comp _).symm s.condition
@@ -261,14 +263,14 @@ theorem gluedLiftPullbackMap_fst (i j : 𝒰.I₀) :
       pullback.fst _ _ ≫
         (pullbackSymmetry _ _).hom ≫
           pullback.map _ _ _ _ (𝟙 _) s.snd f (Category.id_comp _).symm s.condition := by
-  simp [gluedLiftPullbackMap]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [gluedLiftPullbackMap])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 theorem gluedLiftPullbackMap_snd (i j : 𝒰.I₀) :
     gluedLiftPullbackMap 𝒰 f g s i j ≫ pullback.snd _ _ = pullback.snd _ _ ≫ pullback.snd _ _ := by
-  simp [gluedLiftPullbackMap]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [gluedLiftPullbackMap])
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The lifted map `s.X ⟶ (gluing 𝒰 f g).glued` in order to show that `(gluing 𝒰 f g).glued` is
@@ -327,20 +329,22 @@ def pullbackFstιToV (i j : 𝒰.I₀) :
     pullback (pullback.fst (p1 𝒰 f g) (𝒰.f i)) ((gluing 𝒰 f g).ι j) ⟶
       v 𝒰 f g j i :=
   (pullbackSymmetry _ _ ≪≫ pullbackRightPullbackFstIso (p1 𝒰 f g) (𝒰.f i) _).hom ≫
-    (pullback.congrHom (Multicoequalizer.π_desc ..) rfl).hom
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    (pullback.congrHom (Multicoequalizer.π_desc ..) rfl).hom)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp, reassoc]
 theorem pullbackFstιToV_fst (i j : 𝒰.I₀) :
     pullbackFstιToV 𝒰 f g i j ≫ pullback.fst _ _ = pullback.snd _ _ := by
-  simp [pullbackFstιToV, p1]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackFstιToV, p1])
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp, reassoc]
 theorem pullbackFstιToV_snd (i j : 𝒰.I₀) :
     pullbackFstιToV 𝒰 f g i j ≫ pullback.snd _ _ = pullback.fst _ _ ≫ pullback.snd _ _ := by
-  simp [pullbackFstιToV, p1]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackFstιToV, p1])
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- We show that the map `W ×[X] Uᵢ ⟶ Uᵢ ×[Z] Y ⟶ W` is the first projection, where the
@@ -515,8 +519,9 @@ def openCoverOfLeft (𝒰 : OpenCover.{v} X) (f : X ⟶ Z) (g : Y ⟶ Z) :
           𝒰.ulift.I₀ (fun i => pullback (𝒰.ulift.f i ≫ f) g)
           (fun i => pullback.map _ _ _ _ (𝒰.ulift.f i) (𝟙 _) (𝟙 _) (Category.comp_id _) (by simp))
           (Equiv.refl 𝒰.ulift.I₀) (fun _ => Iso.refl _) fun i ↦ by
+        (set_option backward.dsimp.instanceTypes false in
         simp_rw [Cover.pushforwardIso_I₀, Cover.pushforwardIso_f, GlueData.openCover_f,
-          GlueData.openCover_I₀, gluing_J]
+          GlueData.openCover_I₀, gluing_J])
         exact pullback.hom_ext (by simp [p1]) (by simp [p2])
       obtain ⟨i, x, rfl⟩ := 𝒱.exists_eq x
       exact ⟨_, x, rfl⟩
@@ -540,7 +545,7 @@ def openCoverOfRight (𝒰 : OpenCover.{v} Y) (f : X ⟶ Z) (g : Y ⟶ Z) :
       (Equiv.refl _) fun i => pullbackSymmetry _ _
   intro i
   dsimp
-  apply pullback.hom_ext <;> simp
+  apply pullback.hom_ext <;> (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -557,7 +562,7 @@ def openCoverOfLeftRight (𝒰X : OpenCover.{v} X) (𝒰Y : OpenCover.{w} Y) (f 
           (Category.comp_id _))
       (Equiv.sigmaEquivProd _ _).symm fun _ => Iso.refl _
   rintro ⟨i, j⟩
-  apply pullback.hom_ext <;> simp
+  apply pullback.hom_ext <;> (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -623,7 +628,8 @@ lemma _root_.AlgebraicGeometry.Scheme.isPullback_of_openCover
       rw [← IsPullback.paste_vert_iff this.flip (by ext <;> simp [f])]
       simpa using .of_hasPullback _ _
     convert! (inferInstance : IsIso (H'.isoPullback.inv ≫ (H i).isoPullback.hom))
-    aesop (add simp [Iso.eq_inv_comp, Scheme.Cover.pullbackHom])
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    aesop (add simp [Iso.eq_inv_comp, Scheme.Cover.pullbackHom]))
   exact MorphismProperty.of_zeroHypercover_target (P := .isomorphisms Scheme)
     (Scheme.Pullback.openCoverOfLeft 𝒰 fXZ fYZ) H₁
 
@@ -652,7 +658,9 @@ lemma diagonalCover_map (I) : (diagonalCover f 𝒰 𝒱).f I =
     (by simp)
     (by simp) := by
   cases I
-  ext1 <;> simp [diagonalCover, Cover.pullbackHom]
+  ext1 <;>
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [diagonalCover, Cover.pullbackHom])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -679,15 +687,18 @@ def diagonalRestrictIsoDiagonal (i j) :
       · simp [diagonalCover_map]
       · rw [← pullback.condition_assoc, ← pullback.condition_assoc]
         simp
-    · simp [pullback.condition, Cover.pullbackHom]
-  dsimp [Cover.pullbackHom] at H ⊢
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      simp [pullback.condition, Cover.pullbackHom])
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp [Cover.pullbackHom] at H ⊢)
   apply pullback.hom_ext
   · simp only [Category.assoc, pullback.diagonal_fst, Category.comp_id]
     simp only [← Category.assoc, IsIso.comp_inv_eq]
-    apply pullback.hom_ext <;> simp [H]
+    apply pullback.hom_ext <;>
+      (set_option backward.instanceTypes.subsingletons.prop false in simp [H])
   · simp only [Category.assoc, pullback.diagonal_snd, Category.comp_id]
     simp only [← Category.assoc, IsIso.comp_inv_eq]
-    apply pullback.hom_ext <;> simp [H]
+    apply pullback.hom_ext <;>
+      (set_option backward.instanceTypes.subsingletons.prop false in simp [H])
 
 end Pullback
 

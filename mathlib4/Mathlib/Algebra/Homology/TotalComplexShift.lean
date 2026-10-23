@@ -174,7 +174,7 @@ lemma D₂_totalShift₁XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + x 
       K.d₂_eq _ _ rfl _ (by dsimp; lia), smul_smul,
       Linear.units_smul_comp, Category.assoc, ι_totalDesc]
     dsimp
-    congr 1
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 1)
     rw [add_comm p, Int.negOnePow_add, ← mul_assoc, Int.units_mul_self, one_mul]
   · rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
     grind [up_Rel]
@@ -291,7 +291,7 @@ lemma D₂_totalShift₂XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + y 
     rw [Linear.units_smul_comp, Linear.comp_units_smul, smul_smul, smul_smul,
       ← Int.negOnePow_add, ← Int.negOnePow_add, ← Int.negOnePow_add,
       ← Int.negOnePow_add]
-    congr 2
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 2)
     lia
   · rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
     simp_all only [up_Rel]
@@ -359,6 +359,7 @@ def shiftFunctor₁₂CommIso (x y : ℤ) :
     shiftFunctor₂ C y ⋙ shiftFunctor₁ C x ≅ shiftFunctor₁ C x ⋙ shiftFunctor₂ C y :=
   Iso.refl _
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The compatibility isomorphisms of the total complex with the shifts
 in both variables "commute" only up to a sign `(x * y).negOnePow`. -/

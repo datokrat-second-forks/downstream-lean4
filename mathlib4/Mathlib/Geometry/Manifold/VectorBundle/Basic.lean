@@ -165,6 +165,7 @@ bundle at all, just that it is a fiber bundle over a charted base space.
 
 namespace Bundle
 
+set_option backward.dsimp.instanceTypes false in
 /-- Characterization of `C^n` functions into a vector bundle.
 Version at a point within a set. -/
 theorem contMDiffWithinAt_totalSpace {f : M → TotalSpace F E} {s : Set M} {x₀ : M} :

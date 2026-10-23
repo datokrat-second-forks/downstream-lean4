@@ -31,7 +31,8 @@ instance [IsLocalRing R] [IsLocalRing S] [IsLocalHom (algebraMap R S)] :
     IsLocalRing (ResidueField R ⊗[R] S) :=
   let eSp : ResidueField R ⊗[R] S ≃ₐ[R] S ⧸ (maximalIdeal R).map (algebraMap R S) :=
     (Algebra.TensorProduct.comm _ _ _).trans
-      ((TensorProduct.quotIdealMapEquivTensorQuot S (maximalIdeal R)).symm.restrictScalars _)
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      (TensorProduct.quotIdealMapEquivTensorQuot S (maximalIdeal R)).symm.restrictScalars _)
   have : Nontrivial (IsLocalRing.ResidueField R ⊗[R] S) := by
     rw [eSp.nontrivial_congr, Ideal.Quotient.nontrivial_iff]
     exact ((((local_hom_TFAE (algebraMap R S)).out 1 3 rfl rfl).mp inferInstance).trans_lt
@@ -69,7 +70,9 @@ instance (q : Ideal (p.Fiber S)) [q.IsPrime] : q.LiesOver p :=
 lemma Fiber.exists_smul_eq_one_tmul (x : p.Fiber S) : ∃ r ∉ p, ∃ s, r • x = 1 ⊗ₜ[R] s := by
   obtain ⟨r, hr, s, e⟩ := Ideal.ResidueField.exists_smul_eq_tmul_one _
     (Algebra.TensorProduct.comm _ _ _ x)
-  refine ⟨r, hr, s, by simpa using congr((Algebra.TensorProduct.comm _ _ _).symm $e)⟩
+  refine ⟨r, hr, s, by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa using congr((Algebra.TensorProduct.comm _ _ _).symm $e))⟩
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 /-- `p.Fiber S` is isomorphic to the quotient `Sₚ ⧸ pSₚ`. -/

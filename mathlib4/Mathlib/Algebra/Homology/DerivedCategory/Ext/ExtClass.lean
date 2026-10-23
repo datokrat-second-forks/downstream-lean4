@@ -86,8 +86,9 @@ set_option backward.isDefEq.respectTransparency false in
 lemma extClass_hom [HasDerivedCategory.{w'} C] : hS.extClass.hom = hS.singleδ := by
   change SmallShiftedHom.equiv W Q hS.extClass = _
   dsimp [extClass, SmallShiftedHom.equiv]
+  (set_option backward.instanceTypes.subsingletons.prop false in
   erw [SmallHom.equiv_comp]
-  rw [SmallHom.equiv_mkInv, SmallHom.equiv_mk, Category.assoc]
+  rw [SmallHom.equiv_mkInv, SmallHom.equiv_mk, Category.assoc])
   rfl
 
 end

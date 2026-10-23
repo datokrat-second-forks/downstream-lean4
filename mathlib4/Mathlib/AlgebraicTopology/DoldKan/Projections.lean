@@ -70,6 +70,7 @@ theorem P_add_Q (q : ℕ) : P q + Q q = 𝟙 K[X] := by
   rw [Q]
   abel
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem P_add_Q_f (q n : ℕ) : (P q).f n + (Q q).f n = 𝟙 (X _⦋n⦌) :=
   congr($(P_add_Q q).f n)
 

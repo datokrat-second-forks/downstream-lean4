@@ -91,7 +91,8 @@ noncomputable def Spec.fiberToSpecResidueFieldIso (R S : Type u) [CommRing R] [C
 set_option backward.isDefEq.respectTransparency false in
 lemma Scheme.Hom.range_fiberι (f : X ⟶ Y) (y : Y) :
     Set.range (f.fiberι y) = f ⁻¹' {y} := by
-  simp [fiber, fiberι, Scheme.Pullback.range_fst, Scheme.range_fromSpecResidueField]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [fiber, fiberι, Scheme.Pullback.range_fst, Scheme.range_fromSpecResidueField])
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance (f : X ⟶ Y) (y : Y) : IsPreimmersion (f.fiberι y) :=

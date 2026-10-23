@@ -115,7 +115,9 @@ lemma map_liftBaseChange_smul [h : Algebra.IsPushout R S A B] (b : B) (x) :
     ((map R S A B).restrictScalars R).liftBaseChange S (b • x) =
     b • ((map R S A B).restrictScalars R).liftBaseChange S x := by
   induction b using h.1.inductionOn with
-  | smul s b e => rw [smul_assoc, map_smul, e, smul_assoc]
+  | smul s b e =>
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [smul_assoc, map_smul, e, smul_assoc])
   | add b₁ b₂ e₁ e₂ => simp only [map_add, e₁, e₂, add_smul]
   | tmul a =>
     induction x
@@ -136,8 +138,9 @@ def derivationTensorProduct [h : Algebra.IsPushout R S A B] :
   leibniz' a b := by
     induction a using h.out.inductionOn with
     | smul x y e =>
+      (set_option backward.instanceTypes.subsingletons.prop false in
       rw [smul_mul_assoc, map_smul, e, map_smul, smul_add,
-        smul_comm x b, smul_assoc]
+        smul_comm x b, smul_assoc])
     | add b₁ b₂ e₁ e₂ => simp only [add_mul, add_smul, map_add, e₁, e₂, smul_add, add_add_add_comm]
     | tmul z =>
       dsimp
@@ -151,8 +154,9 @@ def derivationTensorProduct [h : Algebra.IsPushout R S A B] :
         simp only [LinearMap.coe_comp, Derivation.coeFn_coe, Function.comp_apply,
           Derivation.leibniz, mk_apply, mulActionBaseChange_smul_tmul, TensorProduct.tmul_add]
       | smul _ _ e =>
+        (set_option backward.instanceTypes.subsingletons.prop false in
         rw [mul_comm, smul_mul_assoc, map_smul, mul_comm, e,
-            map_smul, smul_add, smul_comm, smul_assoc]
+            map_smul, smul_add, smul_comm, smul_assoc])
       | add _ _ e₁ e₂ => simp only [mul_add, add_smul, map_add, e₁, e₂, smul_add, add_add_add_comm]
 
 lemma derivationTensorProduct_algebraMap [Algebra.IsPushout R S A B] (x) :
@@ -168,10 +172,11 @@ lemma tensorKaehlerEquiv_left_inv [Algebra.IsPushout R S A B] :
   intro x y
   obtain ⟨y, rfl⟩ := tensorProductTo_surjective _ _ y
   induction y
-  · simp only [LinearMap.restrictScalars_comp, Derivation.tensorProductTo_tmul, LinearMap.coe_comp,
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [LinearMap.restrictScalars_comp, Derivation.tensorProductTo_tmul, LinearMap.coe_comp,
       LinearMap.coe_restrictScalars, Function.comp_apply, LinearMap.liftBaseChange_tmul, map_smul,
       map_D, LinearMap.map_smul_of_tower, Derivation.liftKaehlerDifferential_comp_D,
-      LinearMap.id_coe, id_eq, derivationTensorProduct_algebraMap]
+      LinearMap.id_coe, id_eq, derivationTensorProduct_algebraMap])
     rw [smul_comm, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
     rfl
   · simp only [map_add, TensorProduct.tmul_add, *]

@@ -83,7 +83,8 @@ def lift (x : S) (h : P.HasMap x) : P.Ring →ₐ[R] S :=
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma lift_X (x : S) (h : P.HasMap x) : P.lift x h P.X = x := by
-  simp [lift, StandardEtalePair.Ring, StandardEtalePair.X]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [lift, StandardEtalePair.Ring, StandardEtalePair.X])
 
 variable {P} in
 lemma HasMap.map {x : S} (h : P.HasMap x) (f : S →ₐ[R] T) : P.HasMap (f x) :=
@@ -96,6 +97,8 @@ lemma HasMap.isUnit_derivative_f {x : S} (h : P.HasMap x) :
     ⟨_, by simpa [h.1] using congr(aeval x $e.symm)⟩
   exact isUnit_of_dvd_unit this (.pow _ h.2)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma aeval_X_g_mul_mk_X : aeval P.X P.g * Ideal.Quotient.mk _ .X = 1 := by
   have : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
@@ -109,7 +112,10 @@ set_option backward.isDefEq.respectTransparency false in
 variable {P} in
 lemma hasMap_X : P.HasMap P.X :=
   have : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
-    ext; simp [StandardEtalePair.Ring, StandardEtalePair.X]
+    ext
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [StandardEtalePair.Ring, StandardEtalePair.X])
   ⟨this ▸ Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_insert _ _)),
     IsUnit.of_mul_eq_one _ P.aeval_X_g_mul_mk_X⟩
 
@@ -120,7 +126,10 @@ lemma hom_ext {f g : P.Ring →ₐ[R] S} (H : f P.X = g P.X) : f = g := by
   have H : (f.comp (Ideal.Quotient.mkₐ R _)).comp CAlgHom =
     (g.comp (Ideal.Quotient.mkₐ R _)).comp CAlgHom := Polynomial.algHom_ext (by simpa)
   have H' : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
-    ext; simp [StandardEtalePair.Ring, StandardEtalePair.X]
+    ext
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [StandardEtalePair.Ring, StandardEtalePair.X])
   refine Ideal.Quotient.algHom_ext _ (Polynomial.algHom_ext' H ?_)
   change f.toMonoidHom (Ideal.Quotient.mk _ .X) = g.toMonoidHom (Ideal.Quotient.mk _ .X)
   rw [← show (↑P.hasMap_X.2.unit⁻¹ : P.Ring) = Ideal.Quotient.mk _ .X from
@@ -240,7 +249,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma equivMvPolynomialQuotient_symm_apply :
     P.equivMvPolynomialQuotient.symm (Ideal.Quotient.mk _ (.X 0)) = P.X := by
-  simp [equivMvPolynomialQuotient, StandardEtalePair.Ring]; rfl
+  (set_option backward.dsimp.instanceTypes false in
+  simp [equivMvPolynomialQuotient, StandardEtalePair.Ring]); rfl
 
 /-- Mapping a standard etale pair under a ring homomorphism. -/
 @[simps] protected noncomputable def map (f : R →+* S) : StandardEtalePair S where

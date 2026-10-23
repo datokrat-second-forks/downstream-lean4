@@ -106,7 +106,8 @@ theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center D = ⊤ 
   rw [Nat.cast_sum]
   apply Finset.dvd_sum
   rintro ⟨x⟩ hx
-  simp -zeta only [ConjClasses.quot_mk_eq_mk, Set.mem_toFinset] at hx ⊢
+  (set_option backward.dsimp.instanceTypes false in
+  simp -zeta only [ConjClasses.quot_mk_eq_mk, Set.mem_toFinset] at hx ⊢)
   set Zx := Subring.centralizer ({↑x} : Set D)
   -- The key thing is then to note that for all conjugacy classes `x`, `|x|` is given by
   -- `|Dˣ| / |Zxˣ|`, where `Zx` is the centralizer of `x`; but `Zx` is an algebra over `Z`, and
@@ -114,8 +115,9 @@ theorem center_eq_top [Finite D] (hD : InductionHyp D) : Subring.center D = ⊤ 
   -- We therefore get that `|x| = (q ^ n - 1) / (q ^ d - 1)`, and as `d` is a strict divisor of `n`,
   -- we do have that `Φₙ(q) | (q ^ n - 1) / (q ^ d - 1)`; extending this over the whole sum
   -- gives us the desired contradiction..
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [Set.toFinset_card, ConjClasses.card_carrier, ← card_congr
-        (show Zxˣ ≃* _ from unitsCentralizerEquiv _ x).toEquiv, card_units, card_D]
+        (show Zxˣ ≃* _ from unitsCentralizerEquiv _ x).toEquiv, card_units, card_D])
   have hZx : Zx ≠ ⊤ := by
     by_contra hZx
     refine (ConjClasses.mk_bijOn (Dˣ)).mapsTo (Set.subset_center_units ?_) hx

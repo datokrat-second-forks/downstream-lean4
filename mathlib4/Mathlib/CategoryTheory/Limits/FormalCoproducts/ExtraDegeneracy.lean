@@ -51,7 +51,8 @@ noncomputable def cechIsoCechNerveApp (n : SimplexCategoryᵒᵖ) :
     U.cech.obj n ≅ (Arrow.cechNerve (Arrow.mk ((isTerminalIncl _ hT).from U))).obj n :=
   IsLimit.conePointUniqueUpToIso (WidePullbackCone.isLimitOfFan
     (arrows := fun _ ↦ (isTerminalIncl _ hT).from U)
-    (U.isLimitPowerFan (ToType n.unop)) (isTerminalIncl _ hT)) (limit.isLimit _)
+    (U.isLimitPowerFan (ToType n.unop)) (isTerminalIncl _ hT))
+      (set_option backward.instanceTypes.subsingletons.prop false in limit.isLimit _)
 
 @[reassoc (attr := simp)]
 lemma cechIsoCechNerveApp_hom_π (n : SimplexCategoryᵒᵖ) (i : ToType n.unop) :
@@ -65,6 +66,7 @@ lemma cechIsoCechNerveApp_inv_π (n : SimplexCategoryᵒᵖ) (i : ToType n.unop)
       WidePullback.π (fun _ ↦ (isTerminalIncl T hT).from U) i := by
   rw [← U.cechIsoCechNerveApp_hom_π hT, Iso.inv_hom_id_assoc]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The Cech construction for `FormalCoproduct` is isomorphic
 to the general `Arrow.cechNerve` construction applied to the morphism

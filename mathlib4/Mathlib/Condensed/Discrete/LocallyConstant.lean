@@ -269,8 +269,9 @@ noncomputable def counit [HasExplicitFiniteCoproducts.{u} P] : haveI := CompHaus
     simp only [NatTrans.comp_app, counitApp_app, TypeCat.Fun.toFun_apply, CategoryTheory.comp_apply]
     apply presheaf_ext (f.map (g.hom.app (op ↧PUnit.{u + 1})))
     intro a
+    (set_option backward.dsimp.instanceTypes false in
     simp only [functorToPresheaves_obj_obj, functorToPresheaves_map_app, TypeCat.hom_ofHom,
-      TypeCat.Fun.coe_mk, dsimp% incl_of_counitAppApp]
+      TypeCat.Fun.coe_mk, dsimp% incl_of_counitAppApp])
     apply presheaf_ext (f.comap (sigmaIncl _ _).hom.hom)
     intro b
     simp only [counitAppAppImage, ← Functor.map_comp_apply, ← op_comp,

@@ -116,7 +116,8 @@ theorem laplacian_eq_fourierMultiplierCLM (f : 𝓢(E, F)) :
   ext i x
   simp_rw [smul_apply, lineDeriv_eq_fourierMultiplierCLM]
   rw [← fourierMultiplierCLM_ofReal ℂ (by fun_prop)]
-  simp_rw [map_smul, smul_apply, smul_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [map_smul, smul_apply, smul_smul])
   congr 1
   · ring_nf
     simp
@@ -156,7 +157,7 @@ theorem fourierMultiplierCLM_apply_apply (g : E → ℂ) (f : 𝓢'(E, F)) (u : 
 theorem fourierMultiplierCLM_const (c : ℂ) :
     fourierMultiplierCLM F (fun (_ : E) ↦ c) = c • ContinuousLinearMap.id _ _ := by
   ext
-  simp
+  (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 theorem fourierMultiplierCLM_fourierMultiplierCLM_apply {g₁ g₂ : E → ℂ}
     (hg₁ : g₁.HasTemperateGrowth) (hg₂ : g₂.HasTemperateGrowth) (f : 𝓢'(E, F)) :
@@ -216,7 +217,8 @@ theorem laplacian_eq_fourierMultiplierCLM (f : 𝓢'(E, F)) :
     fourierMultiplierCLM_sum F this, sum_apply, Finset.smul_sum]
   congr 1
   ext i x
-  simp_rw [lineDeriv_eq_fourierMultiplierCLM, map_smul, smul_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [lineDeriv_eq_fourierMultiplierCLM, map_smul, smul_smul])
   rw [fourierMultiplierCLM_fourierMultiplierCLM_apply (by fun_prop) (by fun_prop),
     ← Complex.coe_smul (-(2 * π) ^ 2)]
   congr 4

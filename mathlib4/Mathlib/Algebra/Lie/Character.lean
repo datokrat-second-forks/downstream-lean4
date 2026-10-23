@@ -58,7 +58,8 @@ theorem lieCharacter_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
     exact lieCharacter_apply_lie ..
   | zero => exact map_zero _
   | add y z _ _ hy hz => rw [map_add, hy, hz, add_zero]
-  | smul t y _ hy => rw [map_smul, hy, smul_zero]
+  | smul t y _ hy =>
+    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, hy, smul_zero])
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps! apply symm_apply]

@@ -94,7 +94,8 @@ public def baseChangeEquiv : S ⊗[R] ExteriorAlgebra R M ≃ₐ[S] ExteriorAlge
 public lemma baseChangeEquiv_apply (s : S) (m : M) :
     baseChangeEquiv R M S (s ⊗ₜ[R] ι R m) = ι S (s ⊗ₜ[R] m) := by
   rw [← mul_one s, ← smul_eq_mul, ← TensorProduct.smul_tmul', ← TensorProduct.smul_tmul']
-  simp [baseChangeEquiv, baseChangeEquivForward, baseChangeEquivForwardAux]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [baseChangeEquiv, baseChangeEquivForward, baseChangeEquivForwardAux])
 
 public lemma baseChangeEquiv_symm_apply (s : S) (m : M) :
     (baseChangeEquiv R M S).symm (ι S (s ⊗ₜ[R] m)) = (s ⊗ₜ[R] ι R m) := by

@@ -155,7 +155,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma toPresheafFiberOfIsCofiltered_w {V U : N} (f : V ⟶ U) (P : Cᵒᵖ ⥤ A) :
     P.map (p.map f).op ≫ toPresheafFiberOfIsCofiltered p hp V P =
       toPresheafFiberOfIsCofiltered p hp U P := by
-  simp [toPresheafFiberOfIsCofiltered]
+  (set_option backward.dsimp.instanceTypes false in simp [toPresheafFiberOfIsCofiltered])
 
 set_option backward.isDefEq.respectTransparency.types false in
 @[reassoc (attr := simp)]

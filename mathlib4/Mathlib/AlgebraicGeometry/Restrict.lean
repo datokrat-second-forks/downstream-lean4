@@ -119,6 +119,7 @@ lemma ι_image_le (W : U.toScheme.Opens) : U.ι ''ᵁ W ≤ U := by
 lemma ι_preimage_self : U.ι ⁻¹ᵁ U = ⊤ :=
   Opens.inclusion'_map_eq_top _
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_ι_image_iff {x : U} {V : Opens U} : (x : X) ∈ U.ι ''ᵁ V ↔ x ∈ V :=
   U.ι.apply_mem_image_iff
@@ -151,6 +152,7 @@ def stalkIso {X : Scheme.{u}} (U : X.Opens) (x : U) :
     U.toScheme.presheaf.stalk x ≅ X.presheaf.stalk x.1 :=
   X.restrictStalkIso (Opens.isOpenEmbedding _) _
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[reassoc (attr := simp)]
 lemma germ_stalkIso_hom {X : Scheme.{u}} (U : X.Opens)
     {V : U.toScheme.Opens} (x : U) (hx : x ∈ V) :
@@ -158,6 +160,7 @@ lemma germ_stalkIso_hom {X : Scheme.{u}} (U : X.Opens)
         X.presheaf.germ (U.ι ''ᵁ V) x.1 ⟨x, hx, rfl⟩ :=
     PresheafedSpace.restrictStalkIso_hom_eq_germ _ U.isOpenEmbedding _ _ _
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[reassoc]
 lemma germ_stalkIso_inv {X : Scheme.{u}} (U : X.Opens) (V : U.toScheme.Opens) (x : U)
     (hx : x ∈ V) : X.presheaf.germ (U.ι ''ᵁ V) x ⟨x, hx, rfl⟩ ≫
@@ -227,14 +230,16 @@ lemma Scheme.Opens.ι_image_basicOpen (r : Γ(U, ⊤)) :
 set_option backward.isDefEq.respectTransparency false in
 lemma Scheme.Opens.ι_image_basicOpen_topIso_inv (r : Γ(X, U)) :
     U.ι ''ᵁ U.toScheme.basicOpen (U.topIso.inv r) = X.basicOpen r := by
-  simp only [Scheme.Opens.toScheme_presheaf_obj]
+  (set_option backward.dsimp.instanceTypes false in simp only [Scheme.Opens.toScheme_presheaf_obj])
   rw [ι_image_basicOpen', basicOpen_res_eq, topIso_inv, basicOpen_res_eq X]
 
 @[simp]
 lemma Scheme.Opens.mem_basicOpen_toScheme {U : X.Opens} {V : Scheme.Opens U} {r : Γ(U, V)} {x : U} :
-    x ∈ U.toScheme.basicOpen r ↔ (x : X) ∈ X.basicOpen r := by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    x ∈ U.toScheme.basicOpen r) ↔ (x : X) ∈ X.basicOpen r := by
   rw [← U.toScheme.basicOpen_res_eq _ (eqToHom (U.ι.preimage_image_eq V)).op]
-  exact congr(x ∈ $(U.ι.preimage_basicOpen r)).to_iff.symm
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact congr(x ∈ $(U.ι.preimage_basicOpen r)).to_iff.symm)
 
 /-- If `U ≤ V`, then `U` is also a subscheme of `V`. -/
 protected noncomputable
@@ -894,12 +899,14 @@ def Scheme.OpenCover.restrict {X : Scheme.{u}} (𝒰 : Scheme.OpenCover.{v} X) (
     U.toScheme.OpenCover := by
   refine Cover.copy (𝒰.pullback₁ U.ι) 𝒰.I₀ _ (𝒰.f · ∣_ U) (Equiv.refl _)
     (fun i ↦ IsOpenImmersion.isoOfRangeEq (Opens.ι _) (pullback.snd _ _) ?_) ?_
-  · dsimp only [Precoverage.ZeroHypercover.pullback₁_toPreZeroHypercover,
-      PreZeroHypercover.pullback₁_I₀, Equiv.refl_apply, PreZeroHypercover.pullback₁_X]
+  · (set_option backward.dsimp.instanceTypes false in
+    dsimp only [Precoverage.ZeroHypercover.pullback₁_toPreZeroHypercover,
+      PreZeroHypercover.pullback₁_I₀, Equiv.refl_apply, PreZeroHypercover.pullback₁_X])
     rw [IsOpenImmersion.range_pullbackSnd U.ι (𝒰.f i), Opens.opensRange_ι]
     exact Subtype.range_val
   · intro i
     rw [← cancel_mono U.ι]
-    simp [morphismRestrict_ι, Equiv.refl_apply, Category.assoc, pullback.condition]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [morphismRestrict_ι, Equiv.refl_apply, Category.assoc, pullback.condition])
 
 end AlgebraicGeometry

@@ -58,8 +58,10 @@ def tensorCotangentSpace (P : Extension.{u} R S) (T : Type*) [CommRing T] [Algeb
       rfl
   letI PT : Extension T (T ⊗[R] S) := P.baseChange
   haveI : IsPushout R T P.Ring PT.Ring := by
-    convert! TensorProduct.isPushout (R := R) (T := P.Ring) (S := T)
-    exact Algebra.algebra_ext _ _ fun _ ↦ rfl
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! TensorProduct.isPushout (R := R) (T := P.Ring) (S := T))
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact Algebra.algebra_ext _ _ fun _ ↦ rfl)
   haveI : IsScalarTower P.Ring PT.Ring (T ⊗[R] S) := .of_algebraMap_eq' rfl
   (IsTensorProduct.assocOfMapSMul (TensorProduct.mk R T S) (isTensorProduct _ _ _)
     (TensorProduct.mk _ _ _) (isTensorProduct _ _ _) (by simp [Algebra.smul_def])
@@ -118,10 +120,11 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 lemma tensorCotangentOfFlat_tmul [Module.Flat R T] (t : T) (x : P.Cotangent) :
     P.tensorCotangentOfFlat T (t ⊗ₜ x) = t • Cotangent.map (P.toBaseChange T) x := by
   obtain ⟨x, rfl⟩ := Cotangent.mk_surjective x
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [tensorCotangentOfFlat, LinearEquiv.trans_apply, AlgebraTensorModule.congr_tmul,
     LinearEquiv.refl_apply, LinearEquiv.restrictScalars_apply, cotangentEquivCotangentKer_apply,
     Cotangent.val_mk, Ideal.tensorCotangentEquiv_tmul, map_smul, Cotangent.map_mk,
-    Hom.toAlgHom_apply, Ideal.Cotangent.equivOfEq_toCotangent]
+    Hom.toAlgHom_apply, Ideal.Cotangent.equivOfEq_toCotangent])
   rfl
 
 /-- The canonical map `T ⊗[R] P.H1Cotangent →ₗ[T] (P.baseChange).H1Cotangent`. -/
@@ -209,10 +212,11 @@ attribute [local instance] TensorProduct.rightAlgebra in
 lemma tensorH1CotangentOfFlat_tmul (T : Type*) [CommRing T] [Algebra R T] [Module.Flat R T]
     (t : T) (x : H1Cotangent R S) :
     tensorH1CotangentOfFlat R S T (t ⊗ₜ x) = t • H1Cotangent.map _ _ _ _ x := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [tensorH1CotangentOfFlat, LinearEquiv.trans_apply,
     Extension.tensorH1CotangentOfFlat_tmul, map_smul, LinearEquiv.restrictScalars_apply,
     Extension.H1Cotangent.equiv, LinearEquiv.coe_mk, Generators.equivH1Cotangent,
-    Generators.H1Cotangent.equiv]
+    Generators.H1Cotangent.equiv])
   rw [← Extension.H1Cotangent.map_comp_apply, ← Extension.H1Cotangent.map_comp_apply,
     H1Cotangent.map, Extension.H1Cotangent.map_eq]
 

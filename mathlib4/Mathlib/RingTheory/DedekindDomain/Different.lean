@@ -457,9 +457,10 @@ theorem dual_eq_dual_mul_dual :
         extendedHom'_apply, coe_mul, coe_spanSingleton, coe_extended_eq_span, coe_dual_one,
         span_mul_span, span_le]
     rintro _ ⟨x, rfl, _, ⟨a, ha, rfl⟩, rfl⟩ _ ⟨m, rfl⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [← h_alg, mul_comm _ (algebraMap _ _ _), ← Algebra.smul_def a, map_smul,
       LinearMap.toSpanSingleton_apply, Algebra.smul_def m, mul_one,
-      LinearMap.smul_apply, traceForm_apply, smul_eq_mul]
+      LinearMap.smul_apply, traceForm_apply, smul_eq_mul])
     rw [← FractionalIdeal.coe_one (S := B⁰)]
     refine (mem_inv_iff (by simp)).mp ha _ (trace_mem_dual_one A K L B C M _ ?_)
     exact Algebra.smul_def m x ▸ smul_mem _ _ hx
@@ -731,8 +732,9 @@ lemma pow_sub_one_dvd_differentIdeal_aux
     have : trace K L (algebraMap B L z) ∈ (p : FractionalIdeal A⁰ K) := by
       rw [← algebraMap_intTrace (A := A)]
       exact ⟨intTrace A B z, this z hz, rfl⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
     rwa [mul_comm, ← smul_eq_mul, ← map_smul, Algebra.smul_def, mul_comm,
-      ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply A B L, ← hz']
+      ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply A B L, ← hz'])
   intro x hx
   rw [← Ideal.Quotient.eq_zero_iff_mem, ← trace_quotient_eq_of_isDedekindDomain,
     ← isNilpotent_iff_eq_zero]
@@ -891,8 +893,9 @@ lemma dvd_differentIdeal_of_not_isSeparable
     have : Algebra.trace K L (algebraMap B L z) ∈ (p : FractionalIdeal A⁰ K) := by
       rw [← Algebra.algebraMap_intTrace (A := A)]
       exact ⟨Algebra.intTrace A B z, this z hz, rfl⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
     rwa [mul_comm, ← smul_eq_mul, ← map_smul, Algebra.smul_def, mul_comm,
-      ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply A B L, ← hz']
+      ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply A B L, ← hz'])
   intro x hx
   rw [← Ideal.Quotient.eq_zero_iff_mem, ← Algebra.trace_quotient_eq_of_isDedekindDomain]
   let : Algebra (A ⧸ p) (B ⧸ a) :=

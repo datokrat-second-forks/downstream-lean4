@@ -203,6 +203,7 @@ noncomputable def resolution.π (g : G) :
     ⟨leftRegularHom _ 1, (leftRegularHomEquiv _).injective <| by
     simp [homEquiv, sub_hom, applyAsHom]⟩
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma resolution_quasiIso (g : G) (hg : ∀ x, x ∈ Subgroup.zpowers g) :

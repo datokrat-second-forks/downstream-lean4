@@ -294,6 +294,10 @@ def stalkToFiber (P : LocalPredicate T) (x : X) :
     (subsheafToTypes P).presheaf.stalk x ⟶ T x :=
   colimit.desc _ (P.cocone x)
 
+-- With the instance type check, `dsimp%` keeps `(subsheafToTypes P).presheaf` in the type
+-- arguments of the coercion (as in `chosenCoend.map_apply`), and the statement no longer matches
+-- its use in `stalkToFiber_injective`.
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
 lemma stalkToFiber_ι (P : LocalPredicate T) (x : X) (U : (OpenNhds x)ᵒᵖ)
@@ -339,12 +343,13 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   · choose W s hW e using Q
     exact e.1.trans e.2.symm
   -- Then use induction to pick particular representatives of `tU tV : stalk x`
-  dsimp at tU tV h
+  (set_option backward.dsimp.instanceTypes false in dsimp at tU tV h)
   obtain ⟨U, ⟨fU, hU⟩, rfl⟩ := jointly_surjective' tU
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective' tV
   -- Decompose everything into its constituent parts:
+  (set_option backward.dsimp.instanceTypes false in
   simp only [Functor.whiskeringLeft_obj_obj, Functor.comp_obj, Functor.op_obj,
-    subpresheafToTypes_obj, stalkToFiber_ι] at h
+    subpresheafToTypes_obj, stalkToFiber_ι] at h)
   specialize w (unop U) (unop V) fU hU fV hV h
   rcases w with ⟨W, iU, iV, w⟩
   -- and put it back together again in the correct order.

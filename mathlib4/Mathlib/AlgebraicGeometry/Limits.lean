@@ -187,7 +187,7 @@ lemma sigmaι_eq_iff [Small.{u} σ] (i j : σ) (x y) :
   · simp only [Discrete.functor_obj_eq_as, Sigma.mk.injEq]
     rintro ⟨rfl, e⟩
     obtain rfl := (heq_eq_eq x y).mp e
-    exact ⟨⟨i⟩, 𝟙 _, 𝟙 _, x, by simp⟩
+    exact ⟨⟨i⟩, 𝟙 _, 𝟙 _, x, by (set_option backward.dsimp.instanceTypes false in simp)⟩
 
 /-- The images of each component in the coproduct is disjoint. -/
 lemma disjoint_opensRange_sigmaι [Small.{u} σ] (i j : σ) (h : i ≠ j) :
@@ -277,8 +277,9 @@ private lemma isOpenImmersion_sigmaDesc_aux
     refine IsIso.of_isIso_fac_right
       (f := ((Scheme.IsLocallyDirected.openCover (Discrete.functor f)).f _).stalkMap y)
       (h := (X.presheaf.stalkCongr (.of_eq ?_)).hom ≫ (α _).stalkMap _) ?_
-    · simp [← Scheme.Hom.comp_apply]
-    · simp [← Scheme.Hom.stalkMap_comp, Scheme.Hom.stalkMap_congr_hom _ _ (colimit.ι_desc _ _)]
+    · (set_option backward.dsimp.instanceTypes false in simp [← Scheme.Hom.comp_apply])
+    · (set_option backward.dsimp.instanceTypes false in
+      simp [← Scheme.Hom.stalkMap_comp, Scheme.Hom.stalkMap_congr_hom _ _ (colimit.ι_desc _ _)])
 
 open scoped Function in
 lemma isOpenImmersion_sigmaDesc [Small.{u} σ]
@@ -320,13 +321,14 @@ variable (X Y : Scheme.{u})
 The coproduct of the two schemes is given by indexed coproducts over `WalkingPair`. -/
 noncomputable
 def coprodIsoSigma : X ⨿ Y ≅ ∐ fun i : ULift.{u} WalkingPair ↦ i.1.casesOn X Y :=
-  Sigma.whiskerEquiv Equiv.ulift.symm (fun _ ↦ by exact Iso.refl _)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  Sigma.whiskerEquiv Equiv.ulift.symm (fun _ ↦ by exact Iso.refl _))
 
 lemma ι_left_coprodIsoSigma_inv : Sigma.ι _ ⟨.left⟩ ≫ (coprodIsoSigma X Y).inv = coprod.inl :=
-  Sigma.ι_comp_map' _ _ _
+  (set_option backward.instanceTypes.subsingletons.prop false in Sigma.ι_comp_map' _ _ _)
 
 lemma ι_right_coprodIsoSigma_inv : Sigma.ι _ ⟨.right⟩ ≫ (coprodIsoSigma X Y).inv = coprod.inr :=
-  Sigma.ι_comp_map' _ _ _
+  (set_option backward.instanceTypes.subsingletons.prop false in Sigma.ι_comp_map' _ _ _)
 
 instance : IsOpenImmersion (coprod.inl : X ⟶ X ⨿ Y) := by
   rw [← ι_left_coprodIsoSigma_inv]; infer_instance
@@ -385,7 +387,9 @@ noncomputable
 def coprodOpenCover.{w} : (X ⨿ Y).OpenCover where
   I₀ := PUnit.{w + 1} ⊕ PUnit.{w + 1}
   X x := x.elim (fun _ ↦ X) (fun _ ↦ Y)
-  f x := x.rec (fun _ ↦ coprod.inl) (fun _ ↦ coprod.inr)
+  f x := x.rec (fun _ ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in coprod.inl)) (fun _ ↦
+      (set_option backward.instanceTypes.subsingletons.prop false in coprod.inr))
   mem₀ := by
     rw [Scheme.presieve₀_mem_precoverage_iff]
     refine ⟨fun x ↦ ?_, fun x ↦ x.rec (fun _ ↦ inferInstance) (fun _ ↦ inferInstance)⟩
@@ -394,8 +398,10 @@ def coprodOpenCover.{w} : (X ⨿ Y).OpenCover where
     simp only [Sum.elim_inl, Sum.elim_inr, Set.mem_range]
     rw [Homeomorph.symm_apply_apply]
     obtain (x | x) := x
-    · simp only [Sum.elim_inl, coprodMk_inl, exists_apply_eq_apply]
-    · simp only [Sum.elim_inr, coprodMk_inr, exists_apply_eq_apply]
+    · (set_option backward.dsimp.instanceTypes false in
+      simp only [Sum.elim_inl, coprodMk_inl, exists_apply_eq_apply])
+    · (set_option backward.dsimp.instanceTypes false in
+      simp only [Sum.elim_inr, coprodMk_inr, exists_apply_eq_apply])
 
 /-- If `X` and `Y` are open disjoint and covering open subschemes of `S`,
 `S` is the disjoint union of `X` and `Y`. -/

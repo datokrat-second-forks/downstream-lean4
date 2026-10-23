@@ -232,8 +232,9 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
     linear_combination 4 * (a - 1) * pythag
 
 theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [stereoToFun, stereoInvFun, stereoInvFunAux, smul_add, map_add, map_smul,
-    innerSL_apply_apply, Submodule.orthogonalProjectionOnto_mem_subspace_eq_self]
+    innerSL_apply_apply, Submodule.orthogonalProjectionOnto_mem_subspace_eq_self])
   have h₁ : (ℝ ∙ v)ᗮ.orthogonalProjectionOnto v = 0 :=
     Submodule.orthogonalProjectionOnto_orthogonalComplement_singleton_eq_zero v
   have h₂ : ⟪v, w⟫ = 0 := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
@@ -546,12 +547,15 @@ theorem injective_mvfderiv_subtypeVal_sphere {n : ℕ} [Fact (finrank ℝ E = n 
   refine Eq.subst this.symm ?_
   rw [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
   set_option backward.isDefEq.respectTransparency false in
-  simpa [-Subtype.val_injective] using Subtype.val_injective
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simpa [-Subtype.val_injective] using Subtype.val_injective)
 
 @[deprecated injective_mvfderiv_subtypeVal_sphere +typeChanged (since := "2026-08-02")]
 theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     Injective (mfderiv (𝓡 n) 𝓘(ℝ, E) ((↑) : sphere (0 : E) 1 → E) v) := by
-  convert! injective_mvfderiv_subtypeVal_sphere v
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! injective_mvfderiv_subtypeVal_sphere v)
 
 end ContMDiffManifold
 
@@ -568,7 +572,8 @@ attribute [local instance] finrank_real_complex_fact'
 /-- The unit circle in `ℂ` is a charted space modelled on `EuclideanSpace ℝ (Fin 1)`.  This
 follows by definition from the corresponding result for `Metric.Sphere`. -/
 instance : ChartedSpace (EuclideanSpace ℝ (Fin 1)) Circle :=
-  inferInstanceAs <| ChartedSpace _ (sphere _ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| ChartedSpace _ (sphere _ _))
 
 instance : IsManifold (𝓡 1) ω Circle :=
   EuclideanSpace.instIsManifoldSphere (E := ℂ)

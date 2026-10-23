@@ -74,17 +74,22 @@ noncomputable instance algebra₀ : Algebra R (D.subalgebra R) :=
 -- Note: `Set` has no computational content, but Lean still attempts to compile it.
 -- See https://github.com/leanprover/lean4/issues/14084.
 noncomputable instance algebra₁ : Algebra (D.subalgebra R) A :=
-  inferInstanceAs <| Algebra (Algebra.adjoin _ _) A
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra (Algebra.adjoin _ _) A)
 
 -- Note: `Set` has no computational content, but Lean still attempts to compile it.
 -- See https://github.com/leanprover/lean4/issues/14084.
 noncomputable instance algebra₂ : Algebra (D.subalgebra R) B :=
-  inferInstanceAs <| Algebra (Algebra.adjoin _ _) B
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra (Algebra.adjoin _ _) B)
 
 instance : IsScalarTower (D.subalgebra R) A B :=
-  inferInstanceAs <| IsScalarTower (Algebra.adjoin _ _) _ _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower (Algebra.adjoin _ _) _ _)
 
-instance : FaithfulSMul (D.subalgebra R) A := inferInstanceAs <| FaithfulSMul (Algebra.adjoin _ _) _
+instance : FaithfulSMul (D.subalgebra R) A :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| FaithfulSMul (Algebra.adjoin _ _) _)
 
 lemma fg_subalgebra [Finite D.vars] [Finite D.rels] : (D.subalgebra R).FG := by
   refine Subalgebra.fg_def.mpr ⟨_, ?_, rfl⟩
@@ -240,7 +245,9 @@ public theorem exists_subalgebra_fg [Smooth A B] :
     exact hh i ▸ congr($hsig (P.val i))
   have (i : Fin (Presentation.ofFinitePresentationVars A B)) :
       h i - X i ∈ Ideal.span (.range P.relation) := by
-    simpa [P.span_range_relation_eq_ker, sub_eq_zero, f] using hsig i
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simpa [P.span_range_relation_eq_ker, sub_eq_zero, f] using hsig i)
   simp_rw [Ideal.mem_span_iff_exists_isHomogeneous] at this
   choose q hqhom hq using this
   let D : DescentAux A B :=

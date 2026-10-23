@@ -155,7 +155,8 @@ noncomputable abbrev algebraOfCoalgebra : Algebra 𝕜 E where
           adjoint_toLinearMap_eq_symm]
         simp only [LinearIsometryEquiv.symm_symm, toLinearEquiv_lidIsometry, adjoint_lTensor,
           coe_comp, LinearEquiv.coe_coe, Function.comp_apply, lTensor_tmul, lid_tmul]
-        rw [← smul_eq_mul, ← _root_.map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [← smul_eq_mul, ← _root_.map_smul])
       map_zero' := map_zero _
       map_add' := map_add _ }
   commutes' r x := by

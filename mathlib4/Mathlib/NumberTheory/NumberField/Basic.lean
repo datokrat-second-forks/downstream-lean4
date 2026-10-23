@@ -116,11 +116,13 @@ instance {L : Type*} [Ring L] [Algebra K L] : Algebra (𝓞 K) L :=
 instance : Algebra (𝓞 K) K := inferInstanceAs _
 
 instance : IsTorsionFree (𝓞 K) K :=
-  inferInstanceAs (IsTorsionFree (integralClosure _ _) _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (IsTorsionFree (integralClosure _ _) _))
 
 
 instance {L : Type*} [Ring L] [Algebra K L] : IsScalarTower (𝓞 K) K L :=
-  inferInstanceAs (IsScalarTower (integralClosure _ _) K L)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (IsScalarTower (integralClosure _ _) K L))
 
 instance {G : Type*} [Group G] [MulSemiringAction G K] : MulSemiringAction G (𝓞 K) :=
   inferInstanceAs (MulSemiringAction G (integralClosure ℤ K))

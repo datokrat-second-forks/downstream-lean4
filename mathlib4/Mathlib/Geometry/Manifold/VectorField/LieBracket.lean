@@ -89,7 +89,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma mlieBracketWithin_eq_lieBracketWithin {V W : Π (x : E), TangentSpace 𝓘(𝕜, E) x} {s : Set E} :
     mlieBracketWithin 𝓘(𝕜, E) V W s = lieBracketWithin 𝕜 V W s := by
   ext x
-  simp [mlieBracketWithin_apply]
+  (set_option backward.dsimp.instanceTypes false in simp [mlieBracketWithin_apply])
 
 /- Copy of the `lieBracket` API to manifolds -/
 
@@ -268,16 +268,18 @@ theorem _root_.Filter.EventuallyEq.mlieBracketWithin_vectorField_eq
     ‹NormedSpace 𝕜 E›
   apply Filter.EventuallyEq.lieBracketWithin_vectorField_eq
   · apply nhdsWithin_mono _ inter_subset_left
-    filter_upwards [(continuousAt_extChartAt_symm x).continuousWithinAt.preimage_mem_nhdsWithin''
-      hV (by simp)] with y hy
+    filter_upwards [(set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      (continuousAt_extChartAt_symm x).continuousWithinAt.preimage_mem_nhdsWithin''
+      hV (by simp))] with y hy
     simp only [mpullbackWithin_apply]
     congr 1
   · simp only [mpullbackWithin_apply]
     congr 1
     convert! hxV <;> exact extChartAt_to_inv x
   · apply nhdsWithin_mono _ inter_subset_left
-    filter_upwards [(continuousAt_extChartAt_symm x).continuousWithinAt.preimage_mem_nhdsWithin''
-      hW (by simp)] with y hy
+    filter_upwards [(set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      (continuousAt_extChartAt_symm x).continuousWithinAt.preimage_mem_nhdsWithin''
+      hW (by simp))] with y hy
     simp only [mpullbackWithin_apply]
     congr 1
   · simp only [mpullbackWithin_apply]
@@ -600,6 +602,8 @@ section Invariance_IsSymmSndFDerivWithinAt
 
 variable [IsManifold I 2 M] [IsManifold I' 2 M'] [CompleteSpace E]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /- The Lie bracket of vector fields on manifolds is well defined, i.e., it is invariant under
 diffeomorphisms. Auxiliary version where one assumes that all relevant sets are contained

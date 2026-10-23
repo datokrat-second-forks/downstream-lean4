@@ -800,7 +800,9 @@ def tensorHomEquiv (A B C : Rep.{u} k G) : (A ⊗ B ⟶ C) ≃ (B ⟶ (Rep.ihom 
     simp [this]⟩
   invFun f := Rep.ofHom ⟨TensorProduct.uncurry (.id k) _ _ _
     f.hom.toLinearMap.flip, fun g ↦ TensorProduct.ext' fun x y => by
-    simpa using LinearMap.ext_iff.1 (hom_comm_apply f g y) (A.ρ g x)⟩
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simpa using LinearMap.ext_iff.1 (hom_comm_apply f g y) (A.ρ g x))⟩
   left_inv _ := Rep.Hom.ext <| Representation.IntertwiningMap.ext <|
     TensorProduct.ext' fun _ _ => rfl
 
@@ -832,6 +834,7 @@ theorem ihom_ev_app_hom (A B : Rep k G) :
       LinearMap.id.flip) := by
   ext; rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp] theorem ihom_coev_app_hom (A B : Rep k G) :
     ((ihom.coev A).app B).hom.toLinearMap = (TensorProduct.mk k _ _).flip :=
   LinearMap.ext fun _ => LinearMap.ext fun _ => rfl

@@ -115,7 +115,8 @@ theorem card_inv_mul_sum_char_eq_finrank :
     (Nat.card G : k)⁻¹ * ∑ g : G, ρ.character g = finrank k (invariants ρ) := by
   have : Invertible (Fintype.card G : k) := by rwa [Fintype.card_eq_nat_card]
   rw [← (isProj_averageMap ρ).trace]
-  simp [character, GroupAlgebra.average, _root_.map_sum]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [character, GroupAlgebra.average, _root_.map_sum])
 
 /--
 If `V` and `W` are finite-dimensional representations of a finite group, then the
@@ -216,7 +217,8 @@ theorem average_char_eq_finrank_invariants (V : FDRep k G) :
   have : Invertible (Fintype.card G : k) := by
     rwa [Fintype.card_eq_nat_card]
   rw [← (isProj_averageMap V.ρ).trace]
-  simp [character, GroupAlgebra.average, _root_.map_sum]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [character, GroupAlgebra.average, _root_.map_sum])
 
 /--
 If `V` and `W` are finite-dimensional representations of a finite group, then the

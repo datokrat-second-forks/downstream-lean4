@@ -90,7 +90,7 @@ lemma ι_singularChainComplexFunctorAdjunction_counit_app_app (F : TopCat ⥤ C)
       Adjunction.equivHomsetRightOfNatIso, Adjunction.homEquiv,
       Adjunction.comp, singularChainComplexFunctor, SSet.chainComplexFunctor,
       SSet.chainComplexFunctorAdjunction]
-    simp
+    (set_option backward.instanceTypes.subsingletons.prop false in simp)
   · congr 1
     rw [← reassoc_of% sSetTopAdj_unit_app_app_down]
     congrm ($(sSetTopAdj.right_triangle_components X).app (.op ⦋n⦌) i).down

@@ -70,7 +70,7 @@ lemma ofArrows_mem_smallEtaleTopology_iff
     obtain ⟨_, b, _, ⟨j⟩, fac⟩ := hU _ _ ⟨i⟩
     replace fac : b.left ≫ (f j).left = U.f i :=
       (Etale.forget _ ⋙ CategoryTheory.Over.forget _).congr_map fac
-    exact ⟨j, b.left u, by simp [← fac]⟩
+    exact ⟨j, b.left u, by (set_option backward.dsimp.instanceTypes false in simp [← fac])⟩
   · have (w : W.left) : ∃ (i : ι), w ∈ Set.range (f i).left := by
       have := Set.mem_univ w
       simpa [← hf]
@@ -82,7 +82,8 @@ lemma ofArrows_mem_smallEtaleTopology_iff
       { over w := ⟨(Z (i w)).hom⟩
         isOver_map w := by cat_disch }
     have (w : W.left) : Etale (V.X w ↘ X) := (Z (i w)).prop
-    refine ⟨V, inferInstance, inferInstance, ?_⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    refine ⟨V, inferInstance, inferInstance, ?_⟩)
     rintro _ _ ⟨w⟩
     refine ⟨_, 𝟙 _, _, ⟨i w⟩, by cat_disch⟩
 

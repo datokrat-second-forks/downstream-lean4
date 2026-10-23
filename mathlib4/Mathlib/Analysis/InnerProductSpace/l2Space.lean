@@ -439,7 +439,8 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
   have : lp.single (E := (fun _ : ι => 𝕜)) 2 i (f i * 1) = f i • lp.single 2 i 1 :=
     lp.single_smul (E := (fun _ : ι => 𝕜)) 2 i (f i) (1 : 𝕜)
   rw [mul_one] at this
-  rw [map_smul, b.repr_self, ← this, LinearIsometryEquiv.coe_toContinuousLinearEquiv]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [map_smul, b.repr_self, ← this, LinearIsometryEquiv.coe_toContinuousLinearEquiv])
   exact (b.repr.apply_symm_apply (lp.single 2 i (f i))).symm
 
 protected theorem hasSum_repr (b : HilbertBasis ι 𝕜 E) (x : E) :

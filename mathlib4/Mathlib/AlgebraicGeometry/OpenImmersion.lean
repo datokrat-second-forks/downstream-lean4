@@ -42,13 +42,14 @@ instance IsOpenImmersion.comp {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
 
 namespace LocallyRingedSpace.IsOpenImmersion
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- To show that a locally ringed space is a scheme, it suffices to show that it has a jointly
 surjective family of open immersions from affine schemes. -/
 protected def scheme (X : LocallyRingedSpace.{u})
     (h :
       ∀ x : X,
         ∃ (R : CommRingCat) (f : Spec.toLocallyRingedSpace.obj (op R) ⟶ X),
-          (x ∈ Set.range f.base :) ∧ LocallyRingedSpace.IsOpenImmersion f) :
+          ((x ∈ Set.range f.base) :) ∧ LocallyRingedSpace.IsOpenImmersion f) :
     Scheme where
   toLocallyRingedSpace := X
   local_affine := by
@@ -357,7 +358,8 @@ theorem exists_affine_mem_range_and_range_subset
     ∃ R, ∃ (f : Spec R ⟶ X), IsOpenImmersion f ∧ x ∈ Set.range f ∧ Set.range f ⊆ U := by
   obtain ⟨⟨V, hxV⟩, R, ⟨e⟩⟩ := X.2 x
   have : e.hom.base ⟨x, hxV⟩ ∈ (Opens.map (e.inv.base ≫ V.inclusion')).obj U :=
-    show ((e.hom ≫ e.inv).base ⟨x, hxV⟩).1 ∈ U from e.hom_inv_id ▸ hxU
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    show ((e.hom ≫ e.inv).base ⟨x, hxV⟩).1 ∈ U from e.hom_inv_id ▸ hxU)
   obtain ⟨_, ⟨_, ⟨r : R, rfl⟩, rfl⟩, hr, hr'⟩ :=
     PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open this (Opens.is_open' _)
   let f : Spec ↧(Localization.Away r) ⟶ X :=
@@ -590,7 +592,8 @@ instance hasPullback_of_right : HasPullback g f :=
 
 instance : IsOpenImmersion (pullback.snd f g) := by
   have := PreservesPullback.iso_hom_snd forget f g
-  dsimp only [Scheme.forgetToLocallyRingedSpace, inducedFunctor_map] at this
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  dsimp only [Scheme.forgetToLocallyRingedSpace, inducedFunctor_map] at this)
   change LocallyRingedSpace.IsOpenImmersion _
   rw [← this]
   infer_instance

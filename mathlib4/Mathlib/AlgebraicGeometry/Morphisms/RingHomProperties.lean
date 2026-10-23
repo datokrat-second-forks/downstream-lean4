@@ -83,9 +83,10 @@ theorem IsStableUnderBaseChange.pullback_fst_appTop
   have := congr_arg Quiver.Hom.unop
       (PreservesPullback.iso_hom_fst AffineScheme.Γ.rightOp (AffineScheme.ofHom f)
         (AffineScheme.ofHom g))
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [AffineScheme.Γ, Functor.rightOp_obj, Functor.comp_obj, Functor.op_obj, unop_comp,
     AffineScheme.forgetToScheme_obj, Scheme.Γ_obj, Functor.rightOp_map, Functor.comp_map,
-    Functor.op_map, Quiver.Hom.unop_op, AffineScheme.forgetToScheme_map, Scheme.Γ_map] at this
+    Functor.op_map, Quiver.Hom.unop_op, AffineScheme.forgetToScheme_map, Scheme.Γ_map] at this)
   rw [← this, CommRingCat.hom_comp, hP'.cancel_right_isIso, ← pushoutIsoUnopPullback_inl_hom,
     CommRingCat.hom_comp, hP'.cancel_right_isIso]
   exact hP.pushout_inl hP' _ _ H
@@ -164,8 +165,10 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
     have : X.basicOpen (f.appLE ⊤ U (by simp) r) = U := by
       simp only [Scheme.Hom.appLE, Opens.map_top, CommRingCat.comp_apply]
       rw [Scheme.basicOpen_res]
-      simpa using hU
-    rw [← f.appLE_congr (by simp [Scheme.Hom.appLE]) rfl this (fun f => P f.hom),
+      (set_option backward.dsimp.instanceTypes false in simpa using hU)
+    rw [← f.appLE_congr (by
+      (set_option backward.dsimp.instanceTypes false in
+      simp [Scheme.Hom.appLE])) rfl this (fun f => P f.hom),
       IsAffineOpen.appLE_eq_away_map f (isAffineOpen_top Y) U.2 _ r]
     simp only [CommRingCat.hom_ofHom]
     apply +allowSynthFailures h₂
@@ -175,7 +178,7 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
     intro r
     simp_rw [sourceAffineLocally_morphismRestrict] at hs'
     have := hs' r ⟨X.basicOpen (f.appLE ⊤ U le_top r.1), U.2.basicOpen (f.appLE ⊤ U le_top r.1)⟩
-      (by simp [Scheme.Hom.appLE])
+      (by (set_option backward.dsimp.instanceTypes false in simp [Scheme.Hom.appLE]))
     rwa [IsAffineOpen.appLE_eq_away_map f (isAffineOpen_top Y) U.2, CommRingCat.hom_ofHom,
       ← h₁.isLocalization_away_iff] at this
 
@@ -326,10 +329,12 @@ theorem of_source_openCover [IsAffine Y]
   let S i : X.affineOpens := ⟨_, isAffineOpen_opensRange (𝒰.f i)⟩
   induction U using of_affine_open_cover S 𝒰.iSup_opensRange with
   | basicOpen U r H =>
+    (set_option backward.dsimp.instanceTypes false in
     simp_rw [Scheme.affineBasicOpen_coe,
-      ← f.appLE_map (U := ⊤) le_top (homOfLE (X.basicOpen_le r)).op]
+      ← f.appLE_map (U := ⊤) le_top (homOfLE (X.basicOpen_le r)).op])
     have := U.2.isLocalization_basicOpen r
-    exact (isLocal_ringHomProperty P).StableUnderCompositionWithLocalizationAwayTarget _ r _ H
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact (isLocal_ringHomProperty P).StableUnderCompositionWithLocalizationAwayTarget _ r _ H)
   | openCover U s hs H =>
     apply (isLocal_ringHomProperty P).ofLocalizationSpanTarget.ofIsLocalization
       (isLocal_ringHomProperty P).respectsIso _ _ hs

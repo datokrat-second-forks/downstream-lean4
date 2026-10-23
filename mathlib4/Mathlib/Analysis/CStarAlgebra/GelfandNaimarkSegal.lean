@@ -83,7 +83,8 @@ noncomputable abbrev preGNSpreInnerProdSpace : PreInnerProductSpace.Core ℂ f.P
   conj_inner_symm := by simp [← Complex.star_def, ← map_star f]
   re_inner_nonneg _ := RCLike.nonneg_iff.mp (f.map_nonneg (star_mul_self_nonneg _)) |>.1
   add_left _ _ _ := by rw [map_add, star_add, add_mul, map_add]
-  smul_left := by simp [smul_mul_assoc]
+  smul_left := by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_mul_assoc])
 
 noncomputable instance : SeminormedAddCommGroup f.PreGNS :=
   InnerProductSpace.Core.toSeminormedAddCommGroup (c := f.preGNSpreInnerProdSpace)
@@ -186,7 +187,7 @@ private lemma completion_leftMulMapPreGNS_map_smul (m : ℂ) (x : A) :
   | hp =>
     exact isClosed_eq (f.leftMulMapPreGNS (m • x)).completion.continuous
       (m • (f.leftMulMapPreGNS x).completion).continuous
-  | ih a => simp [smul_mul_assoc]
+  | ih a => (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_mul_assoc])
 
 /--
 The non-unital ⋆-homomorphism/⋆-representation of `A` into the algebra of bounded operators on

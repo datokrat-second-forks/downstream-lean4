@@ -61,7 +61,8 @@ noncomputable def chainsMap :
   comm' i j (hij : _ = _) := by
     subst hij
     ext
-    simp [Fin.comp_contractNth, map_add, inhomogeneousChains.d, Rep.hom_comm_apply φ]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Fin.comp_contractNth, map_add, inhomogeneousChains.d, Rep.hom_comm_apply φ])
     rfl
 
 lemma chainsMap_congr {f g : G →* H} {φ : A ⟶ res f B} {ψ : A ⟶ res g B} (hfg : f = g)
@@ -275,7 +276,7 @@ theorem map_id_comp_H0Iso_hom {A B : Rep k G} (f : A ⟶ B) :
       (H0Iso A).hom ≫ (coinvariantsFunctor k G).map f := by
   rw [← cancel_epi (H0π A)]
   ext
-  simp
+  (set_option backward.dsimp.instanceTypes false in simp)
 
 instance epi_map_0_of_epi {A B : Rep k G} (f : A ⟶ B) [Epi f] :
     Epi (map (MonoidHom.id G) f 0) where
@@ -317,7 +318,7 @@ theorem mapShortComplexH1_zero :
 
 @[simp]
 theorem mapShortComplexH1_id : mapShortComplexH1 (MonoidHom.id G) (𝟙 A) = 𝟙 _ := by
-  ext <;> simp [shortComplexH1]
+  ext <;> (set_option backward.dsimp.instanceTypes false in simp [shortComplexH1])
 
 set_option backward.isDefEq.respectTransparency.types false in
 theorem mapShortComplexH1_comp {G H K : Type u} [Group G] [Group H] [Group K]
@@ -343,6 +344,7 @@ noncomputable abbrev mapCycles₁ :
   ShortComplex.cyclesMap' (mapShortComplexH1 f φ) (shortComplexH1 A).moduleCatLeftHomologyData
     (shortComplexH1 B).moduleCatLeftHomologyData
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma mapCycles₁_hom :
     (mapCycles₁ f φ).hom = (chainsMap₁ f φ).hom.restrict (fun x _ => by
@@ -474,8 +476,10 @@ theorem H1CoresCoinfOfTrivial_exact :
 0 in `H₁(G ⧸ S, A)`. -/
   induction x using H1_induction_on with | @h x =>
   rcases x with ⟨x, hxc⟩
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp_all only [H1CoresCoinfOfTrivial_X₂, H1CoresCoinfOfTrivial_X₃, H1CoresCoinfOfTrivial_g,
-    LinearMap.mem_ker, H1π_comp_map_apply (QuotientGroup.mk' S)]
+    LinearMap.mem_ker, H1π_comp_map_apply (QuotientGroup.mk' S)])
 /- Choose `y := ∑ y(σ, τ)·(σ, τ) ∈ C₂(G ⧸ S, A)` such that `C₁(π)(x) = d(y)`. -/
   rcases (H1π_eq_zero_iff _).1 hx with ⟨y, hy⟩
 /- Let `s : G ⧸ S → G` be a section of the quotient map. -/
@@ -488,7 +492,8 @@ theorem H1CoresCoinfOfTrivial_exact :
       (d₂₁ (A.ofQuotient S)).hom y := by
     have := congr($((mapShortComplexH1 (QuotientGroup.mk' S)
       (resOfQuotientIso A S).inv).comm₁₂.symm) z)
-    simp_all [shortComplexH1, z, ← mapDomain_comp, Prod.map_map, Rep.hom_id (res _ _)]
+    (set_option backward.dsimp.instanceTypes false in
+    simp_all [shortComplexH1, z, ← mapDomain_comp, Prod.map_map, Rep.hom_id (res _ _)])
   let v := x - (d₂₁ _).hom z
 /- We have `C₁(s ∘ π)(v) = ∑ v(g)·s(π(g)) = 0`, since `C₁(π)(v) = dC₁(π)(z) - C₁(π)(dz) = 0` by
 previous assumptions. -/
@@ -519,7 +524,8 @@ previous assumptions. -/
   /- Now `v + d(ve)` has support in `S` and agrees with `x` in `H₁(G, A)`: -/
   use H1π _ ⟨comapDomain Subtype.val (v + d₂₁ _ ve) <|
     Set.injOn_of_injective Subtype.val_injective, ?_⟩
-  · simp only [H1CoresCoinfOfTrivial_f, H1CoresCoinfOfTrivial_X₁, H1π_comp_map_apply]
+  · (set_option backward.dsimp.instanceTypes false in
+    simp only [H1CoresCoinfOfTrivial_f, H1CoresCoinfOfTrivial_X₁, H1π_comp_map_apply])
     refine (H1π_eq_iff _ _).2 ?_
   /- Indeed, `v + d(ve) - x = d(ve - z) ∈ B₁(G, A)`, since `v := x - dz`. -/
     use ve - z
@@ -596,7 +602,8 @@ instance : Epi (H1CoresCoinf A S).g := by
   have : d₁₀ _ Y ∈ Coinvariants.ker (A.ρ.comp S.subtype) := by
     have h' := congr($((mapShortComplexH1 (B := toCoinvariants A S)
       (MonoidHom.id G) (toCoinvariantsMkQ A S)).comm₂₃) Y)
-    simp_all [shortComplexH1, ← Coinvariants.mk_eq_zero]
+    (set_option backward.dsimp.instanceTypes false in
+    simp_all [shortComplexH1, ← Coinvariants.mk_eq_zero])
   /- Thus we can pick a representation of `d(Y)` as a sum `∑ ρ(sᵢ⁻¹)(aᵢ) - aᵢ`, `sᵢ ∈ S, aᵢ ∈ A`,
 and `Y - ∑ aᵢ·sᵢ` is a cycle. -/
   rcases chains₁ToCoinvariantsKer_surjective
@@ -605,8 +612,9 @@ and `Y - ∑ aᵢ·sᵢ` is a cycle. -/
     simpa [map_sub, sub_eq_zero, chains₁ToCoinvariantsKer, -LinearMap.sub_apply, d₁₀,
       sum_mapDomain_index_inj] using! Subtype.ext_iff.1 hZ.symm
   use H1π A ⟨Y - mapDomain S.subtype Z, H⟩
+  (set_option backward.dsimp.instanceTypes false in
   simp only [H1CoresCoinf_X₃, H1CoresCoinf_X₂, H1CoresCoinf_g,
-    Subgroup.coe_subtype, H1π_comp_map_apply]
+    Subgroup.coe_subtype, H1π_comp_map_apply])
 /- Moreover, the image of `Y - ∑ aᵢ·sᵢ` in `Z₁(G ⧸ S, A_S)` is `x - ∑ aᵢ·1`, and hence differs from
 `x` by a boundary, since `aᵢ·1 = d(aᵢ·(1, 1))`. -/
   refine (H1π_eq_iff _ _).2 ?_
@@ -614,6 +622,7 @@ and `Y - ∑ aᵢ·sᵢ` is a cycle. -/
     ← mapDomain_mapRange, hY, Function.comp_def, (QuotientGroup.eq_one_iff <| Subtype.val _).2
     (Subtype.prop _)] using! Submodule.finsuppSum_mem _ _ _ _ fun _ _ ↦ single_one_mem_boundaries₁ _
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Given a `G`-representation `A` and a normal subgroup `S ≤ G`, the degree 1
@@ -624,8 +633,9 @@ theorem H1CoresCoinf_exact :
   rw [ShortComplex.moduleCat_exact_iff_ker_sub_range]
   intro x hx
   induction x using H1_induction_on with | @h x =>
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [H1CoresCoinf_X₂, H1CoresCoinf_X₃, LinearMap.mem_ker, H1CoresCoinf_g,
-    H1π_comp_map_apply (QuotientGroup.mk' S)] at hx
+    H1π_comp_map_apply (QuotientGroup.mk' S)] at hx)
 /- Let `x : Z₁(G, A)` map to 0 in `H₁(G, ⧸ S, A_S)`. Pick `y : C₂(G ⧸ S, A_S)` such that `d(y)`
 equals `Z₁(π, π)(x) : Z₁(G ⧸ S, A_S)`. -/
   rcases (H1π_eq_zero_iff _).1 hx with ⟨y, hy⟩
@@ -636,9 +646,10 @@ equals `Z₁(π, π)(x) : Z₁(G ⧸ S, A_S)`. -/
   rcases @(ShortComplex.moduleCat_exact_iff_ker_sub_range _).1
     (H1CoresCoinfOfTrivial_exact (toCoinvariants A S) S)
     (H1π _ <| mapCycles₁ (MonoidHom.id G) (Rep.toCoinvariantsMkQ A S) x) (by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa only [H1CoresCoinfOfTrivial_X₂, H1CoresCoinfOfTrivial_X₃, H1CoresCoinfOfTrivial_g,
       Iso.refl_inv, LinearMap.mem_ker, H1π_comp_map_apply (QuotientGroup.mk' S),
-      ← mapCycles₁_comp_apply (x := x)] using! hx) with ⟨z, hz⟩
+      ← mapCycles₁_comp_apply (x := x)] using! hx)) with ⟨z, hz⟩
   induction z using H1_induction_on with | @h z =>
   simp only [H1CoresCoinfOfTrivial_X₂, H1CoresCoinfOfTrivial_X₁, H1CoresCoinfOfTrivial_f] at hz
   rw [H1π_comp_map_apply] at hz
@@ -675,8 +686,9 @@ equals `Z₁(π, π)(x) : Z₁(G ⧸ S, A_S)`. -/
 /- Then, since the image of `C₁(G, I(S)A)` in `C₁(G, A)⧸B₁(G, A)` is contained in the image of
 `C₁(S, A)` by `comap_coinvariantsKer_pOpcycles_range_subtype_pOpcycles_eq_top`, we can choose
 `α : C₁(S, A)`, `δ : C₂(G, A)` such that `d(δ) = Z₁(i, Id)(α) - Z₁(Id, i)(β)`. -/
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rcases eq_top_iff.1 (comap_coinvariantsKer_pOpcycles_range_subtype_pOpcycles_eq_top A S)
-    (by trivial : β ∈ ⊤) with ⟨(α : S →₀ A), hα⟩
+    (by trivial : β ∈ ⊤) with ⟨(α : S →₀ A), hα⟩)
   dsimp only [ModuleCat.hom_comp] at hα
   rcases (moduleCat_pOpcycles_eq_iff _ _ _).1 hα with ⟨(δ : G × G →₀ A), hβ⟩
 /- Then, by assumption, `d(W + δ) = C₁(i, Id)(α + Z) - x`. -/
@@ -765,6 +777,7 @@ noncomputable abbrev mapCycles₂ :
   ShortComplex.cyclesMap' (mapShortComplexH2 f φ) (shortComplexH2 A).moduleCatLeftHomologyData
     (shortComplexH2 B).moduleCatLeftHomologyData
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma mapCycles₂_hom :
     (mapCycles₂ f φ).hom = (chainsMap₂ f φ).hom.restrict (fun x _ => by

@@ -1085,7 +1085,8 @@ lemma HasMFDerivWithinAt.prod [DecidableEq ι]
     rw [t.sum_insert hi, t.erase_insert hi, t.prod_insert hi, add_comm]
     rw [t.forall_mem_insert] at hf
     convert! hf.1.mul (IH hf.2) using 2
-    · simp only [t.smul_sum, ← mul_smul]
+    · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp only [t.smul_sum, ← mul_smul])
       refine t.sum_congr rfl (fun j hj ↦ ?_)
       rw [t.erase_insert_of_ne (by grind), Finset.prod_insert (by grind)]
     · simp

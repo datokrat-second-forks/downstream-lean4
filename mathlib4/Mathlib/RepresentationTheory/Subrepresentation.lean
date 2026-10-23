@@ -132,12 +132,14 @@ def asSubmodule (σ : Subrepresentation ρ) : Submodule A[G] ρ.asModule where
   __ := σ.toSubmodule
   smul_mem' c v hv := by
     induction c using MonoidAlgebra.induction_linear with
-    | zero => simp [zero_smul]
+    | zero =>
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp [zero_smul])
     | add x y hx hy => rw [add_smul]; exact σ.toSubmodule.add_mem' hx hy
     | single g a =>
       rw [Representation.single_smul]
       exact σ.toSubmodule.smul_mem' a (σ.apply_mem_toSubmodule g hv)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_asSubmodule_iff {σ : Subrepresentation ρ} {v : W} : v ∈ asSubmodule σ ↔ v ∈ σ := by rfl
 
@@ -155,6 +157,7 @@ def asSubmodule' (σ : Subrepresentation (Representation.ofModule (k := A) (G :=
       exact σ.toSubmodule.smul_mem' ((algebraMap A A) a) <| by
         simpa [Representation.ofModule, RestrictScalars.lsmul] using! σ.apply_mem_toSubmodule g hm
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_asSubmodule'_iff {σ : Subrepresentation (Representation.ofModule (k := A) (G := G) M)}
     {m : M} : m ∈ asSubmodule' σ ↔ m ∈ σ := by rfl
@@ -169,6 +172,7 @@ def ofSubmodule (N : Submodule A[G] M) :
     simpa [Representation.ofModule, RestrictScalars.lsmul] using!
       Submodule.smul_of_tower_mem N (MonoidAlgebra.single g 1) hv
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_ofSubmodule_iff {N : Submodule A[G] M} {m : M} : m ∈ ofSubmodule N ↔ m ∈ N := by rfl
 
@@ -180,11 +184,13 @@ def ofSubmodule' (N : Submodule A[G] ρ.asModule) : Subrepresentation ρ where
     smul_mem' a w hw := by simpa using! (N.smul_mem (algebraMap A A[G] a) hw) }
   apply_mem_toSubmodule g w hw := by
     let _ : Module A[G] W := ρ.instModuleMonoidAlgebraAsModule
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     have h : (MonoidAlgebra.single g (1 : A)) • w ∈ N :=
-      Submodule.smul_of_tower_mem N _ hw
+      Submodule.smul_of_tower_mem N _ hw)
     rw [Representation.single_smul, one_smul] at h
     exact h
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_ofSubmodule'_iff {N : Submodule A[G] ρ.asModule} {w : W} : w ∈ ofSubmodule' N ↔ w ∈ N :=
   .rfl

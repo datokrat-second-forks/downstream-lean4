@@ -140,6 +140,7 @@ noncomputable def linearExtFunctorObj (X : C) (n : ℕ) : C ⥤ ModuleCat.{w} R 
   obj Y := ModuleCat.of R (Ext X Y n)
   map f := ModuleCat.ofHom (Ext.postcompOfLinear (Ext.mk₀ f) R X (add_zero n))
 
+set_option backward.dsimp.instanceTypes false in
 variable (C) in
 /-- The functor `Cᵒᵖ ⥤ C ⥤ ModuleCat R` which sends `X : C` and `Y : C`
 to `Ext X Y n`. -/

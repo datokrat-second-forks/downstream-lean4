@@ -100,7 +100,7 @@ set_option backward.isDefEq.respectTransparency.types false in
 theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y)
     (Q : ProjectiveResolution Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
   ext
-  simp [lift, liftFZero, liftFOne]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [lift, liftFZero, liftFOne])
 
 @[reassoc (attr := simp)]
 lemma lift_commutes_zero {Y Z : C} (f : Y ⟶ Z)

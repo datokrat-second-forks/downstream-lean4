@@ -127,6 +127,7 @@ def FiniteEtale.finiteSpec (k : Type u) [Field k] : (FiniteEtale.{v} k)ᵒᵖ �
   obj R := ↧(PrimeSpectrum R.unop.obj)
   map f := FintypeCat.homMk (PrimeSpectrum.comap f.unop.hom.hom)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- If the geometric point `Ω` factors through `S`, the fiber can be computed after base change
 to `S`. -/
@@ -174,12 +175,12 @@ noncomputable def FiniteEtale.equivOfIsSepClosed (Ω : Type u) [Field Ω] [IsSep
       fun X ↦ FintypeCat.equivEquivIso <|
         (Equiv.sigmaUnique _ _).symm.trans (PrimeSpectrum.sigmaToPiHomeo _).toEquiv
     functor_unitIso_comp X := by
-      dsimp [FiniteEtale.finiteSpec]
+      (set_option backward.dsimp.instanceTypes false in dsimp [FiniteEtale.finiteSpec])
       apply Quiver.Hom.unop_inj
       ext x i
       dsimp
       rw [FintypeCat.equivEquivIso_apply_hom, FintypeCat.homMk_apply]
-      dsimp
+      (set_option backward.instanceTypes.subsingletons.prop false in dsimp)
       rw [← Pi.coe_evalAlgHom Ω]
       simp [Algebra.FormallyEtale.equivPiOfIsSepClosed_comap,
         Algebra.FormallyEtale.equivPiOfIsSepClosed_self_apply] }

@@ -329,6 +329,7 @@ lemma finitePresentation_universalFactorizationMap :
   letI := (universalFactorizationMap R n m k hn).toAlgebra
   (universalFactorizationMapPresentation R n m k hn).finitePresentation_of_isFinite
 
+set_option backward.instanceTypes.subsingletons.prop false in
 lemma finite_universalFactorizationMap :
     (universalFactorizationMap R n m k hn).Finite := by
   refine RingHom.IsIntegral.to_finite ?_
@@ -403,7 +404,8 @@ def UniversalFactorizationRing.fromTensor :
     (MvPolynomial (Fin m) R ⊗[R] MvPolynomial (Fin k) R) →ₐ[R] 𝓡 :=
   letI := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
   letI := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
-  Algebra.TensorProduct.includeRight.restrictScalars _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  Algebra.TensorProduct.includeRight.restrictScalars _)
 
 /-- The image of `p` in the universal factorization ring of `p`. -/
 @[simps] def UniversalFactorizationRing.monicDegreeEq :
@@ -470,24 +472,30 @@ def UniversalFactorizationRing.homEquiv :
       simp [Algebra.compHom_algebraMap_apply]
     refine Algebra.TensorProduct.ext (by ext) ?_
     refine AlgHom.restrictScalars_injective R (Algebra.TensorProduct.ext ?_ ?_)
-    · ext; simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
-        UniversalFactorizationRing.factor₁, coeff_freeMonic]; rfl
-    · ext; simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
-        UniversalFactorizationRing.factor₂, coeff_freeMonic]; rfl
+    · ext; (set_option backward.dsimp.instanceTypes false in
+      simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
+        UniversalFactorizationRing.factor₁, coeff_freeMonic]); rfl
+    · ext; (set_option backward.dsimp.instanceTypes false in
+      simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
+        UniversalFactorizationRing.factor₂, coeff_freeMonic]); rfl
   right_inv q := by
     let := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
     let := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
+    (set_option backward.dsimp.instanceTypes false in
     simp only [UniversalFactorizationRing, MvPolynomial.mapEquivMonic, AlgHom.toRingHom_eq_coe,
       Equiv.coe_fn_symm_mk, MvPolynomial.coe_aeval_eq_eval, factor₁,
-      MvPolynomial.universalFactorizationMapLiftEquiv, Equiv.coe_fn_mk, fromTensor, factor₂]
-    ext <;> simp +contextual [coeff_freeMonic, apply_dite, MonicDegreeEq.coeff_of_ge]
+      MvPolynomial.universalFactorizationMapLiftEquiv, Equiv.coe_fn_mk, fromTensor, factor₂])
+    ext <;>
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp +contextual [coeff_freeMonic, apply_dite, MonicDegreeEq.coeff_of_ge])
 
 attribute [-instance] leftModule in
 instance : Module.Finite R 𝓡 :=
   letI := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
   letI := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
   letI : Module.Finite _ _ := MvPolynomial.finite_universalFactorizationMap R n m k hn
-  inferInstanceAs (Module.Finite R (R ⊗[_] _))
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (Module.Finite R (R ⊗[_] _)))
 
 set_option backward.isDefEq.respectTransparency false in
 attribute [-instance] leftModule in
@@ -496,7 +504,8 @@ instance : Algebra.FinitePresentation R 𝓡 :=
   letI := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
   letI : Algebra.FinitePresentation _ _ :=
     MvPolynomial.finitePresentation_universalFactorizationMap R n m k hn
-  inferInstanceAs (Algebra.FinitePresentation R (R ⊗[_] _))
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (Algebra.FinitePresentation R (R ⊗[_] _)))
 
 /-- The presentation of `UniversalFactorizationRing`.
 Its jacobian is the resultant of the two factors (up to sign). -/

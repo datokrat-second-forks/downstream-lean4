@@ -280,9 +280,11 @@ a map of extensions. -/
 noncomputable def baseChangeFromBaseChange :
     (P.toExtension.baseChange (T := T)).Hom (P.baseChange (T := T)).toExtension :=
   .ofAlgHom (MvPolynomial.algebraTensorAlgEquiv R T).toAlgHom <| by
-    dsimp [Extension.baseChange]
+    (set_option backward.dsimp.instanceTypes false in dsimp [Extension.baseChange])
     ext
-    simp [RingHom.algebraMap_toAlgebra]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [RingHom.algebraMap_toAlgebra])
 
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
@@ -298,15 +300,18 @@ a map of extensions. -/
 noncomputable def baseChangeToBaseChange :
     (P.baseChange (T := T)).toExtension.Hom (P.toExtension.baseChange (T := T)) :=
   .ofAlgHom (MvPolynomial.algebraTensorAlgEquiv R T).symm.toAlgHom <| by
-    dsimp [Extension.baseChange]
+    (set_option backward.dsimp.instanceTypes false in dsimp [Extension.baseChange])
     ext
-    simp [RingHom.algebraMap_toAlgebra]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [RingHom.algebraMap_toAlgebra])
 
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
 lemma baseChangeToBaseChange_apply (x : (baseChange T P).toExtension.Ring) :
+    (set_option backward.dsimp.instanceTypes false in
     dsimp% (P.baseChangeToBaseChange T).toRingHom x =
-      (MvPolynomial.algebraTensorAlgEquiv R T).symm x :=
+      (MvPolynomial.algebraTensorAlgEquiv R T).symm x) :=
   rfl
 
 /-- Extend generators by more variables. -/
@@ -589,13 +594,17 @@ noncomputable
 def Hom.toExtensionHom [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S']
     (f : P.Hom P') : P.toExtension.Hom P'.toExtension where
   toRingHom := f.toAlgHom.toRingHom
-  toRingHom_algebraMap x := by simp
-  algebraMap_toRingHom x := by simp
+  toRingHom_algebraMap x := by (set_option backward.dsimp.instanceTypes false in simp)
+  algebraMap_toRingHom x := by (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
-lemma Hom.toExtensionHom_id : Hom.toExtensionHom (.id P) = .id _ := by ext; simp
+lemma Hom.toExtensionHom_id : Hom.toExtensionHom (.id P) = .id _ := by
+  ext
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -605,7 +614,11 @@ lemma Hom.toExtensionHom_comp [Algebra R S'] [IsScalarTower R S S']
     [IsScalarTower R S S''] [IsScalarTower R' R'' S''] [IsScalarTower R' S' S'']
     [IsScalarTower S S' S''] [IsScalarTower R R' R''] [IsScalarTower R R' S']
     (f : P'.Hom P'') (g : P.Hom P') :
-    toExtensionHom (f.comp g) = f.toExtensionHom.comp g.toExtensionHom := by ext; simp
+    toExtensionHom (f.comp g) = f.toExtensionHom.comp g.toExtensionHom := by
+  ext
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp)
 
 lemma Hom.toExtensionHom_toAlgHom_apply [Algebra R S'] [IsScalarTower R R' S']
     [IsScalarTower R S S'] (f : P.Hom P') (x) :
@@ -617,7 +630,8 @@ noncomputable abbrev ker : Ideal P.Ring := P.toExtension.ker
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma ker_eq_ker_aeval_val : P.ker = RingHom.ker (aeval P.val) := by
-  simp only [ker, Extension.ker, toExtension_Ring, algebraMap_eq]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [ker, Extension.ker, toExtension_Ring, algebraMap_eq])
   rfl
 
 lemma ker_mvPolynomial : (mvPolynomial R ι).ker = ⊥ := by
@@ -638,7 +652,8 @@ lemma ker_ofAlgHom {I : Type*} (f : MvPolynomial I R →ₐ[R] S) (h : Function.
     (ofAlgHom f h).ker = RingHom.ker f.toRingHom := by
   change RingHom.ker _ = _
   congr
-  exact MvPolynomial.ringHom_ext (by simp) (by simp [ofAlgHom])
+  (set_option backward.dsimp.instanceTypes false in
+  exact MvPolynomial.ringHom_ext (by simp) (by simp [ofAlgHom]))
 
 @[simp]
 lemma ker_ofAlgEquiv (P : Generators R S ι) {T : Type*} [CommRing T] [Algebra R T] (e : S ≃ₐ[R] T) :
@@ -796,6 +811,9 @@ set_option backward.defeqAttrib.useBackward true in
 @[simps!]
 noncomputable
 def defaultHom (P : Extension.{w} R S) : (Generators.self R S).toExtension.Hom P :=
-  .ofAlgHom (MvPolynomial.aeval P.σ) (by dsimp; ext; simp)
+  .ofAlgHom (MvPolynomial.aeval P.σ) (by
+    (set_option backward.dsimp.instanceTypes false in dsimp)
+    ext
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp))
 
 end Algebra.Extension

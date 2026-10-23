@@ -85,7 +85,8 @@ instance (priority := 900) instAlgebra' {R A M} [CommSemiring R] [AddCommGroup M
     [Algebra R A] [Module R M] [Module A M] (Q : QuadraticForm A M)
     [IsScalarTower R A M] :
     Algebra R (CliffordAlgebra Q) :=
-  inferInstanceAs <| Algebra R (RingCon.Quotient _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra R (RingCon.Quotient _))
 
 instance : Algebra R (CliffordAlgebra Q) := inferInstance
 
@@ -301,6 +302,7 @@ theorem mul_ι_mul_ι_mul_comm_of_isOrtho
 
 end isOrtho
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- $aba$ is a vector. -/
 theorem ι_mul_ι_mul_ι (a b : M) :
     ι Q a * ι Q b * ι Q a = ι Q (QuadraticMap.polar Q a b • a - Q a • b) := by

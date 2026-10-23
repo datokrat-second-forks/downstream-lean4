@@ -32,6 +32,7 @@ variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜
 variable [TopologicalSpace B] [ChartedSpace HB B] [FiberBundle F E]
 
 
+set_option backward.dsimp.instanceTypes false in
 /-- Characterization of differentiable functions into a vector bundle.
 Version at a point within a set -/
 theorem mdifferentiableWithinAt_totalSpace (f : M → TotalSpace F E) {s : Set M} {x₀ : M} :

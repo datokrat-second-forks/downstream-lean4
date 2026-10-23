@@ -143,8 +143,9 @@ theorem d_eq [DecidableEq G] :
       ((barComplex k G).coinvariantsTensorObj A).d (n + 1) n ≫
       (coinvariantsTensorFreeLEquiv A (Fin n → G)).toModuleIso.hom := by
   ext : 3
+  (set_option backward.dsimp.instanceTypes false in
   simp [d_single (k := k), TensorProduct.tmul_add, TensorProduct.tmul_sum,
-    barComplex.d_single (k := k)]
+    barComplex.d_single (k := k)])
 
 end inhomogeneousChains
 

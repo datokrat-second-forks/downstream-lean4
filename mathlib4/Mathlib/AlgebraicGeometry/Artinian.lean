@@ -148,7 +148,9 @@ instance (priority := low) {X : Scheme} [DiscreteTopology X] [IsReduced X] :
     have inst (i : _) : DiscreteTopology (𝒰.X i) := (𝒰.f i).isOpenEmbedding.discreteTopology
     have inst (i : _) : IsReduced (𝒰.X i) := isReduced_of_isOpenImmersion (𝒰.f i)
     exact (isLocallyArtinian_iff_openCover 𝒰).mpr
-      fun i ↦ this (inferInstanceAs (Subsingleton ({i} : Set X)))
+      fun i ↦
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        this (inferInstanceAs (Subsingleton ({i} : Set X))))
   cases isEmpty_or_nonempty X
   · infer_instance
   have : IsIntegral X := (isIntegral_iff_irreducibleSpace_and_isReduced _).mpr

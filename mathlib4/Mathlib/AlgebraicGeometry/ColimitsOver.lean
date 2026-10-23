@@ -137,7 +137,7 @@ lemma isPullback {i j : 𝒰.I₀} (hij : i ⟶ j) :
     dsimp
     rw [Category.comp_id, ← Category.assoc]
     congr 1
-    apply pullback.hom_ext <;> simp
+    apply pullback.hom_ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
   let iso2 : (d.cocone i).pt.left ≅ pullback (d.cocone j).pt.hom (𝒰.trans hij) :=
     (MorphismProperty.Over.forget _ _ _ ⋙ Over.forget _).mapIso iso1
   refine .of_iso (IsPullback.of_hasPullback _ _) iso2.symm (.refl _) (.refl _) (.refl _) ?_ ?_
@@ -179,14 +179,14 @@ set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 lemma pullbackGluedIso_inv_fst (i : 𝒰.I₀) : (d.pullbackGluedIso i).inv.left ≫ pullback.fst _ _ =
     colimit.ι d.relativeGluingData.functor i := by
-  simp [pullbackGluedIso, glued]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackGluedIso, glued])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 lemma pullbackGluedIso_inv_snd (i : 𝒰.I₀) :
     (d.pullbackGluedIso i).inv.left ≫ pullback.snd _ _ = (d.cocone i).pt.hom := by
-  simp [pullbackGluedIso, glued]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackGluedIso, glued])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

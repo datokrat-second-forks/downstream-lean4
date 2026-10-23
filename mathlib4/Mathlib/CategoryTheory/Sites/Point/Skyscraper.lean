@@ -60,8 +60,9 @@ noncomputable def skyscraperPresheafHomEquiv :
         ext y
         have := Φ.toPresheafFiber_w g.unop y P
         dsimp at this
-        simp [reassoc_of% this] }
-  invFun g := Φ.presheafFiberDesc (fun X x ↦ g.app (op X) ≫ Pi.π _ x) (by simp)
+        (set_option backward.instanceTypes.subsingletons.prop false in simp [reassoc_of% this]) }
+  invFun g := Φ.presheafFiberDesc (fun X x ↦ g.app (op X) ≫ Pi.π _ x) (by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp))
   left_inv f := by cat_disch
   right_inv g := by cat_disch
 
@@ -90,7 +91,8 @@ lemma skyscraperPresheafHomEquiv_app_π
     (f : Φ.presheafFiber.obj P ⟶ M) (X : C) (x : Φ.fiber.obj X) :
     (Φ.skyscraperPresheafHomEquiv f).app (op X) ≫ Pi.π (fun (_ : Φ.fiber.obj X) ↦ M) x =
       Φ.toPresheafFiber X x P ≫ f := by
-  simp [skyscraperPresheafHomEquiv_apply_app]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [skyscraperPresheafHomEquiv_apply_app])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -102,7 +104,7 @@ lemma skyscraperPresheafHomEquiv_naturality_right
   ext
   dsimp
   ext
-  dsimp
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp)
   rw [skyscraperPresheafHomEquiv_app_π]
   dsimp
   rw [Category.assoc, Pi.map_π, skyscraperPresheafHomEquiv_app_π_assoc]
@@ -179,8 +181,9 @@ private lemma isSheaf_skyscraperPresheaf_aux
   let φ₂ : Presieve.categoryMk _ _ (R.downward_closed hf₁ p₁) ⟶
       Presieve.categoryMk _ _ hf₂ :=
     ObjectProperty.homMk (Over.homMk p₂)
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simpa [hz₁, hz₂, φ₁, φ₂] using!
-    (Cone.w s φ₂.op =≫ Pi.π _ z).trans (Cone.w s φ₁.op =≫ Pi.π _ z).symm
+    (Cone.w s φ₂.op =≫ Pi.π _ z).trans (Cone.w s φ₁.op =≫ Pi.π _ z).symm)
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
@@ -198,8 +201,10 @@ lemma isSheaf_skyscraperPresheaf (M : A) :
       dsimp at hm ⊢
       ext x
       obtain ⟨Y, g, hg, y, rfl⟩ := Φ.jointly_surjective _ hR x
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simpa [← hm (op (Presieve.categoryMk _ _ hg))] using!
-        ((isSheaf_skyscraperPresheaf_aux R hR s).choose_spec (Presieve.categoryMk _ _ hg) y).symm }⟩
+        ((isSheaf_skyscraperPresheaf_aux R hR s).choose_spec
+          (Presieve.categoryMk _ _ hg) y).symm) }⟩
 
 /-- Given a point `Φ` of a site `(C, J)`, this is the skyscraper sheaf functor
 `A ⥤ Sheaf J A`. -/

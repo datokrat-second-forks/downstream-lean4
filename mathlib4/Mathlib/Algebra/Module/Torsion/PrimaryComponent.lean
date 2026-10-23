@@ -62,8 +62,9 @@ theorem primaryComponent_mem (x : M) :
 theorem primaryComponent_map_mem (φ : M₁ →ₗ[A] M₂) (c : primaryComponent M₁ I) :
     φ c ∈ primaryComponent M₂ I := by
   obtain ⟨c, hc⟩ := c
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [primaryComponent_mem, mem_torsionBySet_iff, SetLike.coe_sort_coe, Subtype.forall,
-    ← map_smul] at ⊢ hc
+    ← map_smul] at ⊢ hc)
   obtain ⟨n, hn⟩ := hc
   use n
   grind

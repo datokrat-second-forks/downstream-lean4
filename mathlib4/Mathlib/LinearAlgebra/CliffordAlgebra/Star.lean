@@ -54,7 +54,8 @@ also conjugated all the scalars, but there appears to be nothing in the literatu
 doing this. -/
 @[simp]
 theorem star_smul (r : R) (x : CliffordAlgebra Q) : star (r • x) = r • star x := by
-  rw [star_def, star_def, map_smul, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [star_def, star_def, map_smul, map_smul])
 
 @[simp]
 theorem star_algebraMap (r : R) :

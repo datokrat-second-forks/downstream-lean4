@@ -244,7 +244,7 @@ lemma pairing_one_four_iff' (h2 : IsSMulRegular R (2 : R)) :
     rw [pairing, pairing, h]
     norm_num
     suffices (2 : R) • P.pairing i j = (2 : R) • 1 from h2 this
-    rw [pairing, ← map_smul, ← h]
+    (set_option backward.instanceTypes.subsingletons.prop false in rw [pairing, ← map_smul, ← h])
     simp
 
 lemma pairing_neg_one_neg_four_iff' (h2 : IsSMulRegular R (2 : R)) :

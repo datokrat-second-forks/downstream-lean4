@@ -118,9 +118,12 @@ noncomputable def riemannianMetricVectorSpace :
   contMDiff := by
     intro x
     rw [contMDiffAt_section]
-    convert! contMDiffAt_const (c := innerSL ℝ)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! contMDiffAt_const (c := innerSL ℝ))
     ext v w
-    simp [hom_trivializationAt_apply, ContinuousLinearMap.inCoordinates, TangentSpace]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [hom_trivializationAt_apply, ContinuousLinearMap.inCoordinates, TangentSpace])
 
 noncomputable instance : RiemannianBundle (fun (x : F) ↦ TangentSpace% x) :=
   ⟨(riemannianMetricVectorSpace F).toRiemannianMetric⟩
@@ -270,7 +273,8 @@ lemma eventually_norm_mfderivWithin_symm_extChartAt_comp_lt (x : M) :
   rw [TangentBundle.symmL_trivializationAt h'y] at hy
   have A : (extChartAt I x).symm (extChartAt I x y) = y :=
     (extChartAt I x).left_inv (by simpa using h'y)
-  convert! hy using 3 <;> congr
+  convert! hy using 3 <;>
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma eventually_norm_mfderivWithin_symm_extChartAt_lt (x : M) :

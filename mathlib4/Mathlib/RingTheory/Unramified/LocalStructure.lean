@@ -156,7 +156,8 @@ private lemma exists_hasStandardEtaleSurjectionOn_of_exists_adjoin_singleton_eq_
       ⟨by simp_all [P], by simpa using IsLocalization.Away.algebraMap_isUnit _⟩
     let f : AdjoinRoot P.f →ₐ[R] S := AdjoinRoot.liftAlgHom _ (Algebra.ofId _ _) x hqx
     have : IsLocalization.Away (aeval x (derivative q)) (Localization.Away (f (.mk P.f P.g))) := by
-      simp only [AdjoinRoot.liftAlgHom_mk, toRingHom_ofId, f, ← aeval_def, P]; infer_instance
+      (set_option backward.dsimp.instanceTypes false in
+      simp only [AdjoinRoot.liftAlgHom_mk, toRingHom_ofId, f, ← aeval_def, P]); infer_instance
     refine ⟨_, hq'x, .mk ((Localization.awayMapₐ f _).comp P.equivAwayAdjoinRoot.toAlgHom) ?_⟩
     simpa using IsLocalization.Away.mapₐ_surjective_of_surjective _
       (Ideal.Quotient.lift_surjective_of_surjective _ _ hx')

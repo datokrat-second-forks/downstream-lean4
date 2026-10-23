@@ -183,7 +183,7 @@ noncomputable def subgroupOrderIsoSubgroupMonoidHom : Subgroup G ≃o (Subgroup 
   left_inv H := by
     ext x
     rw [MulEquiv.coe_mapSubgroup, Subgroup.mem_map_equiv, MonoidHom.mem_ker]
-    simp
+    (set_option backward.dsimp.instanceTypes false in simp)
   right_inv Φ := by
     have : HasEnoughRootsOfUnity M (Monoid.exponent (G →* Mˣ)) := by
       rwa [Monoid.exponent_eq_of_mulEquiv (monoidHom_mulEquiv_of_hasEnoughRootsOfUnity G M).some]
@@ -196,6 +196,8 @@ theorem mem_subgroupOrderIsoSubgroupMonoidHom_iff (H : Subgroup G) (φ : G →* 
     φ ∈ (subgroupOrderIsoSubgroupMonoidHom G M H).ofDual ↔ ∀ g ∈ H, φ g = 1 := by
   simp [subgroupOrderIsoSubgroupMonoidHom]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem mem_subgroupOrderIsoSubgroupMonoidHom_symm_iff (Φ : Subgroup (G →* Mˣ)) (g : G) :

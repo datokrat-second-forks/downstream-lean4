@@ -97,7 +97,8 @@ lemma isUnit_apply_topVector : IsUnit (vol b.topVector) := by
   suffices ((b.exteriorPower (finrank R M)).repr x default) * vol b.topVector = 1 from
     IsUnit.of_mul_eq_one_right _ this
   suffices (b.exteriorPower (finrank R M)).repr x default • b.topVector = x by
-    rw [← smul_eq_mul, ← map_smul, ← hx, this]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← smul_eq_mul, ← map_smul, ← hx, this])
   simpa using (b.exteriorPower _).sum_repr x
 
 lemma wedgePairing_eq_apply_topVector_smul :

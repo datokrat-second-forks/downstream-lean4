@@ -67,8 +67,12 @@ lemma FormallyUnramified.isField_quotient_map_maximalIdeal [FormallyUnramified R
     IsField (S ⧸ (maximalIdeal R).map (algebraMap R S)) := by
   let mR := (maximalIdeal R).map (algebraMap R S)
   have hmR : mR ≤ maximalIdeal S := ((local_hom_TFAE (algebraMap R S)).out 1 3 rfl rfl).mp ‹_›
-  let : Algebra (ResidueField R) (S ⧸ mR) := (inferInstanceAs <| Algebra (R ⧸ _) _)
-  have : IsScalarTower R (ResidueField R) (S ⧸ mR) := (inferInstanceAs <| IsScalarTower R (R ⧸ _) _)
+  let : Algebra (ResidueField R) (S ⧸ mR) :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    inferInstanceAs <| Algebra (R ⧸ _) _)
+  have : IsScalarTower R (ResidueField R) (S ⧸ mR) :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    inferInstanceAs <| IsScalarTower R (R ⧸ _) _)
   have : FormallyUnramified (ResidueField R) (S ⧸ mR) := .of_restrictScalars R _ _
   have : EssFiniteType (ResidueField R) (S ⧸ mR) := .of_comp R _ _
   have : Module.Finite (ResidueField R) (S ⧸ mR) := FormallyUnramified.finite_of_free _ _
@@ -273,20 +277,24 @@ lemma exists_awayMap_bijective_of_localRingHom_bijective
     obtain ⟨r'', hr'⟩ := hr'
     refine ⟨IsLocalization.mk' (M := .powers r') _
       (r'' * r * (∏ i ∈ s.erase x, b i) * a x) ⟨_, 1, rfl⟩, ?_⟩
-    dsimp [awayMapₐ, IsLocalization.Away.map]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    dsimp [awayMapₐ, IsLocalization.Away.map])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp only [pow_one, IsLocalization.map_mk', IsLocalization.mk'_eq_iff_eq_mul,
-      ← map_mul (algebraMap S _), map_mul (algebraMap R _), e]
+      ← map_mul (algebraMap S _), map_mul (algebraMap R _), e])
     congr 1
     rw [hr', ← Finset.prod_erase_mul s b hxs, map_mul, map_mul, map_mul]
     ring_nf
   intro x
   obtain ⟨x, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.exists_mk'_eq (.powers (algebraMap R S r')) x
   obtain ⟨y, hy : awayMap _ _ _ = _⟩ := H ⟨x, rfl⟩
-  dsimp at hy
+  (set_option backward.dsimp.instanceTypes false in dsimp at hy)
   refine ⟨y * Localization.Away.invSelf _ ^ n, ?_⟩
   simp only [map_mul, hy]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [Away.invSelf, Localization.mk_eq_mk', awayMap, IsLocalization.Away.map,
-    IsLocalization.map_mk', ← Algebra.smul_def, IsLocalization.smul_mk', ← IsLocalization.mk'_pow]
+    IsLocalization.map_mk', ← Algebra.smul_def, IsLocalization.smul_mk', ← IsLocalization.mk'_pow])
 
 lemma exists_awayMap_bijective_of_residueField_surjective
     [Module.Finite R S] [FaithfulSMul R S] [q.LiesOver p] [Algebra.IsUnramifiedAt R q]

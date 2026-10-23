@@ -110,7 +110,8 @@ instance [QuasiCompactCover 𝒰] {T : Scheme.{u}} (f : T ⟶ S) :
   · exact hU'.isCompact_pullback_inf (hc _ _) hU (by simpa using! hsub) <| by
       simpa [← SetLike.coe_subset_coe, ← heq, Set.range_comp] using! Set.subset_iUnion_of_subset i
         (Set.subset_iUnion_of_subset hi (Set.subset_preimage_image _ _))
-  · refine subset_antisymm (by simp) (fun x hx ↦ ?_)
+  · refine subset_antisymm (by
+      (set_option backward.dsimp.instanceTypes false in simp)) (fun x hx ↦ ?_)
     have : f x ∈ (U : Set S) := hsub ⟨x, hx, rfl⟩
     simp_rw [← heq, Set.mem_iUnion] at this
     obtain ⟨i, hi, y, hy, heq⟩ := this

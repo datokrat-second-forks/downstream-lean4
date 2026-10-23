@@ -57,7 +57,8 @@ instance : LinearOrder ℝ* :=
   inferInstanceAs (LinearOrder (Germ _ _))
 
 instance : IsStrictOrderedRing ℝ* :=
-  inferInstanceAs (IsStrictOrderedRing (Germ _ _))
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (IsStrictOrderedRing (Germ _ _)))
 
 /-- Natural embedding `ℝ → ℝ*`. -/
 @[coe] def ofReal : ℝ → ℝ* := const

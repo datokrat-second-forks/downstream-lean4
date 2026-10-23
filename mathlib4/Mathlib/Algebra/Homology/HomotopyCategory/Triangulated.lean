@@ -152,7 +152,8 @@ set_option backward.defeqAttrib.useBackward true in
 lemma mappingConeCompHomotopyEquiv_comm₁ :
     inr (map f (f ≫ g) (𝟙 X₁) g (by rw [id_comp])) ≫
       (mappingConeCompHomotopyEquiv f g).inv = (mappingConeCompTriangle f g).mor₂ := by
-  simp [map, mappingConeCompHomotopyEquiv, MappingConeCompHomotopyEquiv.inv]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [map, mappingConeCompHomotopyEquiv, MappingConeCompHomotopyEquiv.inv])
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
@@ -173,7 +174,7 @@ lemma mappingConeCompTriangleh_comm₁ :
     (HomotopyCategory.quotient _ _).map (mappingCone.inr _) := by
   rw [← cancel_mono (HomotopyCategory.isoOfHomotopyEquiv
       (mappingConeCompHomotopyEquiv f g)).inv, assoc]
-  dsimp [mappingConeCompTriangleh]
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp [mappingConeCompTriangleh])
   rw [← Functor.map_comp, ← Functor.map_comp, ← Functor.map_comp,
     mappingConeCompHomotopyEquiv_hom_inv_id, comp_id,
     mappingConeCompHomotopyEquiv_comm₁ f g,
@@ -194,7 +195,8 @@ lemma mappingConeCompTriangleh_distinguished :
       distTriang (HomotopyCategory C (ComplexShape.up ℤ)) := by
   refine ⟨_, _, (mappingConeCompTriangle f g).mor₁, ⟨?_⟩⟩
   refine Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) (isoOfHomotopyEquiv
-    (mappingConeCompHomotopyEquiv f g)) (by cat_disch) (by simp) ?_
+    (mappingConeCompHomotopyEquiv f g)) (by cat_disch) (by
+      (set_option backward.instanceTypes.subsingletons.prop false in simp)) ?_
   dsimp [mappingConeCompTriangleh]
   rw [CategoryTheory.Functor.map_id, comp_id, ← Functor.map_comp_assoc]
   congr 2

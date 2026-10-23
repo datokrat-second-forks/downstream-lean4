@@ -78,10 +78,12 @@ lemma spanFinrank_eq_finrank_quotient (N : Submodule R M) (fg : N.FG) :
   let : Module 𝓀 (N ⧸ maximalIdeal R • (⊤ : Submodule R N)) :=
     inferInstanceAs (Module (R ⧸ maximalIdeal R) _)
   let : IsScalarTower R 𝓀 (N ⧸ maximalIdeal R • (⊤ : Submodule R N)) :=
-    inferInstanceAs (IsScalarTower R (R ⧸ maximalIdeal R) _)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    inferInstanceAs (IsScalarTower R (R ⧸ maximalIdeal R) _))
   rw [← spanFinrank_top_eq_of_residueField N fg, ← Module.finrank_eq_spanFinrank_of_free]
   let e : 𝓀 ⊗[R] N ≃ₗ[𝓀] N ⧸ (maximalIdeal R) • (⊤ : Submodule R N) :=
-    (quotTensorEquivQuotSMul N (maximalIdeal R)).extendScalarsOfSurjective residue_surjective
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (quotTensorEquivQuotSMul N (maximalIdeal R)).extendScalarsOfSurjective residue_surjective)
   exact e.finrank_eq
 
 lemma spanFinrank_maximalIdeal_eq_finrank_cotangentSpace_of_fg (fg : (maximalIdeal R).FG) :
@@ -126,7 +128,8 @@ lemma IsLocalRing.spanFinrank_maximalIdeal_add_finrank_eq_of_surjective
   have (r : ResidueField R) (m : Q) : e (r • m) = (ResidueField.map (algebraMap R S)) r • e m := by
     obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective _ m
     obtain ⟨r, rfl⟩ := residue_surjective r
-    exact (map_smul f r m).trans (algebraMap_smul S r _).symm
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    exact (map_smul f r m).trans (algebraMap_smul S r _).symm)
   have bij' : Function.Bijective (ResidueField.map (algebraMap R S)) :=
     ⟨RingHom.injective _, Ideal.Quotient.lift_surjective_of_surjective _ _
       (Ideal.Quotient.mk_surjective.comp surj)⟩

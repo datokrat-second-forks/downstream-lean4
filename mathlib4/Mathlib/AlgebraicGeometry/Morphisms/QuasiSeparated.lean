@@ -189,7 +189,7 @@ theorem Scheme.quasiSeparatedSpace_of_isOpenCover
     ((X.openCoverOfIsOpenCover U hU).f j) ≫
     (X.openCoverOfIsOpenCover U hU).f i).isOpenEmbedding.isCompact_iff, Set.image_univ,
     IsOpenImmersion.range_pullback_to_base_of_left]
-  simpa using hU₂ i j
+  (set_option backward.dsimp.instanceTypes false in simpa using hU₂ i j)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma quasiSeparatedSpace_iff_quasiCompact_prod_lift :
@@ -224,7 +224,8 @@ theorem QuasiSeparated.of_comp (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated (f �
   refine @quasiSeparatedSpace_of_quasiSeparated _ _ ?_
     (HasAffineProperty.of_isPullback (.of_hasPullback _ (Z.affineCover.f i)) ‹_›) ?_
   · exact pullback.map _ _ _ _ (𝟙 _) _ _ (by simp) (Category.comp_id _) ≫
-      (pullbackRightPullbackFstIso g (Z.affineCover.f i) f).hom
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      (pullbackRightPullbackFstIso g (Z.affineCover.f i) f).hom)
   · exact inferInstance
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -452,7 +453,8 @@ instance isIso_ΓSpec_adjunction_unit_app_basicOpen
     (eqToHom (Scheme.toSpecΓ_preimage_basicOpen _ _).symm).op) _ ?_
   rw [ConcreteCategory.isIso_iff_bijective]
   apply +allowSynthFailures IsLocalization.bijective
-  · exact StructureSheaf.IsLocalization.to_basicOpen _ _
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact StructureSheaf.IsLocalization.to_basicOpen _ _)
   · refine isLocalization_basicOpen_of_qcqs ?_ ?_ _
     · exact isCompact_univ
     · exact isQuasiSeparated_univ

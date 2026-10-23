@@ -192,7 +192,8 @@ theorem d_of {n : ℕ} (c : Fin (n + 1) → G) :
 lemma d_single {n : ℕ} (c : Fin (n + 1) → G) (r : k) :
     d k G n (.single c r) =
       ∑ p : Fin (n + 1), .single (c ∘ p.succAbove) (r * (-1 : k) ^ p.val) := by
-  rw [← mul_one r, ← smul_eq_mul, ← MonoidAlgebra.smul_single, map_smul, d_of]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← mul_one r, ← smul_eq_mul, ← MonoidAlgebra.smul_single, map_smul, d_of])
   simp [Finset.smul_sum]
 
 variable (k G) [Monoid G]
@@ -214,11 +215,13 @@ set_option backward.isDefEq.respectTransparency false in
 theorem d_eq (n : ℕ) : ((standardComplex k G).d (n + 1) n).hom.toLinearMap =
     d k G (n + 1) := by
   refine MonoidAlgebra.lhom_ext' fun (x : Fin (n + 2) → G) => LinearMap.ext_ring ?_
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [standardComplex, Action.ofMulAction_V, SimplicialObject.δ, SimplexCategory.δ,
     Fin.succAboveOrderEmb, ← Int.cast_smul_eq_zsmul k ((-1) ^ _ : ℤ), ← ofHom_smul, ← ofHom_sum,
     Representation.IntertwiningMap.coe_toLinearMap, Representation.IntertwiningMap.sum_apply,
     Representation.IntertwiningMap.smul_apply, (Representation.linearizeMap_single),
-    smul_eq_mul, mul_one]
+    smul_eq_mul, mul_one])
 
 set_option backward.isDefEq.respectTransparency.types false in
 lemma d_apply {n : ℕ} (f : k[Fin (n + 1 + 1) → G]) :
@@ -270,12 +273,14 @@ a trivial `G`-representation, and the complex which is `k` at 0 and 0 everywhere
 theorem forget₂ToModuleCatHomotopyEquiv_f_0_eq :
     (forget₂ToModuleCatHomotopyEquiv k G).1.f 0 = (forget₂ (Rep k G) _).map (ε k G) := by
   refine ModuleCat.hom_ext <| MonoidAlgebra.lhom_ext' fun (x : Fin 1 → G) => LinearMap.ext_ring ?_
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [forget₂ToModuleCatHomotopyEquiv, HomotopyEquiv.ofIso, HomotopyEquiv.trans,
     SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv, ChainComplex.single₀_map_f_zero,
     AlgebraicTopology.AlternatingFaceMapComplex.ε_app_f_zero, compForgetAugmentedIso, eqToIso.inv,
     HomologicalComplex.eqToHom_f, compForgetAugmented, compForgetAugmented.toModule, ε,
     SimplicialObject.augment, Unique.eq_default (terminal.from _), MonoidAlgebra.coeff_single,
-    Finsupp.single_apply, ite_eq_left (Subsingleton.elim _ _)]
+    Finsupp.single_apply, ite_eq_left (Subsingleton.elim _ _)])
 
 set_option backward.isDefEq.respectTransparency false in
 theorem d_comp_ε : (standardComplex k G).d 1 0 ≫ ε k G = 0 := by

@@ -80,7 +80,7 @@ theorem skyscraperPresheaf_eq_pushforward
         skyscraperPresheaf (X := ↧PUnit) PUnit.unit A := by
   convert_to @skyscraperPresheaf X p₀ (fun U => hd <| (Opens.map <| ofHom <|
       ContinuousMap.const _ p₀).obj U)
-    C _ _ A = _ <;> congr
+    C _ _ A = _ <;> (set_option backward.instanceTypes.subsingletons.decidable false in congr)
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Taking skyscraper presheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by
@@ -159,7 +159,9 @@ colimit
 -/
 noncomputable def skyscraperPresheafCoconeIsColimitOfSpecializes {y : X} (h : p₀ ⤳ y) :
     IsColimit (skyscraperPresheafCoconeOfSpecializes p₀ A h) where
-  desc c := eqToHom (ite_eq_left trivial).symm ≫ c.ι.app (op ⊤)
+  desc c :=
+    eqToHom (ite_eq_left trivial).symm ≫
+      (set_option backward.instanceTypes.subsingletons.decidable false in c.ι.app (op ⊤))
   fac c U := by
     dsimp
     rw [← c.w (homOfLE (le_top : unop U ≤ _)).op]

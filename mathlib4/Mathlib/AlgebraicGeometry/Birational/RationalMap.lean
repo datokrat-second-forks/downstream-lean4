@@ -608,8 +608,9 @@ def RationalMap.toPartialMap [IsReduced X] [Y.IsSeparated] (f : X ⤏ Y) : X.Par
   have hg₁ (x) : (g x).toRationalMap = f := x.2.choose_spec.1
   have hg₂ (x) : (g x).domain = x.1 := x.2.choose_spec.2
   refine (cancel_epi (isPullback_opens_inf_le (le_sSup x.2) (le_sSup y.2)).isoPullback.hom).mp ?_
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [openCoverDomain, IsPullback.isoPullback_hom_fst_assoc,
-    IsPullback.isoPullback_hom_snd_assoc]
+    IsPullback.isoPullback_hom_snd_assoc])
   change _ ≫ _ ≫ (g x).hom = _ ≫ _ ≫ (g y).hom
   simp_rw [← cancel_epi (X.isoOfEq congr($(hg₂ x) ⊓ $(hg₂ y))).hom, ← Category.assoc]
   convert! (PartialMap.equiv_iff_of_isSeparated (S := ⊤_ _) (f := g x) (g := g y)).mp ?_ using 1

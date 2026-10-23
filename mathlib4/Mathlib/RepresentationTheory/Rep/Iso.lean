@@ -82,7 +82,8 @@ theorem to_Module_monoidAlgebra_map_aux {k G : Type*} [CommRing k] [Monoid G] (V
     congrm $(w g) x
   · intro g h gw hw; simp only [map_add, LinearMap.add_apply, hw, gw]
   · intro r g w
-    simp only [map_smul, w, LinearMap.smul_apply]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [map_smul, w, LinearMap.smul_apply])
 
 /-- Auxiliary definition for `toModuleMonoidAlgebra`. -/
 def toModuleMonoidAlgebraMap {V W : Rep.{w} k G} (f : V ⟶ W) :
@@ -100,12 +101,14 @@ def toModuleMonoidAlgebra : Rep.{w} k G ⥤ ModuleCat k[G] where
 set_option backward.isDefEq.respectTransparency false in
 /-- Functorially convert a module over `k[G]` into a representation of `G`. -/
 def ofModuleMonoidAlgebra : ModuleCat k[G] ⥤ Rep.{w} k G where
-  obj M := Rep.of (Representation.ofModule M)
-  map f := ofHom {
+  obj M :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    Rep.of (Representation.ofModule M))
+  map f := (set_option backward.isDefEq.respectTransparency.instanceTypes false in ofHom {
     __ := f.hom
     map_smul' r x := f.hom.map_smul (algebraMap k _ r) x
     isIntertwining' g := by ext; apply f.hom.map_smul
-  }
+  })
 
 theorem ofModuleMonoidAlgebra_obj_coe (M : ModuleCat.{w} k[G]) :
     ofModuleMonoidAlgebra.obj M = RestrictScalars k k[G] M :=
@@ -115,6 +118,7 @@ theorem ofModuleMonoidAlgebra_obj_ρ (M : ModuleCat.{w} k[G]) :
     (ofModuleMonoidAlgebra.obj M).ρ = Representation.ofModule M :=
   rfl
 
+set_option backward.dsimp.instanceTypes false in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{w} k[G]} :
     (ofModuleMonoidAlgebra ⋙ toModuleMonoidAlgebra).obj M ≃+ M := by
@@ -122,6 +126,7 @@ def counitIsoAddEquiv {M : ModuleCat.{w} k[G]} :
   exact (Representation.ofModule M).asModuleEquiv.toAddEquiv.trans
     (RestrictScalars.addEquiv k k[G] _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def unitIsoAddEquiv {V : Rep.{w} k G} : V ≃+ (toModuleMonoidAlgebra ⋙
@@ -129,6 +134,7 @@ def unitIsoAddEquiv {V : Rep.{w} k G} : V ≃+ (toModuleMonoidAlgebra ⋙
   dsimp [ofModuleMonoidAlgebra, toModuleMonoidAlgebra]
   exact V.ρ.asModuleEquiv.symm.toAddEquiv.trans (RestrictScalars.addEquiv _ _ _).symm
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def counitIso (M : ModuleCat.{w} k[G]) :
@@ -138,6 +144,8 @@ def counitIso (M : ModuleCat.{w} k[G]) :
       map_smul' := fun r x => by
         simp [counitIsoAddEquiv] }
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem unit_iso_comm (V : Rep.{w} k G) (g : G) (x : V) :
@@ -148,12 +156,13 @@ theorem unit_iso_comm (V : Rep.{w} k G) (g : G) (x : V) :
 set_option backward.isDefEq.respectTransparency false in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def unitIso (V : Rep.{w} k G) : V ≅ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgebra).obj V :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   mkIso <| .mk
   { unitIsoAddEquiv (k := k) (G := G) with
     map_smul' r x := show (RestrictScalars.addEquiv _ _ _).symm
       (V.ρ.asModuleEquiv.symm (r • x)) = _ by
       simp only [Representation.asModuleEquiv_symm_map_smul]
-      rfl } fun g ↦ by ext; exact unit_iso_comm ..
+      rfl } fun g ↦ by ext; exact unit_iso_comm ..)
 
 /-- The categorical equivalence `Rep k G ≌ ModuleCat k[G]`. -/
 def equivalenceModuleMonoidAlgebra : Rep.{w} k G ≌ ModuleCat k[G] where

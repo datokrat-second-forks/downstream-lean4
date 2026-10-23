@@ -137,8 +137,9 @@ lemma compactSpace_of_universallyClosed
   let φ : MvPolynomial 𝒰.I₀ K →+* MvPolynomial 𝒰.I₀ K :=
     (MvPolynomial.aeval fun i : 𝒰.I₀ ↦ if i ∈ σ then MvPolynomial.X i else 0).toRingHom
   let t' : T := Spec.map (CommRingCat.ofHom φ) t
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   have ht'g : t' ∈ PrimeSpectrum.basicOpen g :=
-    show φ g ∉ t.asIdeal from (show φ g = g from aeval_ite_mem_eq_self g subset_rfl).symm ▸ htU'
+    show φ g ∉ t.asIdeal from (show φ g = g from aeval_ite_mem_eq_self g subset_rfl).symm ▸ htU')
   have h : t' ∉ fT '' Z := hU'le ht'g
   suffices ⋃ i ∈ σ, (U i).1 = Set.univ from
     ⟨this ▸ Finset.isCompact_biUnion _ fun i _ ↦ isCompact_range (𝒰.f i).continuous⟩
@@ -146,7 +147,8 @@ lemma compactSpace_of_universallyClosed
   contrapose! h
   obtain ⟨x, hx⟩ := h
   obtain ⟨z, rfl, hzr⟩ := exists_preimage_pullback x t' (Subsingleton.elim (f x) (q t'))
-  suffices ∀ i, t ∈ (Ti i).comap ⟨_, continuous_comap φ⟩ → p z ∉ U i from
+  suffices ∀ i, (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      t ∈ (Ti i).comap ⟨_, continuous_comap φ⟩) → p z ∉ U i from
     ⟨z, by simpa [Z, p, fT, hzr], hzr⟩
   intro i hi₁ hi₂
   rw [comap_basicOpen, show φ (.X i) = 0 by simpa [φ] using (hx i · hi₂), basicOpen_zero] at hi₁

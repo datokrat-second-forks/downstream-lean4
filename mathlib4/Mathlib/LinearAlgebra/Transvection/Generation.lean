@@ -333,11 +333,14 @@ private theorem exists_dual_of_fixedReduce_ne_smul
   have hspan : K ∙ (e v - v) = K ∙ (e u - u) := by
     simp only [Submodule.span_singleton_eq_span_singleton]
     use (Ne.isUnit hfu).unit
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp [v_def, _root_.map_smul, Units.smul_isUnit, smul_sub,
-      ← mul_smul, mul_inv_cancel₀ hfu]
+      ← mul_smul, mul_inv_cancel₀ hfu])
   rw [← hspan, ← le_ker_iff_map] at hf
   refine ⟨f, v, ?_, hf,
-    by simp only [_root_.map_smul, smul_eq_mul, v_def, inv_mul_cancel₀ hfu]⟩
+    by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [_root_.map_smul, smul_eq_mul, v_def, inv_mul_cancel₀ hfu])⟩
   rw [← LinearIndependent.pair_smul_smul_iff (Ne.isUnit hfu).inv (Ne.isUnit hfu).inv] at hu
   simpa only [← LinearMap.map_smul, ← LinearEquiv.map_smul, ← v_def] using hu
 
@@ -383,7 +386,8 @@ private theorem not_forall_fixedReduce_eq_smul {f g : Dual K V} {v : V} {a b : K
       obtain ⟨w, hw⟩ : ∃ w, g w ≠ 0 := by
         contrapose! hg0
         exact LinearMap.ext hg0
-      simpa [hw] using key ((g w)⁻¹ • e⁻¹ w)
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simpa [hw] using key ((g w)⁻¹ • e⁻¹ w))
     simp only [mem_sup, mem_span_singleton, exists_exists_eq_and] at hmem
     obtain ⟨y, hy, k, hk⟩ := hmem
     refine (hv (k - 1) 1 ?_).right

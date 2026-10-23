@@ -44,6 +44,8 @@ namespace Presheaf
 
 variable [MonoidalClosed A]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Relation between `functorEnrichedHom` and `presheafHom`. -/
@@ -97,7 +99,8 @@ lemma functorEnrichedHomCoyonedaObjEquiv_naturality
       (functorEnrichedHomCoyonedaObjEquiv M F G Y y) := by
   dsimp
   ext ⟨j⟩
-  simp [functorEnrichedHomCoyonedaObjEquiv, presheafHom]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [functorEnrichedHomCoyonedaObjEquiv, presheafHom])
   rfl
 
 lemma isSheaf_functorEnrichedHom (F G : Cᵒᵖ ⥤ A) (hG : Presheaf.IsSheaf J G)

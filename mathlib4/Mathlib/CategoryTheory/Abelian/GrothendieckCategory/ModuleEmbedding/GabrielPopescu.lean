@@ -82,20 +82,26 @@ theorem kernel_ι_d_comp_d {G : C} (hG : IsSeparator G) {A B : C} {M : ModuleCat
     (f : M ⟶ ModuleCat.of (End G)ᵐᵒᵖ (G ⟶ B)) :
     kernel.ι (d g) ≫ d f = 0 := by
   refine (isColimitFiniteSubproductsCocone (fun (_ : M) => G)).pullback_zero_ext (fun F => ?_)
+  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp only [liftToFinsetObj_obj, Discrete.functor_obj_eq_as, finiteSubcoproductsCocone_pt,
-    Functor.const_obj_obj]
+    Functor.const_obj_obj])
   classical
-  rw [finiteSubcoproductsCocone_ι_app_eq_sum, ← pullback.condition_assoc]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [finiteSubcoproductsCocone_ι_app_eq_sum, ← pullback.condition_assoc])
   refine (Preadditive.isSeparator_iff G).1 hG _ (fun h => ?_)
   rw [Preadditive.comp_sum_assoc, Preadditive.comp_sum_assoc, Preadditive.sum_comp]
   simp only [Category.assoc, ι_d]
-  let r (x : F) : (End G)ᵐᵒᵖ := MulOpposite.op (.of (h ≫ pullback.fst _ _ ≫ Sigma.π _ x))
+  let r (x : F) : (End G)ᵐᵒᵖ :=
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    MulOpposite.op (.of (h ≫ (pullback.fst _ _) ≫ (Sigma.π _ x))))
   suffices ∑ x ∈ F.attach, r x • f.hom x.1.as = 0 by simpa [End.smul_left, r] using this
-  simp only [← map_smul, ← map_sum]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp only [← map_smul, ← map_sum])
   suffices ∑ x ∈ F.attach, r x • x.1.as = 0 by simp [this]
-  simp only [← g.hom.map_eq_zero_iff ((ModuleCat.mono_iff_injective _).1 hg), map_sum, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [← g.hom.map_eq_zero_iff ((ModuleCat.mono_iff_injective _).1 hg), map_sum, map_smul])
   simp only [← ι_d g, End.smul_left, MulOpposite.unop_op, Category.assoc, r]
-  simp [← Preadditive.comp_sum, ← Preadditive.sum_comp', pullback.condition_assoc]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [← Preadditive.comp_sum, ← Preadditive.sum_comp', pullback.condition_assoc])
 
 theorem exists_d_comp_eq_d {G : C} (hG : IsSeparator G) {A} (B : C) [Injective B]
     {M : ModuleCat (End G)ᵐᵒᵖ} (g : M ⟶ ModuleCat.of (End G)ᵐᵒᵖ (G ⟶ A)) (hg : Mono g)
@@ -119,7 +125,8 @@ theorem GabrielPopescu.full (G : C) (hG : IsSeparator G) : (preadditiveCoyonedaO
   map_surjective {A B} f := by
     have := (isSeparator_iff_epi G).1 hG A
     have h := kernel_ι_d_comp_d hG (𝟙 _) inferInstance f
-    simp only [ModuleCat.hom_id, LinearMap.id_coe, id_eq, d] at h
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [ModuleCat.hom_id, LinearMap.id_coe, id_eq, d] at h)
     refine ⟨epiDesc _ _ h, ?_⟩
     ext q
     simpa [-comp_epiDesc] using! Sigma.ι _ q ≫= comp_epiDesc _ _ h

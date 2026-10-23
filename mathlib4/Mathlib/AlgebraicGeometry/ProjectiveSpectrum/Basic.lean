@@ -79,7 +79,8 @@ theorem basicOpen_eq_iSup_proj (f : A) :
 theorem isBasis_basicOpen :
     TopologicalSpace.Opens.IsBasis (Set.range (basicOpen 𝒜)) := by
   delta TopologicalSpace.Opens.IsBasis
-  convert! ProjectiveSpectrum.isTopologicalBasis_basic_opens 𝒜
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! ProjectiveSpectrum.isTopologicalBasis_basic_opens 𝒜)
   exact (Set.range_comp _ _).symm
 
 /-- If `{ xᵢ }` spans the irrelevant ideal of `A`, then `D₊(xᵢ)` covers `Proj A`. -/
@@ -435,6 +436,7 @@ def openCoverOfMapIrrelevantEqTop : X.OpenCover :=
     rw [← Scheme.zeroLocus_span, Set.range_comp', ← Ideal.map_span, H, hf]
     simp)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a graded ring `A` and a map `f : A →+* Γ(X, ⊤)` such that the image of the
@@ -465,9 +467,10 @@ lemma fromOfGlobalSections_preimage_basicOpen {r : A} {n : ℕ} (hn : 0 < n) (hr
       ← Scheme.Hom.comp_apply, fromOfGlobalSections, Scheme.Cover.ι_glueMorphisms] at hx
     simp only [openCoverOfMapIrrelevantEqTop,
       toBasicOpenOfGlobalSections, Scheme.isoOfEq_inv, Category.assoc, basicOpenIsoSpec_inv_ι] at hx
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp only [Scheme.Hom.comp_base, Scheme.homOfLE_base, homOfLE_leOfHom, TopCat.hom_comp,
       ContinuousMap.comp_assoc, ContinuousMap.comp_apply, morphismRestrict_base,
-      TopologicalSpace.Opens.carrier_eq_coe] at hx
+      TopologicalSpace.Opens.carrier_eq_coe] at hx)
     rw [← SetLike.mem_coe, ← Set.mem_preimage, ← TopologicalSpace.Opens.map_coe,
       Proj.awayι_preimage_basicOpen (𝒜 := 𝒜) i.2.2.2 i.2.2.1 hr hn,
       ← Set.mem_preimage, ← TopologicalSpace.Opens.map_coe, ← Function.Injective.mem_set_image

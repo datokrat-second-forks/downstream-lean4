@@ -106,6 +106,7 @@ lemma structured_arrows_elements_sheaf_chains_bounded (c : Set (Under g s))
   exact fun i hi => Nonempty.intro (StructuredArrow.homMk (Functor.Elements.homMk
     (homOfLE (le₂ i hi)).op (ht ⟨i, hi⟩)) (by cat_disch))
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Given a short exact sequence of sheaves, `0 ⟶ 𝓕 ⟶ 𝓖 ⟶ 𝓗 ⟶ 0`, if `𝓕` is flasque then
 `𝓖(U) ⟶ 𝓗(U)` is surjective, for any open `U`. -/

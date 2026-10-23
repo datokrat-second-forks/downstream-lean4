@@ -134,7 +134,7 @@ theorem isMaxRank_iff_closure_finiteIndex {u : Fin (rank K) → (𝓞 K)ˣ} :
     unitLattice_rank, ← Set.finrank, IsMaxRank, linearIndependent_iff_card_eq_finrank_span,
     Real.finrank_eq_int_finrank_of_discrete h₂, Set.finrank, Set.finrank, ← finrank_map_subtype_eq,
     map_span, ← Set.range_comp', eq_comm]
-  simp
+  (set_option backward.dsimp.instanceTypes false in simp)
 
 open scoped Classical in
 /--

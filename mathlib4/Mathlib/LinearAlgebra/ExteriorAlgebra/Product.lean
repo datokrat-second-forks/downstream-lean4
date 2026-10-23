@@ -72,7 +72,9 @@ lemma map_inl_inr_anticomm (i j : ℕ) (a : ⋀[R]^i M) (b : ⋀[R]^j N) :
   · rintro x y ⟨mx, rfl⟩ ⟨my, rfl⟩
     rw [map_apply_ιMulti, map_apply_ιMulti]
     exact ιMulti_mul_ιMulti_anticomm R _ _
-  all_goals simp +contextual [add_mul, mul_add]
+  all_goals
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp +contextual [add_mul, mul_add])
 
 /-- The inverse function for the equivalence between `ExteriorAlgebra R (M × N)` and
 graded tensor product of the two exterior algebras, lift form universal property. -/

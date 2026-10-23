@@ -460,9 +460,10 @@ lemma subtypeCompatibleHomEquiv_toCompatible_presheafHomObjHomEquiv
     subtypeCompatibleHomEquiv F f (Presieve.Arrows.toCompatible _ _
       (F.presheafHomObjHomEquiv φ)) = (F.toDescentData f).map φ := by
   ext i
+  (set_option backward.dsimp.instanceTypes false in
   simp [subtypeCompatibleHomEquiv, presheafHomObjHomEquiv, pullHom,
     ← Functor.map_comp, Pseudofunctor.mapComp'_id_comp_hom_app_assoc,
-    Pseudofunctor.mapComp'_id_comp_inv_app]
+    Pseudofunctor.mapComp'_id_comp_inv_app])
 
 end DescentData
 

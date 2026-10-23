@@ -905,7 +905,8 @@ theorem mfderivWithin_congr_set' (y : M) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
     mfderiv[s] f x = mfderiv[t] f x := by
   by_cases hx : MDiffAt[s] f x
   · simp only [mfderivWithin, hx, (mdifferentiableWithinAt_congr_set' y h).1 hx, ↓reduceIte]
-    apply fderivWithin_congr_set' (extChartAt I x x)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    apply fderivWithin_congr_set' (extChartAt I x x))
     exact preimage_extChartAt_eventuallyEqSet_compl_singleton y h
   · simp [mfderivWithin, hx, ← mdifferentiableWithinAt_congr_set' y h]
 

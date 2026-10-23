@@ -345,7 +345,8 @@ instance [IsReduced X] : IsReduced f.normalization :=
   have (i : _) : IsReduced ((normalizationOpenCover f).X i) := by
     have : _root_.IsReduced ((normalizationDiagram f).obj (.op i.1)) :=
       let := (f.app i.1).hom.toAlgebra
-      isReduced_of_injective (Subalgebra.val _) Subtype.val_injective
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      isReduced_of_injective (Subalgebra.val _) Subtype.val_injective)
     dsimp [normalizationOpenCover, normalizationGlueData, relativeGluingData]
     infer_instance
   .of_openCover _ f.normalizationOpenCover
@@ -389,7 +390,9 @@ def normalizationDesc (H : f = f₁ ≫ f₂) : f.normalization ⟶ T := by
     congr 2
     ext i
     apply Subtype.ext
-    dsimp [normalizationDiagram]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    dsimp [normalizationDiagram])
     simp only [← CommRingCat.comp_apply, appLE_map, map_appLE]
 
 set_option backward.defeqAttrib.useBackward true in
@@ -420,7 +423,9 @@ lemma normalizationDesc_comp (H : f = f₁ ≫ f₂) :
   rw [Category.assoc]
   congr 2
   ext i
-  dsimp [normalizationDiagram, normalizationDiagramMap, RingHom.algebraMap_toAlgebra]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  dsimp [normalizationDiagram, normalizationDiagramMap, RingHom.algebraMap_toAlgebra])
   rw [← CommRingCat.comp_apply, Hom.appLE_comp_appLE, app_eq_appLE]
   simp_rw [H]
 
@@ -619,14 +624,16 @@ instance [Smooth g] : IsIso (f.normalizationPullback g) := by
       ← Scheme.Hom.preimage_inf, inf_eq_right.mpr hVU]) hU hV (f.isCompact_preimage hU.isCompact)
     (f.isQuasiSeparated_preimage hU.isQuasiSeparated)
   let e₀ := (CommRingCat.isPushout_tensorProduct ..).flip.isoPushout ≪≫
-    (pushout.congrHom f.app_eq_appLE rfl ≪≫ @asIso _ _ _ _ _ this :)
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    (pushout.congrHom f.app_eq_appLE rfl ≪≫ @asIso _ _ _ _ _ this :))
   let e : Γ(Y, V) ⊗[Γ(S, U)] Γ(X, f ⁻¹ᵁ U) ≃ₐ[Γ(Y, V)] Γ(pullback f g, pullback.snd f g ⁻¹ᵁ V) :=
     { toRingEquiv := e₀.commRingCatIsoToRingEquiv,
       commutes' r := by
         change (CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom ≫ e₀.hom) r =
           (pullback.snd f g).app V r
         congr 2
-        simp [e₀, pushout.inr_desc_assoc, Scheme.Hom.app_eq_appLE] }
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp [e₀, pushout.inr_desc_assoc, Scheme.Hom.app_eq_appLE]) }
   let ψ : Γ(Y, V) ⊗[Γ(S, U)] integralClosure Γ(S, U) Γ(X, f ⁻¹ᵁ U) →ₐ[Γ(Y, V)]
       integralClosure Γ(Y, V) Γ(pullback f g, pullback.snd f g ⁻¹ᵁ V) :=
     e.mapIntegralClosure.toAlgHom.comp (TensorProduct.toIntegralClosure _ _ _)
@@ -667,7 +674,9 @@ instance [Smooth g] : IsIso (f.normalizationPullback g) := by
       ext x
       change (pullback.fst f g).appLE _ _ H x = _
       trans (CommRingCat.ofHom Algebra.TensorProduct.includeRight.toRingHom ≫ e₀.hom) x
-      · congr 2; simp [e₀, pushout.inl_desc_assoc]
+      · congr 2
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp [e₀, pushout.inl_desc_assoc])
       · simp [ψ, toIntegralClosure, e]; rfl
   · dsimp [φ]
     simp only [Scheme.Hom.app_eq_appLE, colimit.ι_desc_assoc, span_right, PushoutCocone.mk_pt,

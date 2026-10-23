@@ -66,12 +66,16 @@ nonrec lemma isSheaf_type_propQCTopology_iff [P.IsMultiplicative] (F : Scheme.{u
         · rw [← Sieve.pullbackArrows_comm, ← Presieve.ofArrows_pullback,
             ← Presieve.isSheafFor_iff_generate]
           let 𝒰' := (𝒱.cover.pullback₂ f).pullback₂ (V.affineCover.f i)
-          exact this _ (.ofQuasiCompactCover 𝒰' (qc := by dsimp [𝒰']; infer_instance))
+          exact this _ (.ofQuasiCompactCover 𝒰' (qc := by
+            (set_option backward.instanceTypes.subsingletons.prop false in
+            dsimp [𝒰']); infer_instance))
             ⟨fun j ↦ .of_isIso (pullbackLeftPullbackSndIso (𝒱.f j) f (V.affineCover.f i)).hom, hfin⟩
         · rw [← Sieve.pullbackArrows_comm, ← Presieve.ofArrows_pullback,
             ← Presieve.isSeparatedFor_iff_generate]
           exact (this _ (.ofQuasiCompactCover ((𝒱.cover.pullback₂ f).pullback₂ _)
-              (qc := by dsimp; infer_instance))
+              (qc := by
+                (set_option backward.instanceTypes.subsingletons.prop false in
+                dsimp); infer_instance))
             ⟨fun l ↦ .of_isIso (pullbackLeftPullbackSndIso (𝒱.f l) f _).hom, hfin⟩).isSeparatedFor
       refine f.isSheafFor_iff ?_ fun f ↦ (H _ f).isSeparatedFor
       exact this _ (.ofQuasiCompactCover 𝒱.cover)
@@ -87,7 +91,8 @@ nonrec lemma isSheaf_type_propQCTopology_iff [P.IsMultiplicative] (F : Scheme.{u
       (𝒰.forgetQc.sigma.X default).isoSpec (by simp [hφ, f])]
     refine hff _ ?_ ?_
     · simpa only [hφ, f] using IsZariskiLocalAtSource.comp (𝒰.forgetQc.sigma.map_prop _) _
-    · simp only [hφ, f, Cover.sigma_I₀, PUnit.default_eq_unit, Cover.sigma_X, Cover.sigma_f, f]
+    · (set_option backward.dsimp.instanceTypes false in
+      simp only [hφ, f, Cover.sigma_I₀, PUnit.default_eq_unit, Cover.sigma_X, Cover.sigma_f, f])
       have : Surjective (Sigma.desc 𝒰.f) := inferInstanceAs <| Surjective (Sigma.desc 𝒰.forgetQc.f)
       infer_instance
 

@@ -60,7 +60,9 @@ namespace Coinvariants
 
 instance : AddCommGroup (Coinvariants ρ) := inferInstanceAs <| AddCommGroup (_ ⧸ _)
 
-instance : Module k (Coinvariants ρ) := inferInstanceAs <| Module k (_ ⧸ _)
+instance : Module k (Coinvariants ρ) :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Module k (_ ⧸ _))
 
 instance [Module.Finite k V] : Module.Finite k (Coinvariants ρ) :=
   inferInstanceAs <| Module.Finite k (V ⧸ Coinvariants.ker ρ)
@@ -352,6 +354,8 @@ noncomputable def coinvariantsFunctor : Rep.{w} k G ⥤ ModuleCat k where
   map_id _ := by simp
   map_comp _ _ := by ext; simp
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The quotient map from a representation to its coinvariants induces a natural transformation
 from the forgetful functor `Rep k G ⥤ ModuleCat k` to the coinvariants functor. -/
 @[simps! app_hom]
@@ -380,6 +384,8 @@ variable (k G)
 instance : (coinvariantsFunctor k G).Additive where
 instance : (coinvariantsFunctor k G).Linear k where
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The adjunction between the functor sending a representation to its coinvariants and the functor
 equipping a module with the trivial representation. -/
 @[simps]
@@ -399,7 +405,9 @@ theorem coinvariantsAdjunction_homEquiv_symm_apply_hom {X : Rep.{w} k G} {Y : Mo
     (f : X ⟶ (trivialFunctor k G).obj Y) :
     ((coinvariantsAdjunction k G).homEquiv X Y).symm f = desc f := by
   ext
-  simp [coinvariantsAdjunction, Adjunction.homEquiv_symm_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [coinvariantsAdjunction, Adjunction.homEquiv_symm_apply])
 
 instance : (coinvariantsFunctor k G).PreservesZeroMorphisms where
 instance : (coinvariantsFunctor k G).IsLeftAdjoint := (coinvariantsAdjunction k G).isLeftAdjoint

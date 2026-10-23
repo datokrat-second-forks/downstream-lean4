@@ -482,7 +482,7 @@ lemma contMDiffAt_localFrameCoeff (hxe : x ∈ e.baseSet) (hs : CMDiffAt k (T% s
   let breprl : F →ₗ[𝕜] 𝕜 :=
     { toFun v := b.repr v i
       map_add' m m' := by simp
-      map_smul' m x := by simp }
+      map_smul' m x := by (set_option backward.instanceTypes.subsingletons.prop false in simp) }
   have : CMDiffAt k breprl.toContinuousLinearMap (e ((T% s) x)).2 :=
     contMDiffAt_iff_contDiffAt.mpr <| by fun_prop
   exact this.comp x h₁
@@ -567,7 +567,7 @@ lemma mdifferentiableAt_localFrameCoeff
   let breprl : F →ₗ[𝕜] 𝕜 :=
     { toFun v := b.repr v i
       map_add' m m' := by simp
-      map_smul' m x := by simp }
+      map_smul' m x := by (set_option backward.instanceTypes.subsingletons.prop false in simp) }
   have : MDifferentiableAt 𝓘(𝕜, F) 𝓘(𝕜) breprl.toContinuousLinearMap (e ((T% s) x)).2 :=
     mdifferentiableAt_iff_differentiableAt.mpr <| by fun_prop
   exact this.comp x h₁

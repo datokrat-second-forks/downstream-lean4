@@ -749,7 +749,8 @@ theorem algebraBase_injective [IsDomain A] [IsFractionRing A K] :
   FaithfulSMul.algebraMap_injective _ _
 
 instance : Algebra (CyclotomicRing n A K) (CyclotomicField n K) :=
-  inferInstanceAs <| Algebra (adjoin A _) (CyclotomicField n K)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra (adjoin A _) (CyclotomicField n K))
 
 omit [NeZero n] in
 theorem adjoin_algebra_injective :
@@ -760,7 +761,8 @@ instance : IsTorsionFree (CyclotomicRing n A K) (CyclotomicField n K) :=
   isTorsionFree_iff_algebraMap_injective.mpr (adjoin_algebra_injective n A K)
 
 instance : IsScalarTower A (CyclotomicRing n A K) (CyclotomicField n K) :=
-  inferInstanceAs <| IsScalarTower A (adjoin A _) (CyclotomicField n K)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower A (adjoin A _) (CyclotomicField n K))
 
 set_option backward.isDefEq.respectTransparency false in
 instance isCyclotomicExtension [IsDomain A] [IsFractionRing A K] [NeZero ((n : ℕ) : A)] :

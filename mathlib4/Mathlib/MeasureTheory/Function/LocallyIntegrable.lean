@@ -659,16 +659,22 @@ theorem MonotoneOn.memLp_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompac
 theorem AntitoneOn.memLp_top (hanti : AntitoneOn f s) {a b : X}
     (ha : IsLeast s a) (hb : IsGreatest s b) (h's : MeasurableSet s) :
     MemLp f ∞ (μ.restrict s) :=
-  MonotoneOn.memLp_top (E := Eᵒᵈ) hanti ha hb h's
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.types false in
+  MonotoneOn.memLp_top (E := Eᵒᵈ) hanti ha hb h's)
 
 theorem AntitoneOn.memLp_of_measure_ne_top (hanti : AntitoneOn f s) {a b : X}
     (ha : IsLeast s a) (hb : IsGreatest s b) (hs : μ s ≠ ∞) (h's : MeasurableSet s) :
     MemLp f p (μ.restrict s) :=
-  MonotoneOn.memLp_of_measure_ne_top (E := Eᵒᵈ) hanti ha hb hs h's
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.types false in
+  MonotoneOn.memLp_of_measure_ne_top (E := Eᵒᵈ) hanti ha hb hs h's)
 
 theorem AntitoneOn.memLp_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hanti : AntitoneOn f s) : MemLp f p (μ.restrict s) :=
-  MonotoneOn.memLp_isCompact (E := Eᵒᵈ) hs hanti
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.types false in
+  MonotoneOn.memLp_isCompact (E := Eᵒᵈ) hs hanti)
 
 theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b : X}
     (ha : IsLeast s a) (hb : IsGreatest s b) (hs : μ s ≠ ∞) (h's : MeasurableSet s) :
@@ -702,7 +708,9 @@ theorem Monotone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hmono : Monotone
 
 theorem Antitone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hanti : Antitone f) :
     LocallyIntegrable f μ :=
-  hanti.dual_right.locallyIntegrable
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.types false in
+  hanti.dual_right.locallyIntegrable)
 
 end Monotone
 

@@ -303,8 +303,9 @@ set_option backward.isDefEq.respectTransparency.types false in
 @[simp] theorem intermediateFieldEquivSubgroup_symm_apply [Finite G] {H} :
     (intermediateFieldEquivSubgroup G K L).symm H = FixedPoints.intermediateField H.ofDual := by
   obtain ⟨H, rfl⟩ := OrderDual.toDual.surjective H
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [IntermediateField.ext_iff, intermediateFieldEquivSubgroup,
-    (mulEquivAlgEquiv G K L).surjective.forall, -mulEquivAlgEquiv_symm_apply]
+    (mulEquivAlgEquiv G K L).surjective.forall, -mulEquivAlgEquiv_symm_apply])
 
 theorem intermediateFieldEquivSubgroup_symm_apply_toDual [Finite G] {H} :
     (intermediateFieldEquivSubgroup G K L).symm (.toDual H) = FixedPoints.intermediateField H :=

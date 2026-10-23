@@ -308,14 +308,16 @@ noncomputable def realContinuousMapZeroOfNNReal (φ : C(X, ℝ≥0)₀ →⋆ₙ
     simp only [MonoidHom.id_apply]
     by_cases! hr : 0 ≤ r
     · lift r to ℝ≥0 using hr
-      simp only [← smul_def, toNNReal_smul, map_smul, toNNReal_neg_smul, smul_sub]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [← smul_def, toNNReal_smul, map_smul, toNNReal_neg_smul, smul_sub])
     · rw [← neg_pos] at hr
       rw [← neg_smul]
       nth_rw 1 [← neg_neg r]
       nth_rw 3 [← neg_neg r]
       lift -r to ℝ≥0 using hr.le with r
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [neg_smul, ← smul_def, toNNReal_neg_smul, map_smul, toNNReal_smul, smul_sub,
-        sub_neg_eq_add]
+        sub_neg_eq_add])
       rw [sub_eq_add_neg, add_comm]
   map_star' f := by simp only [star_trivial, star_sub, ← map_star]
 

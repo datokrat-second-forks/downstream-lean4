@@ -73,7 +73,7 @@ noncomputable instance : (Qh : _ ⥤ Plus C).CommShift ℤ :=
   ObjectProperty.commShiftLift ..
 
 instance : (Qh : _ ⥤ Plus C).IsTriangulated := by
-  dsimp only [Qh]
+  (set_option backward.dsimp.instanceTypes false in dsimp only [Qh])
   infer_instance
 
 set_option backward.isDefEq.respectTransparency false in

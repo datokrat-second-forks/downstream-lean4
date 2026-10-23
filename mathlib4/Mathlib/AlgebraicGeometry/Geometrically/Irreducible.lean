@@ -66,7 +66,8 @@ instance (s : S) [GeometricallyIrreducible f] :
   MorphismProperty.pullback_snd _ _ inferInstance
 
 instance (s : S) [GeometricallyIrreducible f] : IrreducibleSpace (f.fiber s) :=
-  GeometricallyIrreducible.geometrically_irreducibleSpace _ _ _ (.of_hasPullback _ _)
+  GeometricallyIrreducible.geometrically_irreducibleSpace _ _ _
+    (set_option backward.instanceTypes.subsingletons.prop false in .of_hasPullback _ _)
 
 instance (priority := low) [GeometricallyIrreducible f] : Surjective f :=
   ⟨fun x ↦ ⟨_, (f.range_fiberι x).le ⟨Nonempty.some inferInstance, rfl⟩⟩⟩

@@ -69,7 +69,7 @@ noncomputable abbrev filteredColimitsModule : Module (RingCat.FilteredColimits.c
       (rightToMax U₁ U₂ ≫ leftToMax (max U₁ U₂) V) (leftToMax U₂ V ≫ rightToMax U₁ (max U₂ V))
       (rightToMax (max U₁ U₂) V) (rightToMax U₂ V ≫ rightToMax U₁ (max U₂ V))
     refine Functor.ιColimitType_eq_of_map_eq_map _ _ _ α β ?_
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in dsimp)
     simp only [map_mul, ← ConcreteCategory.comp_apply, ← Functor.map_comp, mul_smul, *]
   one_smul m := Quot.induction_on m <| by
     rintro ⟨V, b⟩
@@ -92,7 +92,7 @@ noncomputable abbrev filteredColimitsModule : Module (RingCat.FilteredColimits.c
       (rightToMax U V₂ ≫ rightToMax (max U V₁) (max U V₂))
       (rightToMax V₁ V₂ ≫ rightToMax U (max V₁ V₂))
     refine Functor.ιColimitType_eq_of_map_eq_map _ _ _ β α ?_
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in dsimp)
     -- We use this pattern instead of a single `simp` to avoid heatbeat modifications
     rw [H, H, H]
     simp only [← ConcreteCategory.comp_apply, ← Functor.map_comp]
@@ -109,7 +109,7 @@ noncomputable abbrev filteredColimitsModule : Module (RingCat.FilteredColimits.c
       (leftToMax U₂ V ≫ rightToMax (max U₁ V) (max U₂ V))
       (rightToMax U₁ U₂ ≫ leftToMax (max U₁ U₂) V)
     refine Functor.ιColimitType_eq_of_map_eq_map _ _ _ β α ?_
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in dsimp)
     simp only [add_smul, map_add, ← ConcreteCategory.comp_apply, ← Functor.map_comp, *]
   zero_smul m := Quot.induction_on m <| by
     rintro ⟨V, b⟩
@@ -165,9 +165,10 @@ noncomputable
 instance : Module (R.stalk x) ↑(TopCat.Presheaf.stalk M.presheaf x) :=
   letI (i : (OpenNhds x)ᵒᵖ) : Module (((OpenNhds.inclusion x).op ⋙ R).obj i)
       (((OpenNhds.inclusion x).op ⋙ M.presheaf).obj i) := by
-    dsimp; infer_instance
+    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
   Limits.IsColimit.module ((OpenNhds.inclusion x).op ⋙ R) ((OpenNhds.inclusion x).op ⋙ M.presheaf)
-    (fun f r m ↦ M.map_smul _ _ _) (Limits.colimit.isColimit _) (Limits.colimit.isColimit _)
+    (fun f r m ↦ M.map_smul _ _ _) (Limits.colimit.isColimit _)
+    (set_option backward.instanceTypes.subsingletons.prop false in Limits.colimit.isColimit _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -176,7 +177,7 @@ lemma germ_ringCat_smul (U : Opens X) (hx : x ∈ U) (r : R.obj (op U)) (m : M.o
       R.germ U x hx r • TopCat.Presheaf.germ M.presheaf U x hx m :=
   letI (i : (OpenNhds x)ᵒᵖ) : Module (((OpenNhds.inclusion x).op ⋙ R).obj i)
       (((OpenNhds.inclusion x).op ⋙ M.presheaf).obj i) := by
-    dsimp; infer_instance
+    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
   Limits.IsColimit.ι_smul ((OpenNhds.inclusion x).op ⋙ R) ((OpenNhds.inclusion x).op ⋙ M.presheaf)
     (fun f r m ↦ M.map_smul _ _ _)
       (Limits.colimit.isColimit _) (Limits.colimit.isColimit _) ⟨_, _⟩ _ _
@@ -192,11 +193,12 @@ noncomputable
 instance (x : X) : Module (R.stalk x) ↑(TopCat.Presheaf.stalk M.presheaf x) :=
   letI (i : (OpenNhds x)ᵒᵖ) : Module (((OpenNhds.inclusion x).op ⋙ R ⋙ forget₂ _ RingCat).obj i)
       (((OpenNhds.inclusion x).op ⋙ M.presheaf).obj i) := by
-    dsimp; infer_instance
+    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
   Limits.IsColimit.module ((OpenNhds.inclusion x).op ⋙ R ⋙ forget₂ _ _)
     ((OpenNhds.inclusion x).op ⋙ M.presheaf)
     (fun f r m ↦ M.map_smul _ _ _) (Limits.isColimitOfPreserves (forget₂ _ _)
-      (Limits.colimit.isColimit ((OpenNhds.inclusion x).op ⋙ R))) (Limits.colimit.isColimit _)
+      (Limits.colimit.isColimit ((OpenNhds.inclusion x).op ⋙ R)))
+    (set_option backward.instanceTypes.subsingletons.prop false in Limits.colimit.isColimit _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -205,7 +207,7 @@ lemma germ_smul (x : X) (U : Opens X) (hx : x ∈ U) (r : R.obj (op U)) (m : M.o
       R.germ U x hx r • TopCat.Presheaf.germ M.presheaf U x hx m :=
   letI (i : (OpenNhds x)ᵒᵖ) : Module (((OpenNhds.inclusion x).op ⋙ R ⋙ forget₂ _ RingCat).obj i)
       (((OpenNhds.inclusion x).op ⋙ M.presheaf).obj i) := by
-    dsimp; infer_instance
+    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
   Limits.IsColimit.ι_smul ((OpenNhds.inclusion x).op ⋙ R ⋙ forget₂ _ _)
     ((OpenNhds.inclusion x).op ⋙ M.presheaf)
     (fun f r m ↦ M.map_smul _ _ _) (Limits.isColimitOfPreserves (forget₂ _ _)

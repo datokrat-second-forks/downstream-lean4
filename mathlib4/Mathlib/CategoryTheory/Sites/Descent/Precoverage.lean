@@ -57,6 +57,7 @@ variable {J : GrothendieckTopology C} [F.IsPrestack J]
   {α : ι' → ι} {p' : ∀ j, X' j ⟶ X (α j)} (w : ∀ j, p' j ≫ f (α j) = f' j)
   (hf' : Sieve.ofArrows _ f' ∈ J S)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 include hf' in
@@ -172,7 +173,7 @@ lemma mor_precomp ⦃i : ι⦄ {Z : C} (q : Z ⟶ X i) ⦃j : ι'⦄ (a : Z ⟶ 
     ← D₁.pullHom_hom r (q ≫ f i) _ rfl q (a ≫ p' j) rfl (by cat_disch) r' _ hr' rfl,
     ← D₂.pullHom_hom r (q ≫ f i) _ rfl (a ≫ p' j) q (by cat_disch) rfl _ r' rfl hr']
   have := F.mapComp'_naturality_2 a.op.toLoc r.op.toLoc a'.op.toLoc (by cat_disch) (φ.hom j)
-  dsimp [pullHom] at this ⊢
+  (set_option backward.dsimp.instanceTypes false in dsimp [pullHom] at this ⊢)
   simp only [Category.assoc, Functor.map_comp, ← this,
     Cat.Hom.inv_hom_id_toNatTrans_app_assoc,
     mapComp'₀₁₃_hom_comp_whiskerLeft_mapComp'_hom_app_assoc F
@@ -262,9 +263,10 @@ lemma map_hom ⦃i : ι⦄ ⦃Y : C⦄ (q : Y ⟶ X i) ⦃j : ι'⦄
     Presieve.IsSheafFor.isAmalgamation
       (((isSheaf_iff_isSheaf_of_type _ _).1 (IsPrestack.isSheaf J _ _)).isSheafFor _
         (by simpa using sieve_mem _ hf' i)) (compatible_familyOfElements w φ i)
+  (set_option backward.dsimp.instanceTypes false in
   simpa [hom, familyOfElements_eq w φ (Z := Over.mk q) _ a fac,
     presheafHomObjHomEquiv, pullHom, mapComp'_id_comp_hom_app,
-    mapComp'_id_comp_inv_app] using hs _ (mem_sieve _ _ fac)
+    mapComp'_id_comp_inv_app] using hs _ (mem_sieve _ _ fac))
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
@@ -284,7 +286,7 @@ lemma comm ⦃W : C⦄ (q : W ⟶ S) ⦃i₁ i₂ : ι⦄
   rintro T p ⟨_, g, _, ⟨j⟩, fac⟩
   obtain ⟨T, t, rfl⟩ := T.mk_surjective
   obtain ⟨p, hp, rfl⟩ := Over.homMk_surjective p
-  dsimp [pullHom] at t g p hp fac ⊢
+  (set_option backward.dsimp.instanceTypes false in dsimp [pullHom] at t g p hp fac ⊢)
   subst hp
   simp only [mapComp'_inv_naturality, Cat.Hom.comp_toFunctor, Functor.comp_obj,
     Cat.Hom.hom_inv_id_toNatTrans_app_assoc, Functor.map_comp, Category.assoc]

@@ -73,7 +73,7 @@ theorem decomposition_Q (n q : ℕ) :
       conv_rhs => rw [sub_eq_add_neg, add_comm]
       let q' : Fin (n + 1) := ⟨q, Nat.lt_succ_of_le hqn⟩
       rw [← @Finset.add_sum_erase _ _ _ _ _ _ q' (by simp [q'])]
-      congr
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr)
       · have hnaq' : n = a + q := by lia
         simp only [(HigherFacesVanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq', neg_neg]
         rfl
@@ -114,7 +114,7 @@ def id : MorphComponents X n (X _⦋n + 1⦌) where
 @[simp]
 theorem id_φ : (id X n).φ = 𝟙 _ := by
   simp only [← P_add_Q_f (n + 1) (n + 1), φ]
-  congr 1
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 1)
   · simp only [id, PInfty_f, P_f_idem]
   · exact Eq.trans (by simp) (decomposition_Q n (n + 1)).symm
 
@@ -137,6 +137,7 @@ def preComp : MorphComponents X' n Z where
   a := g.app (op ⦋n + 1⦌) ≫ f.a
   b i := g.app (op ⦋n⦌) ≫ f.b i
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 theorem preComp_φ : (f.preComp g).φ = g.app (op ⦋n + 1⦌) ≫ f.φ := by
   unfold φ preComp

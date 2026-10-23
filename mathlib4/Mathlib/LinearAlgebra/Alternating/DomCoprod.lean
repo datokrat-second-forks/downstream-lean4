@@ -169,8 +169,9 @@ def domCoprod' :
       induction σ using Quotient.inductionOn'
       simp only [Quotient.liftOn'_mk'', toMultilinearMap_add, toMultilinearMap_smul, smul_apply,
         ← MultilinearMap.domCoprod'_apply]
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [TensorProduct.add_tmul, ← TensorProduct.smul_tmul', TensorProduct.tmul_add,
-        TensorProduct.tmul_smul, map_add, map_smul]
+        TensorProduct.tmul_smul, map_add, map_smul])
       first | rw [← smul_add] | rw [smul_comm]
       rfl
 

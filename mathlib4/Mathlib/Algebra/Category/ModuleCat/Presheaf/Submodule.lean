@@ -56,9 +56,10 @@ lemma ext {N₁ N₂ : M.Submodule} (h : ∀ X, N₁.obj X = N₂.obj X) :
 
 @[grind .]
 lemma map_mem {X Y : Cᵒᵖ} (f : X ⟶ Y) {x : M.obj X} (hx : x ∈ N.obj X) :
-    M.map f x ∈ N.obj Y :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in M.map f x ∈ N.obj Y) :=
   N.map f hx
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 attribute [local simp] LinearMap.restrict_apply ModuleCat.semilinearMapAddEquiv in
 set_option backward.isDefEq.respectTransparency false in
 /-- The presheaf of modules associated to a submodule. -/
@@ -107,7 +108,8 @@ def toSubfunctor : Subfunctor (M.presheaf ⋙ CategoryTheory.forget AddCommGrpCa
 
 @[simp]
 lemma mem_toSubfunctor_obj {X : Cᵒᵖ} (r : M.obj X) :
-    r ∈ N.toSubfunctor.obj X ↔ r ∈ N.obj X := Iff.rfl
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    r ∈ N.toSubfunctor.obj X) ↔ r ∈ N.obj X := Iff.rfl
 
 @[simps sup_obj inf_obj sSup_obj sInf_obj top_obj bot_obj]
 instance : CompleteLattice M.Submodule where

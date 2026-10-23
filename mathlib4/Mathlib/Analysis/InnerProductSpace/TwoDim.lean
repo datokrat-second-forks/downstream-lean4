@@ -383,12 +383,13 @@ theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
     let b : ℝ := (o.basisRightAngleRotation x hx).repr y 1
     suffices ↑0 ≤ a * ‖x‖ ^ 2 ∧ b * ‖x‖ ^ 2 = 0 → SameRay ℝ x (a • x + b • J x) by
       rw [← (o.basisRightAngleRotation x hx).sum_repr y]
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [Fin.sum_univ_succ, coe_basisRightAngleRotation, Matrix.cons_val_zero,
         Fin.succ_zero_eq_one', Finset.univ_eq_empty, Finset.sum_empty, areaForm_apply_self,
         map_smul, map_add, real_inner_smul_right, inner_add_right, Matrix.cons_val_one,
         smul_eq_mul, areaForm_rightAngleRotation_right,
         mul_zero, add_zero, zero_add, neg_zero, inner_rightAngleRotation_right,
-        real_inner_self_eq_norm_sq]
+        real_inner_self_eq_norm_sq])
       exact this
     simp_all
   · intro h

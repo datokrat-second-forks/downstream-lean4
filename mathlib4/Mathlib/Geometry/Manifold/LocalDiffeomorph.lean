@@ -414,7 +414,8 @@ is a linear equivalence. -/
   toFun := mfderiv% f x
   invFun := mfderiv% hf.localInverse (f x)
   left_inv := by
-    apply ContinuousLinearMap.leftInverse_of_comp
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    apply ContinuousLinearMap.leftInverse_of_comp)
     rw [← mfderiv_id, hf.localInverse_eventuallyEq_left.symm.mfderiv_eq]
     exact (mfderiv_comp _ (hf.mdifferentiableAt_localInverse hn) (hf.mdifferentiableAt hn)).symm
   right_inv := by

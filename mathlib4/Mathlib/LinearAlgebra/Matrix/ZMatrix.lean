@@ -48,7 +48,9 @@ public lemma lt_two_mul_of_mul_diagonal_posDef_of_for_le_of_hasEigen
   set N := μ • 1 - A with N_def
   have hN (i j : ι) : 0 ≤ N i j := by specialize hμ i j; aesop
   obtain ⟨v, hv, hv₀⟩ : ∃ v, N *ᵥ v = (μ - ρ) • v ∧ v ≠ 0 := by
-    replace hρ : HasEigenvalue (toLin' N) (μ - ρ) := by simpa [N_def, hasEigenvalue_sub'_iff]
+    replace hρ : HasEigenvalue (toLin' N) (μ - ρ) := by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simpa [N_def, hasEigenvalue_sub'_iff])
     simpa [hasEigenvector_iff, mulVec_transpose] using hρ.exists_hasEigenvector
   set q := |v| ⬝ᵥ (diagonal d * N) *ᵥ |v| with q_def
   set Q := μ * ∑ i, d i * |v i| ^ 2 with Q_def

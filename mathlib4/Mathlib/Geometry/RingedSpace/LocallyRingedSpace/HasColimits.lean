@@ -81,6 +81,7 @@ noncomputable def coproductCofan : Cocone F where
     { app j := LocallyRingedSpace.homMk (colimit.ι (F ⋙ forgetToSheafedSpace) j)
       naturality := fun ⟨j⟩ ⟨j'⟩ ⟨(f : j = j')⟩ => by subst f; simp }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The explicit coproduct cofan constructed in `coproductCofan` is indeed a colimit. -/
@@ -212,7 +213,7 @@ theorem imageBasicOpen_image_open :
     g.toShHom)).isOpen_preimage, TopCat.coequalizer_isOpen_iff, ← Set.preimage_comp]
   erw [← TopCat.coe_comp]
   rw [PreservesCoequalizer.iso_hom, ι_comp_coequalizerComparison]
-  dsimp only [SheafedSpace.forget]
+  (set_option backward.dsimp.instanceTypes false in dsimp only [SheafedSpace.forget])
   rw [imageBasicOpen_image_preimage]
   exact (imageBasicOpen f g U s).2
 
@@ -244,9 +245,10 @@ theorem coequalizer_π_stalk_isLocalHom (x : Y) :
     ← isUnit_map_iff (Y.presheaf.map (eqToHom hV').op).hom]
   -- Porting note (https://github.com/leanprover-community/mathlib4/issues/11224): change `rw` to `erw`
   erw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, ← Y.presheaf.map_comp]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   convert!
     @RingedSpace.isUnit_res_basicOpen Y.toRingedSpace (unop _)
-      (((coequalizer.π f.toShHom g.toShHom).hom.c.app (op U)) s)
+      (((coequalizer.π f.toShHom g.toShHom).hom.c.app (op U)) s))
 
 end HasCoequalizer
 

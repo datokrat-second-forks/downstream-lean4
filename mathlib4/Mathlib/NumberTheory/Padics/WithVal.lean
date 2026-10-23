@@ -82,7 +82,7 @@ lemma isUniformInducing_cast_withVal : IsUniformInducing ((Rat.castHom ℚ_[p]).
       unfold Rat.padicValuation at *
       simp only [Valuation.coe_mk, MonoidWithZeroHom.coe_mk, ZeroHom.coe_mk] at h ⊢
       split_ifs with H
-      · simp only [exp_neg]
+      · (set_option backward.dsimp.instanceTypes false in simp only [exp_neg])
         exact embedding_unit_pos _
       · rw [← lt_log_iff_exp_lt (embedding_unit_ne_zero _)]
         simp_all [← zpow_natCast, zpow_pos, inv_le_inv₀, zpow_le_zpow_iff_right₀ hp1', abs_le,

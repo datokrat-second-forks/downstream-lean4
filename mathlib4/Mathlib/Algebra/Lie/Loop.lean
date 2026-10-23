@@ -142,10 +142,13 @@ def residuePairing [AddCommGroup A] [DistribSMul A R] [SMulCommClass A R R]
           sum_of_support_subset _ hu₂ _ (by simp)]
         simp [Finset.sum_add_distrib, u]
       map_smul' r x := by
-        rw [map_smul, sum_of_support_subset _ support_smul _ (by simp), sum, Finset.smul_sum]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [map_smul, sum_of_support_subset _ support_smul _ (by simp), sum, Finset.smul_sum])
         simp [-smul_eq_mul, smul_comm] }
   map_add' x y := by ext; simp [sum_add]
-  map_smul' r x := by ext; simp [-smul_eq_mul, smul_comm]
+  map_smul' r x := by
+    ext
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [-smul_eq_mul, smul_comm])
 
 open LieModule in
 /-- A 2-cochain on a loop algebra given by an invariant bilinear form. When `A = ℤ`, the alternating

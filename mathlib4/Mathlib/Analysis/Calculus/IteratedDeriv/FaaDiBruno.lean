@@ -61,6 +61,8 @@ theorem iteratedDeriv_vcomp_eq_sum_orderedFinpartition
   exact iteratedDerivWithin_vcomp_eq_sum_orderedFinpartition hg hf uniqueDiffOn_univ
     uniqueDiffOn_univ (mem_univ x) (mapsTo_univ f _) hi
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem iteratedDerivWithin_vcomp_two
     (hg : ContDiffWithinAt 𝕜 2 g t (f x)) (hf : ContDiffWithinAt 𝕜 2 f s x)
@@ -85,6 +87,8 @@ theorem iteratedDeriv_vcomp_two (hg : ContDiffAt 𝕜 2 g (f x)) (hf : ContDiffA
   exact iteratedDerivWithin_vcomp_two hg hf uniqueDiffOn_univ
     uniqueDiffOn_univ (mem_univ x) (mapsTo_univ f _)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem iteratedDerivWithin_vcomp_three

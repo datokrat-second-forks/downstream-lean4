@@ -98,7 +98,9 @@ def d₀₁ : ModuleCat.of k A.V ⟶ ModuleCat.of k (G → A) :=
   ModuleCat.ofHom
   { toFun m g := A.ρ g m - m
     map_add' x y := funext fun g => by simp only [map_add, add_sub_add_comm]; rfl
-    map_smul' r x := funext fun g => by dsimp; rw [map_smul, smul_sub] }
+    map_smul' r x := funext fun g => by
+      dsimp
+      (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, smul_sub]) }
 
 theorem d₀₁_ker_eq_invariants : LinearMap.ker (d₀₁ A).hom = invariants A.ρ := by
   ext x
@@ -125,7 +127,10 @@ def d₁₂ : ModuleCat.of k (G → A) ⟶ ModuleCat.of k (G × G → A) :=
   ModuleCat.ofHom
   { toFun f g := A.ρ g.1 (f g.2) - f (g.1 * g.2) + f g.1
     map_add' x y := funext fun g => by dsimp; rw [map_add, add_add_add_comm, add_sub_add_comm]
-    map_smul' r x := funext fun g => by dsimp; rw [map_smul, smul_add, smul_sub] }
+    map_smul' r x := funext fun g => by
+      dsimp
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [map_smul, smul_add, smul_sub]) }
 
 /-- The 2nd differential in the complex of inhomogeneous cochains of `A : Rep k G`, as a
 `k`-linear map `Fun(G × G, A) → Fun(G × G × G, A)`. It sends
@@ -140,7 +145,10 @@ def d₂₃ : ModuleCat.of k (G × G → A) ⟶ ModuleCat.of k (G × G × G → 
         dsimp
         rw [map_add, add_sub_add_comm (A.ρ _ _), add_sub_assoc, add_sub_add_comm, add_add_add_comm,
           add_sub_assoc, add_sub_assoc]
-    map_smul' r x := funext fun g => by dsimp; simp only [map_smul, smul_add, smul_sub] }
+    map_smul' r x := funext fun g => by
+      dsimp
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [map_smul, smul_add, smul_sub]) }
 
 /-- Let `C(G, A)` denote the complex of inhomogeneous cochains of `A : Rep k G`. This lemma
 says `d₀₁` gives a simpler expression for the 0th differential: that is, the following
@@ -563,6 +571,7 @@ def cocyclesOfIsCocycle₁ {f : G → A} (hf : IsCocycle₁ f) :
     cocycles₁ (Rep.ofDistribMulAction k G A) :=
   ⟨f, (mem_cocycles₁_iff (A := Rep.ofDistribMulAction k G A) f).2 hf⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isCocycle₁_of_mem_cocycles₁
     (f : G → A) (hf : f ∈ cocycles₁ (Rep.ofDistribMulAction k G A)) :
     IsCocycle₁ f :=
@@ -576,6 +585,7 @@ def coboundariesOfIsCoboundary₁ {f : G → A} (hf : IsCoboundary₁ f) :
     coboundaries₁ (Rep.ofDistribMulAction k G A) :=
   ⟨f, hf.choose, funext hf.choose_spec⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isCoboundary₁_of_mem_coboundaries₁
     (f : G → A) (hf : f ∈ coboundaries₁ (Rep.ofDistribMulAction k G A)) :
     IsCoboundary₁ f := by
@@ -590,6 +600,7 @@ def cocyclesOfIsCocycle₂ {f : G × G → A} (hf : IsCocycle₂ f) :
     cocycles₂ (Rep.ofDistribMulAction k G A) :=
   ⟨f, (mem_cocycles₂_iff (A := Rep.ofDistribMulAction k G A) f).2 hf⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isCocycle₂_of_mem_cocycles₂
     (f : G × G → A) (hf : f ∈ cocycles₂ (Rep.ofDistribMulAction k G A)) :
     IsCocycle₂ f := (mem_cocycles₂_iff (A := Rep.ofDistribMulAction k G A) f).1 hf
@@ -602,6 +613,7 @@ def coboundariesOfIsCoboundary₂ {f : G × G → A} (hf : IsCoboundary₂ f) :
     coboundaries₂ (Rep.ofDistribMulAction k G A) :=
   ⟨f, hf.choose,funext fun g ↦ hf.choose_spec g.1 g.2⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isCoboundary₂_of_mem_coboundaries₂
     (f : G × G → A) (hf : f ∈ coboundaries₂ (Rep.ofDistribMulAction k G A)) :
     IsCoboundary₂ f := by
@@ -695,6 +707,7 @@ def cocyclesOfIsMulCocycle₁ {f : G → M} (hf : IsMulCocycle₁ f) :
     cocycles₁ (Rep.ofMulDistribMulAction G M) :=
   ⟨Additive.ofMul ∘ f, (mem_cocycles₁_iff (A := Rep.ofMulDistribMulAction G M) f).2 hf⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isMulCocycle₁_of_mem_cocycles₁
     (f : G → M) (hf : f ∈ cocycles₁ (Rep.ofMulDistribMulAction G M)) :
     IsMulCocycle₁ (Additive.toMul ∘ f) :=
@@ -708,6 +721,7 @@ def coboundariesOfIsMulCoboundary₁ {f : G → M} (hf : IsMulCoboundary₁ f) :
     coboundaries₁ (Rep.ofMulDistribMulAction G M) :=
   ⟨Additive.ofMul ∘ f, hf.choose, funext hf.choose_spec⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isMulCoboundary₁_of_mem_coboundaries₁
     (f : G → M) (hf : f ∈ coboundaries₁ (Rep.ofMulDistribMulAction G M)) :
     IsMulCoboundary₁ (M := M) (Additive.ofMul ∘ f) := by
@@ -722,6 +736,7 @@ def cocyclesOfIsMulCocycle₂ {f : G × G → M} (hf : IsMulCocycle₂ f) :
     cocycles₂ (Rep.ofMulDistribMulAction G M) :=
   ⟨Additive.ofMul ∘ f, (mem_cocycles₂_iff (A := Rep.ofMulDistribMulAction G M) f).2 hf⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isMulCocycle₂_of_mem_cocycles₂
     (f : G × G → M) (hf : f ∈ cocycles₂ (Rep.ofMulDistribMulAction G M)) :
     IsMulCocycle₂ (Additive.toMul ∘ f) :=
@@ -734,6 +749,7 @@ def coboundariesOfIsMulCoboundary₂ {f : G × G → M} (hf : IsMulCoboundary₂
     coboundaries₂ (Rep.ofMulDistribMulAction G M) :=
   ⟨Additive.ofMul ∘ f, hf.choose, funext fun g ↦ hf.choose_spec g.1 g.2⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem isMulCoboundary₂_of_mem_coboundaries₂
     (f : G × G → M) (hf : f ∈ coboundaries₂ (Rep.ofMulDistribMulAction G M)) :
     IsMulCoboundary₂ (M := M) (Additive.toMul ∘ f) := by
@@ -983,7 +999,8 @@ lemma H1π_eq_zero_iff (x : cocycles₁ A) : H1π A x = 0 ↔ ⇑x ∈ coboundar
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  simp [LinearMap.range_codRestrict, coboundaries₁, shortComplexH1, cocycles₁]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [LinearMap.range_codRestrict, coboundaries₁, shortComplexH1, cocycles₁])
 
 lemma H1π_eq_iff (x y : cocycles₁ A) :
     H1π A x = H1π A y ↔ ⇑x - ⇑y ∈ coboundaries₁ A := by
@@ -1064,7 +1081,8 @@ lemma H2π_eq_zero_iff (x : cocycles₂ A) : H2π A x = 0 ↔ ⇑x ∈ coboundar
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  simp [LinearMap.range_codRestrict, coboundaries₂, shortComplexH2, cocycles₂]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [LinearMap.range_codRestrict, coboundaries₂, shortComplexH2, cocycles₂])
 
 lemma H2π_eq_iff (x y : cocycles₂ A) :
     H2π A x = H2π A y ↔ ⇑x - ⇑y ∈ coboundaries₂ A := by

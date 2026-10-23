@@ -179,8 +179,9 @@ lemma ideal_le_ker_glueDataObjι (U V : X.affineOpens) :
     Scheme.Hom.app_eq _ H, Scheme.Opens.toScheme_presheaf_map, ← Functor.map_comp, Category.assoc]
   simp only [CommRingCat.hom_comp, RingHom.comp_apply]
   convert RingHom.map_zero _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [← RingHom.mem_ker, ker_glueDataObjι_appTop, ← Ideal.mem_comap, Ideal.comap_comap,
-    ← CommRingCat.hom_comp]
+    ← CommRingCat.hom_comp])
   simp only [homOfLE_leOfHom, Scheme.Hom.comp_base,
     TopologicalSpace.Opens.map_comp_obj, eqToHom_op, eqToHom_unop, ← Functor.map_comp,
     Scheme.Opens.topIso_hom, Category.assoc]
@@ -377,7 +378,8 @@ private lemma gluedTo_injective :
     rwa [← this, ← hfg]
   obtain ⟨a, rfl⟩ := (I.opensRange_glueDataObjMap f).ge H
   obtain ⟨b, rfl⟩ := hmem (X.affineBasicOpen f) (Subtype.ext hfg)
-  simp only [glueData_U, ← Scheme.Hom.comp_apply, glueDataObjMap_glueDataObjι] at this ⊢
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [glueData_U, ← Scheme.Hom.comp_apply, glueDataObjMap_glueDataObjι] at this ⊢)
   simp only [Scheme.affineBasicOpen_coe, Scheme.Hom.comp_base, TopCat.comp_app,
     Scheme.homOfLE_apply, SetLike.coe_eq_coe] at this
   obtain rfl := (I.glueDataObjι (X.affineBasicOpen f)).isEmbedding.injective this
@@ -611,9 +613,10 @@ def inclusion {I J : IdealSheafData X} (h : I ≤ J) :
   J.subschemeCover.openCover.glueMorphisms (fun U ↦ glueDataObjHom h U ≫ I.subschemeCover.f U)
   (by
     intro U V
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [← cancel_mono I.subschemeι, AffineOpenCover.openCover_X, glueDataObjHom_ι_assoc,
       AffineOpenCover.openCover_f, Category.assoc, subschemeCover_map_subschemeι]
-    rw [← subschemeCover_map_subschemeι, pullback.condition_assoc, subschemeCover_map_subschemeι])
+    rw [← subschemeCover_map_subschemeι, pullback.condition_assoc, subschemeCover_map_subschemeι]))
 
 @[reassoc (attr := simp)]
 lemma subSchemeCover_map_inclusion {I J : IdealSheafData X} (h : I ≤ J) (U) :
@@ -690,8 +693,9 @@ def Hom.toImageAux : X ⟶ f.image :=
       (by exact ideal_ker_le_ker_ΓSpecIso_inv_comp f U) ≫ f.ker.subschemeCover.f U) (by
     intro U V
     rw [← cancel_mono f.imageι]
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc,
-      ← pullback.condition, ← pullback.condition_assoc])
+      ← pullback.condition, ← pullback.condition_assoc]))
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -700,7 +704,8 @@ lemma Hom.toImageAux_spec :
   apply Cover.hom_ext ((Y.openCoverOfIsOpenCover _ (iSup_affineOpens_eq_top Y)).pullback₁ f)
   intro U
   simp only [Hom.toImageAux, Cover.ι_glueMorphisms_assoc]
-  simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc, pullback.condition]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc, pullback.condition])
 
 /-- The morphism from the domain to the scheme-theoretic image. -/
 noncomputable

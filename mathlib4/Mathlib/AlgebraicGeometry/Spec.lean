@@ -228,8 +228,11 @@ theorem localRingHom_comp_stalkIso {R S : CommRingCat.{u}} (f : R ⟶ S) (p : Pr
   (stalkIso R (PrimeSpectrum.comap f.hom p)).toCommRingCatIso.symm.eq_inv_comp.mp <|
     (stalkIso S p).toCommRingCatIso.symm.comp_inv_eq.mpr <| CommRingCat.hom_ext <|
       Localization.localRingHom_unique _ _ _ (PrimeSpectrum.comap_asIdeal _ _) fun x => by
-  dsimp [-RingEquiv.symm_mk]
-  simp only [AlgEquiv.commutes, RingEquiv.symm_apply_eq, AlgEquiv.coe_toRingEquiv]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  dsimp [-RingEquiv.symm_mk])
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp only [AlgEquiv.commutes, RingEquiv.symm_apply_eq, AlgEquiv.coe_toRingEquiv])
   exact stalkMap_toStalk_apply f p x
 
 set_option backward.isDefEq.respectTransparency false in
@@ -309,8 +312,11 @@ theorem isIso_specMap_stalkMap_localization (R : CommRingCat.{u}) (M : Submonoid
         (CommRingCat.ofHom (algebraMap R (Localization M))).op).stalkMap x) := by
   dsimp only [Spec.toPresheafedSpace_map, Quiver.Hom.unop_op]
   rw [← localRingHom_comp_stalkIso, ConcreteCategory.isIso_iff_bijective]
-  dsimp
-  simp only [EquivLike.bijective_comp]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  dsimp)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp only [EquivLike.bijective_comp])
   refine (stalkIso (Localization M) x).bijective.comp ?_
   suffices
     IsIso (IsLocalization.localizationLocalizationAtPrimeIsoLocalization M
@@ -368,7 +374,9 @@ theorem isLocalizedModule_toPushforwardStalkAlgHom_aux (y) :
     ∃ x : S × p.asIdeal.primeCompl, x.2 • y = toPushforwardStalkAlgHom R S p x.1 := by
   obtain ⟨U, hp, s, e⟩ := TopCat.Presheaf.exists_germ_eq _ y
   obtain ⟨_, ⟨r, rfl⟩, hpr : p ∈ PrimeSpectrum.basicOpen r, hrU : PrimeSpectrum.basicOpen r ≤ U⟩ :=
-    PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U from hp) U.2
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U from hp)
+      U.2)
   change PrimeSpectrum.basicOpen r ≤ U at hrU
   replace e :=
     ((Spec.topMap (CommRingCat.ofHom (algebraMap R S)) _* (structureSheaf S).1).germ_res_apply
@@ -403,7 +411,8 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
   · intro x hx; rw [algebraMap_pushforward_stalk, toPushforwardStalk_comp]
     change IsUnit ((TopCat.Presheaf.stalkFunctor CommRingCat p).map
       (Spec.sheafedSpaceMap (CommRingCat.ofHom (algebraMap ↑R ↑S))).hom.c _)
-    exact (IsLocalization.map_units ((structureSheaf R).presheaf.stalk p) ⟨x, hx⟩).map _
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact (IsLocalization.map_units ((structureSheaf R).presheaf.stalk p) ⟨x, hx⟩).map _)
   · apply isLocalizedModule_toPushforwardStalkAlgHom_aux
   · intro x hx
     rw [toPushforwardStalkAlgHom_apply,
@@ -412,8 +421,9 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
     rw [CommRingCat.comp_apply, map_zero] at hx
     obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq (C := CommRingCat) _ _ _ _ _ _ hx
     obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hpU)
-        U.2
+        U.2)
     apply_fun (Spec.topMap (CommRingCat.ofHom (algebraMap R S)) _* (structureSheaf S).1).map
         (homOfLE hrU).op at e
     have : algebraMap S ((structureSheaf S).presheaf.obj _) x = 0 := e

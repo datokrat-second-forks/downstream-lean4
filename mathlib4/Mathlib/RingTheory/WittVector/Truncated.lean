@@ -383,7 +383,8 @@ variable (p n R)
 
 theorem card {R : Type*} [Fintype R] :
     Fintype.card (TruncatedWittVector p n R) = Fintype.card R ^ n := by
-  simp only [TruncatedWittVector, Fintype.card_fin, Fintype.card_fun]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [TruncatedWittVector, Fintype.card_fin, Fintype.card_fun])
 
 end Fintype
 

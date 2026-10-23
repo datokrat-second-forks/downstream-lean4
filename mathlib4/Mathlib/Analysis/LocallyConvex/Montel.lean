@@ -107,7 +107,7 @@ def _root_.ContinuousLinearEquiv.toCompactConvergenceCLM [T1Space E] [MontelSpac
   continuous_toFun := by
     simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.coe_coe, continuous_def]
     intro s hs
-    apply hs.mono
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in apply hs.mono)
     apply UniformConvergenceCLM.topologicalSpace_mono
     intro x hx
     exact hx.isVonNBounded 𝕜₁

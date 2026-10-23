@@ -213,7 +213,9 @@ def autAdjoinRootXPowSubCHom :
     rw [map_sub, map_pow, aeval_C, aeval_X, Algebra.smul_def, mul_pow, root_X_pow_sub_C_pow,
       AdjoinRoot.algebraMap_eq, ← map_pow, this, map_one, one_mul, sub_self]
   map_one' := algHom_ext <| by simp
-  map_mul' := fun ε η ↦ algHom_ext <| by simp [mul_smul, smul_comm ((ε : Kˣ) : K)]
+  map_mul' := fun ε η ↦ algHom_ext <| by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [mul_smul, smul_comm ((ε : Kˣ) : K)])
 
 /-- The natural embedding of the roots of unity of `K` into `Gal(K[ⁿ√a]/K)`, by sending
 `η ↦ (ⁿ√a ↦ η • ⁿ√a)`. This is an isomorphism when `K` contains a primitive root of unity.
@@ -404,10 +406,11 @@ lemma autEquivRootsOfUnity_apply_rootOfSplit [NeZero n] (σ : Gal(L/K)) :
       autEquivRootsOfUnity hζ H L σ • (rootOfSplitsXPowSubC (NeZero.pos n) a L) := by
   obtain ⟨η, rfl⟩ := (autEquivRootsOfUnity hζ H L).symm.surjective σ
   rw [MulEquiv.apply_symm_apply, autEquivRootsOfUnity]
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [MulEquiv.symm_trans_apply, AlgEquiv.autCongr_symm, AlgEquiv.symm_symm,
     MulEquiv.symm_symm, AlgEquiv.autCongr_apply, AlgEquiv.trans_apply,
     adjoinRootXPowSubCEquiv_symm_eq_root, autAdjoinRootXPowSubCEquiv_root, map_smul,
-    adjoinRootXPowSubCEquiv_root]
+    adjoinRootXPowSubCEquiv_root])
   rfl
 
 include hα in
@@ -420,8 +423,9 @@ lemma autEquivRootsOfUnity_smul [NeZero n] (σ : Gal(L/K)) :
     (rootOfSplitsXPowSubC_pow a L)] at hα
   simp only [Multiset.mem_map, Multiset.mem_range] at hα
   obtain ⟨i, _, rfl⟩ := hα
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [← map_pow, ← Algebra.smul_def, map_smul,
-    autEquivRootsOfUnity_apply_rootOfSplit hζ H L]
+    autEquivRootsOfUnity_apply_rootOfSplit hζ H L])
   exact smul_comm _ _ _
 
 /-- Suppose `L/K` is the splitting field of `Xⁿ - a`, and `ζ` is an `n`-th primitive root of unity

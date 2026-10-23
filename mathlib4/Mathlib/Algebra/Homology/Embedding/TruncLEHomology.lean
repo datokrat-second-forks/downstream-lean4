@@ -163,10 +163,11 @@ lemma shortComplexTruncLE_X₃_isSupportedOutside :
         dsimp [shortComplexTruncLE]
         rw [← homologyMap_comp, cokernel.condition, homologyMap_zero]
       · simp
-    · have : IsIso (homologyMap (K.shortComplexTruncLE e).f (e.f i)) := by dsimp; infer_instance
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      have : IsIso (homologyMap (K.shortComplexTruncLE e).f (e.f i)) := by dsimp; infer_instance
       rw [IsZero.iff_id_eq_zero, ← cancel_epi (homologyMap (K.shortComplexTruncLE e).g (e.f i)),
         comp_id, comp_zero, ← cancel_epi (homologyMap (K.shortComplexTruncLE e).f (e.f i)),
-        comp_zero, ← homologyMap_comp, ShortComplex.zero, homologyMap_zero]
+        comp_zero, ← homologyMap_comp, ShortComplex.zero, homologyMap_zero])
 
 end
 

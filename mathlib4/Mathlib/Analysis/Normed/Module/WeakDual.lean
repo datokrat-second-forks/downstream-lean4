@@ -174,7 +174,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem dual_norm_topology_le_weak_dual_topology :
     (UniformSpace.toTopologicalSpace : TopologicalSpace (StrongDual 𝕜 E)) ≤
       (instTopologicalSpaceWeakDual .. : TopologicalSpace (WeakDual 𝕜 E)) := by
-  convert (@toWeakDual_continuous _ _ _ _ (by assumption)).le_induced
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert (@toWeakDual_continuous _ _ _ _ (by assumption)).le_induced)
   exact induced_id.symm
 
 end Dual
@@ -213,8 +214,9 @@ and pointwise-boundedness (`IsVonNBounded`) coincide on the weak dual of a Banac
 theorem isBounded_iff_isVonNBounded [CompleteSpace E] {s : Set (WeakDual 𝕜 E)} :
     IsBounded s ↔ Bornology.IsVonNBounded 𝕜 s := by
   constructor
-  · exact fun h => ((NormedSpace.isVonNBounded_iff 𝕜).mpr h).of_topologicalSpace_le
-      Dual.dual_norm_topology_le_weak_dual_topology
+  · exact fun h => (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ((NormedSpace.isVonNBounded_iff 𝕜).mpr h).of_topologicalSpace_le
+      Dual.dual_norm_topology_le_weak_dual_topology)
   · intro h_vN
     have h_ptwise := (withSeminorms 𝕜 E).isVonNBounded_iff_seminorm_bounded.mp h_vN
     obtain ⟨C, hC⟩ := banach_steinhaus (g := fun i : s ↦ WeakDual.toStrongDual i.val) fun x ↦

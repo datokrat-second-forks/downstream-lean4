@@ -30,7 +30,7 @@ theorem Presheaf.sections_exact_of_exact
     {S : ShortComplex (Presheaf AddCommGrpCat.{u} X)}
     (hS : S.Exact) {s : S.X₂.obj (Opposite.op U)} (h : S.g.app (Opposite.op U) s = 0) :
     ∃ (t : S.X₁.obj (Opposite.op U)), S.f.app (Opposite.op U) t = s := by
-  dsimp [Presheaf] at S
+  (set_option backward.dsimp.instanceTypes false in dsimp [Presheaf] at S)
   let F := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (Opposite.op U)
   exact (ShortComplex.ab_exact_iff (S.map F)).mp (((Functor.exact_tfae F).out 2 4 rfl rfl).mpr
     ⟨inferInstance, inferInstance⟩ S hS) _ h

@@ -387,7 +387,7 @@ theorem coverPreserving_over_star (X : C) :
   cover_preserve {U} S hs := by
     refine J.superset_covering ?_ (J.pullback_stable prod.snd hs)
     intro y f hf
-    dsimp [Sieve.overEquiv]
+    (set_option backward.dsimp.instanceTypes false in dsimp [Sieve.overEquiv])
     rw [← Presieve.functorPushforward_comp]
     refine ⟨_, _, prod.lift (f ≫ prod.fst) (𝟙 _), hf, Limits.prod.hom_ext ?_ ?_⟩ <;> simp
 
@@ -554,8 +554,9 @@ set_option backward.isDefEq.respectTransparency false in
 instance {X : C} (f : Over X) :
     f.iteratedSliceEquiv.inverse.IsDenseSubsite (J.over _) ((J.over _).over _) where
   functorPushforward_mem_iff := by
+    (set_option backward.dsimp.instanceTypes false in
     simp [GrothendieckTopology.mem_over_iff, Sieve.overEquiv,
-      ← Over.iteratedSliceBackward_forget_forget f, Sieve.functorPushforward_comp]
+      ← Over.iteratedSliceBackward_forget_forget f, Sieve.functorPushforward_comp])
 
 instance {X : C} (f : Over X) :
     f.iteratedSliceForward.IsContinuous ((J.over _).over _) (J.over _) :=

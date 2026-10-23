@@ -118,15 +118,17 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance : (𝒰.functorOfLocallyDirected ⋙ Scheme.forget).IsLocallyDirected where
   cond {i j k} fi fj xi xj hxij := by
+    (set_option backward.dsimp.instanceTypes false in
     simp only [Functor.comp_obj, functorOfLocallyDirected_obj, forget_obj, Functor.comp_map,
       functorOfLocallyDirected_map, forget_map, ConcreteCategory.hom_ofHom,
-      TypeCat.Fun.coe_mk] at hxij
+      TypeCat.Fun.coe_mk] at hxij)
     have : 𝒰.f i xi = 𝒰.f j xj := by
       rw [← 𝒰.trans_map fi, ← 𝒰.trans_map fj, Hom.comp_base, Hom.comp_base,
         ConcreteCategory.comp_apply, hxij, ConcreteCategory.comp_apply]
     obtain ⟨z, rfl, rfl⟩ := Scheme.Pullback.exists_preimage_pullback xi xj this
     obtain ⟨l, gi, gj, y, rfl⟩ := 𝒰.exists_lift_trans_eq z
-    refine ⟨l, gi, gj, y, ?_, ?_⟩ <;> simp [← Scheme.Hom.comp_apply]
+    refine ⟨l, gi, gj, y, ?_, ?_⟩ <;>
+      (set_option backward.dsimp.instanceTypes false in simp [← Scheme.Hom.comp_apply])
 
 set_option backward.defeqAttrib.useBackward true in
 /-- The structure maps to `S` as a natural transformation. -/
@@ -159,7 +161,7 @@ instance locallyDirectedPullbackCover : Cover.LocallyDirected (𝒰.pullback₁ 
   trans_id i := by simp
   trans_comp hij hjk := by simp [pullback.map_comp]
   directed {i j} x := by
-    dsimp at i j x ⊢
+    (set_option backward.dsimp.instanceTypes false in dsimp at i j x ⊢)
     let iso : pullback (pullback.fst f (𝒰.f i)) (pullback.fst f (𝒰.f j)) ≅
         pullback f (pullback.fst (𝒰.f i) (𝒰.f j) ≫ 𝒰.f i) :=
       pullbackRightPullbackFstIso _ _ _ ≪≫ pullback.congrHom pullback.condition rfl ≪≫

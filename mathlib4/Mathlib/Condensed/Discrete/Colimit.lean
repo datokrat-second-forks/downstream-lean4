@@ -116,7 +116,7 @@ lemma lanPresheafExt_hom {F G : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)} (S : Profi
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_hom, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  aesop
+  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -126,7 +126,7 @@ lemma lanPresheafExt_inv {F G : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)} (S : Profi
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_inv, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  aesop
+  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
 
 variable {S : Profinite.{u}} {F : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)}
 
@@ -140,8 +140,10 @@ colimit, agrees with the left Kan extension of its restriction.
 -/
 def lanPresheafIso (hF : IsColimit <| F.mapCocone S.asLimitCone.op) :
     (lanPresheaf F).obj ⟨S⟩ ≅ F.obj ⟨S⟩ :=
-  (Functor.Final.colimitIso (Profinite.Extend.functorOp S.asLimitCone) _).symm ≪≫
-    (colimit.isColimit _).coconePointUniqueUpToIso hF
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  (Functor.Final.colimitIso (Profinite.Extend.functorOp S.asLimitCone) _).symm) ≪≫
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    (colimit.isColimit _).coconePointUniqueUpToIso hF)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -252,6 +254,7 @@ lemma isoFinYonedaComponents_inv_comp {X Y : Profinite.{u}} [Finite X] [Finite Y
 
 attribute [local simp] toProfinite_obj
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /--
@@ -303,20 +306,22 @@ lemma isoLocallyConstantOfIsColimit_inv (X : Profinite.{u}ᵒᵖ ⥤ Type (u + 1
     ConcreteCategory.hom_ofHom, TypeCat.Fun.coe_mk, counitApp_app]
   apply presheaf_ext.{u, u + 1} (X := X) (Y := X) (f := f)
   intro x
-  dsimp [toProfinite_obj]
+  (set_option backward.dsimp.instanceTypes false in dsimp [toProfinite_obj])
   rw [incl_of_counitAppApp.{u, u + 1}]
   simp only [counitAppAppImage]
   have : Finite (fiber.{u, u + 1} f x) :=
     Finite.of_injective (sigmaIncl.{u, u + 1} f x).1 Subtype.val_injective
   apply injective_of_mono (isoFinYonedaComponents X (fiber.{u, u + 1} f x)).hom
   ext y
+  (set_option backward.dsimp.instanceTypes false in
   simp only [toProfinite_obj, isoFinYonedaComponents_hom, ConcreteCategory.hom_ofHom,
-    TypeCat.Fun.coe_mk, ← Functor.map_comp_apply, ← op_comp]
+    TypeCat.Fun.coe_mk, ← Functor.map_comp_apply, ← op_comp])
   rw [show (Profinite.of PUnit.{u + 1}).const y ≫
     IsTerminal.from _ (fiber.{u, u + 1} f x) = 𝟙 _ from rfl]
   simp only [op_comp, Functor.map_comp_apply, op_id, Functor.map_id_apply]
+  (set_option backward.dsimp.instanceTypes false in
   simpa [← dsimp% isoFinYonedaComponents_inv_comp X _ (sigmaIncl.{u, u + 1} f x),
-    ← isoFinYonedaComponents_hom_apply, -isoFinYonedaComponents_hom] using! x.map_eq_image f y
+    ← isoFinYonedaComponents_hom_apply, -isoFinYonedaComponents_hom] using! x.map_eq_image f y)
 
 end Condensed
 
@@ -412,7 +417,7 @@ lemma lanPresheafExt_hom {F G : LightProfinite.{u}ᵒᵖ ⥤ Type u} (S : LightP
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_hom, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  aesop
+  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -422,7 +427,7 @@ lemma lanPresheafExt_inv {F G : LightProfinite.{u}ᵒᵖ ⥤ Type u} (S : LightP
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_inv, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  aesop
+  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
 
 variable {S : LightProfinite.{u}} {F : LightProfinite.{u}ᵒᵖ ⥤ Type u}
 
@@ -436,8 +441,10 @@ colimit, agrees with the left Kan extension of its restriction.
 -/
 def lanPresheafIso (hF : IsColimit <| F.mapCocone (coconeRightOpOfCone S.asLimitCone)) :
     (lanPresheaf F).obj ⟨S⟩ ≅ F.obj ⟨S⟩ :=
-  (Functor.Final.colimitIso (LightProfinite.Extend.functorOp S.asLimitCone) _).symm ≪≫
-    (colimit.isColimit _).coconePointUniqueUpToIso hF
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  (Functor.Final.colimitIso (LightProfinite.Extend.functorOp S.asLimitCone) _).symm) ≪≫
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    (colimit.isColimit _).coconePointUniqueUpToIso hF)
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -543,6 +550,7 @@ lemma isoFinYonedaComponents_inv_comp {X Y : LightProfinite.{u}} [Finite X] [Fin
 
 attribute [local simp] toLightProfinite_obj
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /--
@@ -593,18 +601,20 @@ lemma isoLocallyConstantOfIsColimit_inv (X : LightProfinite.{u}ᵒᵖ ⥤ Type u
   ext f
   apply presheaf_ext.{u, u} (X := X) (Y := X) (f := f)
   intro x
-  dsimp [toLightProfinite_obj]
+  (set_option backward.dsimp.instanceTypes false in dsimp [toLightProfinite_obj])
   rw [incl_of_counitAppApp]
   simp only [counitAppAppImage]
   have : Finite (fiber.{u, u} f x) :=
     Finite.of_injective (sigmaIncl.{u, u} f x).1 Subtype.val_injective
   apply injective_of_mono (isoFinYonedaComponents X (fiber.{u, u} f x)).hom
   ext y
+  (set_option backward.dsimp.instanceTypes false in
   simp only [toLightProfinite_obj, isoFinYonedaComponents_hom, TypeCat.hom_ofHom,
-    TypeCat.Fun.coe_mk, ← map_comp_apply, ← op_comp]
+    TypeCat.Fun.coe_mk, ← map_comp_apply, ← op_comp])
   rw [show (LightProfinite.of PUnit.{u + 1}).const y ≫
     IsTerminal.from _ (fiber.{u, u} f x) = 𝟙 _ from rfl]
+  (set_option backward.dsimp.instanceTypes false in
   simpa [← dsimp% isoFinYonedaComponents_inv_comp X _ (sigmaIncl.{u, u} f x),
-    ← isoFinYonedaComponents_hom_apply, -isoFinYonedaComponents_hom] using! x.map_eq_image f y
+    ← isoFinYonedaComponents_hom_apply, -isoFinYonedaComponents_hom] using! x.map_eq_image f y)
 
 end LightCondensed

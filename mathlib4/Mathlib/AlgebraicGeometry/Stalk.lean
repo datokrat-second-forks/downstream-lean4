@@ -174,7 +174,8 @@ set_option backward.isDefEq.respectTransparency.types false in
 @[reassoc (attr := simp)]
 lemma Opens.fromSpecStalkOfMem_ι {X : Scheme.{u}} (U : X.Opens) (x : X) (hxU : x ∈ U) :
     U.fromSpecStalkOfMem x hxU ≫ U.ι = X.fromSpecStalk x := by
-  simp only [Opens.fromSpecStalkOfMem, Spec.map_inv, Category.assoc, IsIso.inv_comp_eq]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [Opens.fromSpecStalkOfMem, Spec.map_inv, Category.assoc, IsIso.inv_comp_eq])
   exact (Scheme.SpecMap_stalkMap_fromSpecStalk U.ι (x := ⟨x, hxU⟩)).symm
 
 instance {X : Scheme.{u}} (U : X.Opens) (x : X) (hxU : x ∈ U) :

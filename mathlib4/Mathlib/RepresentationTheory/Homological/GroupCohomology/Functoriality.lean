@@ -56,8 +56,9 @@ noncomputable def cochainsMap :
   comm' i j (hij : _ = _) := by
     subst hij
     ext
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simpa [inhomogeneousCochains.d_hom_apply, Fin.comp_contractNth, CochainComplex.of.d]
-      using! (hom_comm_apply φ _ _).symm
+      using! (hom_comm_apply φ _ _).symm)
 
 @[simp]
 lemma cochainsMap_id :
@@ -295,11 +296,13 @@ noncomputable def mapShortComplexH1 :
   comm₁₂ := by
     ext x
     funext g
-    simpa [shortComplexH1, d₀₁, cochainsMap₁] using (hom_comm_apply φ g x).symm
+    (set_option backward.dsimp.instanceTypes false in
+    simpa [shortComplexH1, d₀₁, cochainsMap₁] using (hom_comm_apply φ g x).symm)
   comm₂₃ := by
     ext x
     funext g
-    simpa [shortComplexH1, d₁₂, cochainsMap₁, cochainsMap₂] using (hom_comm_apply φ _ _).symm
+    (set_option backward.dsimp.instanceTypes false in
+    simpa [shortComplexH1, d₁₂, cochainsMap₁, cochainsMap₂] using (hom_comm_apply φ _ _).symm)
 
 @[simp]
 theorem mapShortComplexH1_zero :
@@ -354,7 +357,8 @@ theorem mapCocycles₁_one (φ : res 1 A ⟶ B) :
     mapCocycles₁ 1 φ = 0 := by
   rw [← cancel_mono (moduleCatLeftHomologyData (shortComplexH1 B)).i, cyclesMap'_i]
   refine ModuleCat.hom_ext (LinearMap.ext fun _ ↦ funext fun y => ?_)
-  simp [mapShortComplexH1, shortComplexH1, Pi.zero_apply y]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [mapShortComplexH1, shortComplexH1, Pi.zero_apply y])
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]
@@ -403,8 +407,10 @@ lemma H1InfRes_exact : (H1InfRes A S).Exact := by
   rw [moduleCat_exact_iff_ker_sub_range]
   intro x hx
   induction x using H1_induction_on with | @h x =>
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp_all only [HInfRes_X₂, HInfRes_X₃, HInfRes_g, HInfRes_X₁, LinearMap.mem_ker,
-    H1π_comp_map_apply S.subtype, HInfRes_f]
+    H1π_comp_map_apply S.subtype, HInfRes_f])
   rcases (H1π_eq_zero_iff _).1 hx with ⟨(y : A), hy⟩
   have h1 := (mem_cocycles₁_iff x).1 x.2
   have h2 : ∀ s ∈ S, x s = A.ρ s y - y :=
@@ -455,11 +461,11 @@ noncomputable def mapShortComplexH2 :
   comm₁₂ := by
     ext x
     funext g
-    simp [shortComplexH2, ← hom_comm_apply φ]
+    (set_option backward.dsimp.instanceTypes false in simp [shortComplexH2, ← hom_comm_apply φ])
   comm₂₃ := by
     ext x
     funext g
-    simp [shortComplexH2, ← hom_comm_apply φ]
+    (set_option backward.dsimp.instanceTypes false in simp [shortComplexH2, ← hom_comm_apply φ])
 
 @[simp]
 theorem mapShortComplexH2_zero :

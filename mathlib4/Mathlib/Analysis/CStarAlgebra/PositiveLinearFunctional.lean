@@ -97,7 +97,8 @@ private lemma im_apply_eq_zero_of_tendsto_nhds_opNorm {l : Filter A}
   suffices (fun x ↦ ‖f (a + (I * t) • x)‖ ^ 2) ≤ᶠ[l]
         (fun x ↦ ‖f‖ ^ 2 * (‖a‖ ^ 2 + t ^ 2 + |t| * ‖a * x - x * a‖)) by
     refine le_of_tendsto_of_tendsto (hb := hl.neBot) ?_ ?_ this
-    · simp_rw [map_add, map_smul, smul_eq_mul]
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      simp_rw [map_add, map_smul, smul_eq_mul])
       apply_rules [Tendsto.pow, Tendsto.norm, Tendsto.const_add, Tendsto.const_mul]
     · simpa using (hl.tendsto_mul_left a).sub (hl.tendsto_mul_right a)
         |>.norm |>.const_mul _ |>.const_add _ |>.const_mul _

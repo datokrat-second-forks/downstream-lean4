@@ -198,10 +198,11 @@ attribute [simp] relativeDifferentials'_obj
 
 @[simp]
 lemma relativeDifferentials'_map_d {X Y : Dᵒᵖ} (f : X ⟶ Y) (x : R.obj X) :
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     DFunLike.coe (α := CommRingCat.KaehlerDifferential (φ'.app X))
       (β := fun _ ↦ CommRingCat.KaehlerDifferential (φ'.app Y))
       (ModuleCat.Hom.hom (R := ↑(R.obj X)) ((relativeDifferentials' φ').map f))
-        (CommRingCat.KaehlerDifferential.d x) =
+        (CommRingCat.KaehlerDifferential.d x)) =
         CommRingCat.KaehlerDifferential.d (R.map f x) :=
   CommRingCat.KaehlerDifferential.map_d (φ'.naturality f) _
 

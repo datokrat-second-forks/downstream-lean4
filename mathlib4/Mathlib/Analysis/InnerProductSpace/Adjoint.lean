@@ -267,7 +267,7 @@ instance : StarRing (E →L[𝕜] E) :=
   ⟨map_add adjoint⟩
 
 instance : StarModule 𝕜 (E →L[𝕜] E) :=
-  ⟨map_smulₛₗ adjoint⟩
+  ⟨(set_option backward.instanceTypes.subsingletons.prop false in map_smulₛₗ adjoint)⟩
 
 theorem star_eq_adjoint (A : E →L[𝕜] E) : star A = A† :=
   rfl
@@ -719,7 +719,7 @@ instance : StarRing (E →ₗ[𝕜] E) :=
   ⟨map_add adjoint⟩
 
 instance : StarModule 𝕜 (E →ₗ[𝕜] E) :=
-  ⟨map_smulₛₗ adjoint⟩
+  ⟨(set_option backward.instanceTypes.subsingletons.prop false in map_smulₛₗ adjoint)⟩
 
 theorem star_eq_adjoint (A : E →ₗ[𝕜] E) : star A = A.adjoint :=
   rfl
@@ -925,6 +925,7 @@ theorem conjStarAlgEquiv_trans {G : Type*} [NormedAddCommGroup G] [InnerProductS
     [CompleteSpace G] (e : H ≃ₗᵢ[𝕜] K) (f : K ≃ₗᵢ[𝕜] G) :
     (e.trans f).conjStarAlgEquiv = e.conjStarAlgEquiv.trans f.conjStarAlgEquiv := rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 open ContinuousLinearEquiv ContinuousLinearMap in
 theorem conjStarAlgEquiv_ext_iff (f g : H ≃ₗᵢ[𝕜] K) :

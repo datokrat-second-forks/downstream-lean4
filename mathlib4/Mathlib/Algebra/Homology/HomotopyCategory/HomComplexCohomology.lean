@@ -267,6 +267,8 @@ noncomputable def homologyAddEquiv :
     (HomComplex K L).homology n ≃+ CohomologyClass K L n :=
   (leftHomologyData K L n).homologyIso.addCommGroupIsoToAddEquiv
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- `CohomologyClass K L m` identifies to the cohomology of the
 complex `linearHomComplex R K L` in degree `m`. -/
 @[simps, implicit_reducible]

@@ -198,7 +198,7 @@ lemma trace_toEnd_genWeightSpaceChain_eq_zero
     simp [hfg]
   | zero => simp
   | add => simp_all
-  | smul => simp_all
+  | smul => (set_option backward.instanceTypes.subsingletons.prop false in simp_all)
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- Given a (potential) root `α` relative to a Cartan subalgebra `H`, if we restrict to the ideal

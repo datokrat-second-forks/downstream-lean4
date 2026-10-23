@@ -714,13 +714,15 @@ lemma toOpen_toSpec_val_c_app (f) (U) :
       awayToΓ 𝒜 f ≫ (Proj| pbo f).presheaf.map (homOfLE le_top).op :=
   Eq.trans (by rfl) <| ΓSpec.toOpen_comp_locallyRingedSpaceAdjunction_homEquiv_app _ U
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 lemma toStalk_stalkMap_toSpec (f) (x) :
     (Scheme.ΓSpecIso _).inv ≫ (Spec A⁰_ f).presheaf.germ _ _ (by simp) ≫
       (toSpec 𝒜 f).stalkMap x = awayToΓ 𝒜 f ≫ (Proj| pbo f).presheaf.Γgerm x := by
   dsimp
-  erw [LocallyRingedSpace.stalkMap_germ (toSpec 𝒜 f) ⊤ x (by simp)]
+  erw [LocallyRingedSpace.stalkMap_germ (toSpec 𝒜 f) ⊤ x (by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp))]
   erw [toOpen_toSpec_val_c_app_assoc]
   rfl
 

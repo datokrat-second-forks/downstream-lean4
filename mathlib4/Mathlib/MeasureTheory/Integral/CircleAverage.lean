@@ -325,7 +325,7 @@ theorem _root_.ContinuousLinearMap.circleAverage_comp_comm [CompleteSpace E] (L 
     {f : ℂ → E} (hf : CircleIntegrable f c R) :
     circleAverage (L ∘ f) c R = L (circleAverage f c R) := by
   unfold circleAverage
-  rw [map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
   congr
   exact L.intervalIntegral_comp_comm hf
 

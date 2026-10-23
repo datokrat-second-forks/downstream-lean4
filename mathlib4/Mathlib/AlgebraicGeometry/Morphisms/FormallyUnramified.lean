@@ -162,8 +162,9 @@ instance [FormallyUnramified f] [LocallyOfFiniteType f] (x : X) :
   suffices h : Algebra.IsSeparable
       (IsLocalRing.ResidueField <| Y.presheaf.stalk (f x))
       (IsLocalRing.ResidueField <| X.presheaf.stalk x) by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     convert! h
-    refine Algebra.algebra_ext _ _ fun x ↦ ?_
+    refine Algebra.algebra_ext _ _ fun x ↦ ?_)
     obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective x
     rfl
   have : Algebra.EssFiniteType (Y.presheaf.stalk (f x)) (X.presheaf.stalk x) := by

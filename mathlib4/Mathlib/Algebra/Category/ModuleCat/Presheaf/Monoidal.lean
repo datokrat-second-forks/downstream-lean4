@@ -105,9 +105,10 @@ variable {M₁ M₂ M₃ M₄}
 
 @[simp]
 lemma tensorObj_map_tmul {X Y : Cᵒᵖ} (f : X ⟶ Y) (m₁ : M₁.obj X) (m₂ : M₂.obj X) :
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     DFunLike.coe (α := (M₁.obj X ⊗ M₂.obj X :))
       (β := fun _ ↦ (ModuleCat.restrictScalars (R.map f).hom).obj (M₁.obj Y ⊗ M₂.obj Y))
-      (ModuleCat.Hom.hom ((tensorObj M₁ M₂).map f)) (m₁ ⊗ₜ[R.obj X] m₂) =
+      (ModuleCat.Hom.hom ((tensorObj M₁ M₂).map f)) (m₁ ⊗ₜ[R.obj X] m₂)) =
     M₁.map f m₁ ⊗ₜ[R.obj Y] M₂.map f m₂ := rfl
 
 set_option backward.defeqAttrib.useBackward true in
@@ -118,7 +119,7 @@ noncomputable def tensorHom (f : M₁ ⟶ M₂) (g : M₃ ⟶ M₄) :
     tensorObj M₁ M₃ ⟶ tensorObj M₂ M₄ :=
   homMk (fun X ↦ f.app' X ⊗ₘ g.app' X)
     (fun φ ↦ ModuleCat.MonoidalCategory.tensor_ext (fun m₁ m₃ ↦ by
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in dsimp)
       rw [tensorObj_map_tmul, ModuleCat.MonoidalCategory.tensorHom_tmul, tensorObj_map_tmul,
         naturality_apply, naturality_apply]))
 

@@ -184,7 +184,9 @@ lemma isEmbedding_pullback {X Y S : Scheme.{u}} (f : X ⟶ S) (g : Y ⟶ S) [Sur
       rw [← hx₁', ← hz, ← Scheme.Hom.comp_apply]
       erw [← Scheme.Hom.comp_apply]
       congr 5
-      apply pullback.hom_ext <;> simp [𝓤, ← pullback.condition, ← pullback.condition_assoc]
+      apply pullback.hom_ext <;>
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp [𝓤, ← pullback.condition, ← pullback.condition_assoc])
   · intro i
     have := H (S.affineOpenCover.X i.1) (((𝒰.pullback₁ f).X i.1).affineOpenCover.X i.2.1)
         (((𝒰.pullback₁ g).X i.1).affineOpenCover.X i.2.2)
@@ -196,7 +198,8 @@ lemma isEmbedding_pullback {X Y S : Scheme.{u}} (f : X ⟶ S) (g : Y ⟶ S) [Sur
         inferInstance inferInstance inferInstance
     convert! this using 7
     apply pullback.hom_ext <;>
-      simp [𝓤, Scheme.Cover.pullbackHom]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp [𝓤, Scheme.Cover.pullbackHom])
 
 end SurjectiveOnStalks
 

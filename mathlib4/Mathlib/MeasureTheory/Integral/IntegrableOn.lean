@@ -559,7 +559,8 @@ theorem integrableAtFilter_atBot_iff [Preorder α] [IsCodirectedOrder α] [Nonem
 
 theorem integrableAtFilter_atTop_iff [Preorder α] [IsDirectedOrder α] [Nonempty α] :
     IntegrableAtFilter f atTop μ ↔ ∃ a, IntegrableOn f (Ici a) μ :=
-  integrableAtFilter_atBot_iff (α := αᵒᵈ)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  integrableAtFilter_atBot_iff (α := αᵒᵈ))
 
 @[gcongr]
 lemma IntegrableAtFilter.mono_measure (hf : IntegrableAtFilter f l μ) (h : ν ≤ μ) :

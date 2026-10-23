@@ -56,7 +56,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
         dsimp only [Γ₀.splitting, Splitting.summand.eq_1, Splitting.IndexSet.id_fst]
         rw [comp_id]
       · intro i hi
-        dsimp
+        (set_option backward.dsimp.instanceTypes false in dsimp)
         simp only [Preadditive.zsmul_comp, Preadditive.comp_zsmul]
         rw [δ, Γ₀.Obj.mapMono_on_summand_id_assoc, Γ₀.Obj.Termwise.mapMono_eq_zero, zero_comp,
           zsmul_zero]

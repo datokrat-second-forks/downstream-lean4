@@ -49,6 +49,7 @@ theorem writtenInExtChartAt_model_space : writtenInExtChartAt 𝓘(𝕜, E) 𝓘
 
 variable {f' : TangentSpace 𝓘(𝕜, E) x →L[𝕜] TangentSpace 𝓘(𝕜, E') (f x)}
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem hasMFDerivWithinAt_iff_hasFDerivWithinAt :
     HasMFDerivAt[s] f x f' ↔ HasFDerivWithinAt f f' s x := by
@@ -58,9 +59,11 @@ theorem hasMFDerivWithinAt_iff_hasFDerivWithinAt :
 alias ⟨HasMFDerivWithinAt.hasFDerivWithinAt, HasFDerivWithinAt.hasMFDerivWithinAt⟩ :=
   hasMFDerivWithinAt_iff_hasFDerivWithinAt
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem hasMFDerivAt_iff_hasFDerivAt : HasMFDerivAt% f x f' ↔ HasFDerivAt f f' x := by
-  rw [← hasMFDerivWithinAt_univ, hasMFDerivWithinAt_iff_hasFDerivWithinAt, hasFDerivWithinAt_univ]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [← hasMFDerivWithinAt_univ, hasMFDerivWithinAt_iff_hasFDerivWithinAt, hasFDerivWithinAt_univ])
 
 alias ⟨HasMFDerivAt.hasFDerivAt, HasFDerivAt.hasMFDerivAt⟩ := hasMFDerivAt_iff_hasFDerivAt
 

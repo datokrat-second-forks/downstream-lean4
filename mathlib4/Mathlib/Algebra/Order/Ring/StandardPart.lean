@@ -121,11 +121,13 @@ variable (K) in
 /-- The residue field of `FiniteElement`. This quotient inherits an order from `K`,
 which makes it into a linearly ordered Archimedean field. -/
 def FiniteResidueField : Type _ :=
-  IsLocalRing.ResidueField (FiniteElement K)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  IsLocalRing.ResidueField (FiniteElement K))
 deriving Field
 
 namespace FiniteResidueField
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 instance ordConnected_preimage_mk' : ∀ x, Set.OrdConnected <| Quotient.mk
     (Submodule.quotientRel (IsLocalRing.maximalIdeal (FiniteElement K))) ⁻¹' {x} := by
@@ -139,7 +141,9 @@ instance ordConnected_preimage_mk' : ∀ x, Set.OrdConnected <| Quotient.mk
 set_option backward.isDefEq.respectTransparency.types false in
 instance : LinearOrder (FiniteResidueField K) :=
   haveI := Classical.decRel fun x y : FiniteElement K ↦
-    letI := Submodule.quotientRel (IsLocalRing.maximalIdeal (FiniteElement K))
+    letI := Submodule.quotientRel
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      IsLocalRing.maximalIdeal (FiniteElement K))
     x ≈ y
   inferInstanceAs <| LinearOrder (Quotient _)
 
@@ -147,7 +151,9 @@ set_option backward.isDefEq.respectTransparency.types false in
 /-- The quotient map from finite elements on the field to the associated residue field. -/
 def mk : FiniteElement K →+*o FiniteResidueField K where
   monotone' _ _ h := Quotient.mk_monotone h
-  __ := IsLocalRing.residue (FiniteElement K)
+  __ :=
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    IsLocalRing.residue (FiniteElement K))
 
 @[induction_eliminator]
 theorem ind {motive : FiniteResidueField K → Prop} (mk : ∀ x, motive (mk x)) : ∀ x, motive x :=
@@ -157,6 +163,7 @@ instance ordConnected_preimage_mk :
     ∀ x, Set.OrdConnected (mk ⁻¹' ({x} : Set (FiniteResidueField K))) :=
   ordConnected_preimage_mk'
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 theorem mk_eq_mk {x y : FiniteElement K} : mk x = mk y ↔ 0 < ArchimedeanClass.mk (x.1 - y.1) := by
   apply Quotient.eq.trans

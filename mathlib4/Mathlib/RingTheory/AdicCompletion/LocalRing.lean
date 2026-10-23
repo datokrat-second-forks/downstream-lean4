@@ -191,7 +191,7 @@ lemma spanFinrank_maximalIdeal_eq [IsNoetherianRing R] [IsLocalRing R] :
     (LinearEquiv.ofBijective f ⟨inj, surj⟩).toAddEquiv
     (residueField_map_bijective R) (fun r m ↦ by
       rcases IsLocalRing.residue_surjective r with ⟨s, rfl⟩
-      exact map_smul f s m )
+      exact (set_option backward.instanceTypes.subsingletons.prop false in map_smul f s m) )
   have fg' : (maximalIdeal (AdicCompletion (maximalIdeal R) R)).FG := by
     simpa [AdicCompletion.maximalIdeal_eq_map] using fg.map _
   rw [IsLocalRing.spanFinrank_maximalIdeal_eq_finrank_cotangentSpace_of_fg fg,

@@ -892,7 +892,8 @@ set_option backward.isDefEq.respectTransparency.types false in
 theorem Spec_zeroLocus_eq_zeroLocus {R : CommRingCat} (s : Set R) :
     (Spec R).zeroLocus ((Scheme.ΓSpecIso R).inv '' s) = PrimeSpectrum.zeroLocus s := by
   ext x
-  suffices (∀ a ∈ s, x ∉ PrimeSpectrum.basicOpen a) ↔ x ∈ PrimeSpectrum.zeroLocus s by simpa
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  suffices (∀ a ∈ s, x ∉ PrimeSpectrum.basicOpen a) ↔ x ∈ PrimeSpectrum.zeroLocus s by simpa)
   simp [Spec_carrier, PrimeSpectrum.mem_zeroLocus, Set.subset_def,
     PrimeSpectrum.mem_basicOpen _ x]
 

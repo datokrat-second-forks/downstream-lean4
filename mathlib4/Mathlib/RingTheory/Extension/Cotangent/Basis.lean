@@ -55,8 +55,11 @@ variable (D : Aux P b)
 /-- `T = R[X₁, ..., Xₙ] / (b₁, ..., bᵣ)` where the `bᵢ` are lifts of the basis elements
 of `I/I²` in `I`. -/
 abbrev T :=
-  MvPolynomial ι R ⧸ (Ideal.span <| Set.range <| Subtype.val ∘ D.f ∘ b)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  MvPolynomial ι R ⧸ (Ideal.span <| Set.range <| Subtype.val ∘ D.f ∘ b))
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The map `R[X₁, ..., Xₙ] → S` factors via `T`, because the `bᵢ` are in `I`. -/
@@ -115,7 +118,10 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The identity on `R[X₁, ..., Xₙ]` as a map of presentations of `T` to `S`. -/
 def fhom : D.presLeft.Hom P where
   val i := X i
-  aeval_val i := by simp [RingHom.algebraMap_toAlgebra, presLeft, hom, T]
+  aeval_val i := by
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [RingHom.algebraMap_toAlgebra, presLeft, hom, T])
 
 @[simp]
 lemma toAlgHom_fhom : D.fhom.toAlgHom = AlgHom.id R P.Ring := by
@@ -126,15 +132,19 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma ker_presLeft_le : D.presLeft.ker ≤ P.ker := by
   intro x hx
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simpa only [toExtension_commRing, toExtension_Ring, RingHom.mem_ker,
     toExtension_algebra₂, algebraMap_apply, Ideal.Quotient.algebraMap_eq,
-    map_zero] using! (algebraMap D.T S).congr_arg hx
+    map_zero] using! (algebraMap D.T S).congr_arg hx)
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The forward direction of the isomorphism `S ⊗[T] J/J² ≃ₗ[S] I/I²`. -/
 def tensorCotangentHom : S ⊗[D.T] D.presLeft.toExtension.Cotangent →ₗ[S] P.toExtension.Cotangent :=
   LinearMap.liftBaseChange _ (Extension.Cotangent.map D.fhom.toExtensionHom)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma tensorCotangentHom_tmul (x : D.presLeft.toExtension.ker) :
@@ -201,7 +211,8 @@ lemma map_ofComp_mk [Nontrivial S] :
   simp_rw [Extension.Cotangent.map_mk, Generators.Hom.toExtensionHom_toAlgHom_apply]
   congr 2
   have : Nontrivial D.T := inferInstance
-  dsimp only [T, Generators.toExtension_Ring, Generators.toExtension_commRing] at this
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp only [T, Generators.toExtension_Ring, Generators.toExtension_commRing] at this)
   rw [pres, presLeft, presRight, Presentation.relation_comp_localizationAway_inl]
   · exact Generators.toAlgHom_ofComp_localizationAway _ _
   · rw [Presentation.naive, Generators.naive_σ];
@@ -394,7 +405,7 @@ public lemma exists_presentation_of_basis_cotangent [Algebra.FinitePresentation 
   rw [← Submodule.coe_subtype, Ideal.span, Set.range_comp, ← Submodule.map_span,
     Submodule.comap_map_eq_of_injective P.ker.subtype_injective,
     ← Extension.Cotangent.ker_mk]
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in dsimp)
   simp only [← LinearMap.map_le_map_iff, Submodule.map_span, ← Set.range_comp,
     Function.comp_def, ← Submodule.restrictScalars_span P.Ring S P.algebraMap_surjective]
   refine le_trans le_top (top_le_iff.mpr ?_)
@@ -421,7 +432,9 @@ public lemma exists_presentation_of_free_cotangent [Algebra.FinitePresentation R
   · let P' : Presentation R S (Unit ⊕ α) (Unit ⊕ Fin (Module.finrank S P.toExtension.Cotangent)) :=
       { toGenerators := .ofSurjective (fun i : Unit ⊕ α ↦ 0) (Function.surjective_to_subsingleton _)
         relation _ := 1
-        span_range_relation_eq_ker := by simpa using! (RingHom.ker_eq_top_of_subsingleton _).symm }
+        span_range_relation_eq_ker := by
+          (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          simpa using! (RingHom.ker_eq_top_of_subsingleton _).symm) }
     have : Subsingleton P'.toExtension.Cotangent := Module.subsingleton S _
     exact ⟨P', default, by subsingleton, by subsingleton⟩
   have : Module.Finite S P.toExtension.Cotangent :=

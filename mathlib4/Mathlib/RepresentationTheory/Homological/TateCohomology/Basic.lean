@@ -233,7 +233,8 @@ non-zero. -/
 def isoGroupCohomology (n : ℕ) [NeZero n] :
     tateCohomologyFunctor n ≅ groupCohomology.functor.{u} R G n :=
   NatIso.ofComponents (fun M ↦ (tateComplexConnectData M).homologyIsoPos _ _ rfl) fun {X Y} f ↦ by
-    simp [tateCohomologyFunctor, CochainComplex.ConnectData.homologyMap_map_of_eq_succ (n := n)]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [tateCohomologyFunctor, CochainComplex.ConnectData.homologyMap_map_of_eq_succ (n := n)])
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The isomorphism between the `-n-1`-th Tate cohomology and `n`-th group homology for `n : ℕ`

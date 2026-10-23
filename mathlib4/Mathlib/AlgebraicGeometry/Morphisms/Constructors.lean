@@ -78,6 +78,7 @@ theorem HasAffineProperty.diagonal_of_openCover (P) {Q} [HasAffineProperty P Q]
   have i1 : ∀ i, IsAffine (𝒱.X i) := fun i => by dsimp [𝒱]; infer_instance
   apply of_openCover 𝒱
   rintro ⟨i, j, k⟩
+  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp [𝒱]
   convert!
     (Q.cancel_left_of_respectsIso
@@ -85,13 +86,16 @@ theorem HasAffineProperty.diagonal_of_openCover (P) {Q} [HasAffineProperty P Q]
             pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) _ _)
           (pullback.snd _ _)).mp
       _
-      using 1
+      using 1)
   · simp
   · ext1 <;> simp
-  · simp only [Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
-      Category.comp_id]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
+      Category.comp_id])
     convert! h𝒰' i j k
-    ext1 <;> simp [Scheme.Cover.pullbackHom]
+    ext1 <;>
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp [Scheme.Cover.pullbackHom])
 
 set_option backward.isDefEq.respectTransparency.types false in
 theorem HasAffineProperty.diagonal_of_openCover_diagonal
@@ -143,14 +147,16 @@ theorem AffineTargetMorphismProperty.diagonal_of_openCover_source
   let 𝒱 := Scheme.Pullback.openCoverOfLeftRight.{u} 𝒰 𝒰 f f
   have i1 : ∀ i, IsAffine (𝒱.X i) := fun i => by dsimp [𝒱]; infer_instance
   refine HasAffineProperty.of_openCover (P := targetAffineLocally Q) 𝒱 fun i ↦ ?_
-  dsimp [𝒱, Scheme.Cover.pullbackHom]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  dsimp [𝒱, Scheme.Cover.pullbackHom])
   have : IsPullback (pullback.fst _ _ ≫ 𝒰.f _) (pullback.mapDesc (𝒰.f i.1) (𝒰.f i.2) f)
       (pullback.diagonal f) (pullback.map _ _ _ _ (𝒰.f _) (𝒰.f _) (𝟙 Y) (by simp) (by simp)) :=
     .of_iso (pullback_fst_map_snd_isPullback f (𝟙 _) (𝒰.f i.1 ≫ pullback.lift (𝟙 _) f)
       (𝒰.f i.2 ≫ pullback.lift (𝟙 _) f)) (asIso (pullback.map _ _ _ _ (𝟙 _) (𝟙 _)
       (pullback.fst _ _) (by simp) (by simp))) (.refl _) (pullback.congrHom (by simp) (by simp))
       (.refl _) (by simp) (by cat_disch) (by simp) (by cat_disch)
-  rw [← Q.cancel_left_of_respectsIso this.isoPullback.hom, IsPullback.isoPullback_hom_snd]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← Q.cancel_left_of_respectsIso this.isoPullback.hom, IsPullback.isoPullback_hom_snd])
   exact h𝒰 _ _
 
 set_option backward.isDefEq.respectTransparency.types false in

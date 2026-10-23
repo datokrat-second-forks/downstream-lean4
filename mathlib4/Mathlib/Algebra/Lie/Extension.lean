@@ -305,7 +305,7 @@ noncomputable def toKer (E : Extension R M L) :
     M ≃ₗ⁅R⁆ E.proj.ker where
   toFun m := ⟨E.incl m, E.incl_apply_mem_ker m⟩
   map_add' _ _ := by simp
-  map_smul' _ _ := by simp
+  map_smul' _ _ := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
   map_lie' {x y} := by ext; simp [← LieHom.map_lie]
   invFun := (Equiv.ofInjective E.incl E.incl_injective).symm ∘ E.IsExtension.kerEquivRange
   left_inv _ := by
@@ -350,6 +350,7 @@ lemma ringModuleOf_bracket_proj [IsLieAbelian M] (E : Extension R M L) (y : M) (
     Subtype.ext_iff, LieSubmodule.coe_bracket, lie_toKer_apply, ZeroMemClass.coe_zero, ← hx,
     LieHom.coe_toLinearMap, ← LieHom.map_lie, trivial_lie_zero M M x y, map_zero]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Given an extension of `L` by `M` whose kernel `M` is abelian, the kernel `M` gets an `R`-linear
 `L`-module structure. We do not make this an instance, because we may have to work with more than
 one extension. -/
@@ -422,6 +423,7 @@ noncomputable def twoCocycleOf [IsLieAbelian M] (E : Extension R M L) {s : L →
       sub_add_cancel_right, map_add, neg_add_rev]
     abel_nf
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- The 1-cochain attached to a pair of splittings of an extension. -/
 @[simps]
 noncomputable def oneCochainOfTwoSplitting (E : Extension R M L) {s₁ s₂ : L →ₗ[R] E.L}

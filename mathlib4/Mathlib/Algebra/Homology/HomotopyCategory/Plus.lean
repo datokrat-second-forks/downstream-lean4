@@ -312,7 +312,7 @@ noncomputable instance :
 
 instance [HasZeroObject C] [HasBinaryBiproducts C] [HasZeroObject D] [HasBinaryBiproducts D] :
     (F.mapHomotopyCategoryPlus).IsTriangulated := by
-  dsimp only [mapHomotopyCategoryPlus]
+  (set_option backward.dsimp.instanceTypes false in dsimp only [mapHomotopyCategoryPlus])
   infer_instance
 
 instance [Full F] [Faithful F] : Full F.mapHomotopyCategoryPlus where

@@ -154,7 +154,8 @@ lemma mpullbackWithin_neg :
 
 lemma mpullbackWithin_id {V : Π (x : M), TangentSpace I x} (h : UniqueMDiffAt[s] x) :
     mpullbackWithin I I id V s x = V x := by
-  simp [mpullbackWithin_apply, mfderivWithin_id h]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [mpullbackWithin_apply, mfderivWithin_id h])
 
 lemma mpullback_apply :
     mpullback I I' f V x = (mfderiv% f x).inverse (V (f x)) := rfl
@@ -215,7 +216,7 @@ lemma mpullback_eq_pullback {f : E → E'} {V : E' → E'} :
 
 @[simp] lemma mpullback_id {V : Π (x : M), TangentSpace I x} : mpullback I I id V = V := by
   ext x
-  simp [mpullback]
+  (set_option backward.dsimp.instanceTypes false in simp [mpullback])
 
 lemma mpullbackWithin_comp_of_left
     {g : M' → M''} {f : M → M'} {V : Π (x : M''), TangentSpace I'' x} {s : Set M} {t : Set M'}

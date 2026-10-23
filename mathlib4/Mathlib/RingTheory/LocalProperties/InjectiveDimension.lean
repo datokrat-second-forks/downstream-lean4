@@ -35,8 +35,10 @@ instance [Small.{v} R] [IsNoetherianRing R] (S : Submonoid R) :
   injective_obj X {inj} := by
     let _ : Small.{v, u} (Localization S) := small_of_surjective Localization.mkHom_surjective
     rw [← Module.injective_iff_injective_object] at inj ⊢
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa [ModuleCat.localizedModuleFunctor] using
-      Module.injective_of_isLocalizedModule S (X.localizedModuleMkLinearMap S)
+      Module.injective_of_isLocalizedModule S (X.localizedModuleMkLinearMap S))
 
 lemma localizedModule_hasInjectiveDimensionLE [Small.{v, u} R] [IsNoetherianRing R] (n : ℕ)
     (S : Submonoid R) (M : ModuleCat.{v} R) [HasInjectiveDimensionLE M n] :

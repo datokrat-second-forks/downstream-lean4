@@ -238,7 +238,7 @@ instance : (functor hG A₀ J).IsWellOrderContinuous where
     have : Mono c.pt.hom := by dsimp [c]; infer_instance
     apply IsGrothendieckAbelian.isColimitMapCoconeOfSubobjectMkEqISup
       ((Set.principalSegIio m).monotone.functor ⋙ functorToMonoOver hG A₀ J) c
-    dsimp [c]
+    (set_option backward.instanceTypes.subsingletons.prop false in dsimp [c])
     simp only [Subobject.mk_arrow]
     exact transfiniteIterate_limit (largerSubobject hG) A₀ m hm⟩
 

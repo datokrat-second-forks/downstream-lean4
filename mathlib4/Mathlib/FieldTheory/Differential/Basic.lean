@@ -94,7 +94,8 @@ variable {F : Type*} [Field F] [Differential F] [CharZero F]
 
 noncomputable instance (p : F[X]) [Fact (Irreducible p)] [Fact p.Monic] :
     Differential (AdjoinRoot p) where
-  deriv := Derivation.liftOfSurjective (f := (AdjoinRoot.mk p).toIntAlgHom) AdjoinRoot.mk_surjective
+  deriv := (set_option backward.instanceTypes.subsingletons.prop false in
+    Derivation.liftOfSurjective (f := (AdjoinRoot.mk p).toIntAlgHom) AdjoinRoot.mk_surjective
     (d := implicitDeriv <| AdjoinRoot.modByMonicHom Fact.out <|
       - (aeval (AdjoinRoot.root p) (mapCoeffs p)) / (aeval (AdjoinRoot.root p) (derivative p))) (by
       rintro x hx
@@ -115,7 +116,7 @@ noncomputable instance (p : F[X]) [Fact (Irreducible p)] [Fact p.Monic] :
       · intro nh
         simp_all
       apply natDegree_derivative_lt
-      exact Nat.ne_zero_of_lt this)
+      exact Nat.ne_zero_of_lt this))
 
 set_option backward.isDefEq.respectTransparency false in
 instance (p : F[X]) [Fact (Irreducible p)] [Fact p.Monic] :

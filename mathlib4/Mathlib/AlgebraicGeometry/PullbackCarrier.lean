@@ -130,11 +130,13 @@ set_option backward.isDefEq.respectTransparency false in
 lemma SpecMap_tensorInl_fromSpecResidueField :
     (Spec.map T.tensorInl ≫ X.fromSpecResidueField T.x) ≫ f =
       (Spec.map T.tensorInr ≫ Y.fromSpecResidueField T.y) ≫ g := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [residueFieldCongr_inv, Category.assoc, tensorInl, tensorInr,
-    ← Hom.SpecMap_residueFieldMap_fromSpecResidueField]
+    ← Hom.SpecMap_residueFieldMap_fromSpecResidueField])
   rw [← residueFieldCongr_fromSpecResidueField T.hx.symm,
     ← residueFieldCongr_fromSpecResidueField T.hy.symm]
-  simp only [← Category.assoc, ← Spec.map_comp, pushout.condition]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [← Category.assoc, ← Spec.map_comp, pushout.condition])
 
 /-- Given `x : X`, `y : Y` and `s : S` such that `f x = s = g y`,
 this is `Spec (κ(x) ⊗[κ(s)] κ(y)) ⟶ X ×ₛ Y`. -/
@@ -395,6 +397,7 @@ lemma pullbackComparison_forget_surjective {X Y S : Scheme.{u}} (f : X ⟶ S) (g
   · simp only [Function.comp_apply, Types.pullbackIsoPullback_hom_snd]
     rwa [← types_comp_apply (g := pullback.snd _ _), pullbackComparison_comp_snd]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 instance {X Y S : Scheme.{u}} (f : X ⟶ S) (g : Y ⟶ S) :
     Epi (pullbackComparison Scheme.forgetToTop f g) := by
   refine (CategoryTheory.forget TopCat).epi_of_epi_map ?_

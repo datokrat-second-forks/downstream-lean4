@@ -163,11 +163,13 @@ set_option backward.isDefEq.respectTransparency false in
 noncomputable
 def modulesSpecToSheafIso :
     (modulesSpecToSheaf.obj (tilde M)).1 ≅ structurePresheafInModuleCat R M :=
-  NatIso.ofComponents (fun U ↦ LinearEquiv.toModuleIso
+  NatIso.ofComponents (fun U ↦
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    LinearEquiv.toModuleIso
     (X₁ := (modulesSpecToSheaf.obj (tilde M)).presheaf.obj _)
     { __ := AddEquiv.refl _,
       map_smul' r m := IsScalarTower.algebraMap_smul (M := ((structureSheafInType R M).obj.obj U))
-        ((structureSheafInType R R).obj.obj U) r m }) fun _ ↦ rfl
+        ((structureSheafInType R R).obj.obj U) r m })) fun _ ↦ rfl
 
 /-- The map from `M` to `Γ(M, U)`. This is a localization map when `U = D(f)`. -/
 def toOpen (U : (Spec R).Opens) : M ⟶ (modulesSpecToSheaf.obj (tilde M)).presheaf.obj (.op U) :=
@@ -282,8 +284,11 @@ noncomputable def Scheme.Modules.fromTildeΓ (M : (Spec R).Modules) :
         · dsimp [← ModuleCat.hom_comp]
           rw [tilde.toOpen_res_assoc]
           ext x
-          dsimp
-          simp only [IsLocalizedModule.lift_apply, ← ModuleCat.comp_apply, ← Functor.map_comp]
+          (set_option backward.dsimp.instanceTypes false in
+          set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          dsimp)
+          (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          simp only [IsLocalizedModule.lift_apply, ← ModuleCat.comp_apply, ← Functor.map_comp])
           rfl }⟩
 
 set_option backward.isDefEq.respectTransparency false in
@@ -293,8 +298,9 @@ lemma Scheme.Modules.toOpen_fromTildeΓ_app (M : (Spec R).Modules) (U) :
       (modulesSpecToSheaf.map M.fromTildeΓ).1.app (.op U) =
     (modulesSpecToSheaf.obj M).1.map (homOfLE le_top).op := by
   wlog hU : U = PrimeSpectrum.basicOpen 1 generalizing U
-  · rw [← tilde.toOpen_res _ (PrimeSpectrum.basicOpen 1) _ (homOfLE (by simp)), Category.assoc,
-      NatTrans.naturality, ← Category.assoc, this, ← Functor.map_comp, ← op_comp, homOfLE_comp]
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← tilde.toOpen_res _ (PrimeSpectrum.basicOpen 1) _ (homOfLE (by simp)), Category.assoc,
+      NatTrans.naturality, ← Category.assoc, this, ← Functor.map_comp, ← op_comp, homOfLE_comp])
     simp
   subst hU
   simp only [fromTildeΓ, inducedFunctor_obj, homOfLE_leOfHom, Functor.FullyFaithful.map_preimage,
@@ -322,8 +328,9 @@ noncomputable def Scheme.Modules.fromTildeΓNatTrans :
       change Submonoid.powers _ ≤ (IsUnit.submonoid _).comap _
       simp only [Submonoid.powers_le, Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
       exact N.isUnit_algebraMap_end_of_le_basicOpen r.unop le_rfl
+    (set_option backward.dsimp.instanceTypes false in
     dsimp [TopCat.Sheaf.restrictHomEquivHom, Functor.IsCoverDense.restrictHomEquivHom,
-      moduleSpecΓFunctor, Sheaf.forget]
+      moduleSpecΓFunctor, Sheaf.forget])
     simp only [← ModuleCat.hom_comp, Functor.map_comp]
     congr 1
     erw [tilde.toOpen_map_app_assoc, toOpen_fromTildeΓ_app N (PrimeSpectrum.basicOpen r.unop),
@@ -359,7 +366,7 @@ def tilde.adjunction : tilde.functor R ⊣ moduleSpecΓFunctor where
     simp only [← ModuleCat.hom_comp, Functor.map_comp]
     congr 1
     rw [ObjectProperty.FullSubcategory.comp_hom]
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in dsimp)
     rw [toOpen_map_app_assoc, toOpen_fromTildeΓ_app]
     rfl
   right_triangle_components M := by
@@ -424,7 +431,8 @@ def tildeFinsupp (ι : Type u) : tilde (ModuleCat.of R (ι →₀ R)) ≅ SheafO
          Discrete.functor fun _ ↦ SheafOfModules.unit.{u} _ :=
       Discrete.natIso (fun _ ↦ tildeSelf)
   IsColimit.coconePointUniqueUpToIso
-    ((IsColimit.precomposeHomEquiv iso.symm _).symm H) (coproductIsCoproduct _)
+    ((IsColimit.precomposeHomEquiv iso.symm _).symm H)
+    (set_option backward.instanceTypes.subsingletons.prop false in coproductIsCoproduct _)
 
 instance (ι : Type u) :
     IsIso (Scheme.Modules.fromTildeΓ (R := R) (SheafOfModules.free.{u} ι)) :=
@@ -445,7 +453,8 @@ def presentationTilde (s : Set M) (hs : Submodule.span R s = ⊤)
       ((tildeFinsupp t).inv ≫ tilde.map (ModuleCat.ofHom (Finsupp.linearCombination R (↑))) ≫
         (tildeFinsupp s).hom) ((tildeFinsupp s).inv ≫
           tilde.map (ModuleCat.ofHom (Finsupp.linearCombination R (↑)))) (by
-    simp only [Category.assoc, Iso.hom_inv_id_assoc, Preadditive.IsIso.comp_left_eq_zero]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp only [Category.assoc, Iso.hom_inv_id_assoc, Preadditive.IsIso.comp_left_eq_zero])
     rw [← tilde.map_comp, ← ModuleCat.ofHom_comp]
     convert tilde.map_zero
     congrm ModuleCat.ofHom $H₁.linearMap_comp_eq_zero) ?_
@@ -464,9 +473,11 @@ set_option backward.isDefEq.respectTransparency false in
 lemma isIso_fromTildeΓ_of_presentation (M : (Spec R).Modules) (P : M.Presentation) :
     IsIso M.fromTildeΓ := by
   rw [isIso_fromTildeΓ_iff]
-  let g := (tilde.functor _).preimage <| (tildeFinsupp _).hom ≫ P.relations.π ≫ kernel.ι _ ≫
+  let g := (tilde.functor _).preimage <| (tildeFinsupp _).hom ≫ P.relations.π ≫
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in kernel.ι _) ≫
     (tildeFinsupp _).inv
-  let iso : cokernel ((tilde.functor R).map g) ≅ cokernel (P.relations.π ≫ kernel.ι _) := by
+  let iso : cokernel ((tilde.functor R).map g) ≅ cokernel (P.relations.π ≫
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in kernel.ι _)) := by
     refine cokernel.mapIso _ _ (tildeFinsupp _) (tildeFinsupp _) ?_
     simp only [g, (tilde.functor R).map_preimage]
     simp
@@ -716,12 +727,13 @@ private lemma Aux.of_eq_iSup_basicOpen {M : (Spec R).Modules} (V : (Spec R).Open
           have hfgigj : basicOpen (f * (g i * g j)) ≤ basicOpen (f * g j) := by
             rw [mul_comm (g i) (g j), ← mul_assoc]
             exact basicOpen_mul_le_left _ _
+          (set_option backward.isDefEq.respectTransparency.instanceTypes false in
           rw [map_sub, ← M.presheaf.map_comp_apply, ← op_comp, ← M.presheaf.map_comp_apply,
             ← op_comp, homOfLE_comp, homOfLE_comp, ← homOfLE_comp hfgigi (hfgi i),
             ← homOfLE_comp hfgigj (hfgi j), op_comp, M.presheaf.map_comp_apply, ← ht i,
             M.map_smul_Spec, ← M.presheaf.map_comp_apply, ← op_comp, homOfLE_comp, op_comp,
             M.presheaf.map_comp_apply, ← ht j, M.map_smul_Spec, ← M.presheaf.map_comp_apply,
-            ← op_comp, homOfLE_comp]
+            ← op_comp, homOfLE_comp])
           simp
       choose m hm using this
       let K := ⨆ i, ⨆ j, m i j
@@ -744,9 +756,10 @@ private lemma Aux.of_eq_iSup_basicOpen {M : (Spec R).Modules} (V : (Spec R).Open
         simp_rw [basicOpen_mul]
         exact le_rfl
       · intro i
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
         rw [← M.presheaf.map_comp_apply, ← op_comp, homOfLE_comp,
           ← homOfLE_comp (basicOpen_mul_le_right _ _) (hgle i), op_comp, M.presheaf.map_comp_apply,
-          M.map_smul_Spec, ha, M.map_smul_Spec, pow_add, mul_smul, smul_comm, ht i]
+          M.map_smul_Spec, ha, M.map_smul_Spec, pow_add, mul_smul, smul_comm, ht i])
     · intro i j
       have : Function.Injective (M.presheaf.map (eqToHom (basicOpen_mul (g i) (g j))).op) :=
         ConcreteCategory.injective_of_mono_of_preservesPullback _
@@ -761,8 +774,9 @@ private lemma Aux.of_eq_iSup_basicOpen {M : (Spec R).Modules} (V : (Spec R).Open
         use n
         rw [mul_pow, mul_comm, mul_smul, ← Scheme.Modules.map_smul_Spec] at hn
         exact ((M.isSMulRegular_of_le_basicOpen le_rfl).pow n).right_eq_zero_of_smul hn
-      · rw [← M.presheaf.map_comp_apply, ← op_comp, homOfLE_comp,
-          ← homOfLE_comp ((basicOpen_mul_le_left f (g i))) hf, op_comp, M.presheaf.map_comp_apply]
+      · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        rw [← M.presheaf.map_comp_apply, ← op_comp, homOfLE_comp,
+          ← homOfLE_comp ((basicOpen_mul_le_left f (g i))) hf, op_comp, M.presheaf.map_comp_apply])
         simp [hs]
     choose n hn using this
     use ⨆ i, n i

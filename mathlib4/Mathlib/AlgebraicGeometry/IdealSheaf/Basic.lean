@@ -224,9 +224,10 @@ lemma map_ideal {U V : X.affineOpens} (h : U ≤ V) :
   obtain ⟨f, g, hfg, hxf⟩ := exists_basicOpen_le_affine_inter U.2 V.2 x ⟨hxU, h hxU⟩
   have := I.map_ideal_basicOpen_of_eq (V := X.affineBasicOpen g) f (Subtype.ext hfg.symm)
   rw [← I.map_ideal_basicOpen] at this
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   apply_fun Ideal.map (X.presheaf.germ (X.basicOpen g) x (hfg ▸ hxf)).hom at this
   simp only [Ideal.map_map, ← CommRingCat.hom_comp, affineBasicOpen_coe, X.presheaf.germ_res]
-    at this ⊢
+    at this ⊢)
   simp only [homOfLE_leOfHom, TopCat.Presheaf.germ_res', this]
 
 /-- A form of `map_ideal` that is easier to rewrite with. -/
@@ -301,7 +302,8 @@ lemma zeroLocus_inter_subset_supportSet (I : IdealSheafData X) (U : X.affineOpen
   apply_fun (x ∈ X.basicOpen ·) at hs'
   refine hx s' s'.2 ?_
   cases n <;>
-    simpa [RingHom.algebraMap_toAlgebra, ← hfg, hxf, hxs, Scheme.basicOpen_pow] using hs'
+    (set_option backward.dsimp.instanceTypes false in
+    simpa [RingHom.algebraMap_toAlgebra, ← hfg, hxf, hxs, Scheme.basicOpen_pow] using hs')
 
 lemma mem_supportSet_iff_of_mem {I : IdealSheafData X} {x} {U : X.affineOpens} (hxU : x ∈ U.1) :
     x ∈ I.supportSet ↔ x ∈ X.zeroLocus (U := U.1) (I.ideal U) :=
@@ -567,7 +569,8 @@ noncomputable nonrec def vanishingIdeal (Z : Closeds X) : IdealSheafData X :=
     (fun U f ↦ by
       let F := X.presheaf.map (homOfLE (X.basicOpen_le f)).op
       apply le_antisymm
-      · rw [Ideal.map_le_iff_le_comap]
+      · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        rw [Ideal.map_le_iff_le_comap]
         intro x hx
         suffices ∀ p, (X.affineBasicOpen f).2.fromSpec p ∈ Z → F.hom x ∈ p.asIdeal by
           simpa [PrimeSpectrum.mem_vanishingIdeal] using! this
@@ -575,7 +578,7 @@ noncomputable nonrec def vanishingIdeal (Z : Closeds X) : IdealSheafData X :=
         refine (PrimeSpectrum.mem_vanishingIdeal _ _).mp hx
           (Spec.map (X.presheaf.map (homOfLE _).op) x) ?_
         rwa [Set.mem_preimage, ← Scheme.Hom.comp_apply,
-          IsAffineOpen.map_fromSpec _ (X.affineBasicOpen f).2]
+          IsAffineOpen.map_fromSpec _ (X.affineBasicOpen f).2])
       · let : Algebra Γ(X, U) Γ(X, X.affineBasicOpen f) := F.hom.toAlgebra
         have : IsLocalization.Away f Γ(X, X.basicOpen f) :=
           U.2.isLocalization_of_eq_basicOpen _ _ rfl
@@ -723,7 +726,8 @@ lemma Hom.ker_apply (f : X.Hom Y) [QuasiCompact f] (U : Y.affineOpens) :
     replace hx : (Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op ≫ f.app _).hom x = 0 := by
       trans (f.app (Y.basicOpen s)).hom (algebraMap Γ(Y, U) _ x)
       · simp [-NatTrans.naturality, RingHom.algebraMap_toAlgebra]
-      · simp only [Scheme.affineBasicOpen_coe, RingHom.mem_ker] at hx
+      · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        simp only [Scheme.affineBasicOpen_coe, RingHom.mem_ker] at hx)
         rw [← IsLocalization.mk'_spec' (M := .powers s), map_mul, hx, mul_zero]
     rwa [f.naturality] at hx
 

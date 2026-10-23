@@ -125,6 +125,8 @@ lemma ι_toBase (i : 𝒰.I₀) :
     colimit.ι d.functor i ≫ d.toBase = d.natTrans.app i ≫ 𝒰.f i := by
   simp [toBase]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance : d.cover.LocallyDirected where
@@ -156,10 +158,12 @@ lemma preimage_toBase_eq_range_ι (i : 𝒰.I₀) :
   refine ⟨fun ⟨ui, h⟩ ↦ ?_, ?_⟩
   · obtain ⟨j, xj, rfl⟩ := IsLocallyDirected.ι_jointly_surjective _ x
     obtain ⟨k, fi, fj, uk, rfl, h⟩ := 𝒰.exists_of_f_eq_f ui (d.natTrans.app j xj) <| by
-      simp only [h, functorOfLocallyDirected_obj, ← Scheme.Hom.comp_apply, ι_toBase]
+      (set_option backward.dsimp.instanceTypes false in
+      simp only [h, functorOfLocallyDirected_obj, ← Scheme.Hom.comp_apply, ι_toBase])
     obtain ⟨xk, rfl, h2⟩ := exists_preimage_of_isPullback (d.equifibered fj) xj uk <| by
       apply (𝒰.f j).injective
-      simp only [functorOfLocallyDirected_obj, functorOfLocallyDirected_map]
+      (set_option backward.dsimp.instanceTypes false in
+      simp only [functorOfLocallyDirected_obj, functorOfLocallyDirected_map])
       rw [← Scheme.Hom.comp_apply, ← ι_toBase, Scheme.Hom.comp_apply, ← h]
       simp [← Scheme.Hom.comp_apply]
     use d.functor.map fi xk
@@ -167,7 +171,7 @@ lemma preimage_toBase_eq_range_ι (i : 𝒰.I₀) :
   · rintro ⟨y, rfl⟩
     use d.natTrans.app i y
     rw [← Scheme.Hom.comp_apply, ι_toBase]
-    simp
+    (set_option backward.dsimp.instanceTypes false in simp)
 
 lemma toBase_preimage_eq_opensRange_ι (i : 𝒰.I₀) :
     d.toBase ⁻¹ᵁ (𝒰.f i).opensRange = (colimit.ι d.functor i).opensRange :=
@@ -184,7 +188,7 @@ lemma isPullback_natTrans_ι_toBase (i : 𝒰.I₀) :
     rintro x ⟨x, rfl⟩
     use s.fst x
     rw [← Scheme.Hom.comp_apply, ← s.condition]
-    simp
+    (set_option backward.dsimp.instanceTypes false in simp)
   · intro s
     rw [← cancel_mono (𝒰.f i), Category.assoc, ← ι_toBase, IsOpenImmersion.lift_fac_assoc,
       s.condition]

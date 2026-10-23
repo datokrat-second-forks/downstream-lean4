@@ -31,6 +31,7 @@ section Fork
 
 variable {R S : CommRingCat.{u}} (f : R ⟶ S)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- If `f : R ⟶ S` is a faithfully flat map in `CommRingCat`, then the fork
 ```
         S ---inl---> pushout f f

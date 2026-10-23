@@ -83,6 +83,7 @@ noncomputable abbrev trianglehOfDegreewiseSplit :
 
 variable [HasBinaryBiproducts C]
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The canonical isomorphism `(mappingCone (homOfDegreewiseSplit S σ)).X p ≅ S.X₂.X q`
 when `p + 1 = q`. -/

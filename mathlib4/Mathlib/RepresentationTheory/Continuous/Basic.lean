@@ -594,7 +594,7 @@ def coind₁Map {π₁ : ContRepresentation R G V} {π₂ : ContRepresentation R
     coind₁ π₁ →ⁱL coind₁ π₂ where
   toFun := (f : ContinuousMap _ _).comp
   map_add' _ _ := by ext; simp
-  map_smul' _ _ := by ext; simp
+  map_smul' _ _ := by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
   isIntertwining' g := by ext; simp [f.isIntertwining]
   cont := continuous_postcomp _
 

@@ -265,6 +265,10 @@ theorem diagonalSuccIsoTensorTrivial_hom_hom_apply {n : ℕ} (f : Fin (n + 1) �
     <;> simp_all [diagonalSuccIsoTensorTrivial, types_tensorObj_def]
     <;> rfl
 
+-- With the instance type check, `dsimp%` keeps `(leftRegular G ⊗ trivial G (Fin n → G)).V` in the
+-- type arguments of the coercion, and `simp` no longer uses the lemma in
+-- `barComplex.d_comp_diagonalSuccIsoFree_inv_eq`.
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -274,9 +278,8 @@ theorem diagonalSuccIsoTensorTrivial_inv_hom_apply {n : ℕ} (g : G) (f : Fin n 
   induction n generalizing g with
   | zero =>
     funext (x : Fin 1)
-    (set_option backward.dsimp.instanceTypes false in
     simp [diagonalSuccIsoTensorTrivial, diagonalOneIsoLeftRegular, Subsingleton.elim x 0,
-      ofMulAction_V, types_tensorObj_def, types_tensorUnit_def])
+      ofMulAction_V, types_tensorObj_def, types_tensorUnit_def]
   | succ n hn =>
     funext x
     induction x using Fin.cases with

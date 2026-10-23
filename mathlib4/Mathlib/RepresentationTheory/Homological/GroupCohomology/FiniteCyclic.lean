@@ -62,8 +62,12 @@ noncomputable def homResolutionIso :
     ext (x : leftRegular _ _ ⟶ _)
     by_cases hi : Even i
     · have : ¬(Even (i + 1)) := Nat.even_add_one.not_left.mpr hi
-      simp [sub_hom, hi, this, homEquiv, ← hom_comm_apply x, Rep.applyAsHom]
-    · simp [hi, Nat.even_add_one.2 hi, Representation.norm, homEquiv, Rep.norm, ← hom_comm_apply x]
+      (set_option backward.dsimp.instanceTypes false in
+      set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [sub_hom, hi, this, homEquiv, ← hom_comm_apply x, Rep.applyAsHom])
+    · (set_option backward.dsimp.instanceTypes false in
+      set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [hi, Nat.even_add_one.2 hi, Representation.norm, homEquiv, Rep.norm, ← hom_comm_apply x])
 
 open ShortComplex Limits
 

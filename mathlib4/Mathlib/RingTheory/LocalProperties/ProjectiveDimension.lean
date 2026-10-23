@@ -37,8 +37,10 @@ instance [Small.{v} R] (S : Submonoid R) :
   projective_obj X {proj} := by
     have : Small.{v} (Localization S) := small_of_surjective Localization.mkHom_surjective
     rw [← IsProjective.iff_projective] at proj ⊢
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa [ModuleCat.localizedModuleFunctor] using
-      Module.projective_of_isLocalizedModule S (X.localizedModuleMkLinearMap S)
+      Module.projective_of_isLocalizedModule S (X.localizedModuleMkLinearMap S))
 
 open Limits in
 lemma localizedModule_hasProjectiveDimensionLE [Small.{v, u} R] (n : ℕ) (S : Submonoid R)

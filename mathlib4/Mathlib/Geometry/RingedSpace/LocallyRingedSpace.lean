@@ -432,12 +432,14 @@ lemma stalkMap_inv_hom_apply (e : X ≅ Y) (x : X) (y) :
       X.presheaf.stalkSpecializes (specializes_of_eq <| by simp) y :=
   congr($(CommRingCat.hom_ext_iff.mp (stalkMap_inv_hom e x)) y)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[reassoc (attr := simp)]
 lemma stalkMap_germ (U : Opens Y) (x : X) (hx : f.base x ∈ U) :
     Y.presheaf.germ U (f.base x) hx ≫ f.stalkMap x =
       f.c.app (op U) ≫ X.presheaf.germ ((Opens.map f.base).obj U) x hx :=
   PresheafedSpace.stalkMap_germ f.toHom U x hx
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 lemma stalkMap_germ_apply (U : Opens Y) (x : X) (hx : f.base x ∈ U) (y) :
     f.stalkMap x (Y.presheaf.germ U (f.base x) hx y) =
       X.presheaf.germ ((Opens.map f.base).obj U) x hx (f.c.app (op U) y) :=

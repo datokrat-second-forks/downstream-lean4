@@ -631,10 +631,12 @@ instance : CommRing (PreTilt O p) :=
   inferInstanceAs <| CommRing <| Perfection _ _
 
 instance : CharP (PreTilt O p) p :=
-  inferInstanceAs <| CharP (Perfection _ _) _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| CharP (Perfection _ _) _)
 
 instance : PerfectRing (PreTilt O p) p :=
-  inferInstanceAs <| PerfectRing (Perfection _ _) p
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| PerfectRing (Perfection _ _) p)
 
 section coeff
 
@@ -650,13 +652,13 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_frobenius (n : ℕ) (x : PreTilt O p) :
     (coeff (n + 1) (frobenius _ p x)) = coeff n x := by
-  simp [PreTilt, coeff]
+  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_iterate_frobenius (m n : ℕ) (x : PreTilt O p) :
     (coeff (m + n) ((frobenius _ p)^[n] x)) = coeff m x := by
-  simp [PreTilt, coeff]
+  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
 
 /-- A variant of `PreTilt.coeff_iterate_frobenius` using `m-n` and `n`. -/
 theorem coeff_iterate_frobenius' (x : PreTilt O p) {m n : ℕ} (hmn : m ≤ n) :
@@ -671,13 +673,13 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_frobeniusEquiv_symm (n : ℕ) (x : PreTilt O p) :
     (coeff n (((frobeniusEquiv _ p).symm) x)) = coeff (n + 1) x := by
-  simp [PreTilt, coeff]
+  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_iterate_frobeniusEquiv_symm (m n : ℕ) (x : PreTilt O p) :
     (coeff m (((frobeniusEquiv _ p).symm^[n]) x)) = coeff (m + n) x := by
-  simp [PreTilt, coeff]
+  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
 
 end coeff
 

@@ -97,7 +97,7 @@ def Q : CochainComplex C ℤ ⥤ DerivedCategory C := HomologicalComplexUpToQuas
 set_option backward.isDefEq.respectTransparency false in
 instance : (Q (C := C)).IsLocalization
     (HomologicalComplex.quasiIso C (ComplexShape.up ℤ)) := by
-  dsimp only [Q, DerivedCategory]
+  (set_option backward.dsimp.instanceTypes false in dsimp only [Q, DerivedCategory])
   infer_instance
 
 instance {K L : CochainComplex C ℤ} (f : K ⟶ L) [QuasiIso f] :
@@ -130,7 +130,7 @@ lemma quotientCompQhIso_inv_naturality {K L : CochainComplex C ℤ} (f : K ⟶ L
 
 set_option backward.isDefEq.respectTransparency false in
 instance : Qh.IsLocalization (HomotopyCategory.quasiIso C (ComplexShape.up ℤ)) := by
-  dsimp [Qh, DerivedCategory]
+  (set_option backward.dsimp.instanceTypes false in dsimp [Qh, DerivedCategory])
   infer_instance
 
 instance : Qh.IsLocalization (HomotopyCategory.subcategoryAcyclic C).trW := by

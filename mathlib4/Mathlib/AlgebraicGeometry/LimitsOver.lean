@@ -84,7 +84,9 @@ noncomputable instance : CreatesColimit F (MorphismProperty.Over.forget P ⊤ S)
   have : HasColimit (F ⋙ MorphismProperty.Over.forget P ⊤ S) :=
     hasColimit_of_created _ (Over.forget S)
   refine createsColimitOfFullyFaithfulOfIso
-      { toComma := colimit (F ⋙ MorphismProperty.Over.forget P ⊤ S)
+      { toComma := colimit (F ⋙
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        MorphismProperty.Over.forget P ⊤ S))
         prop := ?_ } (Iso.refl _)
   let e : (colimit (F ⋙ MorphismProperty.Over.forget P ⊤ S)).left ≅
       colimit ((F ⋙ MorphismProperty.Over.forget P ⊤ S) ⋙ Over.forget S) :=

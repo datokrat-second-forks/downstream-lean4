@@ -126,6 +126,7 @@ instance (K : FibrantObject (Plus C)) (n : ℤ) :
   rw [fibrantObjects, modelCategoryQuillen.isFibrant_iff] at hK
   infer_instance
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 variable (C) in
 set_option backward.defeqAttrib.useBackward true in
@@ -303,7 +304,8 @@ private instance : TwoSquare.GuitartExact (iso C).hom :=
     dsimp [Functor.mapCochainComplexPlus] at f₀ f₁
     refine ⟨Plus.prepathObject _, ?_, ⟨?_⟩⟩
     · ext : 1
-      exact eq_of_homotopy _ _ (pathObject.homotopy₀₁ _ (fun n ↦ ⟨n + 1, by simp⟩))
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      exact eq_of_homotopy _ _ (pathObject.homotopy₀₁ _ (fun n ↦ ⟨n + 1, by simp⟩)))
     · refine PrepathObject.RightHomotopy.fullSubcategoryEquiv.symm
         { h := pathObject.lift f₀ f₁ (homotopyOfEq _ _
           ((HomotopyCategory.Plus.ι C).congr_map hf)) ≫

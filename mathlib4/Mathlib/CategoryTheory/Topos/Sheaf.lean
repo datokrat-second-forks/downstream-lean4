@@ -78,6 +78,7 @@ lemma Presheaf.comp_χ_eq (m : F ⟶ G) : m ≫ Presheaf.χ m =
   apply Sieve.ext
   simp [← NatTrans.naturality_apply]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma Presheaf.isPullback_χ_truth (m : F ⟶ G) [Mono m] :
@@ -108,7 +109,8 @@ lemma Presheaf.χ_unique (m : F ⟶ G) (χ' : G ⟶ Functor.sieves C)
   rw [Sieve.mem_iff_pullback_eq_top, ← Quiver.Hom.unop_op f]
   dsimp
   have := congr($(Functor.sieves_map C f.op) (χ'.app X x))
-  rw [← dsimp% this, ← dsimp% NatTrans.naturality_apply χ' f.op x]
+  (set_option backward.dsimp.instanceTypes false in
+  rw [← dsimp% this, ← dsimp% NatTrans.naturality_apply χ' f.op x])
   constructor
   · intro h
     obtain ⟨z, hz⟩ := h₃ _ _ h

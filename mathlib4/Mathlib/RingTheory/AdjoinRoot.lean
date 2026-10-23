@@ -73,7 +73,8 @@ instance : CommRing (AdjoinRoot f) where
   __ : CommRing (AdjoinRoot f) := inferInstanceAs <| CommRing (_ ⧸ _)
 
 instance [DistribSMul S R] [IsScalarTower S R R] : DistribSMul S (AdjoinRoot f) :=
-  inferInstanceAs <| DistribSMul S (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| DistribSMul S (_ ⧸ _))
 
 instance : DecidableEq (AdjoinRoot f) :=
   Classical.decEq _
@@ -113,25 +114,30 @@ theorem smul_of [DistribSMul S R] [IsScalarTower S R R] (a : S) (x : R) :
 instance (R₁ R₂ : Type*) [SMul R₁ R₂] [DistribSMul R₁ R] [DistribSMul R₂ R] [IsScalarTower R₁ R R]
     [IsScalarTower R₂ R R] [IsScalarTower R₁ R₂ R] (f : R[X]) :
     IsScalarTower R₁ R₂ (AdjoinRoot f) :=
-  inferInstanceAs <| IsScalarTower R₁ R₂ (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower R₁ R₂ (_ ⧸ _))
 
 instance (R₁ R₂ : Type*) [DistribSMul R₁ R] [DistribSMul R₂ R] [IsScalarTower R₁ R R]
     [IsScalarTower R₂ R R] [SMulCommClass R₁ R₂ R] (f : R[X]) :
     SMulCommClass R₁ R₂ (AdjoinRoot f) :=
-  inferInstanceAs <| SMulCommClass R₁ R₂ (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| SMulCommClass R₁ R₂ (_ ⧸ _))
 
 instance isScalarTower_right [DistribSMul S R] [IsScalarTower S R R] :
     IsScalarTower S (AdjoinRoot f) (AdjoinRoot f) :=
-  inferInstanceAs <| IsScalarTower S (_ ⧸ _) (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower S (_ ⧸ _) (_ ⧸ _))
 
 instance [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (f : R[X]) :
     DistribMulAction S (AdjoinRoot f) :=
-  inferInstanceAs <| DistribMulAction S (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| DistribMulAction S (_ ⧸ _))
 
 /-- `R[x]/(f)` is `R`-algebra -/
 @[stacks 09FX "second part"]
 instance [CommSemiring S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
-  inferInstanceAs <| Algebra S (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra S (_ ⧸ _))
 
 /- TODO : generalise base ring -/
 /-- `R`-algebra homomorphism from `R[x]` to `AdjoinRoot f` sending `X` to the `root`. -/

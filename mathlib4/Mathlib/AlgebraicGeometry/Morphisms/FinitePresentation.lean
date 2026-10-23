@@ -139,7 +139,8 @@ nonrec lemma Scheme.Hom.isLocallyConstructible_image (f : X ⟶ Y)
       (Y.affineCover.f i).isoOpensRange.hom ≫ Opens.ι _).base.hom '' _
     rw [Scheme.Hom.isoOpensRange_hom_ι, Cover.pullbackHom_map, Scheme.Hom.comp_base,
       TopCat.hom_comp, ContinuousMap.coe_comp, Set.image_comp, Set.image_preimage_eq_inter_range]
-    simp [IsOpenImmersion.range_pullbackFst, Set.image_inter_preimage]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [IsOpenImmersion.range_pullbackFst, Set.image_inter_preimage])
   obtain ⟨R, rfl⟩ := hY
   wlog hX : ∃ S, X = Spec S
   · have inst : CompactSpace X := HasAffineProperty.iff_of_isAffine.mp ‹QuasiCompact f›

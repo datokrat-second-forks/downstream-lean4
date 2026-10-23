@@ -131,9 +131,12 @@ lemma Localization.exists_finite_awayMapₐ_of_surjective_awayMapₐ
       simp_rw [← hs, map_pow, AlgHom.commutes, ← pow_mul] at this
       refine ⟨s ^ m * b, (n + m' * m), 0, this ▸ ?_⟩
       simp [pow_add, mul_assoc]
-    convert! h₁.trans _ _ (RingHom.IsIntegral.of_finite (.of_surjective _ h₂)) using 1
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! h₁.trans _ _ (RingHom.IsIntegral.of_finite (.of_surjective _ h₂)) using 1)
     refine IsLocalization.ringHom_ext (.powers r) (RingHom.ext fun x ↦ ?_)
-    simp [Localization.awayMap, IsLocalization.Away.map, ← IsScalarTower.algebraMap_apply R T]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [Localization.awayMap, IsLocalization.Away.map, ← IsScalarTower.algebraMap_apply R T])
   · algebraize [(Localization.awayMapₐ (Algebra.ofId R T) r).toRingHom]
     have := IsScalarTower.of_algebraMap_eq'
       (Localization.awayMapₐ (Algebra.ofId R T) r).comp_algebraMap.symm
@@ -158,9 +161,11 @@ lemma Algebra.exists_notMem_and_isIntegral_forall_mem_of_ne_of_liesOver
   obtain ⟨s₃, hs₃⟩ := hs₂.2 (algebraMap _ _ s₁)
   obtain ⟨s₃, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.exists_mk'_eq (.powers s₂) s₃
   obtain ⟨m, hm⟩ : ∃ m, ↑s₂ ^ m * ↑s₃ = ↑s₂ ^ m * (s₁ * ↑s₂ ^ n) := by
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa [IsLocalization.Away.map, IsLocalization.map_mk', IsLocalization.mk'_eq_iff_eq_mul,
       ← map_mul, ← map_pow, IsLocalization.eq_iff_exists (.powers s₂.1),
-      Submonoid.mem_powers_iff] using! hs₃
+      Submonoid.mem_powers_iff] using! hs₃)
   wlog hm0 : 0 < m generalizing m
   · refine this (m + 1) (by grind) (by simp)
   have hs₃q : s₃.1 ∉ q := fun h ↦ (show ↑s₂ ^ m * (s₁ * ↑s₂ ^ n) ∉ q from q.primeCompl.mul_mem
@@ -190,11 +195,14 @@ lemma Algebra.exists_notMem_and_isIntegral_forall_mem_of_ne_of_liesOver
       ((integralClosure R S).val.toRingHom s₂)) s₁) ∈ q's := by
     simpa using! this
   rw [← hs₃, ← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ (s₂ ^ n))] at this
-  · dsimp [Localization.awayMap, IsLocalization.Away.map] at this
+  · (set_option backward.dsimp.instanceTypes false in
+    dsimp [Localization.awayMap, IsLocalization.Away.map] at this)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     rw [IsLocalization.map_mk', ← e.symm.commutes, ← map_mul,
-      IsScalarTower.algebraMap_eq _ S _] at this
+      IsScalarTower.algebraMap_eq _ S _] at this)
     replace this : e.symm ((algebraMap _ (Localization.Away s₂.1)) s₃) ∈ q's := by
-      simpa [-map_mul, -map_pow, -AlgEquiv.commutes] using! this
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simpa [-map_mul, -map_pow, -AlgEquiv.commutes] using! this)
     replace this : s₃ ∈ q' := by simpa [← Ideal.mem_comap, ← q's.over_def q'] using! this
     exact H (Ideal.mul_mem_left _ (s₂ ^ m) this)
   · rw [map_pow]; exact Ideal.notMem_of_isUnit _ (.pow _ (IsLocalization.Away.algebraMap_isUnit _))
@@ -353,8 +361,9 @@ lemma Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq_aux₂
     .mul (Localization.Away f ⊗[R] S) (Localization.Away (algebraMap _ _ e)) _ _
   have : IsLocalization.Away (e * (f ⊗ₜ 1)) (Localization.Away (Algebra.ofId R'
       (Localization.Away e) f)) :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     .mul' (Localization.Away e)
-      (Localization.Away (algebraMap (R' ⊗[R] S) (Localization.Away e) (f ⊗ₜ[R] 1))) _ _
+      (Localization.Away (algebraMap (R' ⊗[R] S) (Localization.Away e) (f ⊗ₜ[R] 1))) _ _)
   let equiv := IsLocalization.algEquiv (.powers (e * (f ⊗ₜ 1)))
       (Localization.Away (φ e))
       (Localization.Away (Algebra.ofId R' (Localization.Away e) f))

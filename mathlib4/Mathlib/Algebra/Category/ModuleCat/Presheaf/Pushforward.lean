@@ -40,18 +40,25 @@ set_option backward.isDefEq.respectTransparency false in
 @[simps]
 def pushforward₀Obj (R : Dᵒᵖ ⥤ RingCat.{u}) (M : PresheafOfModules R) :
     PresheafOfModules (F.op ⋙ R) :=
-  { obj X := ↧(M.obj (F.op.obj X))
+  { obj X :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in ↧(M.obj (F.op.obj X)))
     map {X Y} f := M.map (F.op.map f)
     map_id X := by
       refine ModuleCat.hom_ext
         -- Work around an instance diamond for `restrictScalarsId'`
         (@LinearMap.ext _ _ _ _ _ _ _ _ (_) (_) _ _ _ (fun x => ?_))
-      exact (M.congr_map_apply (F.op.map_id X) x).trans (by simp)
+      exact (M.congr_map_apply (F.op.map_id X) x).trans (by
+        (set_option backward.dsimp.instanceTypes false in
+        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        simp))
     map_comp := fun f g ↦ by
       refine ModuleCat.hom_ext
         -- Work around an instance diamond for `restrictScalarsId'`
         (@LinearMap.ext _ _ _ _ _ _ _ _ (_) (_) _ _ _ (fun x => ?_))
-      exact (M.congr_map_apply (F.op.map_comp f g) x).trans (by simp) }
+      exact (M.congr_map_apply (F.op.map_comp f g) x).trans (by
+        (set_option backward.dsimp.instanceTypes false in
+        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        simp)) }
 
 @[deprecated (since := "2026-04-27")] alias pushforward₀_obj := pushforward₀Obj
 

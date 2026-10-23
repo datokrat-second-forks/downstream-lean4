@@ -154,7 +154,8 @@ theorem exists_mem_support_not_dvd_of_forall_totalDegree_le (hF0 : F ≠ 0) (hFa
   have := mt (H F.support inferInstance (fun s ↦ aeval a (monomial (σ' s) (1 : k)))) (by
     simp_rw [← map_pow, monomial_pow, ← hσ'', one_pow, not_linearIndependent_iff]
     refine ⟨.univ, (F.coeff ·), ?_, by simpa [MvPolynomial.eq_zero_iff] using! hF0⟩
-    simp only [← map_smul, ← map_sum, Finset.univ_eq_attach, smul_eq_mul, mul_one]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [← map_smul, ← map_sum, Finset.univ_eq_attach, smul_eq_mul, mul_one])
     rw [F.support.sum_attach (fun i ↦ monomial i (F.coeff i)), support_sum_monomial_coeff, hFa])
   simp only [LinearIndependent, injective_iff_map_eq_zero, not_forall] at this
   obtain ⟨F', hF', hF'0⟩ := this

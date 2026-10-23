@@ -129,12 +129,14 @@ theorem contractLeft_ι_mul (a : M) (b : CliffordAlgebra Q) :
 /-- This is [grinberg_clifford_2016] Theorem 12 -/
 theorem contractRight_mul_ι (a : M) (b : CliffordAlgebra Q) :
     b * ι Q a⌊d = d a • b - b⌊d * ι Q a := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [contractRight_eq, reverse.map_mul, reverse_ι, contractLeft_ι_mul, map_sub, map_smul,
-    reverse_reverse, reverse.map_mul, reverse_ι, contractRight_eq]
+    reverse_reverse, reverse.map_mul, reverse_ι, contractRight_eq])
 
 theorem contractLeft_algebraMap_mul (r : R) (b : CliffordAlgebra Q) :
     d⌋(algebraMap _ _ r * b) = algebraMap _ _ r * (d⌋b) := by
-  rw [← Algebra.smul_def, map_smul, Algebra.smul_def]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← Algebra.smul_def, map_smul, Algebra.smul_def])
 
 theorem contractLeft_mul_algebraMap (a : CliffordAlgebra Q) (r : R) :
     d⌋(a * algebraMap _ _ r) = d⌋a * algebraMap _ _ r := by
@@ -188,7 +190,9 @@ theorem contractLeft_contractLeft (x : CliffordAlgebra Q) : d⌋(d⌋x) = 0 := b
   | algebraMap => simp_rw [contractLeft_algebraMap, map_zero]
   | add _ _ hx hy => rw [map_add, map_add, hx, hy, add_zero]
   | ι_mul _ _ hx =>
-    rw [contractLeft_ι_mul, map_sub, contractLeft_ι_mul, hx, map_smul, mul_zero, sub_zero, sub_self]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [contractLeft_ι_mul, map_sub, contractLeft_ι_mul, hx, map_smul, mul_zero, sub_zero,
+      sub_self])
 
 /-- This is [grinberg_clifford_2016] Theorem 13 -/
 theorem contractRight_contractRight (x : CliffordAlgebra Q) : x⌊d⌊d = 0 := by
@@ -200,7 +204,8 @@ theorem contractLeft_comm (x : CliffordAlgebra Q) : d⌋(d'⌋x) = -(d'⌋(d⌋x
   | algebraMap => simp_rw [contractLeft_algebraMap, map_zero, neg_zero]
   | add _ _ hx hy => rw [map_add, map_add, map_add, map_add, hx, hy, neg_add]
   | ι_mul _ _ hx =>
-    simp only [contractLeft_ι_mul, map_sub, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [contractLeft_ι_mul, map_sub, map_smul])
     rw [neg_sub, sub_sub_eq_add_sub, hx, mul_neg, ← sub_eq_add_neg]
 
 /-- This is [grinberg_clifford_2016] Theorem 14 -/
@@ -291,7 +296,8 @@ theorem changeForm_contractLeft (d : Module.Dual R M) (x : CliffordAlgebra Q) :
   | algebraMap => simp only [contractLeft_algebraMap, changeForm_algebraMap, map_zero]
   | add _ _ hx hy => rw [map_add, map_add, map_add, map_add, hx, hy]
   | ι_mul _ _ hx =>
-    simp only [contractLeft_ι_mul, changeForm_ι_mul, map_sub, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [contractLeft_ι_mul, changeForm_ι_mul, map_sub, map_smul])
     rw [← hx, contractLeft_comm, ← sub_add, sub_neg_eq_add, ← hx]
 
 theorem changeForm_self_apply (x : CliffordAlgebra Q) : changeForm (Q' := Q)

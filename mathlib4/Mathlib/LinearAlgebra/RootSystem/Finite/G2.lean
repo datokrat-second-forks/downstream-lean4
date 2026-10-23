@@ -294,7 +294,8 @@ lemma threeShortAddLongRoot_eq :
 
 lemma threeShortAddTwoLongRoot_eq :
     threeShortAddTwoLongRoot P = (3 : R) • shortRoot P + (2 : R) • longRoot P := by
-  simp [threeShortAddTwoLongRoot, threeShortAddTwoLong, reflection_apply_root]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [threeShortAddTwoLongRoot, threeShortAddTwoLong, reflection_apply_root])
   module
 
 lemma linearIndependent_short_long :
@@ -416,7 +417,8 @@ variable (i : ι)
     _ = (2 * P.pairing i (short P) +
           3 * P.pairing i (long P)) * B.form (twoShortAddLongRoot P) (twoShortAddLongRoot P) := ?_
   · rw [B.two_mul_apply_root_root]
-  · rw [twoShortAddLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [twoShortAddLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul])
   · rw [B.two_mul_apply_root_root, B.two_mul_apply_root_root, mul_assoc]
   · rw [long_eq_three_mul_short, twoShortAddLongRoot_shortRoot]; ring
 
@@ -447,7 +449,8 @@ omit [Finite ι] [IsDomain R] in
     _ = (P.pairing i (short P) + P.pairing i (long P)) *
           B.form (threeShortAddLongRoot P) (threeShortAddLongRoot P) := ?_
   · rw [B.two_mul_apply_root_root]
-  · rw [threeShortAddLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul]; ring
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [threeShortAddLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul]); ring
   · rw [B.two_mul_apply_root_root, B.two_mul_apply_root_root, long_eq_three_mul_short]; ring
   · rw [threeShortAddLongRoot_longRoot]; ring
 
@@ -477,7 +480,8 @@ omit [Finite ι] [IsDomain R] in
     _ = (P.pairing i (short P) + 2 * P.pairing i (long P)) *
           B.form (threeShortAddTwoLongRoot P) (threeShortAddTwoLongRoot P) := ?_
   · rw [B.two_mul_apply_root_root]
-  · simp only [threeShortAddTwoLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul]; ring
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [threeShortAddTwoLongRoot_eq, map_add, mul_add, map_smul, smul_eq_mul]); ring
   · rw [B.two_mul_apply_root_root, B.two_mul_apply_root_root, long_eq_three_mul_short]; ring
   · rw [threeShortAddTwoLongRoot_longRoot]; ring
 

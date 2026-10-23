@@ -462,6 +462,7 @@ lemma fromSpec_toSpecΓ {X : Scheme} {U : X.Opens} (hU : IsAffineOpen U) :
 @[simp]
 theorem opensRange_fromSpec : hU.fromSpec.opensRange = U := Opens.ext (range_fromSpec hU)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 theorem map_fromSpec {V : X.Opens} (hV : IsAffineOpen V) (f : op U ⟶ op V) :
@@ -475,6 +476,7 @@ theorem map_fromSpec {V : X.Opens} (hV : IsAffineOpen V) (f : op U ⟶ op V) :
   rw [fromSpec, isoSpec_inv, Category.assoc, ← Spec.map_comp_assoc, ← Functor.map_comp]
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc]
 lemma SpecMap_appLE_fromSpec (f : X ⟶ Y) {V : X.Opens} {U : Y.Opens}
@@ -625,6 +627,8 @@ theorem ι_basicOpen_preimage (r : Γ(X, ⊤)) :
     ← Scheme.basicOpen_res _ _ (homOfLE le_top).op]
   exact hU.basicOpen _
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 include hU in
 theorem exists_basicOpen_le {V : X.Opens} (x : V) (h : ↑x ∈ U) :
@@ -673,8 +677,9 @@ theorem isLocalization_basicOpen :
   apply
     (IsLocalization.isLocalization_iff_of_ringEquiv (Submonoid.powers f)
       (asIso <| basicOpenSectionsToAffine hU f).commRingCatIsoToRingEquiv).mpr
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   convert! StructureSheaf.IsLocalization.to_basicOpen _ f using 1
-  apply Algebra.algebra_ext
+  apply Algebra.algebra_ext)
   intro _
   congr 1
   dsimp [CommRingCat.ofHom, RingHom.algebraMap_toAlgebra, ← CommRingCat.hom_comp,
@@ -824,7 +829,7 @@ theorem isLocalization_stalk' (y : PrimeSpectrum Γ(X, U)) (hy : hU.fromSpec y �
       (asIso <| hU.fromSpec.stalkMap y).commRingCatIsoToRingEquiv).mpr
   convert StructureSheaf.IsLocalization.to_stalk Γ(X, U) y
   delta IsLocalization.AtPrime StructureSheaf.stalkAlgebra
-  congr!
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr!)
   simp [RingHom.algebraMap_toAlgebra, ← CommRingCat.hom_comp, IsAffineOpen.fromSpec_app_self]
   rfl
 
@@ -942,7 +947,8 @@ theorem iSup_basicOpen_eq_self_iff {s : Set Γ(X, U)} :
       congr! 1
       · congrm Set.iUnion ?_
         ext1 x
-        congrm Opens.carrier $(hU.fromSpec_preimage_basicOpen _)
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        congrm Opens.carrier $(hU.fromSpec_preimage_basicOpen _))
       · congrm Opens.carrier $(hU.fromSpec_preimage_self)
   · simp only [Opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
     rw [← Set.compl_iInter, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_iUnion, ←

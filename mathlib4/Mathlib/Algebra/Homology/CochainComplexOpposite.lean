@@ -149,7 +149,7 @@ def homotopyUnop (h : Homotopy ((opEquivalence C).functor.map f.op)
     have := h.comm n
     dsimp at this
     rw [op_add, op_add, this, add_left_inj, add_comm]
-    congr 1
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 1)
     · refine (prevD_eq _ (j' := n - 1) (by dsimp; lia)).trans ?_
       rw [dNext_eq _ (i' := - (n - 1)) (by dsimp; lia)]
       dsimp

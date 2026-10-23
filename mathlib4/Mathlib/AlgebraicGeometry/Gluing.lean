@@ -143,7 +143,8 @@ def gluedScheme : Scheme := by
 set_option backward.isDefEq.respectTransparency.types false in
 instance : CreatesColimit 𝖣.diagram.multispan forgetToLocallyRingedSpace :=
   createsColimitOfFullyFaithfulOfIso D.gluedScheme
-    (HasColimit.isoOfNatIso (𝖣.diagramIso forgetToLocallyRingedSpace).symm)
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    HasColimit.isoOfNatIso (𝖣.diagramIso forgetToLocallyRingedSpace).symm)
 
 instance : PreservesColimit (𝖣.diagram.multispan) forgetToTop :=
   inferInstanceAs (PreservesColimit (𝖣.diagram).multispan (forgetToLocallyRingedSpace ⋙
@@ -352,8 +353,9 @@ def fromGlued : 𝒰.gluedCover.glued ⟶ X := by
   fapply Multicoequalizer.desc
   · exact fun x => 𝒰.f x
   rintro ⟨x, y⟩
+  (set_option backward.instanceTypes.subsingletons.prop false in
   change pullback.fst _ _ ≫ _ = ((pullbackSymmetry _ _).hom ≫ pullback.fst _ _) ≫ _
-  simpa using! pullback.condition
+  simpa using! pullback.condition)
 
 @[simp, reassoc]
 theorem ι_fromGlued (x : 𝒰.I₀) : 𝒰.gluedCover.ι x ≫ 𝒰.fromGlued = 𝒰.f x :=
@@ -376,8 +378,9 @@ theorem fromGlued_injective : Function.Injective 𝒰.fromGlued := by
   · erw [← ConcreteCategory.comp_apply e.hom,
       IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.left]
     rfl
-  · erw [← ConcreteCategory.comp_apply e.hom, pullbackSymmetry_hom_comp_fst,
-      IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    erw [← ConcreteCategory.comp_apply e.hom, pullbackSymmetry_hom_comp_fst,
+      IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right])
     rfl
 
 set_option backward.isDefEq.respectTransparency false in
@@ -401,7 +404,8 @@ theorem isOpenMap_fromGlued : IsOpenMap 𝒰.fromGlued := by
   constructor
   · rw [← Set.image_preimage_eq_inter_range]
     apply (𝒰.f (𝒰.idx x)).isOpenEmbedding.isOpenMap
-    convert! hU (𝒰.idx x) using 1
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! hU (𝒰.idx x) using 1)
     simp only [← ι_fromGlued, gluedCover_U, Hom.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
       Set.preimage_comp]
     congr! 1
@@ -449,8 +453,9 @@ def glueMorphisms (𝒰 : OpenCover.{v} X) {Y : Scheme.{u}} (f : ∀ x, 𝒰.X x
   · exact fun i ↦ f _
   rintro ⟨i, j⟩
   dsimp
+  (set_option backward.instanceTypes.subsingletons.prop false in
   change pullback.fst _ _ ≫ f _ = (_ ≫ _) ≫ f _
-  simpa [pullbackSymmetry_hom_comp_fst] using hf _ _
+  simpa [pullbackSymmetry_hom_comp_fst] using hf _ _)
 
 set_option backward.isDefEq.respectTransparency false in
 theorem hom_ext (𝒰 : OpenCover.{v} X) {Y : Scheme} (f₁ f₂ : X ⟶ Y)
@@ -461,6 +466,7 @@ theorem hom_ext (𝒰 : OpenCover.{v} X) {Y : Scheme} (f₁ f₂ : X ⟶ Y)
   rw [fromGlued, Multicoequalizer.π_desc_assoc, Multicoequalizer.π_desc_assoc]
   exact h _
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -550,7 +556,9 @@ lemma exists_of_pullback_V_V {i j k : J} (x : pullback (C := Scheme) (V F i j).�
   obtain ⟨k₂, y₂, hy₂⟩ := mem_iSup.mp ((pullback.snd (C := Scheme) _ _) x).2
   obtain ⟨l, hli, hlk, z, rfl, rfl⟩ :=
     (F ⋙ forget).exists_map_eq_of_isLocallyDirected k₁.2.1 k₂.2.1 y₁ y₂
-      (by simpa [hy₁, hy₂] using congr($(pullback.condition (f := (V F i j).ι)) x))
+      (by
+        (set_option backward.dsimp.instanceTypes false in
+        simpa [hy₁, hy₂] using congr($(pullback.condition (f := (V F i j).ι)) x)))
   let α : F.obj l ⟶ pullback (V F i j).ι (V F i k).ι :=
     pullback.lift
       ((F.map (hli ≫ k₁.2.1)).isoOpensRange.hom ≫ Scheme.homOfLE _
@@ -567,7 +575,7 @@ lemma exists_of_pullback_V_V {i j k : J} (x : pullback (C := Scheme) (V F i j).�
     apply (pullback.fst (C := Scheme) _ _).isOpenEmbedding.injective
     apply (V F i j).ι.isOpenEmbedding.injective
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, pullback.lift_fst_assoc]
-    simpa using hy₁
+    (set_option backward.dsimp.instanceTypes false in simpa using hy₁)
   exact ⟨l, hli ≫ k₁.2.1, hli ≫ k₁.2.2, hlk ≫ k₂.2.2, α, z, ‹_›, by simp [α], by simp [α], ‹_›⟩
 
 variable [Quiver.IsThin J]
@@ -617,7 +625,8 @@ The inclusion map `V i j ⟶ F j` in the glue data associated to a locally direc
 def tAux (i j : J) : (V F i j).toScheme ⟶ F.obj j :=
   (Scheme.Opens.iSupOpenCover _).glueMorphisms
     (fun k ↦ (F.map k.2.1).isoOpensRange.inv ≫ F.map k.2.2) fun k₁ k₂ ↦ by
-      dsimp [Scheme.Opens.iSupOpenCover]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      dsimp [Scheme.Opens.iSupOpenCover])
       apply fst_inv_eq_snd_inv F
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -634,7 +643,8 @@ def t (i j : J) : (V F i j).toScheme ⟶ (V F j i).toScheme :=
   IsOpenImmersion.lift (V F j i).ι (tAux F i j) (by
     rintro _ ⟨x, rfl⟩
     obtain ⟨l, x, rfl⟩ := (Scheme.Opens.iSupOpenCover _).exists_eq x
-    simp only [V, tAux, ← Scheme.Hom.comp_apply, Cover.ι_glueMorphisms]
+    (set_option backward.dsimp.instanceTypes false in
+    simp only [V, tAux, ← Scheme.Hom.comp_apply, Cover.ι_glueMorphisms])
     simp only [Opens.range_ι, iSup_mk, carrier_eq_coe, Hom.coe_opensRange, coe_mk, Hom.comp_base,
       TopCat.hom_comp, ContinuousMap.comp_apply]
     exact Set.mem_iUnion.mpr ⟨⟨l.1, l.2.2, l.2.1⟩, ⟨_, rfl⟩⟩)
@@ -780,9 +790,10 @@ def isColimitForgetToLocallyRingedSpace :
       rw [← CategoryTheory.GlueData.ι, reassoc_of% GlueData.ι_isoLocallyRingedSpace_inv,
         reassoc_of% GlueData.ι_isoLocallyRingedSpace_inv,
         ← cancel_epi (Hom.isoOpensRange (F.map _)).hom.toLRSHom]
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp +instances only [Opens.iSupOpenCover, Cover.ulift, V, ← Hom.comp_toLRSHom_assoc,
         Cover.ι_fromGlued_assoc, homOfLE_ι, Hom.isoOpensRange_hom_ι, Cover.idx]
-      generalize_proofs _ _ h
+      generalize_proofs _ _ h)
       rw [homOfLE_tAux F ↓i ↓j h.choose.2.1 h.choose.2.2, Iso.hom_inv_id_assoc]
       exact (s.w h.choose.2.1).trans (s.w h.choose.2.2).symm)
   fac s j := by
@@ -813,7 +824,9 @@ def openCover : (colimit F).OpenCover :=
   Cover.copy ((coverOfIsIso ((isColimit F).coconePointUniqueUpToIso (colimit.isColimit F)).hom).bind
     fun i ↦ (glueData F).openCover) J F.obj (colimit.ι F)
     ((equivShrink J).trans (Equiv.uniqueSigma fun (_ : Unit) ↦ Shrink J).symm)
-    (fun _ ↦ F.mapIso (eqToIso (by simp [GlueData.openCover, glueData]))) fun i ↦ by
+    (fun _ ↦ F.mapIso (eqToIso (by
+      (set_option backward.dsimp.instanceTypes false in
+      simp [GlueData.openCover, glueData])))) fun i ↦ by
   change colimit.ι F i = _ ≫ (glueData F).ι (equivShrink J i) ≫ _
   simp [← Category.assoc, ← Iso.comp_inv_eq, cocone]
 
@@ -831,8 +844,9 @@ lemma ι_eq_ι_iff {i j : J} {xi : F.obj i} {xj : F.obj j} :
   obtain ⟨j, rfl⟩ := (equivShrink J).symm.surjective j
   rw [← ((isColimit F).coconePointUniqueUpToIso
     (colimit.isColimit F)).inv.isOpenEmbedding.injective.eq_iff]
+  (set_option backward.dsimp.instanceTypes false in
   simp only [Limits.colimit, ← Scheme.Hom.comp_apply,
-    colimit.comp_coconePointUniqueUpToIso_inv, cocone, glueDataι_naturality]
+    colimit.comp_coconePointUniqueUpToIso_inv, cocone, glueDataι_naturality])
   refine ?_ ∘ ((glueData F).ι_eq_iff _ _ _ _).mp
   dsimp +instances only [GlueData.Rel]
   rintro ⟨x, rfl, rfl⟩
@@ -853,7 +867,8 @@ lemma ι_jointly_surjective (x : ↑(colimit F)) :
       (((IsLocallyDirected.isColimit F).coconePointUniqueUpToIso (colimit.isColimit _)).inv x)
   use (equivShrink J).symm i, xi
   apply ((isColimit F).coconePointUniqueUpToIso (colimit.isColimit F)).inv.isOpenEmbedding.injective
-  simp_rw [← h, colimit.cocone_x, ← Scheme.Hom.comp_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  simp_rw [← h, colimit.cocone_x, ← Scheme.Hom.comp_apply])
   congr 5
   have := eqToHom_naturality (fun j ↦ (glueData F).ι j)
     (show i = ((equivShrink J) ((equivShrink J).symm i)) by simp)

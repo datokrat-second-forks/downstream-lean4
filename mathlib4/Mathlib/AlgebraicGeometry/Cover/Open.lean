@@ -216,7 +216,8 @@ def affineOpenCoverOfSpanRangeEqTop {R : CommRingCat} {ι : Type*} (s : ι → R
     generalize_proofs H
     let i := H.choose
     have := PrimeSpectrum.localization_away_comap_range (Localization.Away (s i)) (s i)
-    exact (eq_iff_iff.mp congr(x ∈ $this)).mpr H.choose_spec
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact (eq_iff_iff.mp congr(x ∈ $this)).mpr H.choose_spec)
 
 /-- Given any open cover `𝓤`, this is an affine open cover which refines it. -/
 def OpenCover.fromAffineRefinement {X : Scheme.{u}} (𝓤 : X.OpenCover) :
@@ -295,8 +296,9 @@ theorem affineBasisCover_map_range (X : Scheme.{u}) (x : X)
     (r : (X.local_affine x).choose_spec.choose) :
     Set.range (X.affineBasisCover.f ⟨x, r⟩) =
       (X.affineCover.f x) '' (PrimeSpectrum.basicOpen r).1 := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [affineBasisCover, Precoverage.ZeroHypercover.bind_toPreZeroHypercover, Set.range_comp,
-    PreZeroHypercover.bind_f, Hom.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp]
+    PreZeroHypercover.bind_f, Hom.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp])
   congr
   exact (PrimeSpectrum.localization_away_comap_range (Localization.Away r) r :)
 

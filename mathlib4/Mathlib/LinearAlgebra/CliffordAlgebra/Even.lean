@@ -75,7 +75,8 @@ def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B where
   bilin := g.bilin.compr₂ f.toLinearMap
   contract _m := (f.congr_arg <| g.contract _).trans <| f.commutes _
   contract_mid _m₁ _m₂ _m₃ :=
-    (map_mul f _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| map_smul f _ _
+    (map_mul f _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <|
+      (set_option backward.instanceTypes.subsingletons.prop false in map_smul f _ _)
 
 variable (Q)
 
@@ -84,9 +85,12 @@ nonrec def even.ι : EvenHom Q (even Q) where
   bilin :=
     LinearMap.mk₂ R (fun m₁ m₂ => ⟨ι Q m₁ * ι Q m₂, ι_mul_ι_mem_evenOdd_zero Q _ _⟩)
       (fun _ _ _ => by simp only [map_add, add_mul]; rfl)
-      (fun _ _ _ => by simp only [map_smul, smul_mul_assoc]; rfl)
+      (fun _ _ _ => by
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [map_smul, smul_mul_assoc]); rfl)
       (fun _ _ _ => by simp only [map_add, mul_add]; rfl) fun _ _ _ => by
-      simp only [map_smul, mul_smul_comm]; rfl
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [map_smul, mul_smul_comm]); rfl
   contract m := Subtype.ext <| ι_sq_scalar Q m
   contract_mid m₁ m₂ m₃ :=
     Subtype.ext <|
@@ -152,11 +156,12 @@ private def fFold : M →ₗ[R] A × S f →ₗ[R] A × S f :=
             show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by
               rw [map_add, add_mul]))
     (fun c m a =>
-      Prod.ext (map_smul _ c m)
+      Prod.ext (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ c m)
         (Subtype.ext <|
           LinearMap.ext fun m₃ =>
             show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by
-              rw [map_smul, smul_mul_assoc]))
+              (set_option backward.instanceTypes.subsingletons.prop false in
+              rw [map_smul, smul_mul_assoc])))
     (fun _ _ _ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun _ => mul_add _ _ _))
     fun _ _ _ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun _ => mul_smul_comm _ _ _)
 

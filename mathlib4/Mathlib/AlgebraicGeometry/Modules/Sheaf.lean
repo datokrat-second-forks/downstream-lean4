@@ -50,7 +50,8 @@ instance : HasLimits X.Modules := inferInstanceAs (HasLimits (SheafOfModules X.r
 instance : HasColimits X.Modules := inferInstanceAs (HasColimits (SheafOfModules X.ringCatSheaf))
 
 instance : IsGrothendieckAbelian.{u} X.Modules :=
-  inferInstanceAs (IsGrothendieckAbelian (SheafOfModules _))
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (IsGrothendieckAbelian (SheafOfModules _)))
 
 section Functor
 
@@ -319,13 +320,14 @@ these categories.) -/
   mapComp_hom_τl mapComp_hom_τr mapComp_inv_τl mapComp_inv_τr]
 def pseudofunctor :
     Pseudofunctor (LocallyDiscrete Scheme.{u}ᵒᵖ) (Adj Cat) :=
+  (set_option backward.dsimp.instanceTypes false in
   LocallyDiscrete.mkPseudofunctor
     (fun X ↦ Adj.mk ↧X.unop.Modules)
     (fun f ↦ .mk (pullbackPushforwardAdjunction f.unop).toCat)
     (fun _ ↦ Adj.iso₂Mk (Cat.Hom.isoMk (pullbackId _))
         (Cat.Hom.isoMk (pushforwardId _).symm))
     (fun _ _ ↦ Adj.iso₂Mk (Cat.Hom.isoMk (pullbackComp _ _).symm)
-        (Cat.Hom.isoMk (pushforwardComp _ _)))
+        (Cat.Hom.isoMk (pushforwardComp _ _))))
 
 end Functorial
 

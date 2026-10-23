@@ -493,7 +493,9 @@ theorem setToSimpleFunc_smul_real (T : Set α → E →L[ℝ] F) (h_add : FinMea
     setToSimpleFunc T (c • f) = ∑ x ∈ f.range, T (f ⁻¹' {x}) (c • x) := by
       rw [smul_eq_map c f, map_setToSimpleFunc T h_add hf]; rw [smul_zero]
     _ = ∑ x ∈ f.range, c • T (f ⁻¹' {x}) x :=
-      (Finset.sum_congr rfl fun b _ => by rw [map_smul (T (f ⁻¹' {b})) c b])
+      (Finset.sum_congr rfl fun b _ => by
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [map_smul (T (f ⁻¹' {b})) c b]))
     _ = c • setToSimpleFunc T f := by simp only [setToSimpleFunc, smul_sum]
 
 theorem setToSimpleFunc_smul {E} [NormedAddCommGroup E] [SMulZeroClass 𝕜 E]

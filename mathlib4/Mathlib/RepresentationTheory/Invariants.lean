@@ -136,7 +136,8 @@ theorem averageMap_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun 
 -/
 theorem averageMap_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
   rw [mem_invariants] at hv
-  simp [average, map_sum, hv, Finset.card_univ, ← Nat.cast_smul_eq_nsmul k _ v, smul_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [average, map_sum, hv, Finset.card_univ, ← Nat.cast_smul_eq_nsmul k _ v, smul_smul])
 
 theorem isProj_averageMap : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.averageMap_invariant, ρ.averageMap_id⟩
@@ -266,6 +267,7 @@ noncomputable def quotientToInvariantsFunctor (S : Subgroup G) [S.Normal] :
   map {X Y} f := Rep.ofHom ⟨((invariantsFunctor k S).map ((Rep.resFunctor S.subtype).map f)).hom,
     fun g ↦ QuotientGroup.induction_on g fun g ↦ by ext; simp [hom_comm_apply]⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The adjunction between the functor equipping a module with the trivial representation, and
 the functor sending a representation to its submodule of invariants. -/
 @[simps]

@@ -146,7 +146,7 @@ def toIsometryEquiv (i : X ≅ Y) : X.form.IsometryEquiv Y.form where
     change (i.inv ≫ i.hom).toIsometry x = x
     simp
   map_add' := map_add _
-  map_smul' := map_smul _
+  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _)
   map_app' := QuadraticMap.Isometry.map_app _
 
 @[simp] theorem toIsometryEquiv_refl : toIsometryEquiv (.refl X) = .refl _ :=

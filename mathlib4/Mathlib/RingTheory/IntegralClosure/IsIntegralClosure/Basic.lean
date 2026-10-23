@@ -359,7 +359,8 @@ lemma Polynomial.Monic.quotient_isIntegral {g : S[X]} (mon : g.Monic) {I : Ideal
       have : g = (Polynomial.aeval ((Ideal.Quotient.mkₐ S I) X)) g' := by
         nth_rw 1 [← hg, aeval_eq_sum_range' (lt_add_one _),
           as_sum_range_C_mul_X_pow g', map_sum]
-        simp only [Polynomial.C_mul', ← map_pow, map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [Polynomial.C_mul', ← map_pow, map_smul])
       exact this ▸ (aeval_mem_adjoin_singleton S ((Ideal.Quotient.mk I) Polynomial.X))
   exact fun a ↦ (eq_top ▸ adjoin_le_integralClosure <| mon.quotient_isIntegralElem h)
     Algebra.mem_top
@@ -535,7 +536,8 @@ theorem isIntegral_trans [Algebra.IsIntegral R A] (x : B) (hx : IsIntegral A x) 
   let : SMul S Sx := { MSx with } -- need this even though MSx is there
   have : IsScalarTower R S Sx :=
     Submodule.isScalarTower Sx -- Lean looks for `Module A Sx` without this
-  exact Module.Finite.trans S Sx
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact Module.Finite.trans S Sx)
 
 variable (A) in
 /-- If A is an R-algebra all of whose elements are integral over R,

@@ -121,6 +121,8 @@ noncomputable def topCatAdjunctionUnit (X : LightCondSet.{u}) : X ⟶ X.toTopCat
         TopCat.toSheafCompHausLike_obj_map, ← Functor.map_comp_apply]
       rfl }
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The adjunction `lightCondSetToTopCat ⊣ topCatToLightCondSet` -/

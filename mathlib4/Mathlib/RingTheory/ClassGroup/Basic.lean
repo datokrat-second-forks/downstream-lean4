@@ -211,7 +211,7 @@ theorem ClassGroup.equiv_mk (K' : Type*) [Field K'] [Algebra R K'] [IsFractionRi
       QuotientGroup.mk' _ (Units.mapEquiv (↑(FractionalIdeal.canonicalEquiv R⁰ K K')) I) := by
   -- `simp` can't apply `ClassGroup.mk_def` and `rw` can't unfold `ClassGroup`.
   rw [ClassGroup.equiv, ClassGroup.mk_def]
-  simp only [ClassGroup, QuotientGroup.congr_mk']
+  (set_option backward.dsimp.instanceTypes false in simp only [ClassGroup, QuotientGroup.congr_mk'])
   congr
   rw [← Units.val_inj, Units.coe_mapEquiv, Units.coe_mapEquiv, Units.coe_map]
   exact FractionalIdeal.canonicalEquiv_canonicalEquiv _ _ _ _ _

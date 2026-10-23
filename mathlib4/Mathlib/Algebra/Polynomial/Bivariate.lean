@@ -352,7 +352,7 @@ lemma pderiv_zero_equivMvPolynomial {R : Type*} [CommRing R] (p : R[X][Y]) :
   | add p q _ _ => aesop
   | monomial m a =>
     simp_rw [← Polynomial.C_mul_X_pow_eq_monomial]
-    simp [map_nsmul]
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [map_nsmul])
 
 lemma pderiv_one_equivMvPolynomial (p : R[X][Y]) :
     (equivMvPolynomial R p).pderiv 1 = equivMvPolynomial R (derivative p) := by

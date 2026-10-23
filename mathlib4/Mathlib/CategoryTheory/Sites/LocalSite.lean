@@ -103,9 +103,10 @@ variable {A} in
 the terminal object. -/
 noncomputable def pointPresheafFiberIso (P : Cᵒᵖ ⥤ A) :
     (point J).presheafFiber.obj P ≅ P.obj (op (⊤_ C)) :=
+  (set_option backward.instanceTypes.subsingletons.prop false in
   (colimit.isColimit _).coconePointUniqueUpToIso
     (colimitOfDiagramTerminal (Functor.Elements.isInitialOfCorepresentableBy
-      <| shrinkCoyonedaCorepresentableBy <| op (⊤_ C)).op _)
+      <| shrinkCoyonedaCorepresentableBy <| op (⊤_ C)).op _))
 
 variable {A} in
 set_option backward.isDefEq.respectTransparency false in
@@ -114,7 +115,8 @@ set_option backward.defeqAttrib.useBackward true in
 lemma toPresheafFiber_pointPresheafFiberIso_hom {P : Cᵒᵖ ⥤ A} (X : C) (x : (point J).fiber.obj X) :
     (point J).toPresheafFiber  _ x _ ≫ (pointPresheafFiberIso J P).hom =
       P.map (.op <| shrinkCoyonedaObjObjEquiv x) := by
-  simp [Point.toPresheafFiber, pointPresheafFiberIso]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [Point.toPresheafFiber, pointPresheafFiberIso])
   rfl
 
 variable {A} in

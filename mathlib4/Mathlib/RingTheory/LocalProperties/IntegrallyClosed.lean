@@ -31,7 +31,9 @@ variable {R K : Type*} [CommRing R] [Field K] [Algebra R K] [IsFractionRing R K]
 theorem IsIntegrallyClosed.iInf {ι : Type*} (S : ι → Subalgebra R K)
     (h : ∀ i, IsIntegrallyClosed (S i)) :
     IsIntegrallyClosed (⨅ i, S i : Subalgebra R K) := by
-  refine (isIntegrallyClosed_iff K).mpr (fun {x} hx ↦ CanLift.prf x (Algebra.mem_iInf.mpr ?_))
+  refine (isIntegrallyClosed_iff K).mpr (fun {x} hx ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    CanLift.prf x (Algebra.mem_iInf.mpr ?_)))
   intro i
   have le : (⨅ i : ι, S i : Subalgebra R K) ≤ S i := iInf_le S i
   algebraize [(Subalgebra.inclusion le).toRingHom]

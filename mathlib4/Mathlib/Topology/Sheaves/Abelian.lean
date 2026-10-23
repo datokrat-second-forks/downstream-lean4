@@ -48,7 +48,8 @@ instance : (Sheaf.forget C X).Additive where
 
 instance {D : Type*} [Category.{u} D] [Abelian D] [IsGrothendieckAbelian.{u} D]
     [HasSheafify (Opens.grothendieckTopology X) D] : IsGrothendieckAbelian.{u} (Sheaf D X) :=
-  inferInstanceAs (IsGrothendieckAbelian (CategoryTheory.Sheaf _ _))
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs (IsGrothendieckAbelian (CategoryTheory.Sheaf _ _)))
 
 end Sheaf
 

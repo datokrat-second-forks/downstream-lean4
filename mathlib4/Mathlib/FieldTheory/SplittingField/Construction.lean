@@ -196,7 +196,7 @@ theorem adjoin_rootSet (n : ℕ) :
     rw [algebraMap_succ, ← map_map, ← X_sub_C_mul_removeFactor _ hndf, Polynomial.map_mul] at hmf0 ⊢
     rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.toFinset_add,
       Finset.coe_union, Multiset.toFinset_singleton, Finset.coe_singleton, ← Set.image_singleton]
-    simp only [SplittingFieldAux.succ]
+    (set_option backward.dsimp.instanceTypes false in simp only [SplittingFieldAux.succ])
     rw [← Algebra.adjoin_eq_adjoin_union K {AdjoinRoot.root f.factor}
       ((map (algebraMap (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor))
         f.removeFactor).roots.toFinset : Set (SplittingFieldAux n f.removeFactor))

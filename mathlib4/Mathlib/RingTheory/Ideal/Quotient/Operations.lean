@@ -548,6 +548,9 @@ def quotientKerAlgEquivOfRightInverse {f : A →ₐ[R₁] B} {g : B → A}
   { RingHom.quotientKerEquivOfRightInverse hf,
     kerLiftAlg f with }
 
+-- With the instance type check, `simps!` states `_apply` at `ker f.toRingHom` instead of
+-- `ker (RingHomClass.toRingHom f)`, which no longer matches its uses in `Smooth/Basic.lean`.
+set_option backward.dsimp.instanceTypes false in
 /-- The **first isomorphism theorem** for algebras. -/
 @[simps! -isSimp apply]
 noncomputable def quotientKerAlgEquivOfSurjective {f : A →ₐ[R₁] B} (hf : Function.Surjective f) :

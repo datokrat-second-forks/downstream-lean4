@@ -66,11 +66,12 @@ private lemma of_isAffine_target {X Y S : Scheme.{u}} [IsAffine X] [IsAffine Y] 
     apply AffineScheme.equivCommRingCat.functor.effectiveEpi_of_map
     apply CommRingCat.Opposite.effectiveEpi_of_faithfullyFlat
     exact (Flat.flat_and_surjective_iff_faithfullyFlat_of_isAffine π).mp ⟨‹_›, ‹_›⟩
+  (set_option backward.instanceTypes.subsingletons.prop false in
   obtain ⟨u, hu⟩ := IsRegularEpi.exists_of_isKernelPair
     (AffineScheme.ofHom π)
     (IsPullback.of_map (f := AffineScheme.ofHom (pullback.fst π π)) (AffineScheme.forgetToScheme)
       (InducedCategory.Hom.ext pullback.condition) (.of_hasPullback _ _))
-    (AffineScheme.ofHom f) (InducedCategory.Hom.ext hf)
+    (AffineScheme.ofHom f) (InducedCategory.Hom.ext hf))
   use u.hom, InducedCategory.Hom.ext_iff.mp hu
 
 set_option backward.defeqAttrib.useBackward true in
@@ -100,7 +101,7 @@ private lemma exists_openCover_exists {X Y S : Scheme.{u}} [IsAffine X] [IsAffin
     rw [← hfac, ← TopCat.coe_comp, ← Scheme.Hom.comp_base_assoc, pullback.condition]
     simp only [Hom.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp, Set.range_comp,
       range_eq_univ, Set.image_univ, Opens.range_ι, Set.image_subset_iff]
-    exact trans (by simp [𝒰]) i.2.2
+    exact trans (by (set_option backward.dsimp.instanceTypes false in simp [𝒰])) i.2.2
   have h1 : fst (snd π (𝒰.f i)) _ ≫ fst _ _ = map _ _ _ _ (fst _ _) (fst _ _) _
     condition.symm condition.symm ≫ fst π π := by simp
   have h2 : snd (snd π (𝒰.f i)) _ ≫ fst _ _ = map _ _ _ _ (fst _ _) (fst _ _) _

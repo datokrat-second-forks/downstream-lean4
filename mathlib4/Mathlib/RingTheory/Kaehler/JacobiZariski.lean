@@ -78,12 +78,14 @@ lemma Cotangent.surjective_map_ofComp :
     Function.Surjective (Extension.Cotangent.map (Q.ofComp P).toExtensionHom) := by
   intro x
   obtain ⟨⟨x, hx⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
-  have : x ∈ Q.ker := hx
+  have : (set_option backward.isDefEq.respectTransparency.instanceTypes false in x ∈ Q.ker) := hx
   rw [← map_ofComp_ker Q P, Ideal.mem_map_iff_of_surjective
     _ (toAlgHom_ofComp_surjective Q P)] at this
   obtain ⟨x, hx', rfl⟩ := this
   exact ⟨.mk ⟨x, hx'⟩, Extension.Cotangent.map_mk _ _⟩
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 open Extension.Cotangent in
@@ -273,15 +275,17 @@ lemma δAux_toAlgHom (f : Hom Q Q') (x) :
     simp only [map_add, hx₁, hx₂, tmul_add]
     rw [add_add_add_comm]
   | mul_X p n IH =>
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_mul, Hom.toAlgHom_X, δAux_mul, algebraMap_apply, Hom.algebraMap_toAlgHom,
       ← @IsScalarTower.algebraMap_smul Q'.Ring T, algebraMap_self, δAux_X,
       RingHom.id_apply, coe_eval₂Hom, IH, Hom.aeval_val, smul_add, map_aeval, tmul_add, tmul_smul,
       ← @IsScalarTower.algebraMap_smul Q.Ring T, smul_zero, aeval_X, zero_add, Derivation.leibniz,
       Basis.repr_self, map_add, one_smul, map_smul, Finsupp.linearCombination_single,
-      RingHomCompTriple.comp_eq, Function.comp_apply, ← cotangentSpaceBasis_apply]
+      RingHomCompTriple.comp_eq, Function.comp_apply, ← cotangentSpaceBasis_apply])
     rw [add_left_comm]
     rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma δAux_ofComp (x : (Q.comp P).Ring) :
     δAux R Q ((Q.ofComp P).toAlgHom x) =
@@ -363,6 +367,8 @@ def δ :
     (Cotangent.surjective_map_ofComp Q P)
     (CotangentSpace.map_toComp_injective Q P)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma exact_δ_map :
@@ -470,8 +476,10 @@ lemma liftBaseChange_range_le :
   rw [range_liftBaseChange, coe_range, Submodule.span_le, Set.range_subset_iff]
   rintro ⟨x, _⟩
   obtain ⟨⟨(x : P.Ring), x_in⟩, rfl⟩ := Extension.Cotangent.mk_surjective x
-  ext; suffices (Q.ofComp P).toAlgHom ((Q.toComp P).toAlgHom x) ∈ Q.toExtension.ker ^ 2 by
-    simpa [Ideal.toCotangent_eq_zero]
+  ext
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  suffices (Q.ofComp P).toAlgHom ((Q.toComp P).toAlgHom x) ∈ Q.toExtension.ker ^ 2 by
+    simpa [Ideal.toCotangent_eq_zero])
   rw [← Generators.ker, Generators.ker_eq_ker_aeval_val] at x_in
   rw [toComp_toAlgHom, toAlgHom_ofComp_rename, Generators.algebraMap_eq, RingHom.coe_coe,
     x_in, RingHom.map_zero]

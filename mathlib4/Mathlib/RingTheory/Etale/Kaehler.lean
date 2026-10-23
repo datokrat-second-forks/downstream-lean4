@@ -160,9 +160,10 @@ def tensorCotangentInvFun
     obtain ⟨x, hx⟩ := e.surjective ⟨a, ha⟩
     obtain rfl : (e x).1 = a := congr($(hx).val)
     obtain ⟨y, rfl⟩ := e.surjective b
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [AddMonoidHom.mem_ker, AddMonoidHom.coe_ofClass, map_smul,
       LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      LinearEquiv.symm_apply_apply, f']
+      LinearEquiv.symm_apply_apply, f'])
     clear hx ha
     induction x with
     | add x y _ _ =>
@@ -221,7 +222,8 @@ def tensorCotangent [alg : Algebra P.Ring Q.Ring] (halg : algebraMap P.Ring Q.Ri
       induction x with
       | add x y _ _ => simp only [map_add, *]
       | tmul a b =>
-        simp only [LinearMap.liftBaseChange_tmul, map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [LinearMap.liftBaseChange_tmul, map_smul])
         simp [Hom.mapKer, tensorCotangentInvFun_smul_mk] }
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -291,8 +293,12 @@ def tensorH1CotangentOfIsLocalization (M : Submonoid S) [IsLocalization M T] :
   letI f : P.Hom Q :=
   { toRingHom := algebraMap P.Ring (Localization M')
     toRingHom_algebraMap x := (IsScalarTower.algebraMap_apply R P.Ring (Localization M') _).symm
-    algebraMap_toRingHom x := @IsLocalization.lift_eq .. }
-  haveI : FormallySmooth R P.Ring := inferInstanceAs (FormallySmooth R (MvPolynomial _ _))
+    algebraMap_toRingHom x :=
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      @IsLocalization.lift_eq ..) }
+  haveI : FormallySmooth R P.Ring :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    inferInstanceAs (FormallySmooth R (MvPolynomial _ _)))
   haveI : FormallySmooth P.Ring (Localization M') := .of_isLocalization M'
   haveI : FormallySmooth R Q.Ring := .comp R P.Ring (Localization M')
   haveI : Module.Flat S T := IsLocalization.flat T M
@@ -335,6 +341,7 @@ def tensorH1CotangentOfIsLocalization (M : Submonoid S) [IsLocalization M T] :
     rw [this]
     exact IsLocalizedModule.of_linearEquiv _ _ _
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma tensorH1CotangentOfIsLocalization_toLinearMap
     (M : Submonoid S) [IsLocalization M T] :

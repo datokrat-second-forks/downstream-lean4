@@ -265,9 +265,10 @@ def Hom.sub (f g : Hom P P') : P.CotangentSpace →ₗ[S] P'.Cotangent := by
     simp [Ideal.toCotangent_eq_zero]
   · intro x y
     ext
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [LinearMap.coe_comp, LinearMap.coe_restrictScalars, Function.comp_apply,
       Cotangent.val_mk, Cotangent.val_add, Cotangent.val_smul''', ← map_smul, ← map_add,
-      Ideal.toCotangent_eq]
+      Ideal.toCotangent_eq])
     exact Hom.sub_aux f g x y
 
 variable [IsScalarTower R S S']
@@ -348,7 +349,8 @@ instance {R₁ R₂} [CommRing R₁] [CommRing R₂] [Algebra R₁ R₂]
     [Module R₂ P.Cotangent] [IsScalarTower R₂ S P.Cotangent]
     [IsScalarTower R₁ R₂ P.Cotangent] :
     IsScalarTower R₁ R₂ P.H1Cotangent :=
-  inferInstanceAs <| IsScalarTower R₁ R₂ (LinearMap.ker _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower R₁ R₂ (LinearMap.ker _))
 
 lemma subsingleton_h1Cotangent (P : Extension R S) :
     Subsingleton P.H1Cotangent ↔ Function.Injective P.cotangentComplex := by
@@ -436,6 +438,8 @@ variable {ι : Type w} (P : Generators R S ι)
 def cotangentSpaceBasis : Basis ι S P.toExtension.CotangentSpace :=
   (mvPolynomialBasis _ _).baseChange (R := P.Ring) _
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma cotangentSpaceBasis_repr_tmul (r x i) :
@@ -448,12 +452,12 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma cotangentSpaceBasis_repr_one_tmul (x i) :
     P.cotangentSpaceBasis.repr (1 ⊗ₜ .D _ _ x) i = aeval P.val (pderiv i x) := by
-  simp
+  (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma cotangentSpaceBasis_apply (i) :
     P.cotangentSpaceBasis i = ((1 : S) ⊗ₜ[P.Ring] D R P.Ring (.X i) :) := by
-  simp [cotangentSpaceBasis, toExtension]
+  (set_option backward.dsimp.instanceTypes false in simp [cotangentSpaceBasis, toExtension])
 
 instance (P : Generators R S ι) : Module.Free S P.toExtension.CotangentSpace :=
   .of_basis P.cotangentSpaceBasis
@@ -473,7 +477,8 @@ lemma cotangentRestrict_mk {σ : Type*} {u : σ → ι} (hu : Function.Injective
   ext j
   simp only [cotangentRestrict, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     Finsupp.lcomapDomain_apply, Finsupp.comapDomain_apply, Extension.cotangentComplex_mk]
-  simp only [toExtension_Ring, P.cotangentSpaceBasis_repr_tmul, one_mul]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [toExtension_Ring, P.cotangentSpaceBasis_repr_tmul, one_mul])
 
 universe w' u' v'
 
@@ -495,7 +500,7 @@ lemma repr_CotangentSpaceMap (f : Hom P P') (i j) :
     P'.cotangentSpaceBasis.repr (CotangentSpace.map f.toExtensionHom (P.cotangentSpaceBasis i)) j =
       aeval P'.val (pderiv j (f.val i)) := by
   rw [cotangentSpaceBasis_apply]
-  simp only [toExtension]
+  (set_option backward.dsimp.instanceTypes false in simp only [toExtension])
   rw [CotangentSpace.map_tmul, map_one]
   erw [cotangentSpaceBasis_repr_one_tmul, Hom.toAlgHom_X]
 
@@ -503,7 +508,10 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma toKaehler_tmul_D (i) :
     P.toExtension.toKaehler (1 ⊗ₜ D R P.Ring (X i)) = D _ _ (P.val i) :=
-  (KaehlerDifferential.mapBaseChange_tmul ..).trans (by simp)
+  (KaehlerDifferential.mapBaseChange_tmul ..).trans (by
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp))
 
 @[simp]
 lemma toKaehler_cotangentSpaceBasis (i) :
@@ -521,7 +529,8 @@ attribute [local instance] Module.finitePresentation_of_projective in
 instance [Algebra.FinitePresentation R S] : Module.FinitePresentation S Ω[S⁄R] := by
   let P := Algebra.Presentation.ofFinitePresentation R S
   have : Algebra.FiniteType R P.toExtension.Ring := by
-    simp only [Generators.toExtension_Ring]; infer_instance
+    (set_option backward.dsimp.instanceTypes false in
+    simp only [Generators.toExtension_Ring]); infer_instance
   refine Module.finitePresentation_of_surjective _ P.toExtension.toKaehler_surjective ?_
   rw [LinearMap.exact_iff.mp P.toExtension.exact_cotangentComplex_toKaehler, ← Submodule.map_top]
   exact (Extension.Cotangent.finite P.fg_ker).1.map P.toExtension.cotangentComplex
@@ -586,7 +595,8 @@ instance [FinitePresentation R S] [Module.Projective S Ω[S⁄R]] :
     Module.Finite S (H1Cotangent R S) := by
   let P := Algebra.Presentation.ofFinitePresentation R S
   have : Algebra.FiniteType R P.toExtension.Ring := by
-    simp only [Generators.toExtension_Ring]; infer_instance
+    (set_option backward.dsimp.instanceTypes false in
+    simp only [Generators.toExtension_Ring]); infer_instance
   suffices Module.Finite S P.toExtension.H1Cotangent from
     .of_surjective P.equivH1Cotangent.toLinearMap P.equivH1Cotangent.surjective
   rw [Module.finite_def, Submodule.fg_top, ← LinearMap.ker_rangeRestrict]

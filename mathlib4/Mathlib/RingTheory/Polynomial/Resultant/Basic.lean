@@ -149,7 +149,7 @@ set_option backward.defeqAttrib.useBackward true in
 lemma resultant_comm : resultant f g m n = (-1) ^ (m * n) * resultant g f n m := by
   rw [resultant, resultant, sylvester_comm, Matrix.det_reindex, Equiv.Perm.sign_eq_prod_prod_Ioi]
   congr 1
-  dsimp
+  (set_option backward.instanceTypes.subsingletons.decidable false in dsimp)
   simp only [Fin.cast_lt_cast, Units.coe_prod, apply_ite, Units.val_one, Units.val_neg,
     Int.reduceNeg, Int.cast_prod, Int.cast_one, Int.cast_neg]
   simp_rw [← finSumFinEquiv.prod_comp, ← Finset.prod_map_equiv finSumFinEquiv.symm]
@@ -857,8 +857,9 @@ lemma sylvesterMap_comp_adjSylvester (f g : R[X]) (hf : f.natDegree ≤ m)
   let b₁ := ((degreeLT.basis R m).prod (degreeLT.basis R n)).reindex finSumFinEquiv
   let b₂ := degreeLT.basis R (m + n)
   have := congr(Matrix.toLin b₂ b₂ $(((sylvesterMap f g hf hg).toMatrix b₁ b₂).mul_adjugate))
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rwa [Matrix.toLin_mul b₂ b₁ b₂, Matrix.toLin_toMatrix, map_smul,
-    toMatrix_sylvesterMap', Matrix.toLin_one, ← resultant] at this
+    toMatrix_sylvesterMap', Matrix.toLin_one, ← resultant] at this)
 
 @[deprecated (since := "2026-09-17")]
 alias sylveserMap_comp_adjSylvester := sylvesterMap_comp_adjSylvester
@@ -869,8 +870,9 @@ lemma adjSylvester_comp_sylvesterMap (f g : R[X]) (hf : f.natDegree ≤ m)
   let b₁ := ((degreeLT.basis R m).prod (degreeLT.basis R n)).reindex finSumFinEquiv
   let b₂ := degreeLT.basis R (m + n)
   have := congr(Matrix.toLin b₁ b₁ $(((sylvesterMap f g hf hg).toMatrix b₁ b₂).adjugate_mul))
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rwa [Matrix.toLin_mul b₁ b₂ b₁, Matrix.toLin_toMatrix, map_smul,
-    toMatrix_sylvesterMap', Matrix.toLin_one, ← resultant] at this
+    toMatrix_sylvesterMap', Matrix.toLin_one, ← resultant] at this)
 
 @[deprecated (since := "2026-09-17")]
 alias adjSylvester_comp_sylveserMap := adjSylvester_comp_sylvesterMap

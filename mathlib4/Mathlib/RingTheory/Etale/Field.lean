@@ -237,7 +237,7 @@ lemma equivPiOfIsSepClosed_self_apply [IsSepClosed K] (x : K) (p : PrimeSpectrum
     IsArtinianRing.primeSpectrumEquivMaximalSpectrum_apply_asIdeal, IsArtinianRing.equivPi_apply]
   apply (AlgEquiv.ofBijective (ofId K (K ⧸ p.asIdeal))
     (IsSepClosed.algebraMap_bijective _ _)).injective
-  simp
+  (set_option backward.dsimp.instanceTypes false in simp)
 
 variable {K A} in
 set_option backward.defeqAttrib.useBackward true in
@@ -248,9 +248,10 @@ lemma equivPiOfIsSepClosed_comap {B : Type*} [CommRing B] [EssFiniteType K A] [F
     (f : A →ₐ[K] B) (x : A) (p : PrimeSpectrum B) :
     equivPiOfIsSepClosed K A x (p.comap f) = equivPiOfIsSepClosed K B (f x) p := by
   dsimp [equivPiOfIsSepClosed]
+  (set_option backward.dsimp.instanceTypes false in
   simp only [Equiv.piCongrLeft_symm_apply, AlgEquiv.piCongrRight_apply,
     IsArtinianRing.primeSpectrumEquivMaximalSpectrum_apply_asIdeal, PrimeSpectrum.comap_asIdeal,
-    IsArtinianRing.equivPi_apply]
+    IsArtinianRing.equivPi_apply])
   have heq : ofId K (B ⧸ p.asIdeal) = (Ideal.quotientMapₐ p.asIdeal f le_rfl).comp (ofId _ _) := by
     simp
   suffices h : Ideal.quotientMapₐ p.asIdeal f le_rfl x = f x by

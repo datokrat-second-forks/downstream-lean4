@@ -177,10 +177,11 @@ lemma IsMIntegralCurveOn.hasDerivWithinAt (hγ : IsMIntegralCurveOn γ v s) {t :
     (Set.subset_preimage_image _ _)).congr_mfderiv
   rw [ContinuousLinearMap.ext_iff]
   intro a
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply, map_smul,
     ← one_apply_eq_self (F := TangentSpace 𝓘(ℝ, ℝ) t →L[ℝ] TangentSpace 𝓘(ℝ, ℝ) t) a,
     ← ContinuousLinearMap.smulRight_apply,
-    mfderiv_chartAt_eq_tangentCoordChange hsrc]
+    mfderiv_chartAt_eq_tangentCoordChange hsrc])
   rfl
 
 set_option backward.isDefEq.respectTransparency false in
@@ -196,8 +197,9 @@ lemma IsMIntegralCurveAt.eventually_hasDerivAt (hγ : IsMIntegralCurveAt γ v t�
   apply (HasMFDerivAt.comp t (hasMFDerivAt_extChartAt (I := I) hsrc) ht2).congr_mfderiv
   rw [ContinuousLinearMap.ext_iff]
   intro a
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply, map_smul,
     ← one_apply_eq_self (F := TangentSpace 𝓘(ℝ, ℝ) t →L[ℝ] TangentSpace 𝓘(ℝ, ℝ) t) a,
     ← ContinuousLinearMap.smulRight_apply,
-    mfderiv_chartAt_eq_tangentCoordChange hsrc]
+    mfderiv_chartAt_eq_tangentCoordChange hsrc])
   rfl

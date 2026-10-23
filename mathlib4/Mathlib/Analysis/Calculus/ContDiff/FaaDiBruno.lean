@@ -432,7 +432,8 @@ def extendMiddle (c : OrderedFinpartition n) (k : Fin c.length) : OrderedFinpart
 set_option backward.isDefEq.respectTransparency false in
 lemma index_extendMiddle_zero (c : OrderedFinpartition n) (i : Fin c.length) :
     (c.extendMiddle i).index 0 = i := by
-  have : (c.extendMiddle i).emb i 0 = 0 := by simp [extendMiddle]
+  have : (c.extendMiddle i).emb i 0 = 0 := by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [extendMiddle])
   conv_rhs at this => rw [← (c.extendMiddle i).emb_invEmbedding 0]
   contrapose! this
   exact (c.extendMiddle i).emb_ne_emb_of_ne (Ne.symm this)
@@ -1060,7 +1061,8 @@ theorem HasFTaylorSeriesUpToOn.comp {n : WithTop ℕ∞} {g : F → G} {f : E �
   `OrderedFinpartition.extendEquiv m`. -/
   constructor
   · intro x hx
-    simp [FormalMultilinearSeries.taylorComp, default, HasFTaylorSeriesUpToOn.zero_eq' hg (h hx)]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [FormalMultilinearSeries.taylorComp, default, HasFTaylorSeriesUpToOn.zero_eq' hg (h hx)])
   · intro m hm x hx
     have A (c : OrderedFinpartition m) :
       HasFDerivWithinAt (fun x ↦ (q (f x)).compAlongOrderedFinpartition (p x) c)

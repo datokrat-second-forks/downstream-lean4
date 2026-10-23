@@ -98,12 +98,13 @@ protected theorem weight_vector_multiplication (M₁ M₂ M₃ : Type*)
   let f₂ : Module.End R (M₁ ⊗[R] M₂) := (toEnd R L M₂ x - χ₂ • ↑1).lTensor M₁
   have h_comm_square : F ∘ₗ ↑g = (g : M₁ ⊗[R] M₂ →ₗ[R] M₃).comp (f₁ + f₂) := by
     ext m₁ m₂
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [f₁, f₂, F, ← g.map_lie x (m₁ ⊗ₜ m₂), add_smul, sub_tmul, tmul_sub, smul_tmul,
       lie_tmul_right, tmul_smul, toEnd_apply_apply, map_smul, Module.End.one_apply,
       LieModuleHom.coe_toLinearMap, LinearMap.smul_apply, Function.comp_apply, LinearMap.coe_comp,
       LinearMap.rTensor_tmul, map_add, LinearMap.add_apply, map_sub, LinearMap.sub_apply,
       LinearMap.lTensor_tmul, AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
-      LinearMap.coe_restrictScalars]
+      LinearMap.coe_restrictScalars])
     abel
   rsuffices ⟨k, hk⟩ : ∃ k : ℕ, ((f₁ + f₂) ^ k) (m₁ ⊗ₜ m₂) = 0
   · use k
@@ -510,7 +511,7 @@ lemma map_genWeightSpace_le :
   simp only [LieSubmodule.mem_comap, mem_genWeightSpace]
   intro x
   have : (toEnd R L M₂ x - χ x • ↑1) ∘ₗ f = f ∘ₗ (toEnd R L M x - χ x • ↑1) := by
-    ext; simp
+    ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
   obtain ⟨k, h⟩ := (mem_genWeightSpace _ _ _).mp hm x
   refine ⟨k, ?_⟩
   simpa [h] using congr($(Module.End.commute_pow_left_of_commute this k) m)
@@ -524,7 +525,8 @@ lemma comap_genWeightSpace_eq_of_injective (hf : Injective f) :
     simp only [mem_genWeightSpace]
     intro x
     have h : (toEnd R L M₂ x - χ x • ↑1) ∘ₗ f =
-             f ∘ₗ (toEnd R L M x - χ x • ↑1) := by ext; simp
+             f ∘ₗ (toEnd R L M x - χ x • ↑1) := by
+               ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
     obtain ⟨k, hk⟩ := hm x
     use k
     suffices f (((toEnd R L M x - χ x • ↑1) ^ k) m) = 0 by
@@ -739,8 +741,9 @@ lemma trace_toEnd_genWeightSpace [IsDomain R] [IsPrincipalIdealRing R]
     trace R _ (toEnd R L (genWeightSpace M χ) x) = finrank R (genWeightSpace M χ) • χ x := by
   suffices _root_.IsNilpotent ((toEnd R L (genWeightSpace M χ) x) - χ x • LinearMap.id) by
     replace this := (isNilpotent_trace_of_isNilpotent this).eq_zero
+    (set_option backward.instanceTypes.subsingletons.prop false in
     rwa [map_sub, map_smul, trace_id, sub_eq_zero, smul_eq_mul, mul_comm,
-      ← nsmul_eq_mul] at this
+      ← nsmul_eq_mul] at this)
   rw [← Module.algebraMap_end_eq_smul_id]
   exact isNilpotent_toEnd_sub_algebraMap M χ x
 

@@ -184,8 +184,9 @@ lemma eq_iff_forall_pairing_sRoot_eq [CharZero R] [IsDomain R]
 
 lemma pairing_reflection_left (i : n) (x : M) (y : N) :
     rl.pairing (rl.reflection i x) y = rl.pairing x (rl.coreflection i y) := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [reflection_apply, coreflection_apply, map_sub, map_smul, LinearMap.sub_apply,
-    LinearMap.smul_apply, smul_eq_mul, mul_comm]
+    LinearMap.smul_apply, smul_eq_mul, mul_comm])
 
 lemma pairing_reflection_coreflection (i : n) (x : M) (y : N) :
     rl.pairing (rl.reflection i x) (rl.coreflection i y) = rl.pairing x y := by
@@ -405,8 +406,10 @@ lemma reflectionPair_mem {p : M × N} (hp : p ∈ rl.idx) :
   have h₂ (y : N) : rl.pairing (rl.sRoot i) (w.2.symm y) = rl.pairing (w.1 (rl.sRoot i)) y := by
     simpa using (rl.pairing_apply_apply_of_mem_weyl hw (rl.sRoot i) (w.2.symm y)).symm
   ext
-  · simp [reflectionPair, Module.reflection_apply, rl.reflection_apply, h₁]
-  · simp [reflectionPair, Module.reflection_apply, rl.coreflection_apply, h₂]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [reflectionPair, Module.reflection_apply, rl.reflection_apply, h₁])
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [reflectionPair, Module.reflection_apply, rl.coreflection_apply, h₂])
 
 variable [CharZero R] [IsDomain R]
 
@@ -498,7 +501,8 @@ instance : rl.toRootPairing.IsReduced where
       simpa [Int.cast_smul_eq_zsmul] using hc.symm
     have hsum : ∑ k, (s * (c k : R) + if k = i then t else 0) • rl.sRoot k = 0 := by
       have : w.1.symm (s • x₁ + t • x₂) = 0 := by rw [hst, map_zero]
-      simpa [hc, ← hi, Finset.smul_sum, add_smul, Finset.sum_add_distrib, smul_smul]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simpa [hc, ← hi, Finset.smul_sum, add_smul, Finset.sum_add_distrib, smul_smul])
     replace hsum := Fintype.linearIndependent_iff.mp rl.lin_ind_sRoot _ hsum
     have hxi' : w.1.symm x₁ = (c i) • rl.sRoot i := by
       rw [← Int.cast_smul_eq_zsmul R, hc, Finset.sum_eq_single i (fun k _ hk ↦ ?_) (by simp)]

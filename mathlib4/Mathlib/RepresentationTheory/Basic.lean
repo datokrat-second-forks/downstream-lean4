@@ -235,7 +235,8 @@ theorem ofModule_asAlgebraHom_apply_apply (r : k[G])
   · intro f g fw gw
     simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
   · intro r f w
-    simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul])
 
 @[simp]
 theorem ofModule_asModule_act (g : G) (x : RestrictScalars k k[G] ρ.asModule) :
@@ -493,7 +494,7 @@ lemma asAlgebraHom_ofMulAction_smul_eq_mul (x y : k[G]) :
   induction x using induction_on with
   | of g => ext; simp [MonoidAlgebra.coeff_single_mul_apply]
   | add x y hx hy => simp [hx, hy, add_mul]
-  | smul r x hx => simp [← hx]
+  | smul r x hx => (set_option backward.instanceTypes.subsingletons.prop false in simp [← hx])
 
 @[deprecated (since := "2026-06-18")]
 alias ofMulAction_self_smul_eq_mul := asAlgebraHom_ofMulAction_smul_eq_mul
@@ -626,6 +627,7 @@ local notation ρV " ⊗ " ρW => tprod ρV ρW
 theorem tprod_apply (g : G) : (ρV ⊗ ρW) g = TensorProduct.map (ρV g) (ρW g) :=
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem smul_tprod_one_asModule (r : k[G]) (x : V) (y : W) :
     r • (show (ρV.tprod 1).asModule from x ⊗ₜ y) = (r • show ρV.asModule from x) ⊗ₜ y := by
   change asAlgebraHom (ρV ⊗ 1) _ _ = asAlgebraHom ρV _ _ ⊗ₜ _
@@ -634,6 +636,7 @@ theorem smul_tprod_one_asModule (r : k[G]) (x : V) (y : W) :
   simp only [Finsupp.sum, TensorProduct.sum_tmul]
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem smul_one_tprod_asModule (r : k[G]) (x : V) (y : W) :
     r • (show (1 ⊗ ρW).asModule from x ⊗ₜ y) = x ⊗ₜ (r • show ρW.asModule from y) := by
   change asAlgebraHom (1 ⊗ ρW) _ _ = _ ⊗ₜ asAlgebraHom ρW _ _

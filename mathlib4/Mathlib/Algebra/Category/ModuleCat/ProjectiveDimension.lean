@@ -53,6 +53,7 @@ variable [Small.{v} R] {R' : Type u'} [Ring R'] [Small.{v'} R'] (e : R ≃+* R')
 
 variable {M : ModuleCat.{v} R} {N : ModuleCat.{v'} R'}
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 attribute [local instance] RingHomInvPair.of_ringEquiv in
 lemma hasProjectiveDimensionLE_of_semiLinearEquiv (e' : M ≃ₛₗ[RingHomClass.toRingHom e] N)
@@ -83,6 +84,7 @@ lemma hasProjectiveDimensionLE_of_semiLinearEquiv (e' : M ≃ₛₗ[RingHomClass
     have := (S_exact.hasProjectiveDimensionLT_X₃_iff n inferInstance).mp ‹_›
     exact (S'_exact.hasProjectiveDimensionLT_X₃_iff n inferInstance).mpr (ih eker)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 attribute [local instance] RingHomInvPair.of_ringEquiv in
 lemma projectiveDimension_eq_of_semiLinearEquiv (e' : M ≃ₛₗ[RingHomClass.toRingHom e] N) :
     projectiveDimension M = projectiveDimension N := by
@@ -97,7 +99,9 @@ lemma projectiveDimension_eq_of_semiLinearEquiv (e' : M ≃ₛₗ[RingHomClass.t
       norm_cast
       simp only [projectiveDimension_le_iff]
       exact ⟨fun h ↦ hasProjectiveDimensionLE_of_semiLinearEquiv e e' n,
-        fun h ↦ hasProjectiveDimensionLE_of_semiLinearEquiv e.symm e'.symm n⟩
+        fun h ↦
+          (set_option backward.instanceTypes.subsingletons.prop false in
+          hasProjectiveDimensionLE_of_semiLinearEquiv e.symm e'.symm n)⟩
 
 end
 

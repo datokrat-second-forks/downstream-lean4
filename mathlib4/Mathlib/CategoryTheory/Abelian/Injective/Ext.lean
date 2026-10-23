@@ -327,6 +327,7 @@ lemma extClass_comp_extMk
           (S.map (HomologicalComplex.single C (ComplexShape.up ℤ) 0)) 0,
         HomologicalComplex.single_map_f_self_assoc, ← reassoc_of% hf₃, smul_smul]
     · obtain rfl : q = n := by lia
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp [mappingCone.ext_from_iff _ _ _ (neg_add_cancel 1),
         δ_v n m (by lia) _ (-1) n (by lia) (n - 1) 0 (by lia) (by lia),
         Cochain.fromSingleEquiv_symm_apply,
@@ -335,7 +336,7 @@ lemma extClass_comp_extMk
         Cochain.comp_v (n₁ := 1) (n₂ := n) (n₁₂ := m) _ _ (by lia) (-1) 0 n (by lia) (by lia),
         Cochain.rightUnshift_v _ _ (zero_add 1) (-1) 0 (by lia) (-1) (by lia),
         mappingCone.inl_v_d_assoc _ 0 (-1) 1 (by lia) (by lia),
-        HomologicalComplex.single_map_f_self_assoc, ← hf₂, smul_smul]
+        HomologicalComplex.single_map_f_self_assoc, ← hf₂, smul_smul])
   · apply IsZero.eq_of_src
     rw [mappingCone.isZero_X_iff]
     constructor

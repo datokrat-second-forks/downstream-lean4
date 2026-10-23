@@ -112,7 +112,8 @@ variable [IsTopologicalRing R]
 /-- If `R` is a commutative ring with the discrete topology, then `SL(n, R)` has the discrete
 topology. -/
 instance [DiscreteTopology R] : DiscreteTopology (SL n R) :=
-  inferInstanceAs <| DiscreteTopology (Subtype _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| DiscreteTopology (Subtype _))
 
 lemma isClosedEmbedding_val [T1Space R] :
     IsClosedEmbedding ((↑) : SL n R → Matrix n n R) :=

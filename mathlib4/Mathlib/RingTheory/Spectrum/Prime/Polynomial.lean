@@ -86,9 +86,10 @@ lemma mem_image_comap_zeroLocus_sdiff (f : A) (s : Set A) (x) :
         (Ideal.Quotient.liftₐ (Ideal.span s) (Algebra.ofId A _) hs)
         (Ideal.ResidueField.mapₐ _ _ (Algebra.ofId _ _) rfl)
         fun _ _ ↦ .all _ _
-    have := H.map F
+    have := (set_option backward.isDefEq.respectTransparency.instanceTypes false in H.map F)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     rw [AlgHom.commutes, isNilpotent_iff_eq_zero, ← RingHom.mem_ker,
-      Ideal.ker_algebraMap_residueField] at this
+      Ideal.ker_algebraMap_residueField] at this)
     exact hqf this
   · intro H
     rw [← mem_nilradical, nilradical_eq_sInf, Ideal.mem_sInf] at H

@@ -65,7 +65,10 @@ noncomputable
 def toExtendScalars {R : Type u} {S : Type v} [CommRing R] [CommRing S] [Algebra R S]
     (P : Extension.{w} R S) : P.Hom P.extendScalars :=
   .ofAlgHom (IsScalarTower.toAlgHom R P.Ring P.extendScalars.Ring)
-    (by dsimp; ext; simp)
+    (by
+      (set_option backward.dsimp.instanceTypes false in dsimp)
+      ext
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp))
 
 /-- `Extension.extendScalars` does not change the cotangent space of an extension. -/
 noncomputable

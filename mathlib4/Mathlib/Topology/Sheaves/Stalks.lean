@@ -174,6 +174,7 @@ def stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) (x : X) : (f _* F).stalk (
   refine ?_ ≫ colimit.pre _ (OpenNhds.map f x).op
   exact colim.map (whiskerRight (NatTrans.op (OpenNhds.inclusionMapIso f x).inv) F)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]
@@ -206,7 +207,7 @@ theorem id (ℱ : X.Presheaf C) (x : X) :
   ext
   simp only [stalkPushforward, germ, colim_map, ι_colimMap_assoc, whiskerRight_app]
   erw [CategoryTheory.Functor.map_id]
-  simp [stalkFunctor]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [stalkFunctor])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -215,7 +216,7 @@ theorem comp (ℱ : X.Presheaf C) (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     ℱ.stalkPushforward C (f ≫ g) x =
       (f _* ℱ).stalkPushforward C g (f x) ≫ ℱ.stalkPushforward C f x := by
   ext
-  simp [germ, stalkPushforward]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [germ, stalkPushforward])
 
 theorem stalkPushforward_iso_of_isInducing {f : X ⟶ Y} (hf : IsInducing f)
     (F : X.Presheaf C) (x : X) : IsIso (F.stalkPushforward _ f x) := by
@@ -244,7 +245,8 @@ lemma germ_stalkPullbackHom
     F.germ U (f x) hU ≫ stalkPullbackHom C f F x =
       ((pullbackPushforwardAdjunction C f).unit.app F).app _ ≫
         ((pullback C f).obj F).germ ((Opens.map f).obj U) x hU := by
-  simp [stalkPullbackHom, germ, stalkFunctor, stalkPushforward]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [stalkPullbackHom, germ, stalkFunctor, stalkPushforward])
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in

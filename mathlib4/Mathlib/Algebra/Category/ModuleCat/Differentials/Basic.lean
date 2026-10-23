@@ -122,7 +122,8 @@ lemma ext {M : ModuleCat B} {α β : KaehlerDifferential f ⟶ M}
   have : ⊤ ≤ LinearMap.ker (α - β).hom := by
     rw [← KaehlerDifferential.span_range_derivation, Submodule.span_le]
     rintro _ ⟨y, rfl⟩
-    rw [SetLike.mem_coe, LinearMap.mem_ker, ModuleCat.hom_sub, LinearMap.sub_apply, sub_eq_zero]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [SetLike.mem_coe, LinearMap.mem_ker, ModuleCat.hom_sub, LinearMap.sub_apply, sub_eq_zero])
     apply h
   rw [top_le_iff, LinearMap.ker_eq_top] at this
   ext : 1
@@ -144,10 +145,11 @@ noncomputable def map :
   have := IsScalarTower.of_algebraMap_eq' (congrArg Hom.hom fac)
   -- TODO: after https://github.com/leanprover-community/mathlib4/pull/19511 we need to hint `(Y := ...)`.
   -- This suggests `restrictScalars` needs to be redesigned.
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   ModuleCat.ofHom (Y := (ModuleCat.restrictScalars g'.hom).obj (KaehlerDifferential f'))
   { toFun := fun x ↦ _root_.KaehlerDifferential.map A A' B B' x
     map_add' := by simp
-    map_smul' := by simp }
+    map_smul' := by simp })
 
 @[simp]
 lemma map_d (b : B) : map fac (d b) = d (g' b) := by

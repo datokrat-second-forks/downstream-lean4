@@ -103,7 +103,7 @@ set_option backward.isDefEq.respectTransparency.types false in
 theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
     (J : InjectiveResolution Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
   ext
-  simp [desc, descFOne, descFZero]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [desc, descFOne, descFZero])
 
 @[reassoc (attr := simp)]
 lemma desc_commutes_zero {Y Z : C} (f : Z ⟶ Y)

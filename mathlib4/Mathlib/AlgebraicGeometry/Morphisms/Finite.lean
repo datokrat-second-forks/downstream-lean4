@@ -55,17 +55,20 @@ instance : HasAffineProperty @IsFinite
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : IsStableUnderComposition @IsFinite :=
-  HasAffineProperty.affineAnd_isStableUnderComposition inferInstance
+  HasAffineProperty.affineAnd_isStableUnderComposition
+    (set_option backward.instanceTypes.subsingletons.prop false in inferInstance)
     RingHom.finite_stableUnderComposition
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : IsStableUnderBaseChange @IsFinite :=
-  HasAffineProperty.affineAnd_isStableUnderBaseChange inferInstance
+  HasAffineProperty.affineAnd_isStableUnderBaseChange
+    (set_option backward.instanceTypes.subsingletons.prop false in inferInstance)
     RingHom.finite_respectsIso RingHom.finite_isStableUnderBaseChange
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : ContainsIdentities @IsFinite :=
-  HasAffineProperty.affineAnd_containsIdentities inferInstance
+  HasAffineProperty.affineAnd_containsIdentities
+    (set_option backward.instanceTypes.subsingletons.prop false in inferInstance)
     RingHom.finite_respectsIso RingHom.finite_containsIdentities
 
 instance : IsMultiplicative @IsFinite where
@@ -156,6 +159,7 @@ lemma comp_iff {f : X ⟶ Y} {g : Y ⟶ Z} [IsFinite g] :
     IsFinite (f ≫ g) ↔ IsFinite f :=
   ⟨fun _ ↦ .of_comp f g, fun _ ↦ inferInstance⟩
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 instance {U V X : Scheme.{u}} (f : U ⟶ X) (g : V ⟶ X) [IsFinite f] [IsFinite g] :
     IsFinite (Limits.coprod.desc f g) := by

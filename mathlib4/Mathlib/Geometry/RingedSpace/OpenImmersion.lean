@@ -321,8 +321,10 @@ def pullbackConeOfLeftFst :
                   apply LE.le.antisymm
                   · rintro _ ⟨_, h₁, h₂⟩
                     use (TopCat.pullbackIsoProdSubtype _ _).inv ⟨⟨_, _⟩, h₂⟩
+                    (set_option backward.dsimp.instanceTypes false in
+                    set_option backward.isDefEq.respectTransparency.instanceTypes false in
                     simpa [(TopCat.pullbackIsoProdSubtype_inv_fst_apply),
-                      (TopCat.pullbackIsoProdSubtype_inv_snd_apply)]
+                      (TopCat.pullbackIsoProdSubtype_inv_snd_apply)])
                   · rintro _ ⟨x, h₁, rfl⟩
                     exact ⟨_, h₁, CategoryTheory.congr_fun pullback.condition x⟩))
       naturality := by
@@ -716,7 +718,7 @@ instance sheafedSpace_pullback_snd_of_left :
   have : _ = (pullback.snd f g).hom := preservesLimitIso_hom_π forget (cospan f g) right
   rw [← this]
   have := HasLimit.isoOfNatIso_hom_π (diagramIsoCospan (cospan f g ⋙ forget)) right
-  dsimp at this
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp at this)
   rw [Category.comp_id] at this
   rw [← this]
   infer_instance
@@ -729,7 +731,7 @@ instance sheafedSpace_pullback_fst_of_right :
   have : _ = (pullback.fst g f).hom := preservesLimitIso_hom_π forget (cospan g f) left
   rw [← this]
   have := HasLimit.isoOfNatIso_hom_π (diagramIsoCospan (cospan g f ⋙ forget)) left
-  dsimp at this
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp at this)
   rw [Category.comp_id] at this
   rw [← this]
   infer_instance
@@ -932,7 +934,8 @@ instance sigma_ι_isOpenImmersion_aux [HasStrictTerminalObjects C] :
         (colimit.ι (F ⋙ SheafedSpace.forgetToPresheafedSpace) i ≫
             (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv).base := by
       have := h₁.symm
-      convert! sigma_ι_isOpenEmbedding F i
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      convert! sigma_ι_isOpenEmbedding F i)
     suffices IsIso <| (colimit.ι (F ⋙ SheafedSpace.forgetToPresheafedSpace) i ≫
         (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv).c.app <|
       op (H.functor.obj U) by
@@ -948,8 +951,9 @@ instance sigma_ι_isOpenImmersion_aux [HasStrictTerminalObjects C] :
     apply limit_π_isIso_of_is_strict_terminal
     rintro ⟨j⟩ hj
     dsimp
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     convert! (F.obj j).sheaf.isTerminalOfEmpty using 3
-    convert! image_preimage_is_empty F i j (fun h => hj congr(op $h.symm)) U using 6
+    convert! image_preimage_is_empty F i j (fun h => hj congr(op $h.symm)) U using 6)
     congrm $(h₁).base
 
 set_option backward.defeqAttrib.useBackward true in

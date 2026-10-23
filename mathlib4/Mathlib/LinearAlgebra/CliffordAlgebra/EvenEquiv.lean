@@ -61,8 +61,9 @@ def v : M →ₗ[R] CliffordAlgebra (Q' Q) :=
   ι (Q' Q) ∘ₗ LinearMap.inl _ _ _
 
 theorem ι_eq_v_add_smul_e0 (m : M) (r : R) : ι (Q' Q) (m, r) = v Q m + r • e0 Q := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [e0, v, LinearMap.comp_apply, LinearMap.inl_apply, ← map_smul, Prod.smul_mk,
-    smul_zero, smul_eq_mul, mul_one, ← map_add, Prod.mk_add_mk, zero_add, add_zero]
+    smul_zero, smul_eq_mul, mul_one, ← map_add, Prod.mk_add_mk, zero_add, add_zero])
 
 theorem e0_mul_e0 : e0 Q * e0 Q = -1 :=
   (ι_sq_scalar _ _).trans <| by simp

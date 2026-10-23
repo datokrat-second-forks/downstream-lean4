@@ -99,7 +99,8 @@ noncomputable def yonedaGluedToSheaf :
     ((glueData hf).sheafValGluedMk (fun i ↦ yonedaEquiv (f i)) (by
       intro i j
       apply yonedaEquiv.symm.injective
-      dsimp only [glueData_V, glueData_J, glueData_U, glueData_f, glueData_t]
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp only [glueData_V, glueData_J, glueData_U, glueData_f, glueData_t])
       rw [yonedaEquiv_naturality, Equiv.symm_apply_apply,
         Functor.map_comp_apply, yonedaEquiv_naturality, yonedaEquiv_naturality,
         Equiv.symm_apply_apply, ← Functor.map_comp_assoc,

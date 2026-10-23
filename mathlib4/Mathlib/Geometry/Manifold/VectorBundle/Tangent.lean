@@ -242,7 +242,8 @@ theorem mem_chart_source_iff (p q : TM) :
 
 @[simp, mfld_simps]
 theorem mem_chart_target_iff (p : H × E) (q : TM) :
-    p ∈ (chartAt (ModelProd H E) q).target ↔ p.1 ∈ (chartAt H q.1).target := by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    p ∈ (chartAt (ModelProd H E) q).target) ↔ p.1 ∈ (chartAt H q.1).target := by
   /- porting note: was
   simp +contextual only [FiberBundle.chartedSpace_chartAt,
     and_iff_left_iff_imp, mfld_simps]
@@ -452,7 +453,7 @@ lemma contMDiff_snd_tangentBundle_modelSpace :
     ContMDiff I.tangent 𝓘(𝕜, E) n (fun (p : TangentBundle I H) ↦ p.2) := by
   change CMDiff n ((id Prod.snd : ModelProd H E → E) ∘ (tangentBundleModelSpaceHomeomorph I))
   apply ContMDiff.comp (I' := I.prod 𝓘(𝕜, E))
-  · convert! contMDiff_snd
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in convert! contMDiff_snd)
     rw [chartedSpaceSelf_prod]
     rfl
   · exact contMDiff_tangentBundleModelSpaceHomeomorph

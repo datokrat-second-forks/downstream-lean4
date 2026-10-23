@@ -288,7 +288,7 @@ lemma coequifibered_iff_forall_isLocalizationAway {F : X.AffineZariskiSiteᵒᵖ
   refine (CommRingCat.isPushout_iff_isPushout ..).trans ?_
   rw [Algebra.IsPushout.comm]
   refine (Algebra.isLocalization_iff_isPushout (.powers f) Γ(X, X.basicOpen f)).symm.trans ?_
-  simp [RingHom.algebraMap_toAlgebra]
+  (set_option backward.dsimp.instanceTypes false in simp [RingHom.algebraMap_toAlgebra])
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The relative gluing data associated to a quasi-coherent `𝒪ₓ` algebra. -/

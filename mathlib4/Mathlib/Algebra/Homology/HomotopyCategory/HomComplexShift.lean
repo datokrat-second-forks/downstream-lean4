@@ -335,7 +335,7 @@ lemma shift_units_smul (a : ℤ) (x : Rˣ) :
 lemma rightUnshift_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : ℤ) (hn : n' + a = n) (x : R) :
     (x • γ).rightUnshift n hn = x • γ.rightUnshift n hn := by
   change (rightShiftLinearEquiv R K L n a n' hn).symm (x • γ) = _
-  apply map_smul
+  (set_option backward.instanceTypes.subsingletons.prop false in apply map_smul)
 
 @[simp]
 lemma rightUnshift_units_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : ℤ)
@@ -347,7 +347,7 @@ lemma rightUnshift_units_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : �
 lemma leftUnshift_smul {n' a : ℤ} (γ : Cochain (K⟦a⟧) L n') (n : ℤ) (hn : n + a = n') (x : R) :
     (x • γ).leftUnshift n hn = x • γ.leftUnshift n hn := by
   change (leftShiftLinearEquiv R K L n a n' hn).symm (x • γ) = _
-  apply map_smul
+  (set_option backward.instanceTypes.subsingletons.prop false in apply map_smul)
 
 @[simp]
 lemma leftUnshift_units_smul {n' a : ℤ} (γ : Cochain (K⟦a⟧) L n') (n : ℤ)
@@ -378,7 +378,7 @@ lemma leftShift_comp (a n' : ℤ) (hn' : n + a = n') {m t t' : ℤ} (γ' : Cocha
     Cochain.comp_v _ _ h' p (p + n') q rfl (by lia),
     γ.leftShift_v a n' hn' p (p + n') rfl (p + a) (by lia), Linear.units_smul_comp, smul_smul,
     ← mul_assoc]
-  congr 2
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 2)
   rw [add_comm n', mul_add, Int.negOnePow_add]
 
 @[simp]
@@ -428,7 +428,7 @@ lemma δ_leftShift (a n' m' : ℤ) (hn' : n + a = n') (m : ℤ) (hm' : m + a = m
     simp only [shiftFunctor_obj_X', shiftFunctor_obj_X, shiftFunctorObjXIso,
       HomologicalComplex.XIsoOfEq_rfl, Iso.refl_hom, id_comp, Linear.units_smul_comp,
       shiftFunctor_obj_d', Linear.comp_units_smul, smul_smul, comp_add, smul_add]
-    congr 2
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 2)
     · rw [← hnm', add_comm n', mul_add, mul_one]
       simp only [Int.negOnePow_add, ← mul_assoc, Int.units_mul_self, one_mul]
     · simp only [← Int.negOnePow_add, ← hn', ← hm', ← hnm]

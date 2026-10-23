@@ -249,7 +249,8 @@ lemma of_quasiFiniteAt_residueField [p.IsPrime] [q.LiesOver p]
       rintro ⟨y, hy⟩
       obtain ⟨r, hrp, s, H⟩ := Ideal.Fiber.exists_smul_eq_one_tmul _ y
       suffices IsUnit (φ₂ (1 ⊗ₜ s)) by
-        rw [← H, map_smul, Algebra.smul_def, IsUnit.mul_iff] at this
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [← H, map_smul, Algebra.smul_def, IsUnit.mul_iff] at this)
         exact this.2
       suffices s ∉ q by
         have := (IsLocalization.map_units (M := q.primeCompl) Sq ⟨_, this⟩).map

@@ -87,7 +87,7 @@ lemma biprodAddEquiv_symm_biprodIsoProd_hom_toBiprod_apply
     {n : ℕ} (x : F.H' n S.X₄) :
     Ext.biprodAddEquiv.symm ((AddCommGrpCat.biprodIsoProd _ _).hom (S.toBiprod F n x)) =
       (Ext.mk₀ S.shortComplex.g).comp x (zero_add n) :=
-  Ext.biprodAddEquiv.injective (by cat_disch)
+  Ext.biprodAddEquiv.injective (by (set_option backward.dsimp.instanceTypes false in cat_disch))
 
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] sub_eq_add_neg in

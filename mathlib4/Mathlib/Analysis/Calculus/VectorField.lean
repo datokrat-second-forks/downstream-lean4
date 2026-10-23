@@ -127,8 +127,9 @@ lemma lieBracketWithin_smul_right {f : E → 𝕜} (hf : DifferentiableWithinAt 
     (hW : DifferentiableWithinAt 𝕜 W s x) (hs : UniqueDiffWithinAt 𝕜 s x) :
     lieBracketWithin 𝕜 V (fun y ↦ f y • W y) s x =
       (fderivWithin 𝕜 f s x) (V x) • (W x) + (f x) • lieBracketWithin 𝕜 V W s x := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [lieBracketWithin, fderivWithin_fun_smul hs hf hW, map_smul, add_comm, smul_sub,
-    add_sub_assoc]
+    add_sub_assoc])
 
 /--
 Product rule for Lie Brackets: given two vector fields `V W : E → E` and a function `f : E → 𝕜`,

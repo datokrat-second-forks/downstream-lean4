@@ -47,8 +47,9 @@ def KaehlerDifferential.mvPolynomialEquiv (σ : Type*) :
       rw [map_zero, map_zero, map_zero]
     | add => simp only [map_add, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom] at *; simp only [*]
     | single a b =>
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Finsupp.linearCombination_single,
-        map_smul, Derivation.liftKaehlerDifferential_comp_D]
+        map_smul, Derivation.liftKaehlerDifferential_comp_D])
       congr 1
       induction a using MvPolynomial.induction_on
       · simp only [MvPolynomial.derivation_C, map_zero]

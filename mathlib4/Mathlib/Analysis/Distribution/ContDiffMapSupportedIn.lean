@@ -321,7 +321,8 @@ noncomputable def postcompLM [LinearMap.CompatibleSMul F F' ℝ 𝕜] (T : F →
   toFun f := ⟨T ∘ f, T.restrictScalars ℝ |>.contDiff.comp f.contDiff,
     fun x hx ↦ by simp [f.zero_on_compl hx]⟩
   map_add' f g := by ext x; exact map_add T (f x) (g x)
-  map_smul' c f := by ext x; exact map_smul T c (f x)
+  map_smul' c f := by
+    ext x; exact (set_option backward.instanceTypes.subsingletons.prop false in map_smul T c (f x))
 
 @[simp]
 lemma postcompLM_apply [LinearMap.CompatibleSMul F F' ℝ 𝕜] (T : F →L[𝕜] F')
@@ -537,7 +538,9 @@ instance isUniformAddGroup : IsUniformAddGroup 𝓓^{n}_{K}(E, F) := by
   exact isUniformAddGroup_iInf fun _ ↦ IsUniformAddGroup.comap _
 
 instance continuousSMul : ContinuousSMul 𝕜 𝓓^{n}_{K}(E, F) :=
-  continuousSMul_iInf fun i ↦ continuousSMul_induced (structureMapLM 𝕜 n i)
+  continuousSMul_iInf fun i ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    continuousSMul_induced (structureMapLM 𝕜 n i))
 
 instance locallyConvexSpace : LocallyConvexSpace ℝ 𝓓^{n}_{K}(E, F) :=
   LocallyConvexSpace.iInf fun _ ↦ LocallyConvexSpace.induced _
@@ -965,7 +968,8 @@ noncomputable def integralAgainstBilinLM (B : F₁ →L[𝕜] F₂ →L[𝕜] F�
     · simp
   map_smul' c f := by
     split_ifs with hφ
-    · simp_rw [smul_apply, map_smul, smul_apply, integral_smul c, RingHom.id_apply]
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      simp_rw [smul_apply, map_smul, smul_apply, integral_smul c, RingHom.id_apply])
     · simp
 
 @[simp]

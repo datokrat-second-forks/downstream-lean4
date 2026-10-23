@@ -77,7 +77,7 @@ lemma affineAnd_isLocal (hPi : RingHom.RespectsIso Q) (hQl : RingHom.Localizatio
       rw [Scheme.Opens.ι_image_top]
       rw [(isAffineOpen_top Y).app_basicOpen_eq_away_map f (isAffineOpen_top X),
         CommRingCat.hom_comp, hPi.cancel_right_isIso, ← Scheme.Hom.appTop]
-      dsimp only [Opens.map_top]
+      (set_option backward.dsimp.instanceTypes false in dsimp only [Opens.map_top])
       apply hQl
       exact hf
   of_basicOpenCover {X Y _} f s hs hf := by

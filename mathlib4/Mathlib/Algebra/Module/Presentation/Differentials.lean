@@ -74,8 +74,13 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The canonical map `(σ →₀ S) →ₗ[S] pres.toExtension.Cotangent`. -/
 noncomputable def hom₁ : (σ →₀ S) →ₗ[S] pres.toExtension.Cotangent :=
-  Finsupp.linearCombination S (fun r ↦ Extension.Cotangent.mk ⟨pres.relation r, by simp⟩)
+  Finsupp.linearCombination S (fun r ↦ Extension.Cotangent.mk ⟨pres.relation r, by
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp)⟩)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma hom₁_single (r : σ) :
@@ -118,7 +123,8 @@ lemma surjective_hom₁ : Function.Surjective (hom₁ pres) := by
   change Function.Surjective φ
   have h₁ := Algebra.Extension.Cotangent.mk_surjective (P := pres.toExtension)
   have h₂ : Submodule.span pres.Ring
-      (Set.range (fun r ↦ (⟨pres.relation r, by simp⟩ : pres.ker))) = ⊤ := by
+      (Set.range (fun r ↦ (⟨pres.relation r, by
+        (set_option backward.dsimp.instanceTypes false in simp)⟩ : pres.ker))) = ⊤ := by
     refine Submodule.map_injective_of_injective (f := Submodule.subtype pres.ker)
       Subtype.coe_injective ?_
     rw [Submodule.map_top, Submodule.range_subtype, Submodule.map_span,
@@ -128,7 +134,7 @@ lemma surjective_hom₁ : Function.Surjective (hom₁ pres) := by
     aesop
   rw [← LinearMap.range_eq_top] at h₁ ⊢
   rw [← top_le_iff, ← h₁, LinearMap.range_eq_map, ← h₂]
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in dsimp)
   rw [Submodule.map_span_le]
   rintro _ ⟨r, rfl⟩
   simp only [LinearMap.mem_range]
@@ -143,7 +149,8 @@ lemma comm₁₂_single (r : σ) :
       pres.cotangentSpaceBasis.repr.symm ((differentialsRelations pres).relation r) := by
   simp only [hom₁, Finsupp.linearCombination_single, one_smul, differentialsRelations,
     Basis.repr_symm_apply, Extension.cotangentComplex_mk]
-  exact pres.cotangentSpaceBasis.repr.injective (by ext; simp)
+  exact pres.cotangentSpaceBasis.repr.injective (by
+    ext; (set_option backward.dsimp.instanceTypes false in simp))
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -151,7 +158,9 @@ lemma comm₁₂ : pres.toExtension.cotangentComplex.comp (hom₁ pres) =
     pres.cotangentSpaceBasis.repr.symm.comp (differentialsRelations pres).map := by
   ext r
   have := (differentialsRelations pres).map_single
-  dsimp at this ⊢
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  dsimp at this ⊢)
   rw [comm₁₂_single, this]
 
 end differentials

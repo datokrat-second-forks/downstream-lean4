@@ -134,8 +134,9 @@ protected noncomputable def cfc (f : ℝ → ℝ) : Matrix n n 𝕜 :=
   conjStarAlgAut 𝕜 _ hA.eigenvectorUnitary (diagonal (RCLike.ofReal ∘ f ∘ hA.eigenvalues))
 
 lemma cfcHom_eq_cfcAux : cfcHom hA.isSelfAdjoint = hA.cfcAux :=
+  (set_option backward.instanceTypes.subsingletons.prop false in
   cfcHom_eq_of_continuous_of_map_id hA hA.cfcAux
-    hA.isClosedEmbedding_cfcAux.continuous hA.cfcAux_id
+    hA.isClosedEmbedding_cfcAux.continuous hA.cfcAux_id)
 
 instance instContinuousFunctionalCalculusIsClosedEmbedding :
     ClosedEmbeddingContinuousFunctionalCalculus ℝ (Matrix n n 𝕜) IsSelfAdjoint where

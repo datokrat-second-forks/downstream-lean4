@@ -58,9 +58,10 @@ lemma cotangentComplexAux_apply [Finite σ] (P : PreSubmersivePresentation R S �
     P.cotangentComplexAux (Cotangent.mk x) i = (aeval P.val) (pderiv (P.map i) x.val) := by
   dsimp only [cotangentComplexAux, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     cotangentComplex_mk]
+  (set_option backward.dsimp.instanceTypes false in
   simp only [Generators.toExtension_Ring, Finsupp.lcomapDomain_apply,
     Finsupp.linearEquivFunOnFinite_apply, Finsupp.comapDomain_apply,
-    Generators.cotangentSpaceBasis_repr_tmul, one_mul]
+    Generators.cotangentSpaceBasis_repr_tmul, one_mul])
 
 lemma cotangentComplexAux_zero_iff [Finite σ] {P : PreSubmersivePresentation R S ι σ} (x : P.ker) :
     P.cotangentComplexAux (Cotangent.mk x) = 0 ↔
@@ -262,8 +263,11 @@ variable (S) in
 of the localization of `S` away from `g`. -/
 noncomputable
 abbrev Generators.cMulXSubOneCotangent : (Generators.localizationAway S r).toExtension.Cotangent :=
-  Extension.Cotangent.mk ⟨C r * X () - 1, C_mul_X_sub_one_mem_ker _⟩
+  Extension.Cotangent.mk ⟨C r * X () - 1,
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    C_mul_X_sub_one_mem_ker _)⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 lemma Generators.cMulXSubOneCotangent_eq :
     cMulXSubOneCotangent S r = Extension.Cotangent.mk ⟨C r * X () - 1, C_mul_X_sub_one_mem_ker _⟩ :=
   rfl

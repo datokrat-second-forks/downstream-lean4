@@ -74,7 +74,9 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
       ext_of_apply_closedPoint_eq G.hom (by simpa) (by simp) (by simpa)
     have H₁ : c = fc.left ≫ (η[G] ▷ G).left := by dsimp; ext <;> simp [fc, S, this]
     have H₂ : fc ≫ η ▷ G ≫ γ = lift η η := by ext1 <;> simp [fc, γ, S]
-    exact hc₂ <| by simp [H₁, H₂, ← Scheme.Hom.comp_apply, Category.assoc, ← Over.comp_left]
+    exact hc₂ <| by
+      (set_option backward.dsimp.instanceTypes false in
+      simp [H₁, H₂, ← Scheme.Hom.comp_apply, Category.assoc, ← Over.comp_left])
   -- Since the image of `y ↦ γ(e, y)` is finite, by Zariski Main, there exists an open
   -- `1 ∈ U ⊆ G` such that `γ ∣_ U` factors through a finite scheme over `U`.
   obtain ⟨U, hηU, H⟩ := exists_finite_imageι_comp_morphismRestrict_of_finite_image_preimage
@@ -85,12 +87,14 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
   have H (x : U) : ((pullback.fst G.hom G.hom) ⁻¹' {x.1} ∩ Set.range ⇑γ.left).Finite := by
     refine ((((γ.left.imageι ≫ (fst G G).left) ∣_ U).finite_preimage_singleton x).image
       (Scheme.Opens.ι _ ≫ γ.left.imageι)).subset ?_
-    have : U.ι ⁻¹' {x.1} = {x} := by ext; simp
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    have : U.ι ⁻¹' {x.1} = {x} := by ext; simp)
     rw [← this, ← Set.preimage_comp, ← TopCat.coe_comp, ← Scheme.Hom.comp_base,
       morphismRestrict_ι, ← Category.assoc, Scheme.Hom.comp_base (_ ≫ _) (fst G G).left,
       TopCat.coe_comp, Set.preimage_comp, Set.image_preimage_eq_inter_range]
+    (set_option backward.dsimp.instanceTypes false in
     simp only [Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp, Scheme.Opens.range_ι]
-    dsimp
+    dsimp)
     rw [Set.image_preimage_eq_inter_range, Scheme.IdealSheafData.range_subschemeι,
       Scheme.Hom.support_ker, ← Set.inter_assoc, ← Set.preimage_inter,
       Set.singleton_inter_of_mem x.2, IsClosed.closure_eq
@@ -110,21 +114,25 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
       refine subsingleton_image_closure_of_finite_of_isPreirreducible
         (hx.preimage (fst G G).left.continuous).isLocallyClosed ?_ γ.left.continuous
         γ.left.isClosedMap ((H ⟨_, hyU⟩).subset (Set.image_subset_iff.mpr fun _ ↦ by
-          simp [← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base, γ])) ?_ ?_
+          (set_option backward.dsimp.instanceTypes false in
+          simp [← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base, γ]))) ?_ ?_
       · let α : G ⊗ G ⟶ G ⊗ G := toUnit _ ≫ x ⊗ₘ 𝟙 _
         convert
           ((IrreducibleSpace.isIrreducible_univ _).image α.left
               α.left.continuous.continuousOn).isPreirreducible
         rw [Over.tensorHom_left]
-        simp [Set.range_comp, Scheme.Pullback.range_map, x]
+        (set_option backward.dsimp.instanceTypes false in
+        simp [Set.range_comp, Scheme.Pullback.range_map, x])
       · exact ⟨y, subset_closure (by simp), rfl⟩
       · refine ⟨xe, subset_closure ?_, ?_⟩
-        · simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base]
+        · (set_option backward.dsimp.instanceTypes false in
+          simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
         · simp only [xe, γ, ← Scheme.Hom.comp_apply, ← Over.comp_left]
           congr 6; ext <;> simp
     convert congr((snd G G).left $this) using 1
-    · simp [γ, ← Scheme.Hom.comp_apply]
-    · simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base]
+    · (set_option backward.dsimp.instanceTypes false in simp [γ, ← Scheme.Hom.comp_apply])
+    · (set_option backward.dsimp.instanceTypes false in
+      simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
   · simp
 
 set_option backward.defeqAttrib.useBackward true in
@@ -136,7 +144,8 @@ theorem isCommMonObj_of_isProper_of_geometricallyIntegral
   let f := Spec.map (CommRingCat.ofHom <| algebraMap K (AlgebraicClosure K))
   let G' := (Over.pullback f).obj G
   have : IsProper G'.hom := by dsimp [G']; infer_instance
-  have : IsIntegral (G' ⊗ G').left := by dsimp [G']; infer_instance
+  have : IsIntegral (G' ⊗ G').left := by
+    (set_option backward.instanceTypes.subsingletons.prop false in dsimp [G']); infer_instance
   let : GrpObj G' := Functor.grpObjObj
   have := isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed G'
   rw [isCommMonObj_iff_commutator_eq_toUnit_η] at this ⊢

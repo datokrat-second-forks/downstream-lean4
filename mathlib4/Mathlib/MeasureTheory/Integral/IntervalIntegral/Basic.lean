@@ -531,7 +531,9 @@ theorem MonotoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : Monotone
 
 theorem AntitoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : AntitoneOn u (uIcc a b)) :
     IntervalIntegrable u μ a b :=
-  hu.dual_right.intervalIntegrable
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.types false in
+  hu.dual_right.intervalIntegrable)
 
 theorem Monotone.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : Monotone u) :
     IntervalIntegrable u μ a b :=

@@ -81,7 +81,8 @@ private lemma mul_le_ker_of_range_le_mul_of_sq_zero {J I : Ideal R} (sq : I ^ 2 
       simp only [← mul_assoc, sq, Submodule.bot_mul, Submodule.mem_bot] at mem_bot
       have eq0 : y • w = 0 := SetCoe.ext mem_bot
       have : ⟨y * z, Ideal.mul_le_right (Submodule.mul_mem_mul hy hz)⟩ = y • (⟨z, hz⟩ : J) := rfl
-      rw [this, map_smul, map_smul, ← eqz, ← map_smul, eq0, map_zero]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [this, map_smul, map_smul, ← eqz, ← map_smul, eq0, map_zero])
     | add y ymem z zmem hy hz =>
       have : (⟨y + z, Ideal.mul_le_right (add_mem ymem zmem)⟩ : J) =
         ⟨y, Ideal.mul_le_right ymem⟩ + ⟨z, Ideal.mul_le_right zmem⟩ := rfl
@@ -182,9 +183,11 @@ lemma Algebra.FormallySmooth.of_surjective_of_ker_eq_map_of_flat [Module.Flat R 
     ext i s
     simp only [LinearMap.comp_assoc, toJcot, Finsupp.lsum_comp_lsingle]
     rcases Ideal.Quotient.mk_surjective (eS.symm s) with ⟨p, hp⟩
-    have (x : J.Cotangent) : mapcot (eS.symm s • x) = p • mapcot x := hp ▸ map_smul mapcot p x
+    have (x : J.Cotangent) : mapcot (eS.symm s • x) = p • mapcot x :=
+      hp ▸ (set_option backward.instanceTypes.subsingletons.prop false in map_smul mapcot p x)
     have psmul : p • 1 = s := by simpa [Algebra.smul_def, eS] using! eS.eq_symm_apply.mp hp
-    simp [this, Classical.choose_spec (cotsurj (toJ'cot (Finsupp.single i 1))), ← map_smul, psmul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [this, Classical.choose_spec (cotsurj (toJ'cot (Finsupp.single i 1))), ← map_smul, psmul])
   let σ' := toJcot.comp eTen.toLinearMap
   have σ'_spec' : mapcot.comp σ' = (σ.restrictScalars P.Ring).comp mapTen := by
     simp only [← LinearMap.comp_assoc, toJcot_spec, σ']

@@ -155,7 +155,7 @@ theorem setToL1_smul (hT : DominatedFinMeasAdditive μ T C)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α →₁[μ] E) :
     setToL1 hT (c • f) = c • setToL1 hT f := by
   rw [setToL1_eq_setToL1' hT h_smul, setToL1_eq_setToL1' hT h_smul]
-  exact map_smul _ _ _
+  exact (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ _ _)
 
 theorem setToL1_simpleFunc_indicatorConst (hT : DominatedFinMeasAdditive μ T C) {s : Set α}
     (hs : MeasurableSet s) (hμs : μ s < ∞) (x : E) :

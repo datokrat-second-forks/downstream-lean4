@@ -91,7 +91,7 @@ lemma isConservative_pointsBot :
   .mk' (fun X S hS ↦ by
     obtain ⟨Y, a, ha, b, hb⟩ := hS ⟨_, ⟨X⟩⟩ (shrinkYonedaObjObjEquiv.symm (𝟙 X))
     obtain ⟨b, rfl⟩ := shrinkYonedaObjObjEquiv.symm.surjective b
-    dsimp at b hb
+    (set_option backward.dsimp.instanceTypes false in dsimp at b hb)
     have : b ≫ a = 𝟙 _ :=
       shrinkYonedaObjObjEquiv.symm.injective (by
         rw [← hb, shrinkYoneda_map_app_shrinkYonedaObjObjEquiv_symm])

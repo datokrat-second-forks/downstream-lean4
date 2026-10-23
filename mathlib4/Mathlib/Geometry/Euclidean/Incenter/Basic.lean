@@ -180,7 +180,8 @@ lemma ExcenterExists.excenterWeights_ne_zero {signs : Finset (Fin (n + 1))}
 
 lemma sum_excenterWeights (signs : Finset (Fin (n + 1))) [Decidable (s.ExcenterExists signs)] :
     ∑ i, s.excenterWeights signs i = if s.ExcenterExists signs then 1 else 0 := by
-  simp_rw [ExcenterExists, excenterWeights]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp_rw [ExcenterExists, excenterWeights])
   split_ifs with h
   · simp [← Finset.mul_sum, h]
   · simp only [ne_eq, not_not] at h
@@ -785,6 +786,7 @@ lemma touchpoint_reindex (e : Fin (n + 1) ≃ Fin (m + 1)) (signs : Finset (Fin 
     (s.reindex e).touchpoint signs i = s.touchpoint (signs.map e.symm) (e.symm i) :=
   orthogonalProjectionSpan_congr (s.range_faceOpposite_reindex _ _) (s.excenter_reindex _ _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 variable {s} in
 @[simp] lemma ExcenterExists.touchpoint_map {signs : Finset (Fin (n + 1))}

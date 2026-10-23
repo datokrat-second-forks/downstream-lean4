@@ -97,14 +97,15 @@ theorem finrank {n} (h : n ≠ 0) : Module.finrank (ZMod p) (GaloisField p n) = 
       x ∈ (X ^ p ^ n - X : (ZMod p)[X]).rootSet (GaloisField p n)
     by simpa
   rw [← SplittingField.adjoin_rootSet]
-  simp_rw [Algebra.mem_adjoin_iff]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp_rw [Algebra.mem_adjoin_iff])
   intro x hx
   simp only [g_poly] at aux
   refine Subring.closure_induction ?_ ?_ ?_ ?_ ?_ ?_ hx
     <;> simp_rw [mem_rootSet_of_ne aux]
   · rintro x (⟨r, rfl⟩ | hx)
     · rw [map_sub, map_pow, aeval_X, ← map_pow, ZMod.pow_card_pow, sub_self]
-    · dsimp only [GaloisField] at hx
+    · (set_option backward.dsimp.instanceTypes false in dsimp only [GaloisField] at hx)
       rwa [mem_rootSet_of_ne aux] at hx
   · rw [← coeff_zero_eq_aeval_zero']
     simp [eq_comm, hp.ne_zero]

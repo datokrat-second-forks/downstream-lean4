@@ -107,8 +107,9 @@ instance instLinearWeightsOfIsLieAbelian [IsLieAbelian L] [IsDomain R] [Module.I
     map_smul := fun χ hχ t x ↦ by
       simp_rw [Ne, ← LieSubmodule.toSubmodule_inj, genWeightSpace, genWeightSpaceOf,
         LieSubmodule.iInf_toSubmodule, LieSubmodule.bot_toSubmodule] at hχ
-      exact Module.End.map_smul_of_iInf_genEigenspace_ne_bot
-        (toEnd R L M).toLinearMap χ _ hχ t x
+      exact (set_option backward.instanceTypes.subsingletons.prop false in
+        Module.End.map_smul_of_iInf_genEigenspace_ne_bot
+        (toEnd R L M).toLinearMap χ _ hχ t x)
     map_lie := fun χ hχ t x ↦ by
       rw [trivial_lie_zero, ← add_left_inj (χ 0), ← aux χ hχ, zero_add, zero_add] }
 
@@ -131,6 +132,7 @@ lemma zero_lt_finrank_genWeightSpace {χ : L → R} (hχ : genWeightSpace M χ �
   rwa [← LieSubmodule.nontrivial_iff_ne_bot, ← rank_pos_iff_nontrivial (R := R), ← finrank_eq_rank,
     Nat.cast_pos] at hχ
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- In characteristic zero, the weights of any finite-dimensional Lie module are linear and vanish
 on the derived ideal. -/
 instance instLinearWeightsOfCharZero [CharZero R] :
@@ -211,7 +213,9 @@ set_option backward.isDefEq.respectTransparency false in
 /-- By Engel's theorem, if `M` is Noetherian, the shifted action `⁅x, m⁆ - χ x • m` makes the
 `χ`-weight space into a nilpotent Lie module. -/
 instance [IsNoetherian R M] : IsNilpotent L (shiftedGenWeightSpace R L M χ) :=
-  LieModule.isNilpotent_iff_forall'.mpr fun x ↦ isNilpotent_toEnd_sub_algebraMap M χ x
+  LieModule.isNilpotent_iff_forall'.mpr fun x ↦
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    isNilpotent_toEnd_sub_algebraMap M χ x)
 
 end shiftedGenWeightSpace
 

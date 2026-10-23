@@ -67,8 +67,9 @@ def ofBaseChange (Q : QuadraticForm R V) :
 @[simp] theorem ofBaseChange_tmul_ι (Q : QuadraticForm R V) (z : A) (v : V) :
     ofBaseChange A Q (z ⊗ₜ ι Q v) = ι (Q.baseChange A) (z ⊗ₜ v) := by
   change algebraMap _ _ z * ofBaseChangeAux A Q (ι Q v) = ι (Q.baseChange A) (z ⊗ₜ[R] v)
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [ofBaseChangeAux_ι, ← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul,
-    mul_one]
+    mul_one])
 
 @[simp] theorem ofBaseChange_tmul_one (Q : QuadraticForm R V) (z : A) :
     ofBaseChange A Q (z ⊗ₜ 1) = algebraMap _ _ z := by

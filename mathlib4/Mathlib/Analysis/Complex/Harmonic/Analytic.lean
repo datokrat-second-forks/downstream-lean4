@@ -96,7 +96,7 @@ theorem InnerProductSpace.HarmonicOnNhd.exists_analyticOnNhd_ball_re_eq {z : ℂ
       (by fun_prop) h₅F, ContinuousLinearMap.fderiv, h₄F.fderiv_restrictScalars (𝕜 := ℝ)]
     ext a
     nth_rw 2 [(by simp : a = a.re • (1 : ℂ) + a.im • (I : ℂ))]
-    rw [map_add, map_smul, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_add, map_smul, map_smul])
     simp [HasDerivAt.deriv (hF.2 y hy), g]
   all_goals simp_all
 
@@ -124,7 +124,7 @@ theorem InnerProductSpace.HarmonicOnNhd.exists_analyticOnNhd_univ_re_eq {f : ℂ
     rw [fderiv_comp y (by fun_prop) (by fun_prop)]
     ext x
     trans fderiv ℝ f y (x.re • (1 : ℂ) + x.im • (I : ℂ))
-    · simp only [map_smul, map_add]
+    · (set_option backward.instanceTypes.subsingletons.prop false in simp only [map_smul, map_add])
       simp [(h₁F y).hasFDerivAt.restrictScalars ℝ |>.fderiv, g]
     · simp
   all_goals simp_all

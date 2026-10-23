@@ -281,7 +281,8 @@ theorem stalkToFiberRingHom_germ (U : Opens (ProjectiveSpectrum.top 𝒜))
 set_option backward.isDefEq.respectTransparency false in
 theorem mem_basicOpen_den (x : ProjectiveSpectrum.top 𝒜)
     (f : HomogeneousLocalization.NumDenSameDeg 𝒜 x.asHomogeneousIdeal.toIdeal.primeCompl) :
-    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den := by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den) := by
   rw [ProjectiveSpectrum.mem_basicOpen]
   exact f.den_mem
 

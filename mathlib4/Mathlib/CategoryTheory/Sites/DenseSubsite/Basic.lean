@@ -193,7 +193,7 @@ noncomputable def pushforwardFamily {X} (x : ℱ.obj (op X)) :
 theorem pushforwardFamily_apply [G.IsLocallyFull K]
     {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y ⟶ X) :
     pushforwardFamily α x f (Presieve.in_coverByImage G f) = α.app (op Y) (ℱ.map f.op x) := by
-  simp only [pushforwardFamily_def, op_obj]
+  (set_option backward.dsimp.instanceTypes false in simp only [pushforwardFamily_def, op_obj])
   generalize Nonempty.some (Presieve.in_coverByImage G f) = l
   obtain ⟨W, iYW, iWX, rfl⟩ := l
   simp only [← op_comp, ← Functor.map_comp_apply, naturality_apply]
@@ -322,13 +322,14 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.obj) :
     -- Porting note: the following line closes a goal which didn't exist before reenableeta
     · exact pushforwardFamily_compatible (homOver α Y.unop) (f.unop ≫ x)
     intro Y' f' hf'
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in dsimp)
     simp only [Category.assoc]
     congr 1
     conv_lhs => rw [← hf'.some.fac]
     simp only [← Category.assoc, op_comp, Functor.map_comp]
     congr 1
-    exact (appHom_restrict (homOver α (unop X)) hf'.some.map.op x).trans (by simp)
+    (set_option backward.dsimp.instanceTypes false in
+    exact (appHom_restrict (homOver α (unop X)) hf'.some.map.op x).trans (by simp))
 
 /--
 (Implementation). `sheafCoyonedaHom` but the order of the arguments of the functor are swapped.
@@ -381,6 +382,7 @@ we may obtain a natural isomorphism between presheaves.
 noncomputable def sheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.obj ≅ G.op ⋙ ℱ'.obj) : ℱ ≅ ℱ' :=
   (fullyFaithfulSheafToPresheaf _ _).preimageIso (presheafIso i)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The constructed `sheafHom α` is equal to `α` when restricted onto `C`. -/
@@ -408,6 +410,7 @@ theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.obj) :
       (coyoneda.obj (op ((G.op ⋙ ℱ).obj X))) ℱ'.property⟩)
     (whiskerRight α (coyoneda.obj _)) hf.some.map (𝟙 _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 variable (G) in
 set_option backward.isDefEq.respectTransparency false in

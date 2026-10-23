@@ -70,8 +70,9 @@ theorem Submodule.natAbs_det_equiv (N : Submodule ℤ M) {E : Type*} [EquivLike 
     _ = Nat.card (M ⧸ N) := ?_
   -- since `LinearMap.toMatrix b' b' f` is the diagonal matrix with `a` along the diagonal.
   · congr 2; ext i j
+    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [LinearMap.toMatrix_apply, ha, map_smul, Basis.repr_self, Finsupp.smul_single,
-      smul_eq_mul, mul_one]
+      smul_eq_mul, mul_one])
     by_cases h : i = j
     · rw [h, Matrix.diagonal_apply_eq, Finsupp.single_eq_same]
     · rw [Matrix.diagonal_apply_ne _ h, Finsupp.single_eq_of_ne h]
@@ -107,7 +108,8 @@ theorem AddSubgroup.relIndex_eq_natAbs_det {E : Type*} [AddCommGroup E]
     (L₁ L₂ : AddSubgroup E) (H : L₁ ≤ L₂) {ι : Type*} [DecidableEq ι] [Fintype ι]
     (b₁ : Basis ι ℤ L₁.toIntSubmodule) (b₂ : Basis ι ℤ L₂.toIntSubmodule) :
     L₁.relIndex L₂ = (b₂.det (fun i ↦ ⟨b₁ i, (H (SetLike.coe_mem _))⟩)).natAbs := by
-  rw [relIndex, index_eq_natAbs_det b₂ _ (b₁.map (addSubgroupOfEquivOfLe H).toIntLinearEquiv.symm)]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [relIndex, index_eq_natAbs_det b₂ _ (b₁.map (addSubgroupOfEquivOfLe H).toIntLinearEquiv.symm)])
   rfl
 
 set_option backward.isDefEq.respectTransparency false in

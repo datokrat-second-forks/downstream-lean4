@@ -285,6 +285,7 @@ theorem OrthogonalFamily.sum_projection_of_mem_iSup [Fintype ι] {V : ι → Sub
     simp_rw [map_add, Finset.sum_add_distrib]
     congrm $hx + $hy
 
+set_option backward.dsimp.instanceTypes false in
 /-- If a family of submodules is orthogonal, then the `orthogonalProjection` on a direct sum
 is just the coefficient of that direct sum. -/
 theorem OrthogonalFamily.projection_directSum_coeAddHom [DecidableEq ι] {V : ι → Submodule 𝕜 E}

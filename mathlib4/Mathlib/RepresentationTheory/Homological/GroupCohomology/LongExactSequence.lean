@@ -53,8 +53,9 @@ lemma map_cochainsFunctor_shortExact :
     exact := by
       have : LinearMap.range X.f.hom.toLinearMap = LinearMap.ker X.g.hom.toLinearMap :=
         (hX.exact.map (forget₂ (Rep k G) (ModuleCat k))).moduleCat_range_eq_ker
+      (set_option backward.dsimp.instanceTypes false in
       simp [moduleCat_exact_iff_range_eq_ker, LinearMap.range_compLeft,
-        LinearMap.ker_compLeft, this]
+        LinearMap.ker_compLeft, this])
     mono_f := letI := hX.mono_f; cochainsMap_id_f_map_mono X.f i
     epi_g := letI := hX.epi_g; cochainsMap_id_f_map_epi X.g i }
 
@@ -139,7 +140,7 @@ theorem mem_cocycles₁_of_comp_eq_d₀₁
     x ∈ cocycles₁ X.X₁ := by
   apply Function.Injective.comp_left ((Rep.mono_iff_injective X.f).1 hX.2)
   have := congr($((mapShortComplexH1 (MonoidHom.id G) X.f).comm₂₃.symm) x)
-  simp_all [shortComplexH1, LinearMap.compLeft]
+  (set_option backward.dsimp.instanceTypes false in simp_all [shortComplexH1, LinearMap.compLeft])
 
 set_option backward.isDefEq.respectTransparency.types false in
 theorem δ₀_apply
@@ -167,7 +168,7 @@ theorem mem_cocycles₂_of_comp_eq_d₁₂
     x ∈ cocycles₂ X.X₁ := by
   apply Function.Injective.comp_left ((Rep.mono_iff_injective X.f).1 hX.2)
   have := congr($((mapShortComplexH2 (MonoidHom.id G) X.f).comm₂₃.symm) x)
-  simp_all [shortComplexH2, LinearMap.compLeft]
+  (set_option backward.dsimp.instanceTypes false in simp_all [shortComplexH2, LinearMap.compLeft])
 
 theorem δ₁_apply
     -- Let `0 ⟶ X₁ ⟶f X₂ ⟶g X₃ ⟶ 0` be a short exact sequence of `G`-representations.

@@ -91,7 +91,8 @@ theorem restrictStalkIso_inv_eq_ofRestrict {U : TopCat.{v}} (X : PresheafedSpace
   induction V with | op V => ?_
   let i : (h.functorNhds x).obj ((OpenNhds.map f x).obj V) ⟶ V :=
     homOfLE (Set.image_preimage_subset f _)
-  erw [Iso.comp_inv_eq, colimit.ι_map_assoc, colimit.ι_map_assoc, colimit.ι_pre]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  erw [Iso.comp_inv_eq, colimit.ι_map_assoc, colimit.ι_map_assoc, colimit.ι_pre])
   simp_rw [Category.assoc]
   erw [colimit.ι_pre ((OpenNhds.inclusion (f x)).op ⋙ X.presheaf)
       (h.functorNhds x).op]
@@ -127,7 +128,7 @@ theorem comp {X Y Z : PresheafedSpace.{_, _, v} C} (α : X ⟶ Y) (β : Y ⟶ Z)
   -- We can't use `ext` here due to https://github.com/leanprover/std4/pull/159
   apply colimit.hom_ext
   rintro ⟨U, hU⟩
-  simp
+  (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 /-- If `α = β` and `x = x'`, we would like to say that `stalk_map α x = stalk_map β x'`.
 Unfortunately, this equality is not well-formed, as their types are not _definitionally_ the same.
@@ -198,11 +199,12 @@ theorem stalkSpecializes_stalkMap {X Y : PresheafedSpace.{_, _, v} C}
   -- We can't use `ext` here due to https://github.com/leanprover/std4/pull/159
   refine colimit.hom_ext fun j => ?_
   induction j with | op j => ?_
+  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp
   simp only [colimit.ι_desc_assoc, ι_colimMap_assoc, whiskerLeft_app,
     whiskerRight_app, NatTrans.id_app, colimit.ι_pre, assoc,
     colimit.pre_desc, colimit.map_desc, colimit.ι_desc, Cocone.precompose_obj_ι,
-    Cocone.whisker_ι, NatTrans.comp_app]
+    Cocone.whisker_ι, NatTrans.comp_app])
   tauto
 
 end stalkMap

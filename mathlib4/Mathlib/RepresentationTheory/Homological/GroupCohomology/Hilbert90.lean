@@ -122,7 +122,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem norm_ofAlgebraAutOnUnits_eq (x : Lˣ) :
     (toMul <| toAdditive ((Rep.ofAlgebraAutOnUnits K L).norm.asHom.hom
       (toAdditive.symm <| ofMul x))).1 = algebraMap K L (Algebra.norm K (x : L)) := by
-  simp [Algebra.norm_eq_prod_automorphisms, Representation.norm]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [Algebra.norm_eq_prod_automorphisms, Representation.norm])
 
 variable [IsCyclic (L ≃ₐ[K] L)] {g : Gal(L/K)}
 
@@ -156,7 +157,7 @@ theorem exists_div_of_norm_eq_one (hg : ∀ x, x ∈ Subgroup.zpowers g) {x : L}
     LinearMap.id_coe, id_eq,
     toAdditive_symm_apply, toAdditive_apply, toMul_ofMul, IsUnit.unit_spec, xu] at this
   rw [← this, toMul_sub]
-  simp
+  (set_option backward.dsimp.instanceTypes false in simp)
 
 variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B] [Algebra A L] [Algebra A K]
 variable [Algebra B L] [IsScalarTower A B L] [IsScalarTower A K L] [IsFractionRing A K] [IsDomain A]

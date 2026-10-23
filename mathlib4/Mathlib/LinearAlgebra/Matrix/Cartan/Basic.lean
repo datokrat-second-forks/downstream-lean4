@@ -363,8 +363,9 @@ private theorem E_succ (n : ℕ) (hn : 4 ≤ n) :
   · simp only [E, of_apply, extendPath, Fin.lastCases_last, Fin.lastCases_castSucc,
       Fin.val_last, Fin.val_castSucc]
     grind
-  · simp only [E, of_apply, extendPath, Fin.lastCases_castSucc, Fin.val_castSucc,
-      Fin.castSucc_inj]
+  · (set_option backward.instanceTypes.subsingletons.decidable false in
+    simp only [E, of_apply, extendPath, Fin.lastCases_castSucc, Fin.val_castSucc,
+      Fin.castSucc_inj])
 
 theorem det_E_add_two (n : ℕ) (hn : 4 ≤ n) :
     (E (n + 2)).det = 2 * (E (n + 1)).det - (E n).det := by

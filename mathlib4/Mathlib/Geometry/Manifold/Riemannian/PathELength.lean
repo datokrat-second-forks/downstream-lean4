@@ -90,7 +90,7 @@ lemma pathELength_congr_Ioo (h : EqOn γ γ' (Ioo a b)) :
   simp only [pathELength_eq_lintegral_mfderiv_Ioo]
   apply setLIntegral_congr_fun measurableSet_Ioo (fun t ht ↦ ?_)
   have A : γ t = γ' t := h ht
-  congr! 2
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr! 2)
   apply Filter.EventuallyEq.mfderiv_eq
   filter_upwards [Ioo_mem_nhds ht.1 ht.2] with a ha using h ha
 
@@ -157,13 +157,15 @@ lemma pathELength_comp_of_monotoneOn {f : ℝ → ℝ} (h : a ≤ b) (hf : Monot
     · rw [uniqueMDiffWithinAt_iff_uniqueDiffWithinAt]
       exact uniqueDiffOn_Icc h _ ht
   rw [this]
-  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply])
   have : mfderiv[Icc a b] f t 1 = derivWithin f (Icc a b) t • (1 : TangentSpace% (f t)) := by
     simp only [mfderivWithin_eq_fderivWithin, ← fderivWithin_derivWithin, smul_eq_mul, mul_one]
     rfl
   rw [this]
   have : 0 ≤ derivWithin f (Icc a b) t := hf.derivWithin_nonneg
-  simp only [map_smul, enorm_smul, ← Real.enorm_of_nonneg this, f_im]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp only [map_smul, enorm_smul, ← Real.enorm_of_nonneg this, f_im])
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The length of a path in a manifold is invariant under an antitone reparametrization. -/
@@ -189,14 +191,16 @@ lemma pathELength_comp_of_antitoneOn {f : ℝ → ℝ} (h : a ≤ b) (hf : Antit
     · rw [uniqueMDiffWithinAt_iff_uniqueDiffWithinAt]
       exact uniqueDiffOn_Icc h _ ht
   rw [this]
-  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply])
   have : mfderiv[Icc a b] f t 1
       = derivWithin f (Icc a b) t • (1 : TangentSpace% (f t)) := by
     simp only [mfderivWithin_eq_fderivWithin, ← fderivWithin_derivWithin, smul_eq_mul, mul_one]
     rfl
   rw [this]
   have : 0 ≤ -derivWithin f (Icc a b) t := by simp [hf.derivWithin_nonpos]
-  simp only [map_smul, enorm_smul, f_im, ← Real.enorm_of_nonneg this, enorm_neg]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp only [map_smul, enorm_smul, f_im, ← Real.enorm_of_nonneg this, enorm_neg])
 
 section
 

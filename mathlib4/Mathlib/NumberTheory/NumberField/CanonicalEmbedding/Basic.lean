@@ -400,6 +400,7 @@ theorem nnnorm_eq_sup_normAtPlace (x : mixedSpace K) :
   · ext w
     simp [normAtPlace_apply_of_isComplex w.prop]
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 open scoped Classical in
 theorem norm_eq_sup'_normAtPlace (x : mixedSpace K) :

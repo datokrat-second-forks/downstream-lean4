@@ -60,6 +60,7 @@ open Limits Opposite
 
 variable {C : Type u} [Category.{v} C] {J : GrothendieckTopology C}
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma Sheaf.isPullback_square_op_map_yoneda_presheafToSheaf_yoneda_iff

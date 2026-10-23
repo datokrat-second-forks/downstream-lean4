@@ -47,7 +47,8 @@ def Sphere.secondInter (s : Sphere P) (p : P) (v : V) : P :=
 @[simp] lemma Sphere.secondInter_map (s : Sphere P) (p : P) (v : V) (f : P →ᵃⁱ[ℝ] P₂) :
     Sphere.secondInter ⟨f s.center, s.radius⟩ (f p) (f.linearIsometry v) =
       f (s.secondInter p v) := by
-  simp [secondInter, ← AffineIsometry.map_vsub]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [secondInter, ← AffineIsometry.map_vsub])
 
 lemma Sphere.coe_secondInter (as : AffineSubspace ℝ P) [Nonempty as] (s : Sphere as)
     (p : as) (v : as.direction) :

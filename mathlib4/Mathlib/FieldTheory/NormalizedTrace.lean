@@ -75,6 +75,7 @@ private theorem normalizedTraceAux_eq_of_finiteDimensional [FiniteDimensional F 
 
 variable [Algebra.IsIntegral F K]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.privateInPublic true in
 set_option backward.privateInPublic.warn false in
 /-- The normalized trace map from an algebraic extension `K` to the base field `F`. -/
@@ -188,12 +189,15 @@ private theorem normalizedTrace_trans_apply_aux [FiniteDimensional F E] [Algebra
     normalizedTrace F E (normalizedTrace E K a) = normalizedTrace F K a := by
   have : FiniteDimensional E E⟮a⟯ :=
     IntermediateField.adjoin.finiteDimensional (IsIntegral.isIntegral a)
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [normalizedTrace_def E K, inv_natCast_smul_eq (R := E) (S := F), map_smul,
     normalizedTrace_eq_of_finiteDimensional F E, LinearMap.smul_apply, ← smul_assoc,
     smul_eq_mul (a := _⁻¹), ← mul_inv, trace_trace, mul_comm,
-    ← Nat.cast_mul, Module.finrank_mul_finrank, eq_comm]
+    ← Nat.cast_mul, Module.finrank_mul_finrank, eq_comm])
   let E' := E⟮a⟯.restrictScalars F
-  have : FiniteDimensional F E' := Module.Finite.trans E E⟮a⟯
+  have : FiniteDimensional F E' :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    Module.Finite.trans E E⟮a⟯)
   have h_finrank_eq : Module.finrank F E⟮a⟯ = Module.finrank F E' := rfl
   have h_trace_eq : trace F E⟮a⟯ (AdjoinSimple.gen E a) = trace F E' (AdjoinSimple.gen E a : E') :=
     rfl
