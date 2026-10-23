@@ -671,7 +671,7 @@ See also `AffineEquiv.arrowCongrEquiv` and `AffineEquiv.arrowCongr`. -/
 def arrowCongrₗ : (P₁ →ᵃ[R] V₃) ≃ₗ[R] (P₂ →ᵃ[R] V₄) where
   __ := e₁.arrowCongrEquiv e₂.toAffineEquiv
   map_add' _ _ := by ext; simp
-  map_smul' _ _ := by ext; simp
+  map_smul' _ _ := by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 @[simp]
 theorem arrowCongrₗ_apply (f : P₁ →ᵃ[R] V₃) (x : P₂) :

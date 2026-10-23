@@ -250,7 +250,8 @@ def unionProd : (X ⊗ Y).Subcomplex := ((⊤ : X.Subcomplex).prod T) ⊔ (S.pro
 
 set_option backward.isDefEq.respectTransparency false in
 lemma mem_unionProd_iff {n : SimplexCategoryᵒᵖ} (x : (X ⊗ Y).obj n) :
-    dsimp% x ∈ (unionProd S T).obj _ ↔ x.2 ∈ T.obj _ ∨ x.1 ∈ S.obj _ := by
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp% x ∈ (unionProd S T).obj _ ↔ x.2 ∈ T.obj _ ∨ x.1 ∈ S.obj _) := by
   simp [unionProd, Set.mem_prod (α := X.obj n)]
 
 lemma top_prod_le_unionProd : (⊤ : X.Subcomplex).prod T ≤ S.unionProd T := le_sup_left
@@ -304,9 +305,10 @@ set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 lemma preimage_β_hom : (unionProd S T).preimage (β_ _ _).hom = unionProd T S := by
   ext n ⟨x, y⟩
+  (set_option backward.dsimp.instanceTypes false in
   dsimp
   simp only [mem_unionProd_iff, preimage_obj, Monoidal.tensorObj_obj,
-    dsimp% Set.mem_preimage (f := (β_ Y X).hom.app n)]
+    dsimp% Set.mem_preimage (f := (β_ Y X).hom.app n)])
   tauto
 
 @[simp]

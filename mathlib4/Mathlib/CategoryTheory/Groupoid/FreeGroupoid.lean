@@ -87,6 +87,7 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@HomRel.CompClosure _ _ redStep _ _) (p ≫ p.reverse) =
       Quot.mk (@HomRel.CompClosure _ _ redStep _ _) (𝟙 X) := by
   apply Quot.eqvGen_sound
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   induction p with
   | nil => apply EqvGen.refl
   | cons q f ih =>
@@ -108,7 +109,7 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
         (Quiver.Path.cons q f ≫ (Quiver.Hom.toPath (Quiver.reverse f)) ≫ (Quiver.Path.reverse q))
       simp only [← Category.assoc] at this ⊢
       exact this
-    · exact ih
+    · exact ih)
 
 theorem congr_reverse_comp {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@HomRel.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
@@ -180,7 +181,8 @@ def lift (φ : V ⥤q V') : Quiver.FreeGroupoid V ⥤ V' :=
 
 set_option backward.isDefEq.respectTransparency false in
 theorem lift_spec (φ : V ⥤q V') : of V ⋙q (lift φ).toPrefunctor = φ := by
-  rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, Functor.toPrefunctor_comp]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, Functor.toPrefunctor_comp])
   dsimp [lift]
   rw [Quotient.lift_spec, Paths.lift_spec, Quiver.Symmetrify.lift_spec]
 

@@ -236,7 +236,8 @@ lemma toUniformConvergenceCLM_continuous [IsTopologicalAddGroup F]
     [ContinuousConstSMul 𝕜₂ F]
     (𝔖 : Set (Set E)) (h : 𝔖 ⊆ {S | IsVonNBounded 𝕜₁ S}) :
     Continuous (ContinuousLinearMap.toUniformConvergenceCLM σ F 𝔖) :=
-  continuous_id_of_le <| UniformConvergenceCLM.topologicalSpace_mono _ _ h
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  continuous_id_of_le <| UniformConvergenceCLM.topologicalSpace_mono _ _ h)
 
 /-- A bilinear map `B : E × F → G` which is (jointly) continuous is **hypocontinuous**:
 in curried form, it defines a continuous linear map `E →L[𝕜] F →L[𝕜] G`.
@@ -389,7 +390,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem isUniformEmbedding_restrictScalars :
     IsUniformEmbedding (restrictScalars 𝕜' : (E →L[𝕜] F) → (E →L[𝕜'] F)) := by
   rw [← isUniformEmbedding_toUniformOnFun.of_comp_iff]
-  convert! isUniformEmbedding_toUniformOnFun using 4 with s
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! isUniformEmbedding_toUniformOnFun using 4 with s)
   exact ⟨fun h ↦ h.extend_scalars _, fun h ↦ h.restrict_scalars _⟩
 
 theorem uniformContinuous_restrictScalars :

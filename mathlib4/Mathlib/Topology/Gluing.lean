@@ -159,7 +159,8 @@ theorem eqvGen_of_π_eq
   have : colimit.ι diagram one x = colimit.ι diagram one y := by
     dsimp only [coequalizer.π] at h
     rw [← ι_preservesColimitIso_hom, ConcreteCategory.forget_map_eq_ofHom, types_comp_apply]
-    simp_all
+    (set_option backward.dsimp.instanceTypes false in
+    simp_all)
   have :
     (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.isoColimitCocone _).hom) _ =
       (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.isoColimitCocone _).hom) _ :=
@@ -397,7 +398,8 @@ theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) := by
   constructor
   · rw [← Set.image_preimage_eq_inter_range]
     apply (Opens.isOpenEmbedding (X := ↧α) (U i)).isOpenMap
-    convert! hs i using 1
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! hs i using 1)
     rw [← ι_fromOpenSubsetsGlue, coe_comp, Set.preimage_comp]
     congr! 1
     exact Set.preimage_image_eq _ (fromOpenSubsetsGlue_injective U)

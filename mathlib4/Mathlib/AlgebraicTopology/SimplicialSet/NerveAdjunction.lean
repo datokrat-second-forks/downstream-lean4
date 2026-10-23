@@ -293,7 +293,8 @@ def functorEquiv :
       dsimp
       simp only [Category.comp_id, Category.id_comp, descOfTruncation_map_homMk,
         homToNerveMk_app_zero]
-      exact nerve.homEquiv.symm.injective (Edge.ext (by cat_disch)))
+      (set_option backward.dsimp.instanceTypes false in
+      exact nerve.homEquiv.symm.injective (Edge.ext (by cat_disch))))
   right_inv φ :=
     IsStrictSegal.hom_ext (fun s ↦ by
       obtain ⟨x₀, x₁, f, rfl⟩ := Edge.exists_of_simplex s
@@ -437,7 +438,8 @@ instance (C D : Type u) [Category.{u} C] [Category.{u} D] :
       IsIso.of_isIso_fac_left
         (prodComparison_comp nerveFunctor (hoFunctor ⋙ nerveFunctor)
           (A := ↧C) (B := ↧D)).symm
-    exact IsIso.of_isIso_fac_right (prodComparison_comp hoFunctor nerveFunctor).symm
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    exact IsIso.of_isIso_fac_right (prodComparison_comp hoFunctor nerveFunctor).symm)
   exact isIso_of_fully_faithful nerveFunctor _
 
 instance isIso_prodComparison_stdSimplex.{w} (n m : ℕ) :

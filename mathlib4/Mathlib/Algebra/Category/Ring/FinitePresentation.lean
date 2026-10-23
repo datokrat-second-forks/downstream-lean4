@@ -70,6 +70,7 @@ lemma RingHom.EssFiniteType.exists_comp_map_eq_of_isColimit (hf : f.hom.EssFinit
     have (x : _) : F.map (f₁ x) (a x) = F.map (f₂ x) (b x) := h x
     simp [D, this]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 include hc in

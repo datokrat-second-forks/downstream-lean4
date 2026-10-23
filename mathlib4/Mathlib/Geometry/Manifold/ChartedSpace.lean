@@ -469,7 +469,8 @@ theorem prodChartedSpace_chartAt :
   rfl
 
 theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') := by
-  ext1
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  ext1)
   · simp [atlas, ChartedSpace.atlas]
   · ext1
     simp only [prodChartedSpace_chartAt, chartAt_self_eq, refl_prod_refl]

@@ -107,6 +107,7 @@ instance [F.IsDense] : (restrictedULiftYoneda.{w} F).Faithful where
       simpa using! ULift.up_injective (ConcreteCategory.congr_hom (CC := fun X ↦ X)
         congr($(h).app (op X)) (ULift.up p)))
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance [F.IsDense] : (restrictedULiftYoneda.{w} F).Full where

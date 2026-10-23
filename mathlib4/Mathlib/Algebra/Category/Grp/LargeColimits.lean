@@ -55,7 +55,9 @@ lemma isColimit_iff_bijective_desc [DecidableEq J] :
                        (Quot.ι F j))
             naturality {j j'} u := by
               ext
-              dsimp
+              (set_option backward.dsimp.instanceTypes false in
+              set_option backward.isDefEq.respectTransparency.instanceTypes false in
+              dsimp)
               rw [Quot.map_ι F (f := u)] } }
     use AddEquiv.ulift.toAddMonoidHom.comp (hc.desc c').hom
     refine Quot.addMonoidHom_ext _ (fun j x ↦ ?_)

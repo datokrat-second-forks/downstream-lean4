@@ -142,7 +142,8 @@ lemma of_zeroHypercover_target {P : MorphismProperty C} {K : Precoverage C} [K.H
     [Precoverage.ZeroHypercover.Small.{v} 𝒰] (h : ∀ i, P (pullback.snd f (𝒰.f i))) :
     P f := by
   rw [IsLocalAtTarget.iff_of_zeroHypercover (P := P) 𝒰.restrictIndexOfSmall]
-  simp [h]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [h])
 
 alias iff_of_zeroHypercover_target := IsLocalAtTarget.iff_of_zeroHypercover
 
@@ -252,6 +253,7 @@ lemma eq_of_zeroHypercover_target [HasEqualizers C] [HasPullbacks C] {X Y S : C}
   have : pullback.snd (equalizer.ι f g) (pullback.fst s (𝒰.f i)) =
       (equalizerPullbackMapIso hf hg _).inv ≫ equalizer.ι _ _ := by
     ext <;> simp [pullback.condition]
-  simpa [this] using equalizer.ι_of_eq (H i)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simpa [this] using equalizer.ι_of_eq (H i))
 
 end CategoryTheory

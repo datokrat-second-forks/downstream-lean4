@@ -39,7 +39,8 @@ theorem map_inf [SemilatticeInf α] [LinearOrder β] [FunLike F β α]
 theorem map_sup [SemilatticeSup α] [LinearOrder β] [FunLike F β α]
     [RelHomClass F (· > ·) (· > ·)] (a : F) (m n : β) :
     a (m ⊔ n) = a m ⊔ a n :=
-  map_inf (α := αᵒᵈ) (β := βᵒᵈ) _ _ _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  map_inf (α := αᵒᵈ) (β := βᵒᵈ) _ _ _)
 
 theorem directed [FunLike F α β] [RelHomClass F r s] {ι : Sort*} {a : ι → α} {f : F}
     (ha : Directed r a) : Directed s (f ∘ a) :=

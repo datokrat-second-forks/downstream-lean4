@@ -168,7 +168,8 @@ theorem cycleRange_of_le [NeZero n] (h : i ≤ j) :
   · have hj1 : (i + 1).1 = i.1 + 1 := val_add_one_of_lt' (by lia)
     have hj2 : (i.castLT (by lia) + 1 : Fin (j + 1)).1 =
       (i.castLT (by lia) : Fin (j + 1)) + 1 := val_add_one_of_lt' (by simp; lia)
-    exact eq_of_val_eq (by simp [← this, hj1, hj2])
+    exact eq_of_val_eq (by
+      (set_option backward.dsimp.instanceTypes false in simp [← this, hj1, hj2]))
 
 theorem coe_cycleRange_of_le (h : i ≤ j) :
     (cycleRange j i : ℕ) = if i = j then 0 else (i : ℕ) + 1 := by
@@ -378,8 +379,9 @@ theorem cycleIcc_of_gt (h : j < k) : (cycleIcc i j) k = k := by
     have : (((addNatEmb (n - (n - i.1))).trans (finCongr _).toEmbedding).toEquivRange.symm ⟨k, kin⟩)
       = subNat i.1 (k.cast (by lia)) (by simp; lia) := by
       simpa [-Function.Embedding.coe_trans, symm_apply_eq] using eq_of_val_eq (by simp; lia)
+    (set_option backward.dsimp.instanceTypes false in
     simp only [cycleIcc_to_cycleRange hij kin, natAdd_castLEEmb, this,
-      Function.Embedding.trans_apply, addNatEmb_apply, coe_toEmbedding, finCongr_apply]
+      Function.Embedding.trans_apply, addNatEmb_apply, coe_toEmbedding, finCongr_apply])
     rw [cycleRange_of_gt]
     · exact eq_of_val_eq (by simp; lia)
     · exact lt_def.mpr (by simp [sub_val_of_le hij]; lia)
@@ -395,8 +397,9 @@ theorem cycleIcc_of_le_of_le (hik : i ≤ k) (hkj : k ≤ j) [NeZero n] :
   have : (((addNatEmb (n - (n - i.1))).trans (finCongr _).toEmbedding).toEquivRange.symm ⟨k, kin⟩)
       = subNat i.1 (k.cast (by lia)) (by simp; lia) := by
     simpa [-Function.Embedding.coe_trans, symm_apply_eq] using eq_of_val_eq (by simp; lia)
+  (set_option backward.dsimp.instanceTypes false in
   simp only [cycleIcc_to_cycleRange hij kin, natAdd_castLEEmb, this, Function.Embedding.trans_apply,
-    addNatEmb_apply, coe_toEmbedding, finCongr_apply]
+    addNatEmb_apply, coe_toEmbedding, finCongr_apply])
   refine eq_of_val_eq ?_
   split_ifs with ch
   · have : subNat i.1 (j.cast (by lia)) (by simp [hij]) = (j - i).castLT (sub_val_lt_sub hij) :=
@@ -612,8 +615,9 @@ lemma sign_decomposeFin'Symm (i : Fin (n + 2)) (σ : Perm (Fin (n + 1))) :
     have hS : S.card = i.val := by
       simp only [this, Finset.card_image_of_injective _ (Equiv.injective _)]
       exact Finset.card_eq_of_bijective (fun j hj ↦ ⟨j, by grind⟩) (by grind) (by grind) (by simp)
+    (set_option backward.instanceTypes.subsingletons.decidable false in
     simp only [← hS, Fin.Ioi_zero_eq_map, decomposeFin'Symm_zero, Finset.prod_map, Fin.coe_succEmb,
-      decomposeFin'Symm_succ, ← S.prod_mul_prod_compl, ← Finset.prod_const]
+      decomposeFin'Symm_succ, ← S.prod_mul_prod_compl, ← Finset.prod_const])
     nth_rw 2 [Finset.prod_eq_one (by simp [S]; grind [Fin.succAbove])]
     rw [mul_one]
     exact Finset.prod_congr rfl (by grind)

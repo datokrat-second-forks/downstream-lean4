@@ -204,8 +204,9 @@ instance instWeakPseudoEMetricSpaceWithTop [m : WeakPseudoEMetricSpace α] :
     WeakPseudoEMetricSpace (WithTop α) :=
   letI : TopologicalSpace (Option α) := TopologicalSpace.instWithTopOfOrderTopology
   letI : WeakPseudoEMetricSpace (Option α) :=
-    Option.WeakPseudoEMetricSpace.OfIsOpenEmbedding (inst := instEDistWithTop) rfl
-    WithTop.isOpenEmbedding_some
+    Option.WeakPseudoEMetricSpace.OfIsOpenEmbedding (inst := instEDistWithTop)
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in rfl)
+      WithTop.isOpenEmbedding_some
   inferInstanceAs <| WeakPseudoEMetricSpace (Option α)
 
 /-- If `α` has a topology induced by a linear order and is a weak extended metric space,
@@ -214,7 +215,9 @@ so is `WithTop α` -/
 instance instWeakEMetricSpaceWithTop [m : WeakEMetricSpace α] : WeakEMetricSpace (WithTop α) :=
   let : TopologicalSpace (Option α) := TopologicalSpace.instWithTopOfOrderTopology
   let : WeakEMetricSpace (Option α) := Option.WeakEMetricSpace.OfIsOpenEmbedding
-    (inst := instEDistWithTop) rfl WithTop.isOpenEmbedding_some
+    (inst := instEDistWithTop)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in rfl)
+    WithTop.isOpenEmbedding_some
   inferInstanceAs <| WeakEMetricSpace (Option α)
 
 open scoped OnePoint in
@@ -231,7 +234,9 @@ instance instWeakPseudoEMetricSpaceOnePoint [m : WeakPseudoEMetricSpace α] :
     WeakPseudoEMetricSpace (OnePoint α) :=
   let : TopologicalSpace (Option α) := OnePoint.instTopologicalSpace
   let : WeakPseudoEMetricSpace (Option α) := Option.WeakPseudoEMetricSpace.OfIsOpenEmbedding
-    (inst := instEDistOnePoint) rfl OnePoint.isOpenEmbedding_coe
+    (inst := instEDistOnePoint)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in rfl)
+    OnePoint.isOpenEmbedding_coe
   inferInstanceAs <| WeakPseudoEMetricSpace (Option α)
 
 /-- The one point compactification of a weak extended metric space is again a weak extended metric
@@ -240,7 +245,9 @@ instance instWeakEMetricSpaceOnePoint [m : WeakEMetricSpace α] :
     WeakEMetricSpace (OnePoint α) :=
   let : TopologicalSpace (Option α) := OnePoint.instTopologicalSpace
   let : WeakEMetricSpace (Option α) := Option.WeakEMetricSpace.OfIsOpenEmbedding
-    (inst := instEDistOnePoint) rfl OnePoint.isOpenEmbedding_coe
+    (inst := instEDistOnePoint)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in rfl)
+    OnePoint.isOpenEmbedding_coe
   inferInstanceAs <| WeakEMetricSpace (Option α)
 
 /-- `ℝ≥0∞` is a weak extended metric space with its usual distance function. -/

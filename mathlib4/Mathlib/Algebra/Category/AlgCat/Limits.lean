@@ -79,9 +79,10 @@ def limitπAlgHom (j) :
       (F ⋙ forget₂ (AlgCat R) RingCat.{w} ⋙ forget₂ RingCat SemiRingCat.{w}) j with
     toFun := (Types.Small.limitCone (F ⋙ forget (AlgCat.{w} R))).π.app j
     commutes' := fun x => by
+      (set_option backward.dsimp.instanceTypes false in
       simp only [Functor.comp_obj, Types.Small.limitCone_pt, Functor.const_obj_obj,
         Types.Small.limitCone_π_app, ConcreteCategory.hom_ofHom, TypeCat.Fun.coe_mk,
-        ← Shrink.algEquiv_apply R, AlgEquiv.commutes]
+        ← Shrink.algEquiv_apply R, AlgEquiv.commutes])
       rfl
     }
 
@@ -101,6 +102,8 @@ def limitCone : Cone F where
         ext
         simpa using! (Types.Small.limitCone (F ⋙ forget _)).π.naturality_apply f _ }
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Witness that the limit cone in `AlgCat R` is a limit cone.
 (Internal use only; use the limits API.)
@@ -154,8 +157,8 @@ instance forget₂Ring_preservesLimitsOfSize [UnivLE.{v, w}] :
   preservesLimitsOfShape :=
     { preservesLimit := fun {K} ↦
         preservesLimit_of_preserves_limit_cone (limitConeIsLimit K)
-          (RingCat.limitConeIsLimit.{v, w}
-            (_ ⋙ forget₂ (AlgCat.{w} R) RingCat.{w})) }
+          (set_option backward.instanceTypes.subsingletons.prop false in
+          RingCat.limitConeIsLimit.{v, w} (_ ⋙ forget₂ (AlgCat.{w} R) RingCat.{w})) }
 
 instance forget₂Ring_preservesLimits : PreservesLimits (forget₂ (AlgCat R) RingCat.{w}) :=
   AlgCat.forget₂Ring_preservesLimitsOfSize.{w, w}

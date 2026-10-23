@@ -1245,11 +1245,13 @@ instance isMonoidal_refl : (Equivalence.refl (C := C)).IsMonoidal :=
 instance isMonoidal_symm : e.symm.IsMonoidal where
   leftAdjoint_ε := by
     simp only [toAdjunction]
-    dsimp [symm]
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp [symm])
     rw [counitIso_inv_app_comp_functor_map_η_inverse]
   leftAdjoint_μ X Y := by
     simp only [toAdjunction]
-    dsimp [symm]
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp [symm])
     rw [map_comp, counitIso_inv_app_tensor_comp_functor_map_δ_inverse_assoc]
     simp [← map_comp]
 

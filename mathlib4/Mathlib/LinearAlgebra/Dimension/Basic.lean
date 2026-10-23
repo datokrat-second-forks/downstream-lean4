@@ -179,7 +179,9 @@ theorem Module.one_le_rank_iff : 1 ≤ Module.rank R M ↔ ∃ f : R →ₗ[R] M
 theorem Module.rank_eq_zero_of_not_faithfulSMul (h : ¬ FaithfulSMul R M) : Module.rank R M = 0 := by
   contrapose! h
   obtain ⟨f, hf⟩ := by rwa [← Cardinal.one_le_iff_ne_zero, one_le_rank_iff] at h
-  exact ⟨fun {x y} hxy ↦ hf (by simpa [← map_smul] using hxy (f 1))⟩
+  exact ⟨fun {x y} hxy ↦ hf (by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa [← map_smul] using hxy (f 1)))⟩
 
 section
 variable [AddCommMonoid M'] [Module R' M']
@@ -260,7 +262,8 @@ theorem CommSemiring.rank_self (R) [CommSemiring R] : Module.rank R R = 1 := by
     Module.le_rank_iff_exists_linearMap, Module.one_le_rank_iff]
   refine ⟨fun ⟨f, inj⟩ ↦ ?_, _, (LinearEquiv.refl ..).injective⟩
   have := inj (a₁ := f ![0, 1] • ![1, 0]) (a₂ := f ![1, 0] • ![0, 1]) <| by
-    simp_rw [map_smul, smul_eq_mul]; apply mul_comm
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [map_smul, smul_eq_mul]); apply mul_comm
   have h₁ : f ![0, 1] = 0 := by simpa using congr($this 0)
   have h₂ : 0 = f ![1, 0] := by simpa using congr($this 1)
   exact zero_ne_one (α := R) (by simpa using congr($(inj (h₁.trans h₂)) 1))

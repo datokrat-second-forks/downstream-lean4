@@ -143,7 +143,7 @@ noncomputable def presheafFiberCocone (P : Cᵒᵖ ⥤ A) :
 /-- The cocone `Φ.presheafFiberCocone P` is a colimit. -/
 noncomputable def isColimitPresheafFiberCocone (P : Cᵒᵖ ⥤ A) :
     IsColimit (Φ.presheafFiberCocone P) :=
-  colimit.isColimit _
+  (set_option backward.instanceTypes.subsingletons.prop false in colimit.isColimit _)
 
 /-- The isomorphism `shrinkYoneda.{w} ⋙ Φ.presheafFiber ≅ Φ.fiber`. -/
 noncomputable def shrinkYonedaCompPresheafFiberIso [LocallySmall.{w} C] :

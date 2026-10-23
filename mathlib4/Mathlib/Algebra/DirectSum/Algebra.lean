@@ -105,6 +105,7 @@ theorem algebraMap_toAddMonoid_hom :
     ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (GAlgebra.toFun : R →+ A 0) :=
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- A family of `LinearMap`s preserving `DirectSum.GOne.one` and `DirectSum.GMul.mul`
 describes an `AlgHom` on `⨁ i, A i`. This is a stronger version of `DirectSum.toSemiring`.
 

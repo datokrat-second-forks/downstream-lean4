@@ -75,13 +75,17 @@ private def coneLift : Cone K ⥤ Cone (liftFromOver.obj K) where
     π.naturality
     | star, star, _
     | of a, star, _ => by aesop
-    | of a, of b, f => by simp [← Comma.comp_left]
+    | of a, of b, f => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [← Comma.comp_left])
   }
   map {t₁ t₂} f := {
     hom := f.hom.left
     w
     | star => by cat_disch
-    | of a => by simp [← Comma.comp_left]
+    | of a => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [← Comma.comp_left])
   }
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -192,13 +196,17 @@ private def coconeLift : Cocone K ⥤ Cocone (liftFromUnder.obj K) where
     ι.naturality
     | star, star, _
     | star, of b, _ => by aesop
-    | of a, of b, f => by simp [← Comma.comp_right]
+    | of a, of b, f => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [← Comma.comp_right])
   }
   map {t₁ t₂} f := {
     hom := f.hom.right
     w
     | star => by cat_disch
-    | of a => by simp [← Comma.comp_right]
+    | of a => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [← Comma.comp_right])
   }
 
 set_option backward.isDefEq.respectTransparency.types false in

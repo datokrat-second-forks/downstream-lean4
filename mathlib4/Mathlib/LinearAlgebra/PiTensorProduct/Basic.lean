@@ -648,8 +648,10 @@ theorem piTensorHomMapFun₂_add (φ ψ : ⨂[R] i, s i →ₗ[R] t i →ₗ[R] 
 
 theorem piTensorHomMapFun₂_smul (r : R) (φ : ⨂[R] i, s i →ₗ[R] t i →ₗ[R] t' i) :
     piTensorHomMapFun₂ (r • φ) = r • piTensorHomMapFun₂ φ := by
-  dsimp [piTensorHomMapFun₂]; ext; simp only [map_smul, LinearMap.compMultilinearMap_apply,
-    lift.tprod, smul_apply, LinearMap.smul_apply]
+  dsimp [piTensorHomMapFun₂]; ext
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [map_smul, LinearMap.compMultilinearMap_apply, lift.tprod, smul_apply,
+    LinearMap.smul_apply])
 
 /--
 Let `sᵢ`, `tᵢ` and `t'ᵢ` be families of `R`-modules.
@@ -754,7 +756,9 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem reindex_refl : reindex R s (Equiv.refl ι) = LinearEquiv.refl R _ := by
   ext
-  simp [reindex, domDomCongrLinearEquiv']
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [reindex, domDomCongrLinearEquiv'])
 
 variable {t : ι → Type*}
 variable [∀ i, AddCommMonoid (t i)] [∀ i, Module R (t i)]
@@ -802,7 +806,7 @@ def isEmptyEquiv [IsEmpty ι] : (⨂[R] i : ι, s i) ≃ₗ[R] R where
       rw [map_add, add_smul, hx, hy]
   right_inv t := by simp
   map_add' := map_add _
-  map_smul' := map_smul _
+  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _)
 
 @[simp]
 theorem isEmptyEquiv_apply_tprod [IsEmpty ι] (f : Π i, s i) :
@@ -862,7 +866,7 @@ def tmulEquivDep :
       { toFun a := PiTensorProduct.lift (PiTensorProduct.lift
           (MultilinearMap.currySumEquiv (tprod R)) a)
         map_add' := by simp
-        map_smul' := by simp })
+        map_smul' := by (set_option backward.instanceTypes.subsingletons.prop false in simp) })
     (PiTensorProduct.lift (MultilinearMap.domCoprodDep (tprod R) (tprod R))) (by
       ext
       dsimp

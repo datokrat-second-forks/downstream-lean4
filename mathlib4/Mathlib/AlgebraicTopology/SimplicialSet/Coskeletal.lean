@@ -94,6 +94,7 @@ lemma fac_aux₁ {n : ℕ}
   rw [spineToSimplex_arrow]
   rfl
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma fac_aux₂ {n : ℕ}

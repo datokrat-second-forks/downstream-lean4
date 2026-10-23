@@ -314,7 +314,8 @@ theorem antitone_iff_Icc [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
     [AddCommGroup H] [PartialOrder H] [IsOrderedAddMonoid H]
     [AddConstMapClass F G H a b] {f : F} (ha : 0 < a) (l : G) :
     Antitone f ↔ AntitoneOn f (Icc l (l + a)) :=
-  monotone_iff_Icc (H := Hᵒᵈ) ha l
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  monotone_iff_Icc (H := Hᵒᵈ) ha l)
 
 theorem strictMono_iff_Icc [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G] [Archimedean G]
     [AddCommGroup H] [PartialOrder H] [IsOrderedAddMonoid H]
@@ -326,7 +327,8 @@ theorem strictAnti_iff_Icc [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid 
     [AddCommGroup H] [PartialOrder H] [IsOrderedAddMonoid H]
     [AddConstMapClass F G H a b] {f : F} (ha : 0 < a) (l : G) :
     StrictAnti f ↔ StrictAntiOn f (Icc l (l + a)) :=
-  strictMono_iff_Icc (H := Hᵒᵈ) ha l
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  strictMono_iff_Icc (H := Hᵒᵈ) ha l)
 
 end AddConstMapClass
 

@@ -304,7 +304,8 @@ noncomputable def finitaryExtensiveTopCatAux (Z : TopCat.{u})
     convert! f.hom.2.1 _ isOpen_range_inl
   · refine ⟨(Homeomorph.prodPUnit Z).isEmbedding.comp .subtypeVal, ?_⟩
     convert! f.hom.2.1 _ isOpen_range_inr
-  · convert! Set.isCompl_range_inl_range_inr.preimage f
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! Set.isCompl_range_inl_range_inr.preimage f)
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance finitaryExtensive_TopCat : FinitaryExtensive TopCat.{u} := by

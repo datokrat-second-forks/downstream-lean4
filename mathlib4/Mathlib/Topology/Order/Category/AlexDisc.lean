@@ -81,6 +81,8 @@ def alexDiscEquivPreord : AlexDisc ≌ Preord where
   inverse.obj X := ↧(WithUpperSet X)
   inverse.map f := ConcreteCategory.ofHom (WithUpperSet.map f.hom)
   unitIso := NatIso.ofComponents fun X ↦ AlexDisc.Iso.mk <| by
-    dsimp; exact homeoWithUpperSetTopologyorderIso X
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp); exact homeoWithUpperSetTopologyorderIso X
   counitIso := NatIso.ofComponents fun X ↦ Preord.Iso.mk <| by
-    dsimp; exact (orderIsoSpecializationWithUpperSetTopology X).symm
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp); exact (orderIsoSpecializationWithUpperSetTopology X).symm

@@ -565,7 +565,10 @@ theorem jacobson_density (f : End (End R M) M) (s : Finset M) :
   let p := projection _ _ h
   let f := End.ringHomEndFinsupp s f
   have : f (p • x) = f x := congr(f $(projection_apply_left h ⟨x, mem_span_singleton_self x⟩))
-  have : f x ∈ R ∙ x := by rw [← this, map_smul, End.smul_def]; apply projection_apply_mem
+  have : f x ∈ R ∙ x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← this, map_smul, End.smul_def])
+    apply projection_apply_mem
   have ⟨r, hr⟩ := mem_span_singleton.mp this
   ⟨r, fun m hm ↦ by simpa [x] using! congr($hr ⟨m, hm⟩).symm⟩
 
@@ -580,6 +583,7 @@ protected theorem Module.Finite.toModuleEnd_moduleEnd_surjective [Module.Finite 
   | mem m hm => exact (hr m hm).symm
   | zero => simp
   | add _ _ _ _ h₁ h₂ => simpa using congr($h₁ + $h₂)
-  | smul g _ _ h => simp_rw [map_smul, h]
+  | smul g _ _ h =>
+    (set_option backward.instanceTypes.subsingletons.prop false in simp_rw [map_smul, h])
 
 end jacobson_density

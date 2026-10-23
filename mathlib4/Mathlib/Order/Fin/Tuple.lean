@@ -198,7 +198,10 @@ def insertNthOrderIso (α : Fin (n + 1) → Type*) [∀ i, LE (α i)] (p : Fin (
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp] lemma insertNthOrderIso_zero (α : Fin (n + 1) → Type*) [∀ i, LE (α i)] :
-    insertNthOrderIso α 0 = consOrderIso α := by ext; simp [insertNthOrderIso]
+    insertNthOrderIso α 0 = consOrderIso α := by
+  ext
+  (set_option backward.dsimp.instanceTypes false in
+  simp [insertNthOrderIso])
 
 /-- Note this lemma can only be written about non-dependent tuples as `insertNth (last n) = snoc` is
 not a definitional equality. -/

@@ -693,7 +693,8 @@ theorem comapSMul_single (g : G) (m : M) (r : R) : g • single m r = single (g 
   simp [comapSMul_def, comapDomAlgAut_apply]
 
 theorem comapSMulCommClass : SMulCommClass G R R[M] where
-  smul_comm g r x := by simp [comapSMul_def]
+  smul_comm g r x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [comapSMul_def])
 
 end comapDomAlgAut
 

@@ -97,8 +97,9 @@ scoped instance : TopologicalSpace (MvPowerSeries σ R) :=
 set_option backward.isDefEq.respectTransparency false in
 theorem instTopologicalSpace_mono (σ : Type*) {R : Type*} {t u : TopologicalSpace R} (htu : t ≤ u) :
     @instTopologicalSpace σ R t ≤ @instTopologicalSpace σ R u := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   change ⨅ i, _ ≤ ⨅ i, _
-  gcongr
+  gcongr)
 
 /-- `MvPowerSeries` on a `T0Space` form a `T0Space` -/
 @[scoped instance]

@@ -695,7 +695,8 @@ namespace Truncated
 set_option backward.isDefEq.respectTransparency false in
 instance {n} {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
     HasLimitsOfShape J (CosimplicialObject.Truncated C n) := by
-  dsimp [Truncated]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [Truncated])
   infer_instance
 
 instance {n} [HasLimits C] : HasLimits (CosimplicialObject.Truncated C n) :=
@@ -704,7 +705,8 @@ instance {n} [HasLimits C] : HasLimits (CosimplicialObject.Truncated C n) :=
 set_option backward.isDefEq.respectTransparency false in
 instance {n} {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
     HasColimitsOfShape J (CosimplicialObject.Truncated C n) := by
-  dsimp [Truncated]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [Truncated])
   infer_instance
 
 instance {n} [HasColimits C] : HasColimits (CosimplicialObject.Truncated C n) :=

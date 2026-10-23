@@ -854,6 +854,7 @@ lemma triangleLTLTGELT_distinguished (a b : ℤ) (h : a ≤ b) (X : C) :
   simp only [Category.comp_id, IsIso.eq_inv_comp]
   exact t.to_truncLT_obj_ext (by simp)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 instance (a b : ℤ) : IsIso (t.truncGELTToLTGE a b) := by
   rw [NatTrans.isIso_iff_isIso_app]

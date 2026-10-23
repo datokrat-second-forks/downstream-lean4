@@ -76,6 +76,7 @@ end
 
 variable {J : Type v} [SmallCategory J] {C : Type u} [Category.{v} C]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp←] comp_apply in
 set_option backward.isDefEq.respectTransparency false in
@@ -101,6 +102,7 @@ noncomputable def whiskeringLimYonedaIsoCones : whiskeringLeft _ _ _ ⋙
   NatIso.ofComponents fun F ↦ NatIso.ofComponents
     (fun X => limitCompCoyonedaIsoCone F X.unop)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp←] comp_apply in
 set_option backward.isDefEq.respectTransparency false in

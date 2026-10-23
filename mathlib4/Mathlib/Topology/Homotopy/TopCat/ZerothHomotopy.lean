@@ -34,7 +34,9 @@ singular simplicial set of `X` and the type of morphisms `I ⟶ X`. -/
 noncomputable def toSSetObj₁Equiv :
     toSSet.obj X _⦋1⦌ ≃ (I ⟶ X) :=
   (toSSetObjEquiv _ _).trans
-    { toFun f := ofHom (f.comp (ContinuousMap.ofClass TopCat.stdSimplexHomeomorphI.symm))
+    { toFun f := ofHom (f.comp
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          ContinuousMap.ofClass TopCat.stdSimplexHomeomorphI.symm))
       invFun f := f.hom.comp TopCat.stdSimplexHomeomorphI
       left_inv _ := by simp
       right_inv _ := by simp }
@@ -42,14 +44,16 @@ noncomputable def toSSetObj₁Equiv :
 @[simp]
 lemma toSSetObj₁Equiv_apply_zero (s : toSSet.obj X _⦋1⦌) :
     X.toSSetObj₁Equiv s 0 = toSSetObj₀Equiv ((toSSet.obj X).δ 1 s) := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [toSSetObj₀Equiv, toSSetObj₁Equiv, -ContinuousMap.coe_mk,
-    Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (.single 0)]
+    Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (.single 0)])
 
 @[simp]
 lemma toSSetObj₁Equiv_apply_one (s : toSSet.obj X _⦋1⦌) :
     X.toSSetObj₁Equiv s 1 = toSSetObj₀Equiv ((toSSet.obj X).δ 0 s) := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [toSSetObj₀Equiv, toSSetObj₁Equiv, -ContinuousMap.coe_mk,
-    Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (.single 0)]
+    Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (.single 0)])
 
 @[simp]
 lemma δ_one_toSSetObj₁Equiv.symm (f : I ⟶ X) :

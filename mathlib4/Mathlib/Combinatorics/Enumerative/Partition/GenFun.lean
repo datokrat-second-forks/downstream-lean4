@@ -104,7 +104,7 @@ private theorem aux_dvd_of_coeff_ne_zero {f : ℕ → ℕ → R} {d : ℕ} {s : 
     · suffices g x ≠ 0 by simp [this]
       contrapose hprod
       simp [hprod]
-    · rw [map_smul, coeff_X_pow]
+    · (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, coeff_X_pow])
       apply smul_eq_zero_of_right
       suffices g x ≠ x * (i + 1) by simp [this]
       contrapose hprod

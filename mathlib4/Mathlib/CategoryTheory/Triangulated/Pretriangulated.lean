@@ -226,7 +226,7 @@ lemma contractible_distinguished₁ (X : C) :
   refine isomorphic_distinguished _
     (inv_rot_of_distTriang _ (contractible_distinguished X)) _ ?_
   exact Triangle.isoMk _ _ (Functor.mapZeroObject _).symm (Iso.refl _) (Iso.refl _)
-    (by simp) (by simp) (by simp)
+    (by (set_option backward.dsimp.instanceTypes false in simp)) (by simp) (by simp)
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Obvious triangles `X ⟶ 0 ⟶ X⟦1⟧ ⟶ X⟦1⟧` are distinguished -/
@@ -615,6 +615,7 @@ def completeDistinguishedTriangleMorphism (T₁ T₂ : Triangle C)
       comm₂ := h.choose_spec.1
       comm₃ := h.choose_spec.2 }
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- A product of distinguished triangles is distinguished -/

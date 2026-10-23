@@ -58,7 +58,8 @@ theorem piComparison_fac {α : Type} (X : α → TopCat) :
     (equivEquivIso (sigmaEquiv Y (fun x ↦ (X x).1))).inv ≫ (Types.productIso _).inv := by
   rw [← Category.assoc, Iso.eq_comp_inv]
   ext
-  simp [yonedaPresheaf', piComparison, ← opCoproductIsoProduct_inv_comp_ι]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [yonedaPresheaf', piComparison, ← opCoproductIsoProduct_inv_comp_ι])
   rfl
 
 set_option backward.isDefEq.respectTransparency false in

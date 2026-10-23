@@ -1281,7 +1281,7 @@ theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinear
   -- finally, check that the coordinates of `v` one is using are the same. Based on
   -- `sizeUpTo_sizeUpTo_add`.
   congrm v $(Fin.ext ?_)
-  dsimp [Composition.embedding]
+  (set_option backward.dsimp.instanceTypes false in dsimp [Composition.embedding])
   rw [← add_assoc, ← sizeUpTo_sizeUpTo_add _ _ hi1 hj1]
 
 end FormalMultilinearSeries

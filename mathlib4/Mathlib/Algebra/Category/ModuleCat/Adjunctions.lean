@@ -348,6 +348,7 @@ instance lift_additive (F : C ⥤ D) : (lift R F).Additive where
     dsimp
     rw [Finsupp.sum_add_index'] <;> simp [add_smul]
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance lift_linear (F : C ⥤ D) : (lift R F).Linear R where
@@ -379,7 +380,8 @@ def ext {F G : Free R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Linear 
       | single f' r =>
         rw [Iso.app_hom, Iso.app_hom, ← smul_single_one, F.map_smul, G.map_smul, smul_comp,
           comp_smul]
-        change r • (embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (embedding R C ⋙ G).map f'
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        change r • (embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (embedding R C ⋙ G).map f')
         rw [α.hom.naturality f'])
 
 /-- `Free.lift` is unique amongst `R`-linear functors `Free R C ⥤ D`

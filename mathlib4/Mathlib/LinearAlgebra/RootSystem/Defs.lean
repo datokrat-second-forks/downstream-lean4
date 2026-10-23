@@ -223,8 +223,9 @@ variable {P} in
 lemma pairing_eq_add_of_root_eq_smul_add_smul
     {i j k l : ι} {x y : R} (h : P.root k = x • P.root i + y • P.root l) :
     P.pairing k j = x • P.pairing i j + y • P.pairing l j := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [← root_coroot_eq_pairing, h, map_add, map_smul, LinearMap.add_apply,
-    LinearMap.smul_apply, smul_eq_mul]
+    LinearMap.smul_apply, smul_eq_mul])
 
 lemma coroot_root_two :
     P.toLinearMap.flip (P.coroot i) (P.root i) = 2 := by
@@ -414,9 +415,10 @@ of a root / coroot. -/
   neg i := P.reflectionPerm i i
   neg_neg i := by
     apply P.root.injective
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [root_reflectionPerm, reflection_apply, LinearMap.flip_apply, root_coroot_eq_pairing,
       pairing_same, map_sub, coroot_reflectionPerm, coreflection_apply_self, map_neg, neg_smul,
-      sub_neg_eq_add, map_smul, smul_add]
+      sub_neg_eq_add, map_smul, smul_add])
     module
 
 lemma ne_neg [NeZero (2 : R)] [IsDomain R] :
@@ -521,9 +523,11 @@ lemma two_nsmul_reflection_eq_of_perm_eq (hij : P.reflectionPerm i = P.reflectio
     _ = 2 • P.toLinearMap x (P.coroot j) • P.root j := ?_
   · rw [smul_comm, ← Nat.cast_smul_eq_nsmul R, Nat.cast_ofNat]
   · rw [P.pairing_smul_root_eq j i i hij.symm, pairing_same]
-  · rw [← smul_comm, ← smul_assoc, map_smul]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← smul_comm, ← smul_assoc, map_smul])
   · rw [← P.pairing_smul_coroot_eq j i j hij.symm, pairing_same]
-  · rw [map_smul, smul_assoc, ← Nat.cast_smul_eq_nsmul R, Nat.cast_ofNat]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [map_smul, smul_assoc, ← Nat.cast_smul_eq_nsmul R, Nat.cast_ofNat])
 
 lemma reflectionPerm_eq_reflectionPerm_iff_of_isSMulRegular (h2 : IsSMulRegular M 2) :
     P.reflectionPerm i = P.reflectionPerm j ↔ P.reflection i = P.reflection j := by
@@ -542,7 +546,7 @@ lemma reflectionPerm_eq_reflectionPerm_iff_of_span :
       simp only [← root_reflectionPerm, h]
     | zero => simp
     | add x y _ _ hx hy => simp [hx, hy]
-    | smul t x _ hx => simp [hx]
+    | smul t x _ hx => (set_option backward.instanceTypes.subsingletons.prop false in simp [hx])
   · ext k
     apply P.root.injective
     simp [h (P.root k) (Submodule.subset_span <| mem_range_self k)]
@@ -579,8 +583,9 @@ lemma isOrthogonal_comm (h : IsOrthogonal P i j) : Commute (P.reflection i) (P.r
   rw [commute_iff_eq]
   ext
   replace h : P.pairing i j = 0 ∧ P.pairing j i = 0 := by simpa [IsOrthogonal] using h
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [LinearEquiv.mul_apply, reflection_apply, LinearMap.flip_apply, map_sub,
-    map_smul, root_coroot_eq_pairing, h, zero_smul, sub_zero]
+    map_smul, root_coroot_eq_pairing, h, zero_smul, sub_zero])
   abel
 
 variable {P i j}
@@ -612,7 +617,8 @@ lemma isFixedPt_reflection_of_isOrthogonal {s : Set ι} (hj : ∀ i ∈ s, P.IsO
   induction hx using Submodule.span_induction with
   | zero => rw [map_zero]
   | add u v hu hv hu' hv' => rw [map_add, hu', hv']
-  | smul t u hu hu' => rw [map_smul, hu']
+  | smul t u hu hu' =>
+    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, hu'])
   | mem u hu =>
       obtain ⟨i, his, rfl⟩ := hu
       exact IsOrthogonal.reflection_apply_right <| hj i his
@@ -675,8 +681,10 @@ protected def map (e : ι ≃ ι₂) (f : M ≃ₗ[R] M₂) (g : N ≃ₗ[R] N�
   coroot := (e.symm.toEmbedding.trans P.coroot).trans g.toEmbedding
   root_coroot_two i := by simp
   reflectionPerm i := e.symm.trans <| (P.reflectionPerm (e.symm i)).trans e
-  reflectionPerm_root i j := by simp [reflection_apply]
-  reflectionPerm_coroot i j := by simp [coreflection_apply]
+  reflectionPerm_root i j := by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [reflection_apply])
+  reflectionPerm_coroot i j := by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp [coreflection_apply])
 
 instance [P.IsRootSystem] (e : ι ≃ ι₂) (f : M ≃ₗ[R] M₂) (g : N ≃ₗ[R] N₂) :
     (P.map e f g).IsRootSystem where

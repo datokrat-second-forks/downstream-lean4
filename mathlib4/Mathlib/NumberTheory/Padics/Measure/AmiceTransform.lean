@@ -117,8 +117,9 @@ private def invTransformₗ (F : ℤ_[p]⟦X⟧) : C(ℤ_[p], ℤ_[p]) →ₗ[�
     simp only [map_add, ZeroAtInftyContinuousMap.coe_add, Pi.add_apply, add_mul]
     rw [Summable.tsum_add] <;> apply invTransformSummable
   map_smul' r f := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_smul, ZeroAtInftyContinuousMap.coe_smul, Pi.smul_apply, smul_eq_mul, mul_assoc,
-      RingHom.id_apply]
+      RingHom.id_apply])
     simp_rw [← smul_eq_mul]
     rw [Summable.tsum_const_smul]
     exact invTransformSummable F f

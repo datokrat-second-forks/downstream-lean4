@@ -102,10 +102,11 @@ def comparisonRightAdjointHomEquiv (A : adj.toComonad.Coalgebra) (B : C)
           Adjunction.unit_naturality]
       invFun f := by
         refine ⟨(adj.homEquiv _ _).symm (f ≫ (equalizer.ι _ _)), (adj.homEquiv _ _).injective ?_⟩
+        (set_option backward.dsimp.instanceTypes false in
         simp only [Adjunction.toComonad_coe, Functor.comp_obj, comparison_obj_A, comparison_obj_a,
           Adjunction.homEquiv_counit, Functor.map_comp, Category.assoc,
           Functor.comp_map, Adjunction.homEquiv_unit, Adjunction.unit_naturality_assoc,
-          Adjunction.unit_naturality, Adjunction.right_triangle_components_assoc]
+          Adjunction.unit_naturality, Adjunction.right_triangle_components_assoc])
         congr 1
         exact (equalizer.condition _ _).symm
       left_inv f := by aesop

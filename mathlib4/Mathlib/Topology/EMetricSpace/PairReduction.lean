@@ -362,7 +362,8 @@ lemma logSizeRadius_le_card_smallBall (hJ : J.Nonempty) (i : ℕ) (ha : 1 < a) :
 set_option backward.isDefEq.respectTransparency false in
 lemma card_pairSet_le (ha : 1 < a) : #(pairSet J a c) ≤ a * #J := by
   wlog hJ : J.Nonempty
-  · simp [Finset.not_nonempty_iff_eq_empty.mp hJ]
+  · (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Finset.not_nonempty_iff_eq_empty.mp hJ])
   unfold pairSet
   grw [Finset.card_biUnion_le, Nat.cast_sum,
     Finset.sum_le_sum fun i _ ↦ card_pairSetSeq_le_logSizeRadius_mul hJ i ha,

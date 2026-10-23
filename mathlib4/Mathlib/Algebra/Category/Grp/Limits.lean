@@ -101,7 +101,9 @@ noncomputable instance Forget₂.createsLimit :
                         (F ⋙ forget₂ GrpCat MonCat.{u})).π.naturality h).hom) } }
         validLift := by apply IsLimit.uniqueUpToIso (MonCat.HasLimits.limitConeIsLimit.{v, u} _) t
         makesLimit :=
-         IsLimit.ofFaithful (forget₂ GrpCat MonCat.{u}) (MonCat.HasLimits.limitConeIsLimit _)
+         IsLimit.ofFaithful (forget₂ GrpCat MonCat.{u})
+          (set_option backward.instanceTypes.subsingletons.prop false in
+            MonCat.HasLimits.limitConeIsLimit _)
           (fun _ => _) fun _ => rfl }
 
 /-- A choice of limit cone for a functor into `GrpCat`.
@@ -262,7 +264,10 @@ noncomputable instance Forget₂.createsLimit :
         validLift := by apply IsLimit.uniqueUpToIso (GrpCat.limitConeIsLimit _) hc
         makesLimit :=
           IsLimit.ofFaithful (forget₂ _ GrpCat.{u} ⋙ forget₂ _ MonCat.{u})
-            (by apply MonCat.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl })
+            (by
+              (set_option backward.instanceTypes.subsingletons.prop false in
+              apply MonCat.HasLimits.limitConeIsLimit _))
+            (fun s => _) fun s => rfl })
 
 section
 
@@ -434,6 +439,7 @@ end CommGrpCat
 
 namespace AddCommGrpCat
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The categorical kernel of a morphism in `AddCommGrpCat`
 agrees with the usual group-theoretical kernel.
 -/

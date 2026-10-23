@@ -263,6 +263,7 @@ section Multiequalizer
 variable {FC : C → C → Type*} {CC : C → Type s} [∀ X Y, FunLike (FC X Y) (CC X) (CC Y)]
 variable [ConcreteCategory.{s} C FC]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem multiequalizer_ext {J : MulticospanShape.{w, w'}}

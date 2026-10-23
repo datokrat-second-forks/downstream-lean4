@@ -96,7 +96,8 @@ set_option backward.isDefEq.respectTransparency false in
 lemma shiftFunctor_map {X Y : t.Category} (f : X ⟶ Y) (m : A) :
     (shiftFunctor t.Category m).map f =
       (t.shiftIso m).hom.app X ≫ (shiftFunctor C m).map f ≫ (t.shiftIso m).inv.app Y := by
-  simp
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp)
 
 lemma shiftFunctorZero_hom_app (X : t.Category) :
     (shiftFunctorZero t.Category A).hom.app X =
@@ -120,7 +121,8 @@ lemma shiftFunctorAdd'_hom_app (i j k : A) (h : i + j = k) (X : t.Category) :
     dsimp [shiftFunctorAdd']
     cat_disch
   rw [this]
-  congr
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  congr)
   change _ = 𝟙 _ ≫ _ ≫ (shiftFunctor C j).map (𝟙 _) ≫ 𝟙 _
   simp
 
@@ -137,7 +139,8 @@ lemma shiftFunctorAdd'_inv_app (i j k : A) (h : i + j = k) (X : t.Category) :
     dsimp [shiftFunctorAdd']
     cat_disch
   rw [this]
-  congr
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  congr)
   change _ = 𝟙 _ ≫ (shiftFunctor C j).map (𝟙 _) ≫ _ ≫ 𝟙 _
   simp
 

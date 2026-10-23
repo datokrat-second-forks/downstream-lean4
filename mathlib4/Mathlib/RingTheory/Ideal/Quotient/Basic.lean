@@ -208,7 +208,8 @@ theorem map_pi [I.IsTwoSided] [Finite ι] (x : ι → R) (hi : ∀ i, x i ∈ I)
   classical
     cases nonempty_fintype ι
     rw [pi_eq_sum_univ x]
-    simp only [Finset.sum_apply, smul_eq_mul, map_sum, Pi.smul_apply, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Finset.sum_apply, smul_eq_mul, map_sum, Pi.smul_apply, map_smul])
     exact I.sum_mem fun j _ => I.mul_mem_right _ (hi j)
 
 end Pi

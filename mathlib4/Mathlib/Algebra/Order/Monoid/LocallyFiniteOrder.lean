@@ -184,7 +184,8 @@ lemma LocallyFiniteOrder.orderMonoidHom_strictMono {G : Type*} [CommGroup G] [Li
     [IsOrderedMonoid G] [LocallyFiniteOrder G] :
     StrictMono (orderMonoidHom G) :=
   let : LocallyFiniteOrder (Additive G) := ‹LocallyFiniteOrder G›
-  fun a b h ↦ orderAddMonoidHom_strictMono h
+  fun a b h ↦ (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    orderAddMonoidHom_strictMono h)
 
 open scoped WithZero in
 /-- Any nontrivial linearly ordered abelian group with zero that is locally finite

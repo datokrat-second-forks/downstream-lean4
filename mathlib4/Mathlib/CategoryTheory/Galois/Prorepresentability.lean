@@ -177,6 +177,7 @@ instance : IsCofilteredOrEmpty (PointedGaloisObject F) where
     apply evaluation_injective_of_isConnected F Z B z
     simp [hhz, hf, hg]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `cocone F` is a colimit cocone, i.e. `F` is pro-represented by `incl F`. -/
 noncomputable def isColimit : IsColimit (cocone F) := by
@@ -331,7 +332,8 @@ noncomputable def autIsoFibers :
   NatIso.ofComponents (fun A ↦ ((evaluationEquivOfIsGalois F A A.pt).toIso))
     (fun f ↦ by
       ext
-      simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp])
+      (set_option backward.dsimp.instanceTypes false in
+      simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp]))
 
 lemma autIsoFibers_inv_app (A : PointedGaloisObject F) (b : F.obj A) :
     (autIsoFibers F).inv.app A b = (evaluationEquivOfIsGalois F A A.pt).symm b :=
@@ -350,7 +352,8 @@ lemma endEquivAutGalois_π (f : End F) (A : PointedGaloisObject F) :
     F.map (AutGalois.π F A (endEquivAutGalois F f)).asIso.hom A.pt = f.asHom.app A A.pt := by
   dsimp [endEquivAutGalois, AutGalois.π_apply]
   change F.map ((((sectionsFunctor _).map (autIsoFibers F).inv) _).val A).asIso.hom A.pt = _
-  dsimp [autIsoFibers]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [autIsoFibers])
   simp only [endEquivSectionsFibers_π]
   erw [evaluationEquivOfIsGalois_symm_fiber]
 

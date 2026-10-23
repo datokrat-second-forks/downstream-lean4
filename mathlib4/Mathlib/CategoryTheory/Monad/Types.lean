@@ -40,6 +40,7 @@ def ofTypeMonad : Monad (Type u) where
   left_unit _ := by ext; exact joinM_pure _
   right_unit _ := by ext; exact joinM_map_pure _
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The `Kleisli` category of a `Control.Monad` is equivalent to the `Kleisli` category of its

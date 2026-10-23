@@ -196,6 +196,7 @@ def ForgetEnrichment.equivFunctor (D : Type u'') [Category.{v''} D] [EnrichedOrd
     (eHomEquiv V (X := ForgetEnrichment.to V X) (Y := ForgetEnrichment.to V Z))
     (by simp [eHomEquiv_comp])
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- If `D` is already an enriched ordinary category, it is equivalent to `ForgetEnrichment V D`. -/
@@ -310,9 +311,11 @@ def TransportEnrichment.forgetEnrichmentEquiv : TransportEnrichment F (ForgetEnr
     ForgetEnrichment W (TransportEnrichment F D) where
   functor := forgetEnrichmentEquivFunctor _ _ e h
   inverse := forgetEnrichmentEquivInverse _ _ e h
-  unitIso := NatIso.ofComponents (fun _ => Iso.refl _) (by simp)
+  unitIso := NatIso.ofComponents (fun _ => Iso.refl _)
+    (by (set_option backward.dsimp.instanceTypes false in simp))
   counitIso := NatIso.ofComponents (fun _ => Iso.refl _) fun f => by
-    simp [ForgetEnrichment.to, ForgetEnrichment.of]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [ForgetEnrichment.to, ForgetEnrichment.of])
   functor_unitIso_comp X := by
     simp only [Functor.id_obj, forgetEnrichmentEquivFunctor_obj, Functor.comp_obj,
       forgetEnrichmentEquivInverse_obj, ForgetEnrichment.to_of, NatIso.ofComponents_hom_app,

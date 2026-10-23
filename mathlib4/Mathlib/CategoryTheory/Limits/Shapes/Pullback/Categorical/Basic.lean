@@ -510,6 +510,7 @@ variable {A₂ : Type u₇} {B₂ : Type u₈} {C₂ : Type u₉}
   [Category.{v₇} A₂] [Category.{v₈} B₂] [Category.{v₉} C₂]
   {F₂ : A₂ ⥤ B₂} {G₂ : C₂ ⥤ B₂}
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The construction `CatCommSqOver.transform` respects vertical composition
@@ -524,6 +525,7 @@ def transformObjComp (X : Type u₁₀) [Category.{v₁₀} X]
       (Functor.associator _ _ _).symm)
     (fun {x y} f ↦ by ext <;> simp)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The construction `CatCommSqOver.transform` respects the identity

@@ -220,7 +220,8 @@ protected theorem map_add (f : A →A[R] B) (x y : A) : f (x + y) = f x + f y :=
 
 protected theorem map_smul (f : A →A[R] B) (c : R) (x : A) :
     f (c • x) = c • f x :=
-  map_smul ..
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  map_smul ..)
 
 theorem map_smul_of_tower {R S : Type*} [CommSemiring S] [SMul R A] [Algebra S A] [SMul R B]
     [Algebra S B] [MulActionHomClass (A →A[S] B) R A B] (f : A →A[S] B) (c : R) (x : A) :

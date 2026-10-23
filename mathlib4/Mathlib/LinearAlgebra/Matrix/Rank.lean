@@ -376,8 +376,9 @@ theorem rank_eq_finrank_range_toLin [Finite m] [DecidableEq n] {M₁ M₂ : Type
   have aux₂ := Basis.equiv_apply (Pi.basisFun R n) i v₂
   rw [toLin_eq_toLin', toLin'_apply'] at aux₁
   rw [Pi.basisFun_apply] at aux₁ aux₂
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [e₁, e₂, LinearMap.comp_apply, LinearEquiv.coe_coe, Equiv.refl_apply,
-    aux₁, aux₂, LinearMap.coe_single, toLin_self, map_sum, map_smul, Basis.equiv_apply]
+    aux₁, aux₂, LinearMap.coe_single, toLin_self, map_sum, map_smul, Basis.equiv_apply])
 
 theorem rank_le_card_height [Fintype m] [CommSemiring R] [StrongRankCondition R]
     (A : Matrix m n R) : A.rank ≤ Fintype.card m :=

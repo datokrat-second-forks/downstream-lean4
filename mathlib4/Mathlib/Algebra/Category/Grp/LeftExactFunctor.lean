@@ -87,7 +87,8 @@ noncomputable def unitIsoAux (F : C ⥤ AddCommGrpCat.{v}) [PreservesFiniteLimit
   refine CommGrp.mkIso Multiplicative.toAdd.toIso (by
     rw [Functor.obj.η_def X (F := F ⋙ forget AddCommGrpCat)]
     cat_disch) ?_
-  dsimp [-Functor.comp_map, -ConcreteCategory.forget_map_eq_ofHom]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [-Functor.comp_map, -ConcreteCategory.forget_map_eq_ofHom])
   have : F.Additive := Functor.additive_of_preserves_binary_products _
   simp only [Category.id_comp]
   rw [Functor.obj.μ_def X (F := F ⋙ forget AddCommGrpCat), Preadditive.mul_def X,

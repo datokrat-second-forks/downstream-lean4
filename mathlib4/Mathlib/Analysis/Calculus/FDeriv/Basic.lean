@@ -516,7 +516,8 @@ theorem fderivWithin_subset (st : s ⊆ t) (ht : UniqueDiffWithinAt 𝕜 s x)
 set_option backward.isDefEq.respectTransparency false in
 theorem fderivWithin_inter (ht : t ∈ 𝓝 x) : fderivWithin 𝕜 f (s ∩ t) x = fderivWithin 𝕜 f s x := by
   classical
-  simp [fderivWithin, hasFDerivWithinAt_inter ht, DifferentiableWithinAt]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp [fderivWithin, hasFDerivWithinAt_inter ht, DifferentiableWithinAt])
 
 theorem fderivWithin_of_mem_nhds (h : s ∈ 𝓝 x) : fderivWithin 𝕜 f s x = fderiv 𝕜 f x := by
   rw [← fderivWithin_univ, ← univ_inter s, fderivWithin_inter h]

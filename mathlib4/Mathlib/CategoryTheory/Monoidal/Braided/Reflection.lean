@@ -70,10 +70,13 @@ private lemma adjRetraction_is_retraction (c : C) (d : D)
       Category.comp_id]
   slice_lhs 2 4 =>
     rw [← adj.unit_naturality_assoc]
-  simp
+  (set_option backward.dsimp.instanceTypes false in
+  simp)
 
 attribute [local simp] Adjunction.homEquiv_unit Adjunction.homEquiv_counit
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /--
 Day's reflection theorem.
 

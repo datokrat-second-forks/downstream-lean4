@@ -122,7 +122,10 @@ def whiskerLeftIso
     (α_ W _ _).symm
     (((tensorLeft W).map_isPushout
       (IsPushout.of_hasPushout (X₁.hom ▷ X₂.left) (X₁.left ◁ X₂.hom))).hom_ext
-        (by simp [← whiskerLeft_comp_assoc]) (by simp [← whiskerLeft_comp_assoc]))
+        (by (set_option backward.instanceTypes.subsingletons.prop false in
+          simp [← whiskerLeft_comp_assoc]))
+        (by (set_option backward.instanceTypes.subsingletons.prop false in
+          simp [← whiskerLeft_comp_assoc])))
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Right-whiskering the pushout-product of `X₁` and `X₂` with `W : C` is isomorphic to the
@@ -140,7 +143,10 @@ def whiskerRightIso
     (α_ _ _ W)
     (((tensorRight W).map_isPushout
       (IsPushout.of_hasPushout (X₁.hom ▷ X₂.left) (X₁.left ◁ X₂.hom))).hom_ext
-      (by simp [← comp_whiskerRight_assoc]) (by simp [← comp_whiskerRight_assoc]))
+      (by (set_option backward.instanceTypes.subsingletons.prop false in
+        simp [← comp_whiskerRight_assoc]))
+      (by (set_option backward.instanceTypes.subsingletons.prop false in
+        simp [← comp_whiskerRight_assoc])))
 
 -- helper instance for `PushoutProduct.associator`
 local instance {F : C ⥤ C}
@@ -149,6 +155,7 @@ local instance {F : C ⥤ C}
       (((curriedTensor C).obj X₁.left).map X₂.hom)) F := by
   simpa only [curriedTensor_obj_obj, curriedTensor_map_app, curriedTensor_obj_map]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The pushout-product is associative: `(X₁ □ X₂) □ X₃ ≅ X₁ □ X₂ □ X₃`. -/
@@ -293,6 +300,7 @@ variable [HasPullbacks C]
 
 noncomputable section
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The arrow isomorphism `(f : A ⟶ B) ⋔ (W ⟶ ⋆) ≅ (B ⟹ W ⟶ A ⟹ W)` in a monoidal closed
@@ -311,6 +319,7 @@ def isTerminalIso [MonoidalCategory C] [MonoidalClosed C]
     (pullback.hom_ext (by simp) ((IsTerminal.isTerminalObj (ihom _) _ t).hom_ext ..)))
 
 open CartesianMonoidalCategory in
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The arrow isomorphism `(∅ ⟶ W) ⋔ (f : A ⟶ B) ≅ (W ⟹ A ⟶ W ⟹ B)` in a braided CCC with

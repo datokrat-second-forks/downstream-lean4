@@ -68,7 +68,8 @@ theorem ltb_cons_addChar' (c : Char) (s₁ s₂ : Legacy.Iterator) :
   | case2 s₁ s₂ h₁ h₂ h =>
     rw [ltb, Legacy.Iterator.hasNext_cons_addChar, Legacy.Iterator.hasNext_cons_addChar,
       ite_eq_left (by simpa using h₁), ite_eq_left (by simpa using h₂), ite_eq_right]
-    · simp only [Legacy.Iterator.curr, get_cons_addChar, ofList_toList]
+    · (set_option backward.instanceTypes.subsingletons.decidable false in
+      simp only [Legacy.Iterator.curr, get_cons_addChar, ofList_toList])
     · simpa only [Legacy.Iterator.curr, get_cons_addChar, ofList_toList] using h
   | case3 s₁ s₂ h₁ h₂ =>
     rw [ltb, Legacy.Iterator.hasNext_cons_addChar, Legacy.Iterator.hasNext_cons_addChar,

@@ -172,10 +172,11 @@ instance : (opOpEquivalence C).CommShift ℤ :=
   Equivalence.CommShift.mk'' _ _
     { shift_comm n := by
         ext X
+        (set_option backward.dsimp.instanceTypes false in
         simp [Functor.commShiftIso_comp_hom_app,
           commShiftIso_opOp_hom_app _ n (-n),
           commShiftIso_unopUnop_hom_app _ n (-n),
-          ← unop_comp_assoc] }
+          ← unop_comp_assoc]) }
 
 variable [Preadditive C] [HasZeroObject C] [∀ (n : ℤ), (shiftFunctor C n).Additive]
   [Pretriangulated C]

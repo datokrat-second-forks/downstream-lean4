@@ -440,6 +440,7 @@ theorem vec_ex1_dioph (n) {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) :
 theorem diophFn_vec (f : Vector3 ℕ n → ℕ) : DiophFn f ↔ Dioph {v | f (v ∘ fs) = v fz} :=
   ⟨reindex_dioph _ (fz ::ₒ fs), reindex_dioph _ (none::some)⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem diophPFun_vec (f : Vector3 ℕ n →. ℕ) : DiophPFun f ↔ Dioph {v | (v ∘ fs, v fz) ∈ f.graph} :=
   ⟨reindex_dioph _ (fz ::ₒ fs), reindex_dioph _ (none::some)⟩
 
@@ -473,6 +474,7 @@ theorem diophFn_compn :
             congr! 3 with x
             obtain _ | _ | _ := x <;> rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem dioph_comp {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)
     (df : VectorAllP DiophFn f) : Dioph {v | (fun i => f i v) ∈ S} :=
   diophFn_compn (reindex_dioph _ inr d) df

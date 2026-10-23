@@ -211,7 +211,8 @@ theorem classifier_isSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁).t
     intro Y f hf
     dsimp
     ext1
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     rw [← J₁.pullback_close, this _ hf]
     apply le_antisymm (J₁.le_close_of_isClosed le_rfl (x f hf).2) (J₁.le_close _)
 
@@ -231,9 +232,11 @@ lemma GrothendieckTopology.mem_iff_isSheafFor_closedSieves
     rw [Subtype.ext_iff] at this
     exact this
   refine H.isSeparatedFor.ext fun Y f hf ↦ ?_
-  simp only [Subfunctor.toFunctor_obj, Functor.sieves_obj, Functor.closedSieves_obj, Set.coe_ofPred]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [Subfunctor.toFunctor_obj, Functor.sieves_obj, Functor.closedSieves_obj,
+    Set.coe_ofPred]
   ext1
-  dsimp
+  dsimp)
   rw [Sieve.pullback_top, ← J.pullback_close, S.pullback_eq_top_of_mem hf,
     J.close_eq_top_iff_mem]
   apply J.top_mem

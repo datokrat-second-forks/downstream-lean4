@@ -41,6 +41,8 @@ section
 
 variable {F₁ F₂ F₂' F₃ F₃' : J ⥤ C}
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The bijection `(F₁ ⊗ F₂ ⟶ F₃) ≃ (F₂ ⟶ functorEnrichedHom C F₁ F₃)` when `F₁`, `F₂`
@@ -94,8 +96,11 @@ lemma homEquiv_naturality_two_symm (f₂ : F₂ ⟶ F₂') (g : F₂' ⟶ functo
     homEquiv.symm (f₂ ≫ g) = F₁ ◁ f₂ ≫ homEquiv.symm g := by
   dsimp [homEquiv]
   ext j
-  simp [← uncurry_natural_left]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [← uncurry_natural_left])
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma homEquiv_naturality_three [∀ (F₁ F₂ : J ⥤ C), HasEnrichedHom C F₁ F₂]

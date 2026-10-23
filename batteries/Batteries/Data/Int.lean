@@ -45,7 +45,8 @@ The sign is determined using the two's complement convention: the result is nega
 
 @[simp] theorem testBit_ofBits_ge {f : Fin n → Bool} (h : i ≥ n) :
     (ofBits f).testBit i = decide (ofBits f < 0) := by
-  simp only [ofBits]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [ofBits])
   split
   · have hge : ¬ ofNat (Nat.ofBits f) < 0 := by rw [Int.not_lt]; exact natCast_nonneg ..
     simp only [testBit, Nat.testBit_ofBits_ge _ _ h, hge, decide_false]

@@ -81,7 +81,8 @@ lemma goursat_surjective : ∃ e : (M ⧸ L.goursatFst) ≃ₗ[R] N ⧸ L.goursa
     change (r • x, r • e x) ∈ e.toAddMonoidHom.graph
     rw [← he, ← Prod.smul_mk]
     have : (x, e x) ∈ e.toAddMonoidHom.graph := rfl
-    rw [← he, AddMonoidHom.mem_range] at this
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← he, AddMonoidHom.mem_range] at this)
     rcases this with ⟨⟨l, hl⟩, hl'⟩
     use ⟨r • l, L.smul_mem r hl⟩
     rw [← hl']

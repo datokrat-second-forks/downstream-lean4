@@ -404,13 +404,17 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
     have h : k + 1 + n' = k + n' + 1 := by rw [add_assoc, add_comm 1 n', ← add_assoc]
     simp only [mapTermRel, Realize, realize_castLE_of_eq h, ih3 (hmn.trans k.le_succ)]
     refine forall_congr' fun x => iff_eq_eq.mpr (congr rfl (funext (Fin.lastCases ?_ fun i => ?_)))
-    · simp only [Function.comp_apply, val_last, snoc_last]
+    · (set_option backward.instanceTypes.subsingletons.decidable false in
+      simp only [Function.comp_apply, val_last, snoc_last])
       refine (congr rfl (Fin.ext ?_)).trans (snoc_last _ _)
-      split_ifs <;> dsimp; lia
+      (set_option backward.instanceTypes.subsingletons.decidable false in
+      split_ifs) <;> dsimp; lia
     · simp only [Function.comp_apply, Fin.snoc_castSucc]
       refine (congr rfl (Fin.ext ?_)).trans (snoc_castSucc _ _ _)
-      simp only [val_castSucc, val_cast]
-      split_ifs <;> simp
+      (set_option backward.instanceTypes.subsingletons.decidable false in
+      simp only [val_castSucc, val_cast])
+      (set_option backward.instanceTypes.subsingletons.decidable false in
+      split_ifs) <;> simp
 
 theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + 1) → M}
     (hmn : m ≤ n) :

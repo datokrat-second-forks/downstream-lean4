@@ -72,8 +72,10 @@ lemma inter_indicator_one : (s ∩ t).indicator (1 : ι → M₀) = s.indicator 
 set_option backward.isDefEq.respectTransparency false in
 lemma indicator_prod_one {t : Set κ} {j : κ} :
     (s ×ˢ t).indicator (1 : ι × κ → M₀) (i, j) = s.indicator 1 i * t.indicator 1 j := by
-  simp_rw [indicator, mem_prod_eq]
-  split_ifs with h₀ <;> simp only [Pi.one_apply, mul_one, mul_zero] <;> tauto
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp_rw [indicator, mem_prod_eq])
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  split_ifs with h₀) <;> simp only [Pi.one_apply, mul_one, mul_zero] <;> tauto
 
 variable (M₀) [Nontrivial M₀]
 

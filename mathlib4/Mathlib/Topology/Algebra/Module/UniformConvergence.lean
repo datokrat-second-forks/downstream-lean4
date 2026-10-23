@@ -76,15 +76,18 @@ lemma UniformFun.continuousSMul_induced_of_range_bounded (φ : hom)
     rcases ((Filter.basis_sets _).prod_nhds (Filter.basis_sets _)).tendsto_left_iff.1 this U hU
       with ⟨⟨V, W⟩, ⟨hV, hW⟩, hVW⟩
     refine ⟨V, hV, W, hW, Set.smul_subset_iff.2 fun a ha u hu x ↦ ?_⟩
-    rw [map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [map_smul])
     exact hVW (Set.mk_mem_prod ha (hu x))
   · intro c U hU
     have : Tendsto (c • · : E → E) (𝓝 0) (𝓝 0) :=
       (continuous_const_smul c).tendsto' _ _ (smul_zero _)
     refine ⟨_, this hU, fun u hu x ↦ ?_⟩
-    simpa only [map_smul] using! hu x
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa only [map_smul] using! hu x)
   · intro u U hU
-    simp only [Set.mem_ofPred_eq, map_smul, Pi.smul_apply]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Set.mem_ofPred_eq, map_smul, Pi.smul_apply])
     simpa only [Set.mapsTo_range_iff] using (h u hU).eventually_nhds_zero (mem_of_mem_nhds hU)
 
 /-- Let `E` be a TVS, `𝔖 : Set (Set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
@@ -105,7 +108,9 @@ lemma UniformOnFun.continuousSMul_induced_of_image_bounded (φ : hom) (hφ : IsI
     .induced (UniformFun.ofFun ∘ s.domRestrict ∘ φ) (UniformFun.topologicalSpace s E)
   set φ' : H →ₗ[𝕜] (s → E) :=
     { toFun := s.domRestrict ∘ φ,
-      map_smul' := fun c x ↦ by congrm s.domRestrict $(map_smul φ c x),
+      map_smul' := fun c x ↦ by
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        congrm s.domRestrict $(map_smul φ c x)),
       map_add' := fun x y ↦ by congrm s.domRestrict $(map_add φ x y) }
   refine UniformFun.continuousSMul_induced_of_range_bounded 𝕜 s E H φ' ⟨rfl⟩ fun u ↦ ?_
   simpa only [Set.image_eq_range] using! h u s hs
@@ -118,7 +123,8 @@ If you have a hard time using this lemma, try the one above instead. -/
 theorem UniformOnFun.continuousSMul_submodule_of_image_bounded (H : Submodule 𝕜 (α →ᵤ[𝔖] E))
     (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
     @ContinuousSMul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced ((↑) : H → α →ᵤ[𝔖] E)) :=
+  (set_option backward.instanceTypes.subsingletons.prop false in
   UniformOnFun.continuousSMul_induced_of_image_bounded 𝕜 α E H
-    (LinearMap.id.domRestrict H : H →ₗ[𝕜] α → E) IsInducing.subtypeVal fun ⟨u, hu⟩ => h u hu
+    (LinearMap.id.domRestrict H : H →ₗ[𝕜] α → E) IsInducing.subtypeVal fun ⟨u, hu⟩ => h u hu)
 
 end Module

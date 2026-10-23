@@ -316,7 +316,7 @@ def mapEquivAux (m : Multiset α) (f : α → β) :
         Multiset.consEquiv.symm |>.trans (Multiset.cast (map_cons f a s)).symm, fun x ↦ by
         simp only [consEquiv, Equiv.trans_apply, Equiv.coe_fn_mk, Equiv.optionCongr_apply,
             Equiv.coe_fn_symm_mk]
-        split <;> simp_all⟩
+        split <;> (set_option backward.dsimp.instanceTypes false in simp_all)⟩
 
 @[deprecated (since := "2026-06-06")] alias mapEquiv_aux := mapEquivAux
 

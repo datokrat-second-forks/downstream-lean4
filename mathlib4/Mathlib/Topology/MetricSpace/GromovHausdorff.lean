@@ -112,7 +112,8 @@ theorem eq_toGHSpace_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty
           isomΨ.isometryEquivOnRange).symm
     have E : (range Ψ ≃ᵢ NonemptyCompacts.kuratowskiEmbedding X)
         = (p ≃ᵢ range (kuratowskiEmbedding X)) := by
-      dsimp only [NonemptyCompacts.kuratowskiEmbedding]; rw [rangeΨ]; rfl
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp only [NonemptyCompacts.kuratowskiEmbedding]); rw [rangeΨ]; rfl
     exact ⟨cast E f⟩
 
 theorem eq_toGHSpace {p : NonemptyCompacts ℓ_infty_ℝ} : ⟦p⟧ = toGHSpace p :=
@@ -149,7 +150,8 @@ theorem toGHSpace_eq_toGHSpace_iff_isometryEquiv {X : Type u} [MetricSpace X] [C
     have I :
       (NonemptyCompacts.kuratowskiEmbedding X ≃ᵢ NonemptyCompacts.kuratowskiEmbedding Y) =
         (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y)) := by
-      dsimp only [NonemptyCompacts.kuratowskiEmbedding]; rfl
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp only [NonemptyCompacts.kuratowskiEmbedding]); rfl
     have f := (kuratowskiEmbedding.isometry X).isometryEquivOnRange
     have g := (kuratowskiEmbedding.isometry Y).isometryEquivOnRange.symm
     exact ⟨f.trans <| (cast I e).trans g⟩, by
@@ -160,7 +162,8 @@ theorem toGHSpace_eq_toGHSpace_iff_isometryEquiv {X : Type u} [MetricSpace X] [C
     have I :
       (range (kuratowskiEmbedding X) ≃ᵢ range (kuratowskiEmbedding Y)) =
         (NonemptyCompacts.kuratowskiEmbedding X ≃ᵢ NonemptyCompacts.kuratowskiEmbedding Y) := by
-      dsimp only [NonemptyCompacts.kuratowskiEmbedding]; rfl
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp only [NonemptyCompacts.kuratowskiEmbedding]); rfl
     rw [Quotient.eq]
     exact ⟨cast I ((f.trans e).trans g)⟩⟩
 
@@ -696,7 +699,7 @@ instance : SecondCountableTopology GHSpace := by
       have : (F q).2 ((E q) (Ψ x)) ((E q) (Ψ y)) = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
         simp only [F, (E q).symm_apply_apply]
       have Aq : (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
-        simp [← this, *]
+        (set_option backward.dsimp.instanceTypes false in simp [← this, *])
       -- use the equality between `F p` and `F q` to deduce that the distances have equal
       -- integer parts
       have : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ := by

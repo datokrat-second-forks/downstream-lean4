@@ -34,10 +34,12 @@ def functor (T : C ⥤ D) : Dᵒᵖ ⥤ Cat where
   map f := (map f.unop).toCatHom
   map_id d := by
     ext
-    exact Functor.ext (fun ⟨_, _, _⟩ => by simp)
+    (set_option backward.dsimp.instanceTypes false in
+    exact Functor.ext (fun ⟨_, _, _⟩ => by simp))
   map_comp f g := by
     ext
-    exact Functor.ext (fun _ => by simp)
+    (set_option backward.dsimp.instanceTypes false in
+    exact Functor.ext (fun _ => by simp))
 
 end StructuredArrow
 
@@ -51,14 +53,17 @@ def functor (T : C ⥤ D) : D ⥤ Cat where
   map f := (CostructuredArrow.map f).toCatHom
   map_id d := by
     ext
-    exact Functor.ext (fun ⟨_, _, _⟩ => by simp [CostructuredArrow.map, Comma.mapRight])
+    (set_option backward.dsimp.instanceTypes false in
+    exact Functor.ext (fun ⟨_, _, _⟩ => by simp [CostructuredArrow.map, Comma.mapRight]))
   map_comp f g := by
     ext
-    exact Functor.ext (fun _ => by simp [CostructuredArrow.map, Comma.mapRight])
+    (set_option backward.dsimp.instanceTypes false in
+    exact Functor.ext (fun _ => by simp [CostructuredArrow.map, Comma.mapRight]))
 
 variable {E : Type u₃} [Category.{v₃} E]
 variable (L : C ⥤ D) (R : E ⥤ D)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The functor used to establish the equivalence `grothendieckPrecompFunctorEquivalence` between
@@ -68,6 +73,8 @@ def grothendieckPrecompFunctorToComma : Grothendieck (R ⋙ functor L) ⥤ Comma
   obj P := ⟨P.fiber.left, P.base, P.fiber.hom⟩
   map f := ⟨f.fiber.left, f.base, by simp⟩
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Fibers of `grothendieckPrecompFunctorToComma L R`, composed with `Comma.fst L R`, are isomorphic
@@ -78,6 +85,7 @@ def ιCompGrothendieckPrecompFunctorToCommaCompFst (X : E) :
     proj L (R.obj X) :=
   NatIso.ofComponents (fun X => Iso.refl _) (fun _ => by simp)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The inverse functor used to establish the equivalence `grothendieckPrecompFunctorEquivalence`

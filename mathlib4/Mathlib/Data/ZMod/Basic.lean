@@ -219,7 +219,7 @@ ring, see `ZMod.intCast_cast`. -/
 @[norm_cast]
 theorem intCast_zmod_cast (a : ZMod n) : ((cast a : ℤ) : ZMod n) = a := by
   cases n
-  · simp [ZMod.cast, ZMod]
+  · (set_option backward.dsimp.instanceTypes false in simp [ZMod.cast, ZMod])
   · dsimp [ZMod.cast]
     rw [Int.cast_natCast, natCast_zmod_val]
 
@@ -547,14 +547,14 @@ theorem val_neg_one (n : ℕ) : (-1 : ZMod n.succ).val = n := by
   dsimp [val, Fin.val_neg']
   cases n
   · simp
-  · dsimp [ZMod, ZMod.cast]
+  · (set_option backward.dsimp.instanceTypes false in dsimp [ZMod, ZMod.cast])
     rw [Fin.coe_neg_one]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- `-1 : ZMod n` lifts to `n - 1 : R`. This avoids the characteristic assumption in `cast_neg`. -/
 theorem cast_neg_one {R : Type*} [Ring R] (n : ℕ) : cast (-1 : ZMod n) = (n - 1 : R) := by
   rcases n with - | n
-  · dsimp [ZMod, ZMod.cast]; simp
+  · (set_option backward.dsimp.instanceTypes false in dsimp [ZMod, ZMod.cast]); simp
   · rw [← natCast_val, val_neg_one, Nat.cast_succ, add_sub_cancel_right]
 
 set_option backward.isDefEq.respectTransparency false in
@@ -1121,7 +1121,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem ringHom_map_cast [NonAssocRing R] (f : R →+* ZMod n) (k : ZMod n) : f (cast k) = k := by
   cases n
-  · dsimp +instances [ZMod, ZMod.cast] at f k ⊢
+  · (set_option backward.dsimp.instanceTypes false in
+    dsimp +instances [ZMod, ZMod.cast] at f k ⊢)
     simp
   · dsimp [ZMod.cast]
     rw [map_natCast, natCast_zmod_val]

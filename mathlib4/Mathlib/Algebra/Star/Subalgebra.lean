@@ -821,7 +821,8 @@ noncomputable def _root_.StarAlgEquiv.ofInjective (f : A →⋆ₐ[R] B)
   { AlgEquiv.ofInjective f.toAlgHom hf with
     toFun := f.rangeRestrict
     map_star' := fun a => Subtype.ext (map_star f a)
-    map_smul' := fun r a => Subtype.ext (map_smul f r a) }
+    map_smul' := fun r a => Subtype.ext
+      (set_option backward.instanceTypes.subsingletons.prop false in map_smul f r a) }
 end StarAlgHom
 
 

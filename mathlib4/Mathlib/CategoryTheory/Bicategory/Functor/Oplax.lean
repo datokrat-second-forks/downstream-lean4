@@ -188,7 +188,8 @@ def comp (F : B ⥤ᵒᵖᴸ C) (G : C ⥤ᵒᵖᴸ D) : B ⥤ᵒᵖᴸ D where
     rw [← G.map₂_comp_assoc, mapComp_naturality_right, G.map₂_comp_assoc,
       mapComp_naturality_right, assoc]
   map₂_associator := fun f g h => by
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     simp only [map₂_associator, ← PrelaxFunctor.map₂_comp_assoc, ← mapComp_naturality_right_assoc,
       whiskerLeft_comp, assoc]
     simp only [map₂_associator, PrelaxFunctor.map₂_comp, mapComp_naturality_left_assoc,

@@ -41,6 +41,7 @@ theorem leftQuotient_nil : L.leftQuotient [] = L := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 variable (L) in
+set_option backward.dsimp.instanceTypes false in
 theorem leftQuotient_append (x y : List α) :
     L.leftQuotient (x ++ y) = (L.leftQuotient x).leftQuotient y := by
   simp [leftQuotient, Language]

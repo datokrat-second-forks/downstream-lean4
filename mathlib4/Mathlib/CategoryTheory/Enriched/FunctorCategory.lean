@@ -88,10 +88,10 @@ this is the bijection `(F₁ ⟶ F₂) ≃ (𝟙_ V ⟶ enrichedHom V F₁ F₂)
 noncomputable def homEquiv : (F₁ ⟶ F₂) ≃ (𝟙_ V ⟶ enrichedHom V F₁ F₂) where
   toFun τ := end_.lift (fun j ↦ eHomEquiv V (τ.app j)) (fun i j f ↦ by
     trans eHomEquiv V (τ.app i ≫ F₂.map f)
-    · dsimp
+    · (set_option backward.dsimp.instanceTypes false in dsimp)
       simp only [eHomEquiv_comp, tensorHom_def_assoc, MonoidalCategory.whiskerRight_id,
         ← unitors_equal, assoc, Iso.inv_hom_id_assoc, eHomWhiskerLeft]
-    · dsimp
+    · (set_option backward.dsimp.instanceTypes false in dsimp)
       simp only [← NatTrans.naturality, eHomEquiv_comp, tensorHom_def', id_whiskerLeft,
         assoc, Iso.inv_hom_id_assoc, eHomWhiskerRight])
   invFun g :=
@@ -104,9 +104,10 @@ noncomputable def homEquiv : (F₁ ⟶ F₂) ≃ (𝟙_ V ⟶ enrichedHom V F₁
         conv_lhs =>
           rw [tensorHom_def'_assoc, MonoidalCategory.whiskerLeft_comp_assoc,
             id_whiskerLeft_assoc, id_whiskerLeft_assoc, Iso.inv_hom_id_assoc, unitors_equal]) }
-  left_inv τ := by aesop
-  right_inv g := by aesop
+  left_inv τ := by (set_option backward.dsimp.instanceTypes false in aesop)
+  right_inv g := by (set_option backward.dsimp.instanceTypes false in aesop)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
 lemma homEquiv_apply_π (τ : F₁ ⟶ F₂) (j : J) :

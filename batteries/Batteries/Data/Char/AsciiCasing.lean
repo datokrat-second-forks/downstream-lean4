@@ -48,11 +48,13 @@ theorem toUpper_eq_of_isLower {c : Char} (h : c.isLower) : c.toUpper = ofNat (c.
   · simp [isLower, UInt32.le_iff_toNat_le] at h; grind
 
 @[simp] theorem isUpper_toLower_eq_false (c : Char) : c.toLower.isUpper = false := by
-  simp only [isUpper, toLower]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [isUpper, toLower])
   split <;> grind [UInt32.toNat_add, toNat_val]
 
 @[simp] theorem isLower_toUpper_eq_false (c : Char) : c.toUpper.isLower = false := by
-  simp only [isLower, toUpper]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [isLower, toUpper])
   split <;> grind [UInt32.toNat_add, toNat_val]
 
 @[simp] theorem isLower_toLower_eq_isAlpha (c : Char) : c.toLower.isLower = c.isAlpha := by

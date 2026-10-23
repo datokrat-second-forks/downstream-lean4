@@ -468,7 +468,8 @@ def limCompFlipIsoWhiskerLim [HasLimitsOfShape J C] :
     ext k
     apply limit_obj_ext
     intro j
-    simp [comp_evaluation, ← NatTrans.comp_app (limMap _)]).symm
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [comp_evaluation, ← NatTrans.comp_app (limMap _)])).symm
 
 /-- For a functor `G : J ⥤ K ⥤ C`, its limit `K ⥤ C` is given by `(G' : K ⥤ J ⥤ C) ⋙ lim`.
 Note that this does not require `K` to be small.
@@ -510,7 +511,8 @@ def colimCompFlipIsoWhiskerColim [HasColimitsOfShape J C] :
     ext k
     apply colimit_obj_ext
     intro j
-    simp [comp_evaluation, ← NatTrans.comp_app_assoc _ (colimMap _)]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [comp_evaluation, ← NatTrans.comp_app_assoc _ (colimMap _)])
 
 /-- For a functor `G : J ⥤ K ⥤ C`, its colimit `K ⥤ C` is given by `(G' : K ⥤ J ⥤ C) ⋙ colim`.
 Note that this does not require `K` to be small.

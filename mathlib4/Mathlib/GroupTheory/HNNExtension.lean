@@ -168,6 +168,7 @@ theorem toSubgroupEquiv_one : toSubgroupEquiv φ 1 = φ := rfl
 @[simp]
 theorem toSubgroupEquiv_neg_one : toSubgroupEquiv φ (-1) = φ.symm := rfl
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem toSubgroupEquiv_neg_apply (u : ℤˣ) (a : toSubgroup A B u) :
@@ -459,8 +460,9 @@ theorem unitsSMul_one_group_smul (g : A) (w : NormalWord d) :
   have : Cancels 1 ((g : G) • w) ↔ Cancels 1 w := by
     simp [Cancels, Subgroup.mul_mem_cancel_left]
   by_cases hcan : Cancels 1 w
-  · simp only [unitsSMulWithCancel, toSubgroup_one, id_eq, toSubgroup_neg_one, toSubgroupEquiv_one,
-      group_smul_head, mul_inv_rev, dite_eq_left (this.2 hcan), dite_eq_left hcan]
+  · (set_option backward.dsimp.instanceTypes false in
+    simp only [unitsSMulWithCancel, toSubgroup_one, id_eq, toSubgroup_neg_one, toSubgroupEquiv_one,
+      group_smul_head, mul_inv_rev, dite_eq_left (this.2 hcan), dite_eq_left hcan])
     cases w using consRecOn
     · simp [Cancels] at hcan
     · simp only [smul_cons, consRecOn_cons]
@@ -475,7 +477,8 @@ theorem unitsSMul_one_group_smul (g : A) (w : NormalWord d) :
     -- This used to be the end of the proof before https://github.com/leanprover/lean4/pull/2644
     congr 1
     · conv_lhs => erw [IsComplement.equiv_mul_left]
-      simp_rw [toSubgroup_one]
+      (set_option backward.dsimp.instanceTypes false in
+      simp_rw [toSubgroup_one])
       simp only [SetLike.coe_sort_coe, map_mul, Subgroup.coe_mul]
     conv_lhs => erw [IsComplement.equiv_mul_left]
     rfl
@@ -525,7 +528,7 @@ theorem prod_unitsSMul (u : ℤˣ) (w : NormalWord d) :
     · cases hcan.2
       simp only [unitsSMulWithCancel, id_eq, consRecOn_cons, prod_group_smul, prod_cons, zpow_neg]
       rcases Int.units_eq_one_or u with (rfl | rfl)
-      · simp [equiv_eq_conj, mul_assoc]
+      · (set_option backward.dsimp.instanceTypes false in simp [equiv_eq_conj, mul_assoc])
       · -- Before https://github.com/leanprover/lean4/pull/2644, this proof was just
         -- simp [equiv_symm_eq_conj, mul_assoc].
         simp only [toSubgroup_neg_one, toSubgroupEquiv_neg_one, Units.val_neg, Units.val_one,
@@ -535,16 +538,19 @@ theorem prod_unitsSMul (u : ℤˣ) (w : NormalWord d) :
     rcases Int.units_eq_one_or u with (rfl | rfl)
     · -- Before https://github.com/leanprover/lean4/pull/2644, this proof was just
       -- simp [equiv_eq_conj, mul_assoc, (d.compl _).equiv_snd_eq_inv_mul].
+      (set_option backward.dsimp.instanceTypes false in
       simp only [toSubgroup_neg_one, toSubgroup_one, toSubgroupEquiv_one, equiv_eq_conj, mul_assoc,
-        Units.val_one, zpow_one, inv_mul_cancel_left, mul_right_inj]
+        Units.val_one, zpow_one, inv_mul_cancel_left, mul_right_inj])
       erw [(d.compl 1).equiv_snd_eq_inv_mul]
-      simp [mul_assoc]
+      (set_option backward.dsimp.instanceTypes false in
+      simp [mul_assoc])
     · -- Before https://github.com/leanprover/lean4/pull/2644, this proof was just
       -- simp [equiv_symm_eq_conj, mul_assoc, (d.compl _).equiv_snd_eq_inv_mul]
       simp only [toSubgroup_neg_one, toSubgroupEquiv_neg_one, Units.val_neg, Units.val_one,
         Int.reduceNeg, zpow_neg, zpow_one, mul_assoc]
       erw [equiv_symm_eq_conj, (d.compl (-1)).equiv_snd_eq_inv_mul]
-      simp [mul_assoc]
+      (set_option backward.dsimp.instanceTypes false in
+      simp [mul_assoc])
 
 @[simp]
 theorem prod_empty : (empty : NormalWord d).prod φ = 1 := by

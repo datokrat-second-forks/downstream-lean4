@@ -136,7 +136,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem compHahnSeries_smul (r : R) (u : U) :
     compHahnSeries A B (r • u) = r • compHahnSeries A B u := by
   ext
-  simp only [compHahnSeries_coeff, map_smul, coeff_apply_apply, HahnSeries.coeff_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [compHahnSeries_coeff, map_smul, coeff_apply_apply, HahnSeries.coeff_smul])
   rw [← HahnSeries.coeff_smul]
 
 set_option backward.isDefEq.respectTransparency false in

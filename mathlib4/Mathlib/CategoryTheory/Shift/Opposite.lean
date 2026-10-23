@@ -88,7 +88,8 @@ instance : HasShift (OppositeShift C A) A :=
 
 set_option backward.isDefEq.respectTransparency false in
 instance [HasZeroObject C] : HasZeroObject (OppositeShift C A) := by
-  dsimp only [OppositeShift]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp only [OppositeShift])
   infer_instance
 
 instance [Preadditive C] : Preadditive (OppositeShift C A) :=
@@ -204,16 +205,18 @@ def commShiftUnop
   commShiftIso_zero := by
     rw [commShiftIso_zero]
     ext
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp only [NatIso.removeOp_hom, Iso.symm_hom, NatTrans.removeOp_app,
-      CommShift.isoZero_inv_app, unop_comp, CommShift.isoZero_hom_app]
+      CommShift.isoZero_inv_app, unop_comp, CommShift.isoZero_hom_app])
     erw [oppositeShiftFunctorZero_hom_app, oppositeShiftFunctorZero_inv_app]
     rfl
   commShiftIso_add a b := by
     rw [commShiftIso_add]
     ext
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp only [NatIso.removeOp_hom, Iso.symm_hom, NatTrans.removeOp_app,
       CommShift.isoAdd_inv_app, unop_comp, Category.assoc,
-      CommShift.isoAdd_hom_app]
+      CommShift.isoAdd_hom_app])
     erw [oppositeShiftFunctorAdd_hom_app, oppositeShiftFunctorAdd_inv_app]
     rfl
 

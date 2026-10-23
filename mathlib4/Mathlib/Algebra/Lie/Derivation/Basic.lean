@@ -114,7 +114,7 @@ theorem eqOn_lieSpan {s : Set L} (h : Set.EqOn D1 D2 s) :
   | mem x hx => exact h hx
   | zero => simp
   | add x y _ _ hx hy => simp [hx, hy]
-  | smul t x _ hx => simp [hx]
+  | smul t x _ hx => (set_option backward.instanceTypes.subsingletons.prop false in simp [hx])
   | lie x y _ _ hx hy => simp [hx, hy]
 
 /-- If the Lie span of a set is the whole Lie algebra, then two Lie derivations equal on this set
@@ -318,7 +318,10 @@ instance : LieRing (LieDerivation R L L) where
 
 /-- The set of Lie derivations from a Lie algebra `L` to itself is a Lie algebra. -/
 instance instLieAlgebra : LieAlgebra R (LieDerivation R L L) where
-  lie_smul := fun r d e => by ext a; simp only [commutator_apply, map_smul, smul_sub, smul_apply]
+  lie_smul := fun r d e => by
+    ext a
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [commutator_apply, map_smul, smul_sub, smul_apply])
 
 @[simp] lemma lie_apply (D₁ D₂ : LieDerivation R L L) (x : L) :
     ⁅D₁, D₂⁆ x = D₁ (D₂ x) - D₂ (D₁ x) :=
@@ -378,7 +381,7 @@ instance instLieRingModule : LieRingModule L (LieDerivation R L M) where
   ext; simp
 
 instance instLieModule : LieModule R L (LieDerivation R L M) where
-  smul_lie t x D := by ext; simp
+  smul_lie t x D := by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
   lie_smul t x D := by ext; simp
 
 protected lemma leibniz_lie (x : L) (D₁ D₂ : LieDerivation R L L) :

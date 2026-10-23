@@ -45,7 +45,8 @@ embedding `e : E →L[𝕜] Eₗ`. -/
       · exact isClosed_eq (cont.comp (continuous_const_smul _))
           ((continuous_const_smul _).comp cont)
       · intro x
-        rw [← map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [← map_smul])
         simp only [eq]
         exact map_smulₛₗ _ _ _
     cont }

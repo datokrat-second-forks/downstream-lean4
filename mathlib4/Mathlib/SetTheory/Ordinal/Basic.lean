@@ -463,7 +463,8 @@ instance small_Ioc (a b : Ordinal.{u}) : Small.{u} (Ioc a b) := small_subset Ioc
 
 instance lt_wf : WellFoundedLT Ordinal :=
   wellFounded_iff_wellFounded_subrel.mpr (·.induction_on fun ⟨_, _, wo⟩ ↦
-    RelHomClass.wellFounded (enum _) wo.wf)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    RelHomClass.wellFounded (enum _) wo.wf))
 
 instance wellFoundedRelation : WellFoundedRelation Ordinal :=
   WellFoundedLT.toWellFoundedRelation

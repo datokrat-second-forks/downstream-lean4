@@ -113,7 +113,8 @@ theorem norm_mul_le_const_mul_norm {i : ι} (hBi : B i = (1 : L))
     -- We rewrite the LHS using `ixy`.
     conv_lhs => simp only [Basis.norm]; rw [hixy_def, ← Basis.sum_repr B x, ← Basis.sum_repr B y]
     rw [sum_mul, map_finsetSum]
-    simp_rw [smul_mul_assoc, map_smul, mul_sum, map_finsetSum, mul_smul_comm, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [smul_mul_assoc, map_smul, mul_sum, map_finsetSum, mul_smul_comm, map_smul])
     have hna' : IsNonarchimedean (NormedField.toMulRingNorm K) := hna
     /- Since the norm is nonarchimedean, the norm of a finite sum is bounded by the maximum of the
           norms of the summands. -/

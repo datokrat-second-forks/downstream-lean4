@@ -184,9 +184,10 @@ lemma IsStronglyConnected.isStronglyConnected_symmetrify (h : IsStronglyConnecte
     IsStronglyConnected (Symmetrify V) := by
   intro a b
   obtain ⟨p⟩ := h a b
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   induction p with
   | nil => exact ⟨Path.nil⟩
-  | cons q e ih => exact ⟨ih.some.cons (Sum.inl e)⟩
+  | cons q e ih => exact ⟨ih.some.cons (Sum.inl e)⟩)
 
 lemma IsStronglyConnected.isSStronglyConnected_of_hom (h_sc : IsStronglyConnected V)
     {i₀ j₀ : V} (e₀ : i₀ ⟶ j₀) :

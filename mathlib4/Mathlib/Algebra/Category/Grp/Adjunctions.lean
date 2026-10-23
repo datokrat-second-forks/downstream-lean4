@@ -79,7 +79,9 @@ def adj : free ⊣ forget AddCommGrpCat.{u} :=
       homEquiv_naturality_left_symm := by
         intros
         ext
-        dsimp [ConcreteCategory.homEquiv]
+        (set_option backward.dsimp.instanceTypes false in
+        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        dsimp [ConcreteCategory.homEquiv])
         rw [← FreeAbelianGroup.lift_comp]
         rfl }
 

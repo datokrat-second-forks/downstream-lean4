@@ -33,7 +33,8 @@ noncomputable def restrictScalarsObj (M' : PresheafOfModules.{v} R') (α : R ⟶
   obj := fun X ↦ (ModuleCat.restrictScalars (α.app X).hom).obj (M'.obj X)
   -- TODO: after https://github.com/leanprover-community/mathlib4/pull/19511 we need to hint `(X := ...)` and `(Y := ...)`.
   -- This suggests `restrictScalars` needs to be redesigned.
-  map := fun {X Y} f ↦ ModuleCat.ofHom
+  map := fun {X Y} f ↦ (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ModuleCat.ofHom
       (X := (ModuleCat.restrictScalars (α.app X).hom).obj (M'.obj X))
       (Y := (ModuleCat.restrictScalars (R.map f).hom).obj
         ((ModuleCat.restrictScalars (α.app Y).hom).obj (M'.obj Y)))
@@ -43,7 +44,7 @@ noncomputable def restrictScalarsObj (M' : PresheafOfModules.{v} R') (α : R ⟶
         have eq := congr($(α.naturality f).hom r)
         dsimp at eq
         rw [← eq]
-        rfl) }
+        rfl) })
 
 /-- The restriction of scalars functor `PresheafOfModules R' ⥤ PresheafOfModules R`
 induced by a morphism of presheaves of rings `R ⟶ R'`. -/

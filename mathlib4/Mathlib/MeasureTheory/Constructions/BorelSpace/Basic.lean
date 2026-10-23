@@ -718,7 +718,8 @@ instance NNReal.measurableSpace : MeasurableSpace ℝ≥0 :=
   inferInstanceAs <| MeasurableSpace (Subtype _)
 
 instance NNReal.borelSpace : BorelSpace ℝ≥0 :=
-  inferInstanceAs <| BorelSpace (Subtype _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| BorelSpace (Subtype _))
 
 instance ENNReal.measurableSpace : MeasurableSpace ℝ≥0∞ :=
   borel ℝ≥0∞

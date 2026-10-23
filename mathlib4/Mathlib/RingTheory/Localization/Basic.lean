@@ -136,7 +136,8 @@ theorem linearMap_compatibleSMul [Module S N₁] [Module S N₂]
   map_smul f s s' := by
     obtain ⟨r, m, rfl⟩ := exists_mk'_eq M s
     rw [← (map_units S m).smul_left_cancel]
-    simp_rw [algebraMap_smul, ← map_smul, ← smul_assoc, smul_mk'_self, algebraMap_smul, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [algebraMap_smul, ← map_smul, ← smul_assoc, smul_mk'_self, algebraMap_smul, map_smul])
 
 instance [Module (Localization M) N₁] [Module (Localization M) N₂]
     [IsScalarTower R (Localization M) N₁] [IsScalarTower R (Localization M) N₂] :

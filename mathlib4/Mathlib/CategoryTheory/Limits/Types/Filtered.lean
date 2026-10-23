@@ -131,7 +131,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem colimit_eq_iff_aux [HasColimit F] {i j : J} {xi : F.obj i} {xj : F.obj j} :
     (colimitCocone F).ι.app i xi = (colimitCocone F).ι.app j xj ↔
       FilteredColimit.Rel.{v, u} F ⟨i, xi⟩ ⟨j, xj⟩ := by
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp)
   rw [← (equivShrink _).symm.injective.eq_iff, Equiv.symm_apply_apply, Equiv.symm_apply_apply,
     Functor.ιColimitType_eq_iff, FilteredColimit.rel_eq_eqvGen_colimitTypeRel]
 

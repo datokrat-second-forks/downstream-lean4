@@ -103,7 +103,8 @@ lemma term_realize_eq_add_dotProduct [Fintype α] (t : presburger[[A]].Term α) 
       cases l with
       | zero =>
         refine ⟨f, 0, fun v => ?_⟩
-        rw [withConstants_funMap_sumInr, zero_dotProduct, add_zero]
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        rw [withConstants_funMap_sumInr, zero_dotProduct, add_zero])
         rfl
       | succ => nomatch f
 

@@ -98,6 +98,8 @@ def toComon : Bimon C ⥤ Comon C := (Mon.forget C).mapComon
 @[simp]
 theorem toComon_forget : toComon C ⋙ Comon.forget C = forget C := rfl
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {C} in
@@ -109,6 +111,7 @@ def toMonComonObj (M : Bimon C) : Mon (Comon C) where
   mon.mul.hom := μ[M.X.X]
   mon.mul.isComonHom_hom.hom_comul := by simp
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The forward direction of `Comon (Mon C) ≌ Mon (Comon C)` -/
 @[simps]
@@ -142,6 +145,7 @@ def ofMonComonObj (M : Mon (Comon C)) : Bimon C where
   comon.counit := .mk' ε[M.X.X]
   comon.comul := .mk' Δ[M.X.X]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 variable (C) in
 /-- The backward direction of `Comon (Mon C) ≌ Mon (Comon C)` -/
@@ -270,11 +274,14 @@ instance (M : Bimon C) : BimonObj M.X.X where
   counit := ε[M.X].hom
   comul := Δ[M.X].hom
   counit_comul := by
-    rw [← BimonObjAux_counit, ← BimonObjAux_comul, ComonObj.counit_comul]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← BimonObjAux_counit, ← BimonObjAux_comul, ComonObj.counit_comul])
   comul_counit := by
-    rw [← BimonObjAux_counit, ← BimonObjAux_comul, ComonObj.comul_counit]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← BimonObjAux_counit, ← BimonObjAux_comul, ComonObj.comul_counit])
   comul_assoc := by
-    simp_rw [← BimonObjAux_comul, ComonObj.comul_assoc]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp_rw [← BimonObjAux_comul, ComonObj.comul_assoc])
 
 attribute [local simp] MonObj.tensorObj.one_def in
 @[reassoc]

@@ -20,7 +20,8 @@ theorem Module.IsTorsion.rank_eq_zero {R M : Type*} [Semiring R] [AddCommMonoid 
     [Nontrivial R] (h : IsTorsion R M) : Module.rank R M = 0 := by
   by_contra! h'
   obtain ⟨f, hf⟩ := by rwa [← Cardinal.one_le_iff_ne_zero, one_le_rank_iff] at h'
-  simpa [← map_smul, zero_notMem_nonZeroDivisors, hf] using @h (f 1)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simpa [← map_smul, zero_notMem_nonZeroDivisors, hf] using @h (f 1))
 
 theorem Module.IsTorsion.finrank_eq_zero {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
     [Nontrivial R] (h : IsTorsion R M) : finrank R M = 0 :=

@@ -223,8 +223,9 @@ def coinduced : TopModuleCat R :=
 set_option backward.isDefEq.respectTransparency false in
 /-- The maps into the coinduced topology as homs in `TopModuleCat R`. -/
 def toCoinduced (i) : X i ⟶ coinduced f :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   ofHom (Y := coinduced f)
-    ⟨(f i).hom, continuous_iff_coinduced_le.mpr (le_sInf fun _ hτ ↦ hτ.2.2 i)⟩
+    ⟨(f i).hom, continuous_iff_coinduced_le.mpr (le_sInf fun _ hτ ↦ hτ.2.2 i)⟩)
 
 /-- The cocone of topological modules associated to a cocone over the underlying modules, where
 the cocone point is given the coinduced topology. This is colimiting when the given cocone is. -/
@@ -241,7 +242,8 @@ the coinduced topology gives a colimit cocone in `TopModuleCat R`. -/
 def isColimit {J : Type*} [Category* J] {F : J ⥤ TopModuleCat R}
     {c : Cocone (F ⋙ forget₂ _ (ModuleCat R))} (hc : IsColimit c) :
     IsColimit (ofCocone c) where
-  desc s := ofHom (X := (ofCocone c).pt) ⟨(hc.desc ((forget₂ _ _).mapCocone s)).hom, by
+  desc s := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ofHom (X := (ofCocone c).pt) ⟨(hc.desc ((forget₂ _ _).mapCocone s)).hom, by
     rw [continuous_iff_le_induced]
     refine sInf_le ⟨continuousSMul_induced (M₂ := s.pt) (hc.desc ((forget₂ _ _).mapCocone s)).hom,
       continuousAdd_induced (N := s.pt) (hc.desc ((forget₂ _ _).mapCocone s)).hom, fun i ↦ ?_⟩
@@ -249,7 +251,7 @@ def isColimit {J : Type*} [Category* J] {F : J ⥤ TopModuleCat R}
     change Continuous (X := F.obj i) (Y := s.pt)
       (c.ι.app i ≫ hc.desc ((forget₂ _ (ModuleCat R)).mapCocone s)).hom
     rw [hc.fac]
-    exact (s.ι.app i).hom.2⟩
+    exact (s.ι.app i).hom.2⟩)
   fac s i := by ext x; congrm $(hc.fac ((forget₂ _ _).mapCocone s) i).hom x
   uniq s m H := by
     ext x
@@ -279,13 +281,15 @@ coarsest topology that makes every map continuous. -/
 def induced : TopModuleCat R :=
   letI : TopologicalSpace M := ⨅ i, (X i).topologicalSpace.induced (f i)
   have : ContinuousAdd M := continuousAdd_iInf fun _ ↦ continuousAdd_induced _
-  have : ContinuousSMul R M := continuousSMul_iInf fun _ ↦ continuousSMul_induced _
+  have : ContinuousSMul R M := continuousSMul_iInf fun _ ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in continuousSMul_induced _)
   ↧M
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The maps from the induced topology as homs in `TopModuleCat R`. -/
 def fromInduced (i) : induced f ⟶ X i :=
-  ofHom (X := induced f) ⟨(f i).hom, continuous_iff_le_induced.mpr (iInf_le _ i)⟩
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  ofHom (X := induced f) ⟨(f i).hom, continuous_iff_le_induced.mpr (iInf_le _ i)⟩)
 
 open Limits
 
@@ -304,14 +308,15 @@ the induced topology gives a limit cone in `TopModuleCat R`. -/
 def isLimit {J : Type*} [Category* J] {F : J ⥤ TopModuleCat R}
     {c : Cone (F ⋙ forget₂ _ (ModuleCat R))} (hc : IsLimit c) :
     IsLimit (ofCone c) where
-  lift s := ofHom (Y := (ofCone c).pt) ⟨(hc.lift ((forget₂ _ _).mapCone s)).hom, by
+  lift s := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ofHom (Y := (ofCone c).pt) ⟨(hc.lift ((forget₂ _ _).mapCone s)).hom, by
     rw [continuous_iff_coinduced_le]
     refine le_iInf fun i ↦ ?_
     rw [coinduced_le_iff_le_induced, induced_compose, ← continuous_iff_le_induced]
     change Continuous (X := s.pt) (Y := F.obj i)
       (hc.lift ((forget₂ _ (ModuleCat R)).mapCone s) ≫ c.π.app i).hom
     rw [hc.fac]
-    exact (s.π.app i).hom.2⟩
+    exact (s.π.app i).hom.2⟩)
   fac s i := by ext x; congrm $(hc.fac ((forget₂ _ _).mapCone s) i).hom x
   uniq s m H := by
     ext x
@@ -370,8 +375,9 @@ set_option backward.isDefEq.respectTransparency false in
 def withModuleTopologyAdj : withModuleTopology R ⊣ forget₂ (TopModuleCat R) (ModuleCat R) where
   unit := 𝟙 _
   counit :=
-  { app X := ofHom (X := (withModuleTopology R).obj ↧X)
-      ⟨.id, IsModuleTopology.continuous_of_linearMap _⟩ }
+  { app X := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      ofHom (X := (withModuleTopology R).obj ↧X)
+        ⟨.id, IsModuleTopology.continuous_of_linearMap _⟩) }
 
 instance : (forget₂ (TopModuleCat R) (ModuleCat R)).IsRightAdjoint := ⟨_, ⟨withModuleTopologyAdj R⟩⟩
 instance : (withModuleTopology R).IsLeftAdjoint := ⟨_, ⟨withModuleTopologyAdj R⟩⟩
@@ -411,6 +417,8 @@ def freeObj (X : TopCat.{v}) : TopModuleCat.{max v u} R :=
 
 lemma coe_freeObj (X : TopCat.{v}) : freeObj R X = (X →₀ R) := rfl
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The free topological module over a topological space is functorial. -/
 noncomputable
@@ -440,6 +448,8 @@ def free : TopCat.{v} ⥤ TopModuleCat.{max v u} R :=
     map_id M := by ext x; congrm $(Finsupp.lmapDomain_id _ _) x
     map_comp f g := by ext; congrm $(Finsupp.lmapDomain_comp _ _ f.hom g.hom) _ }
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The free-forgetful adjoint for `TopModuleCat R`. -/

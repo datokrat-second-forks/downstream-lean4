@@ -181,7 +181,8 @@ theorem _root_.Function.Injective.sameRay_map_iff
     {F : Type*} [FunLike F M N] [LinearMapClass F R M N]
     {f : F} (hf : Function.Injective f) :
     SameRay R (f x) (f y) ↔ SameRay R x y := by
-  simp only [SameRay, map_zero, ← hf.eq_iff, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [SameRay, map_zero, ← hf.eq_iff, map_smul])
 
 /-- The images of two vectors under a linear equivalence are on the same ray if and only if the
 original vectors are on the same ray. -/
@@ -243,7 +244,8 @@ def rayOfNeZero (v : M) (h : v ≠ 0) : Module.Ray R M :=
 /-- An induction principle for `Module.Ray`, used as `induction x using Module.Ray.ind`. -/
 theorem Module.Ray.ind {C : Module.Ray R M → Prop} (h : ∀ (v) (hv : v ≠ 0), C (rayOfNeZero R v hv))
     (x : Module.Ray R M) : C x :=
-  Quotient.ind (Subtype.rec h) x
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  Quotient.ind (Subtype.rec h) x)
 
 variable {R}
 

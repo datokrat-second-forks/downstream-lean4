@@ -861,7 +861,8 @@ instance final_comp [hF : Final F] [hG : Final G] : Final (F ⋙ G) := by
   rw [final_iff_comp_equivalence G s₃.functor, final_iff_equivalence_comp s₂.inverse,
     final_iff_isIso_colimit_pre] at hG
   intro H
-  rw [← colimit.pre_pre]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← colimit.pre_pre])
   infer_instance
 
 instance initial_comp [Initial F] [Initial G] : Initial (F ⋙ G) := by
@@ -883,7 +884,8 @@ theorem final_of_final_comp [hF : Final F] [hFG : Final (F ⋙ G)] : Final G := 
     final_natIso_iff _i, final_iff_isIso_colimit_pre] at hFG
   intro H
   replace hFG := hFG H
-  rw [← colimit.pre_pre] at hFG
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← colimit.pre_pre] at hFG)
   exact IsIso.of_isIso_comp_left (colimit.pre _ (s₁.inverse ⋙ F ⋙ s₂.functor)) _
 
 theorem initial_of_initial_comp [Initial F] [Initial (F ⋙ G)] : Initial G := by

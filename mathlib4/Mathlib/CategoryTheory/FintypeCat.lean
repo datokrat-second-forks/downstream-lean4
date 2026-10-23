@@ -241,8 +241,10 @@ attribute [local instance] FintypeCat.fintype in
 theorem incl_mk_nat_card (n : ℕ) :
     Fintype.card (incl.obj (mk n)) = n := by
   convert Finset.card_fin n
-  dsimp [incl, mk, len]
-  convert! (Fintype.ofEquiv_card Equiv.ulift).symm
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [incl, mk, len])
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! (Fintype.ofEquiv_card Equiv.ulift).symm)
 
 end Skeleton
 
@@ -276,7 +278,8 @@ set_option backward.isDefEq.respectTransparency false in
 lemma uSwitchEquiv_naturality {X Y : FintypeCat.{u}} (f : X ⟶ Y)
     (x : uSwitch.{u, v}.obj X) :
     f (X.uSwitchEquiv x) = Y.uSwitchEquiv (uSwitch.map f x) := by
-  simp only [uSwitch, uSwitchEquiv, Equiv.trans_apply, Equiv.ulift_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [uSwitch, uSwitchEquiv, Equiv.trans_apply, Equiv.ulift_apply])
   rw [homMk_apply]
   aesop
 

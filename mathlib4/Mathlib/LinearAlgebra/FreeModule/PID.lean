@@ -192,7 +192,8 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
   have mk_y' : (⟨y', y'M⟩ : M) = ∑ i, c i • b'M i :=
     Subtype.ext
       (show y' = M.subtype _ by
-        simp only [map_sum, map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [map_sum, map_smul])
         rfl)
   have a_smul_y' : a • y' = y := by
     refine Subtype.mk_eq_mk.mp (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from ?_)
@@ -228,8 +229,9 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
     obtain ⟨⟨x, xM⟩, hx', rfl⟩ := Submodule.mem_map.mp xM'
     rw [LinearMap.mem_ker] at hx'
     have hc' : (c • ⟨y', y'M⟩ + ⟨x, xM⟩ : M) = 0 := by exact @Subtype.coe_injective O (· ∈ M) _ _ hc
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simpa only [map_add, map_zero, map_smul, smul_eq_mul, add_zero, mul_eq_zero, ϕy'_ne_zero, hx',
-      or_false] using congr(ϕ $hc')
+      or_false] using congr(ϕ $hc'))
   -- And `a • y'` is orthogonal to `N'`.
   have ay'_ortho_N' : ∀ (c : R), ∀ z ∈ N', c • a • y' + z = 0 → c = 0 := by
     intro c z zN' hc
@@ -245,7 +247,8 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
       obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submoduleImage_dvd_of_mem N_le_M ϕ zN
       refine ⟨-b, Submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, ?_, ?_⟩⟩
       · refine LinearMap.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from ?_)
-        rw [map_sub, map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [map_sub, map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self])
       · simp only [sub_eq_add_neg, neg_smul, coe_subtype]
   -- And extend a basis for `M'` with `y'`
   intro m' hn'm' bM'
@@ -253,8 +256,10 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
   · refine Basis.mkFinConsOfLE y' y'M bM' M'_le_M y'_ortho_M' ?_
     intro z zM
     refine ⟨-ϕ ⟨z, zM⟩, ⟨⟨z, zM⟩ - ϕ ⟨z, zM⟩ • ⟨y', y'M⟩, LinearMap.mem_ker.mpr ?_, ?_⟩⟩
-    · rw [map_sub, map_smul, ϕy'_eq, smul_eq_mul, mul_one, sub_self]
-    · rw [map_sub, map_smul, sub_eq_add_neg, neg_smul]
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [map_sub, map_smul, ϕy'_eq, smul_eq_mul, mul_one, sub_self])
+    · (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [map_sub, map_smul, sub_eq_add_neg, neg_smul])
       rfl
   -- It remains to show the extended bases are compatible with each other.
   intro as h
@@ -425,12 +430,14 @@ lemma repr_eq_zero_of_notMem_range {i : ι} (hi : i ∉ Set.range snf.f) :
   obtain ⟨m, hm⟩ := m
   obtain ⟨c, rfl⟩ := snf.bN.mem_submodule_iff.mp hm
   replace hi : ∀ j, snf.f j ≠ i := by simpa using hi
-  simp [hi, snf.snf, map_finsuppSum]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [hi, snf.snf, map_finsuppSum])
 
 lemma le_ker_coord_of_notMem_range {i : ι} (hi : i ∉ Set.range snf.f) :
     N ≤ LinearMap.ker (snf.bM.coord i) :=
   fun m hm ↦ snf.repr_eq_zero_of_notMem_range ⟨m, hm⟩ hi
 
+set_option backward.instanceTypes.subsingletons.prop false in
 @[simp] lemma repr_apply_embedding_eq_repr_smul {i : Fin n} :
     snf.bM.repr m (snf.f i) = snf.bN.repr (snf.a i • m) i := by
   obtain ⟨m, hm⟩ := m
@@ -449,12 +456,14 @@ lemma le_ker_coord_of_notMem_range {i : ι} (hi : i ∉ Set.range snf.f) :
 @[simp] lemma repr_comp_embedding_eq_smul :
     snf.bM.repr m ∘ snf.f = snf.a • (snf.bN.repr m : Fin n → R) := by
   ext i
-  simp [Pi.smul_apply (snf.a i)]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [Pi.smul_apply (snf.a i)])
 
 @[simp] lemma coord_apply_embedding_eq_smul_coord {i : Fin n} :
     snf.bM.coord (snf.f i) ∘ₗ N.subtype = snf.a i • snf.bN.coord i := by
   ext m
-  simp [Pi.smul_apply (snf.a i)]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [Pi.smul_apply (snf.a i)])
 
 /-- Given a Smith-normal-form pair of bases for `N ⊆ M`, and a linear endomorphism `f` of `M`
 that preserves `N`, the diagonal of the matrix of the restriction `f` to `N` does not depend on

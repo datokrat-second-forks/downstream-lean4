@@ -359,7 +359,8 @@ def ringLmapEquivSelf [Module S M] [SMulCommClass R S M] : (R →ₗ[R] M) ≃�
     invFun := smulRight (1 : R →ₗ[R] R)
     left_inv := fun f ↦ by
       ext
-      simp only [coe_smulRight, Module.End.one_apply, smul_eq_mul, ← map_smul f, mul_one]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [coe_smulRight, Module.End.one_apply, smul_eq_mul, ← map_smul f, mul_one])
     right_inv := fun x ↦ by simp }
 
 end LinearMap

@@ -490,6 +490,7 @@ variable {A B : Type*} (K L : Type*) [CommRing A] [CommRing B] [CommRing K] [Com
 local instance : RingHomInvPair (f : A →+* B) f.symm :=
   RingHomInvPair.of_ringEquiv f
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Given rings `A, B` and localization maps to their fraction rings
 `f : A →+* K, g : B →+* L`, an isomorphism `h : A ≃+* B` induces a semilinear equivalence
 fraction rings `K ≃ₛₗ[f.toRingHom] L`. -/
@@ -497,18 +498,24 @@ noncomputable def semilinearEquivOfRingEquiv : K ≃ₛₗ[(f : A →+* B)] L :=
 { ringEquivOfRingEquiv f with
   map_smul' r x := by simp [Algebra.smul_def] }
 
+set_option backward.instanceTypes.subsingletons.prop false in
+set_option backward.isDefEq.respectTransparency.types false in
 lemma semilinearEquivOfRingEquiv_apply (x : K) :
     (semilinearEquivOfRingEquiv K L f) x = (ringEquivOfRingEquiv f) x := rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 lemma semilinearEquivOfRingEquiv_algebraMap (a : A) :
     semilinearEquivOfRingEquiv K L f (algebraMap A K a) = algebraMap B L (f a) := by
   simp [semilinearEquivOfRingEquiv, ringEquivOfRingEquiv]
 
+set_option backward.instanceTypes.subsingletons.prop false in
+set_option backward.isDefEq.respectTransparency.types false in
 lemma semilinearEquivOfRingEquiv_symm_apply (x : L) :
     (semilinearEquivOfRingEquiv K L f).symm x = (ringEquivOfRingEquiv f).symm x := rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 lemma semilinearEquivOfRingEquiv_comp {C : Type*} (M : Type*) [CommRing C] [CommRing M]
     [Algebra C M] [IsFractionRing C M] (g : B ≃+* C) :

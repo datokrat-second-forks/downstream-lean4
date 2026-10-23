@@ -105,15 +105,15 @@ lemma isIndex_succ (l : Fin d) :
 lemma mem_range_left (i : Fin (m + 2)) (hi : i ≠ k.castSucc) :
     i ∈ Set.range (x.cast hd).simplex.1 := by
   subst hd
-  have := x.notMem
-  simp [Subcomplex.mem_unionProd_iff, mem_horn_iff_notMem_range] at this
+  have := (Subcomplex.mem_unionProd_iff _ _ _).not.1 x.notMem
+  simp [mem_horn_iff_notMem_range] at this
   tauto
 
 lemma mem_range_right (i : Fin (n + 1)) :
     i ∈ Set.range (x.cast hd).simplex.2 := by
   subst hd
-  have := x.notMem
-  simp [Subcomplex.mem_unionProd_iff, mem_boundary_iff_notMem_range] at this
+  have := (Subcomplex.mem_unionProd_iff _ _ _).not.1 x.notMem
+  simp [mem_boundary_iff_notMem_range] at this
   tauto
 
 /-- Let `x` be a nondegenerate `d`-simplex of `Δ[m + 1] ⊗ Δ[n]` which
@@ -217,10 +217,10 @@ noncomputable abbrev δ :
   simplex := (Δ[m + 1] ⊗ Δ[n]).δ l.castSucc (x.cast hd).simplex
   nonDegenerate := nonDegenerate_δ (x.cast hd).nonDegenerate _
   notMem := by
-    simp only [Monoidal.tensorObj_obj]
-    -- `simp? [Subcomplex.mem_unionProd_iff, mem_boundary_iff_notMem_range,
-    --   mem_horn_iff_notMem_range,stdSimplex.δ_apply]` says:
-    simp only [Subcomplex.mem_unionProd_iff, prod_δ_snd, mem_boundary_iff_notMem_range,
+    refine (Subcomplex.mem_unionProd_iff _ _ _).not.2 ?_
+    -- `simp? [Monoidal.tensorObj_obj, mem_boundary_iff_notMem_range,
+    --   mem_horn_iff_notMem_range, stdSimplex.δ_apply]` says:
+    simp only [Monoidal.tensorObj_obj, prod_δ_snd, mem_boundary_iff_notMem_range,
       Set.mem_range, stdSimplex.δ_apply, not_exists, prod_δ_fst, mem_horn_iff_notMem_range,
       ne_eq, exists_prop, not_or, not_forall, Decidable.not_not, not_and]
     refine ⟨fun j ↦ ?_, fun j hj ↦ ?_⟩

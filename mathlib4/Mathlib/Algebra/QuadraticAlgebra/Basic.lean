@@ -120,7 +120,8 @@ theorem algHom_ext {f g : QuadraticAlgebra R a b →ₐ[R] A}
     (h : f ω = g ω) : f = g := by
   refine AlgHom.ext fun z ↦ ?_
   rw [← re_smul_add_im_smul z]
-  simp [h]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [h])
 
 /-- The unique `AlgHom` from `QuadraticAlgebra R a b` to an `R`-algebra `A`,
 constructed by replacing `ω` with the provided root.
@@ -163,7 +164,8 @@ def lift : { u : A // u * u = a • 1 + b • u } ≃ (QuadraticAlgebra R a b �
       commutes' r := by
         simp [← Algebra.algebraMap_eq_smul_one] }
   invFun f := ⟨f (ω), by
-    simp [← map_mul, omega_mul_omega_eq_add]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← map_mul, omega_mul_omega_eq_add])
     ⟩
   left_inv r := by
     simp

@@ -42,6 +42,7 @@ def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
   pt := PUnit
   ι := { app _ := ↾fun _ ↦ by cat_disch }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.

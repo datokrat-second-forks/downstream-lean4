@@ -39,7 +39,8 @@ variable {R : Type*} [CommRing R] {a b a' b' : R}
 private theorem smul_omega_sub_eq :
     (trace (f ω) - b) • f ω = algebraMap R _ (norm (f ω)) + a • 1 := by
   rw [sub_smul, ← sub_neg_eq_add, sub_eq_sub_iff_sub_eq_sub, ← sq_eq_trace_smul_sub_norm]
-  grind [omega_pow_two_eq_add, map_smul, _=_ map_pow]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  grind [omega_pow_two_eq_add, map_smul, _=_ map_pow])
 
 /-- The matrix of an algebra homomorphism `f` between quadratic algebras in the bases `1, ω` is
 `[1, (f ω).re; 0, (f ω).im]` since `f 1 = 1`. In particular, its determinant is `(f ω).im`,
@@ -103,7 +104,8 @@ theorem norm_algHom_omega (hf : Function.Injective f) :
 theorem trace_algHom (hf : Function.Injective f) (x : QuadraticAlgebra R a b) :
     trace (f x) = trace x := by
   rw [← re_smul_add_im_smul x]
-  simp [trace_algHom_omega f hf, mul_comm]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [trace_algHom_omega f hf, mul_comm])
 
 /-- An injective algebra homomorphism commutes with conjugation. -/
 theorem algHom_star (hf : Function.Injective f) (x : QuadraticAlgebra R a b) :

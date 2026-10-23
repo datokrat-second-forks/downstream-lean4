@@ -512,7 +512,9 @@ def piConstAdj [Limits.HasProducts.{v} C] (X : C) :
   counit :=
   { app Y := (Limits.Pi.lift id).op,
     naturality _ _ _ := by apply Quiver.Hom.unop_inj; cat_disch }
-  left_triangle_components _ := by apply Quiver.Hom.unop_inj; cat_disch
+  left_triangle_components _ := by
+    apply Quiver.Hom.unop_inj
+    (set_option backward.instanceTypes.subsingletons.prop false in cat_disch)
 
 -- Note: We may consider making `sigmaConst` an abbrev in order to
 -- improve automation downstream
@@ -522,6 +524,7 @@ def sigmaConst [Limits.HasCoproducts.{w} C] : C ⥤ Type w ⥤ C where
   obj X := { obj n := ∐ fun _ : n ↦ X, map f := Limits.Sigma.map' f fun _ ↦ 𝟙 _ }
   map f := { app n := Limits.Sigma.map fun _ ↦ f }
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- `n ↦ ∐ₙ X` is left adjoint to `Hom(X, -)`. -/
 def sigmaConstAdj [Limits.HasCoproducts.{v} C] (X : C) :
     sigmaConst.obj X ⊣ coyoneda.obj (Opposite.op X) where

@@ -217,6 +217,10 @@ theorem homEquiv_id (X : C) : adj.homEquiv X _ (𝟙 _) = adj.unit.app X := by s
 @[to_dual none]
 theorem homEquiv_symm_id (X : D) : (adj.homEquiv _ X).symm (𝟙 _) = adj.counit.app X := by simp
 
+-- With the instance type check, `dsimp%` keeps `(𝟭 C).obj X` in the type arguments of the
+-- coercion (as in `chosenCoend.map_apply`), and the statement no longer matches its uses in
+-- `Mathlib.CategoryTheory.Sites.CoverLifting`.
+set_option backward.dsimp.instanceTypes false in
 @[simp, to_dual none]
 lemma homEquiv_symm_unit (X : C) : dsimp% (adj.homEquiv _ _).symm (adj.unit.app X) = 𝟙 _ := by
   simp
@@ -316,14 +320,14 @@ theorem eq_homEquiv_apply {A : C} {B : D} (f : F.obj A ⟶ B) (g : A ⟶ G.obj B
 def corepresentableBy (X : C) :
     (G ⋙ coyoneda.obj (Opposite.op X)).CorepresentableBy (F.obj X) where
   homEquiv := adj.homEquiv _ _
-  homEquiv_comp := by simp
+  homEquiv_comp := by (set_option backward.dsimp.instanceTypes false in simp)
 
 /-- If `adj : F ⊣ G`, and `Y : D`, then `G.obj Y` represents `X ↦ (F.obj X ⟶ Y)`. -/
 @[simps]
 def representableBy (Y : D) :
     (F.op ⋙ yoneda.obj Y).RepresentableBy (G.obj Y) where
   homEquiv := (adj.homEquiv _ _).symm
-  homEquiv_comp := by simp
+  homEquiv_comp := by (set_option backward.dsimp.instanceTypes false in simp)
 
 end
 

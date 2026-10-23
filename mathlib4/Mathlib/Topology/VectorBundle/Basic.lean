@@ -240,11 +240,11 @@ theorem linearMapAt_apply (e : Trivialization F (π F E)) [e.IsLinear R] {b : B}
 
 theorem linearMapAt_def_of_mem (e : Trivialization F (π F E)) [e.IsLinear R] {b : B}
     (hb : b ∈ e.baseSet) : e.linearMapAt R b = e.linearEquivAt R b hb :=
-  dite_eq_left hb
+  (set_option backward.instanceTypes.subsingletons.decidable false in dite_eq_left hb)
 
 theorem linearMapAt_def_of_notMem (e : Trivialization F (π F E)) [e.IsLinear R] {b : B}
     (hb : b ∉ e.baseSet) : e.linearMapAt R b = 0 :=
-  dite_eq_right hb
+  (set_option backward.instanceTypes.subsingletons.decidable false in dite_eq_right hb)
 
 theorem symm_linearMapAt (e : Trivialization F (π F E)) [e.IsLinear R] {b : B} (hb : b ∈ e.baseSet)
     (y : E b) : e.symm b (e.linearMapAt R b y) = y := by
@@ -677,7 +677,9 @@ set_option backward.isDefEq.respectTransparency false in
 instance localTriv.isLinear (i : ι) : (Z.localTriv i).IsLinear R where
   linear x _ :=
     { map_add := fun _ _ => by simp only [map_add, localTriv_apply, mfld_simps]
-      map_smul := fun _ _ => by simp only [map_smul, localTriv_apply, mfld_simps] }
+      map_smul := fun _ _ => by
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [map_smul, localTriv_apply, mfld_simps]) }
 
 variable (i j : ι)
 

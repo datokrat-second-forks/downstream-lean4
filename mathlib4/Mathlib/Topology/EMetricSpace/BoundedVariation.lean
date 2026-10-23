@@ -671,7 +671,8 @@ theorem eVariationOn_on_inter_Ici_eq_Ioi_add_edist
     (h'f : Tendsto f (𝓝[s ∩ Ioi a] a) (𝓝 l)) :
     eVariationOn f (s ∩ Ici a) = eVariationOn f (s ∩ Ioi a) + edist (f a) l := by
   rw [← comp_ofDual f, ← comp_ofDual f]
-  exact eVariationOn_on_inter_Iic_eq_Iio_add_edist h ha h'f
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact eVariationOn_on_inter_Iic_eq_Iio_add_edist h ha h'f)
 
 /-- If a function is continuous on the left at a point `a`, then its variations on `Iio a` and
 on `Iic a` coincide. We give a version relative to a set `s`. -/

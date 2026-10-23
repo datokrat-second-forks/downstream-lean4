@@ -271,7 +271,9 @@ def submodule : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M))
   zero_mem' hmn := by rw [Pi.zero_apply, Pi.zero_apply, map_zero]
   add_mem' hf hg m n hmn := by
     rw [Pi.add_apply, Pi.add_apply, map_add, hf hmn, hg hmn]
-  smul_mem' c f hf m n hmn := by rw [Pi.smul_apply, Pi.smul_apply, map_smul, hf hmn]
+  smul_mem' c f hf m n hmn := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [Pi.smul_apply, Pi.smul_apply, map_smul, hf hmn])
 
 instance : Zero (AdicCompletion I M) where
   zero := ⟨0, by simp⟩
@@ -692,7 +694,8 @@ theorem of_ofLinearEquiv_symm (x : AdicCompletion I M) :
 end Bijective
 
 theorem pow_smul_top_le_ker_eval (n : ℕ) : I ^ n • ⊤ ≤ (eval I M n).ker := by
-  simp only [smul_le, mem_top, LinearMap.mem_ker, map_smul, coe_eval, forall_const]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [smul_le, mem_top, LinearMap.mem_ker, map_smul, coe_eval, forall_const])
   intro r r_in x
   rw [← Submodule.Quotient.mk_out (x.val n), ← Quotient.mk_smul, Quotient.mk_eq_zero]
   exact smul_mem_smul r_in mem_top

@@ -90,7 +90,9 @@ theorem Equicontinuous.comap_uniformFun_eq [CompactSpace X] (F_eqcont : Equicont
     (UniformFun.uniformSpace X α).comap F =
     (Pi.uniformSpace _).comap F := by
   -- The `≤` inequality is trivial
-  refine le_antisymm (UniformSpace.comap_monotone UniformFun.uniformContinuous_toFun) ?_
+  refine le_antisymm
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    UniformSpace.comap_monotone UniformFun.uniformContinuous_toFun) ?_
   -- A bit of rewriting to get a nice intermediate statement.
   simp_rw [UniformSpace.le_def, uniformity_comap, Pi.uniformity,
     Filter.comap_iInf, comap_comap, Function.comp_def]
@@ -202,6 +204,7 @@ theorem Equicontinuous.tendsto_uniformFun_iff_pi [CompactSpace X]
       rwa [tendsto_id', nhds_induced, ← map_le_iff_le_comap, h𝒢ℱ]
     rwa [ind.tendsto_nhds_iff, comp_id, ← tendsto_map'_iff, h𝒢ℱ] at H'
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Let `X` be a topological space, `𝔖` a family of compact subsets of `X`, `α` a uniform space,
 and `F : ι → (X → α)` a family which is equicontinuous on each `K ∈ 𝔖`. Then, the uniform

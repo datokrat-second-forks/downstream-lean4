@@ -61,7 +61,8 @@ theorem expand_X : expand R p X = X ^ p :=
 
 @[simp]
 theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r := by
-  simp_rw [← smul_X_eq_monomial, map_smul, map_pow, expand_X, mul_comm, pow_mul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [← smul_X_eq_monomial, map_smul, map_pow, expand_X, mul_comm, pow_mul])
 
 theorem expand_expand (f : R[X]) : expand R p (expand R q f) = expand R (p * q) f :=
   Polynomial.induction_on f (fun r => by simp_rw [expand_C])

@@ -133,7 +133,7 @@ noncomputable def basisSingleton (ι : Type*) [Unique ι] (h : finrank K V = 1) 
     { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default)
       invFun := fun f => f default • v
       map_add' := by simp [add_div]
-      map_smul' := by simp [mul_div]
+      map_smul' := by (set_option backward.instanceTypes.subsingletons.prop false in simp [mul_div])
       left_inv := fun w => by
         apply_fun b.repr using b.repr.toEquiv.injective
         apply_fun Finsupp.uniqueEquiv default

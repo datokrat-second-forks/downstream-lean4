@@ -122,6 +122,7 @@ instance colimitSMulWithZero : SMulWithZero R (M F) :=
     obtain ⟨j, x, rfl⟩ := M.mk_surjective F x
     simp [← colimit_zero_eq] }
 
+set_option backward.instanceTypes.subsingletons.prop false in
 instance colimitModule : Module R (M F) :=
 { colimitMulAction F,
   colimitSMulWithZero F with

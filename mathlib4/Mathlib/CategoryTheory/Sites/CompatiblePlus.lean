@@ -67,6 +67,7 @@ variable [∀ X : C, HasColimitsOfShape (J.Cover X)ᵒᵖ D]
 variable [∀ X : C, HasColimitsOfShape (J.Cover X)ᵒᵖ E]
 variable [∀ X : C, PreservesColimitsOfShape (J.Cover X)ᵒᵖ F]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`. -/

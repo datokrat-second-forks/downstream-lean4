@@ -56,7 +56,8 @@ theorem LinearIndependent.sumElim_of_quotient
   refine disjoint_def.mpr fun x h₁ h₂ ↦ ?_
   have : x ∈ M' := span_le.mpr (Set.range_subset_iff.mpr fun i ↦ (f i).prop) h₁
   obtain ⟨c, rfl⟩ := Finsupp.mem_span_range_iff_exists_finsupp.mp h₂
-  simp_rw [← Quotient.mk_eq_zero, ← mkQ_apply, map_finsuppSum, map_smul, mkQ_apply] at this
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [← Quotient.mk_eq_zero, ← mkQ_apply, map_finsuppSum, map_smul, mkQ_apply] at this)
   rw [linearIndependent_iff.mp hg _ this, Finsupp.sum_zero_index]
 
 theorem LinearIndepOn.union_of_quotient {s t : Set ι} {f : ι → M} (hs : LinearIndepOn R f s)
@@ -622,7 +623,8 @@ theorem sumQuot_repr_inl (w : W) (i : m) :
   classical
   refine Eq.symm (bW.repr_apply_eq
       (fun w i => (sumQuot bW bQ).repr (W.subtype w) (Sum.inl i)) ?_ ?_ ?_ w i) <;>
-  aesop (add simp Finsupp.single_apply)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  aesop (add simp Finsupp.single_apply))
 
 @[simp]
 theorem sumQuot_repr_inl_of_mem (v : V) (hv : v ∈ W) (i : m) :

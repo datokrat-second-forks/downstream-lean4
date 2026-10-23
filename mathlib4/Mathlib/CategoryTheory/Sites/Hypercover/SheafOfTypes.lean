@@ -53,7 +53,7 @@ def sectionsEquivOfHasPullbacks (E : PreZeroHypercover S)
   toFun s :=
     ⟨s.val, fun i j W gi gj hgij ↦ by
       have heq := s.property ⟨(i, j), ⟨⟩⟩
-      dsimp at heq
+      (set_option backward.dsimp.instanceTypes false in dsimp at heq)
       rw [← pullback.lift_fst _ _ hgij]
       conv_rhs => rw [← pullback.lift_snd _ _ hgij]
       rw [op_comp, Functor.map_comp, op_comp, Functor.map_comp]

@@ -91,7 +91,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma toQuotient_relation (r : relations.R) :
     relations.toQuotient (relations.relation r) = 0 := by
-  dsimp only [toQuotient, Quotient]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp only [toQuotient, Quotient])
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
   exact Submodule.subset_span (by simp)
 

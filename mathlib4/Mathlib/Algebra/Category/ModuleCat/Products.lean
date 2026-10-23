@@ -71,6 +71,7 @@ variable [DecidableEq ι]
 def coproductCocone : Cofan Z :=
   Cofan.mk ↧(⨁ i : ι, Z i) fun i => ofHom (DirectSum.lof R ι (fun i ↦ Z i) i)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The concrete coproduct cone is colimiting. -/
 def coproductCoconeIsColimit : IsColimit (coproductCocone Z) where

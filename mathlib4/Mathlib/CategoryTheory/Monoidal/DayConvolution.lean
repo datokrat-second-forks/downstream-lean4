@@ -178,7 +178,7 @@ def corepresentableBy :
     (Functor.whiskeringLeft _ _ _).obj (tensor C) ⋙ coyoneda.obj (.op <| F ⊠ G) |>.CorepresentableBy
       (F ⊛ G) where
   homEquiv := Functor.homEquivOfIsLeftKanExtension _ (unit F G) _
-  homEquiv_comp := by aesop
+  homEquiv_comp := by (set_option backward.dsimp.instanceTypes false in aesop)
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Use the fact that `(F ⊛ G).obj c` is a colimit to characterize morphisms out of it at a
@@ -297,9 +297,10 @@ lemma associator_hom_unit_unit (x y z : C) :
       (corepresentableBy₂' F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂ F G H |>.ofIso
           (associatorCorepresentingIso F G H).symm |>.homEquiv (𝟙 _))
+  (set_option backward.dsimp.instanceTypes false in
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
-    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢
+    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
   simp only [whiskerLeft_id, Category.comp_id, Category.assoc] at this
   simp only [Category.assoc, this]
   dsimp [Functor.FullyFaithful.homEquiv, Equivalence.fullyFaithfulFunctor, prod.associativity]
@@ -322,9 +323,10 @@ lemma associator_inv_unit_unit (x y z : C) :
       (corepresentableBy₂ F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂' F G H |>.ofIso
           (associatorCorepresentingIso F G H) |>.homEquiv (𝟙 _))
+  (set_option backward.dsimp.instanceTypes false in
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
-    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢
+    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
   simp only [whiskerRight_tensor, id_whiskerRight, Category.id_comp, Iso.inv_hom_id] at this
   simp only [this]
   dsimp [Functor.FullyFaithful.homEquiv, Equivalence.fullyFaithfulFunctor, prod.associativity]
@@ -580,9 +582,10 @@ lemma leftUnitor_hom_unit_app (y : C) :
   have := congrArg (fun t ↦ t.app (.mk PUnit.unit, y)) <|
       (corepresentableByLeft U F).homEquiv.rightInverse_symm <|
         ((leftUnitorCorepresentingIso F).symm.hom.app F) (𝟙 _)
+  (set_option backward.dsimp.instanceTypes false in
   dsimp [leftUnitor, Coyoneda.fullyFaithful, corepresentableByLeft,
     leftUnitorCorepresentingIso, Functor.CorepresentableBy.ofIso,
-    Functor.corepresentableByEquiv] at this ⊢
+    Functor.corepresentableByEquiv] at this ⊢)
   simp only [whiskerLeft_id, Category.comp_id] at this
   simp only [Category.comp_id, this]
   simp [prod.leftUnitorEquivalence, Equivalence.congrLeft, Equivalence.fullyFaithfulFunctor,
@@ -631,9 +634,10 @@ lemma rightUnitor_hom_unit_app (x : C) :
   have := congrArg (fun t ↦ t.app (x, .mk PUnit.unit)) <|
       (corepresentableByRight U F).homEquiv.rightInverse_symm <|
         ((rightUnitorCorepresentingIso F).symm.hom.app F) (𝟙 _)
+  (set_option backward.dsimp.instanceTypes false in
   dsimp [rightUnitor, Coyoneda.fullyFaithful, corepresentableByRight,
     rightUnitorCorepresentingIso, Functor.CorepresentableBy.ofIso,
-    Functor.corepresentableByEquiv] at this ⊢
+    Functor.corepresentableByEquiv] at this ⊢)
   simp only [MonoidalCategory.whiskerRight_id, Category.id_comp, Iso.hom_inv_id,
     Category.comp_id] at this
   simp only [Category.comp_id, this]
@@ -841,7 +845,8 @@ lemma ι_map_tensorHom_hom_eq_tensorHom
     DayConvolution.map (ι C V D |>.map f) (ι C V D |>.map f') := by
   apply DayConvolution.corepresentableBy
     (ι C V D |>.obj d₁) (ι C V D |>.obj d₁') |>.homEquiv.injective
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp)
   ext ⟨x, y⟩
   simp only [externalProductBifunctor_obj_obj, Functor.comp_obj, tensor_obj,
     DayConvolution.corepresentableBy_homEquiv_apply_app,
@@ -944,7 +949,8 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       simp only [ι_map_tensorHom_hom_eq_tensorHom, Functor.map_id]
       apply (DayConvolution.corepresentableBy
         (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp)
       ext ⟨_, _⟩
       simp only [externalProductBifunctor_obj_obj, Functor.comp_obj, tensor_obj,
         corepresentableBy_homEquiv_apply_app, unit_app_map_app, NatTrans.id_app,
@@ -957,14 +963,16 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨_, _⟩
-      simp)
+      (set_option backward.dsimp.instanceTypes false in
+      simp))
     (id_tensorHom := fun x {y₁ y₂} f => by
       apply Functor.Faithful.map_injective (F := ι C V D)
       simp only [ι_map_tensorHom_hom_eq_tensorHom]
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨x, y⟩
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp)
       simp only [Functor.map_id, unit_app_map_app, Functor.comp_obj, tensor_obj,
         NatTrans.id_app, id_tensorHom]
       dsimp [unit]
@@ -975,7 +983,8 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨x, y⟩
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp)
       simp only [Functor.map_id, DayConvolution.unit_app_map_app, Functor.comp_obj,
         tensor_obj, NatTrans.id_app, tensorHom_id]
       dsimp [DayConvolution.unit]
@@ -1200,7 +1209,8 @@ lemma ι_map_tensorHom_eq {d₁ d₁' d₂ d₂' : D} (f : d₁ ⟶ d₂) (f' : 
   apply (convolutions C V d₁ d₁').corepresentableBy.homEquiv.injective
   dsimp
   ext ⟨u₁, u₂⟩
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp)
   simp only [DayConvolution.unit_app_map_app, Functor.comp_obj, tensor_obj]
   simp +instances [convolutions, convolutionUnitApp_eq]
 

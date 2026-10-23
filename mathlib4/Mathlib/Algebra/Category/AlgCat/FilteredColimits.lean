@@ -42,8 +42,11 @@ private abbrev AlgCat.algebraOfIsFiltered (hc : IsColimit c) (j : J) : Algebra R
   (c.ι.app j).hom.comp (algebraMap R (F.obj j)) |>.toAlgebra' <| by
     intro r x
     obtain ⟨k, hjk, y, rfl⟩ := Concrete.exists_hom_ι_eq_of_isColimit _ hc x j
-    simp [← dsimp% c.w hjk, ← dsimp% (c.ι.app k).hom.map_mul, Algebra.commutes']
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [← dsimp% c.w hjk, ← dsimp% (c.ι.app k).hom.map_mul, Algebra.commutes'])
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The cocone of the underlying diagram of rings lifted to `AlgCat R`. The algebra instance
 on the cocone point is induced from the `j`-th inclusion map. -/

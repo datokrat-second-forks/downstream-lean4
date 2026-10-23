@@ -629,7 +629,8 @@ set_option backward.defeqAttrib.useBackward true in
 /-- Given a limit cone, `F.cones` is representable by the point of the cone. -/
 def representableBy (hc : IsLimit t) : F.cones.RepresentableBy t.pt where
   homEquiv := hc.homEquiv
-  homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by simp
+  homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by
+    (set_option backward.dsimp.instanceTypes false in simp)
 
 end
 
@@ -724,7 +725,8 @@ set_option backward.defeqAttrib.useBackward true in
 /-- Given a colimit cocone, `F.cocones` is corepresentable by the point of the cocone. -/
 def corepresentableBy (hc : IsColimit t) : F.cocones.CorepresentableBy t.pt where
   homEquiv := hc.homEquiv
-  homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by simp
+  homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by
+    (set_option backward.dsimp.instanceTypes false in simp)
 
 end
 

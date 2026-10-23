@@ -351,6 +351,7 @@ partial def evalFinsetBigop {α : Q(Type u)} {β : Q(Type v)}
       pure (res.eq_trans eq)
 
 attribute [local instance] monadLiftOptionMetaM in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- `norm_num` plugin for evaluating products of finsets.
 
 If your finset is not supported, you can add it to the match in `Finset.proveEmptyOrCons`.
@@ -380,6 +381,7 @@ partial def evalFinsetProd : NormNumExt where eval {u β} e := do
     s
 
 attribute [local instance] monadLiftOptionMetaM in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- `norm_num` plugin for evaluating sums of finsets.
 
 If your finset is not supported, you can add it to the match in `Finset.proveEmptyOrCons`.

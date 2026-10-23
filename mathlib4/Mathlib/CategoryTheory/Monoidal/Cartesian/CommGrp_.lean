@@ -47,6 +47,8 @@ def yonedaCommGrpGrpObj (G : CommGrp C) : (Grp C)ᵒᵖ ⥤ CommGrpCat where
       ext
       simpa using! ((yonedaGrpObj G.X).map f.unop.hom.hom.op).hom.map_mul g.hom.hom h.hom.hom }
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The yoneda embedding of `CommGrp C` into presheaves of groups. -/

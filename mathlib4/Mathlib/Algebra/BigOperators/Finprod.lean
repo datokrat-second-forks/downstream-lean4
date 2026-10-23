@@ -391,8 +391,10 @@ theorem finprod_of_infinite_mulSupport {f : α → M} (hf : (mulSupport f).Infin
     ∏ᶠ i, f i = 1 := by
   classical
   rw [finprod_def]
-  simp only [HasFiniteMulSupport]
-  rw [dite_eq_right hf]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [HasFiniteMulSupport])
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  rw [dite_eq_right hf])
 
 @[to_additive]
 theorem finprod_of_not_hasFiniteMulSupport {f : α → M} (hf : ¬ f.HasFiniteMulSupport) :

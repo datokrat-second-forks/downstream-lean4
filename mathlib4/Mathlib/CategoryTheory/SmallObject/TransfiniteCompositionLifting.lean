@@ -157,7 +157,7 @@ noncomputable def liftHom : F.obj j ⟶ X :=
       { app := fun i ↦ (s.1 ⟨i⟩).f'
         naturality i i' g := by
           have := congr(SqStruct.f' $(s.2 g.op))
-          dsimp at this ⊢
+          (set_option backward.dsimp.instanceTypes false in dsimp at this ⊢)
           rw [this, comp_id] })
 
 @[reassoc]
@@ -211,7 +211,7 @@ noncomputable def wellOrderInductionData :
         simp only [← sq'.w₁]
         conv_rhs => rw [← sq'.sq.fac_left, ← F.map_comp_assoc]
         rfl }
-  map_succ j hj sq' := by cat_disch
+  map_succ j hj sq' := by (set_option backward.dsimp.instanceTypes false in cat_disch)
   lift j hj s := lift hj s
   map_lift j hj s i hij := map_lift hj s hij
 

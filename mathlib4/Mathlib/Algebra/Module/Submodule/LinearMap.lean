@@ -191,7 +191,10 @@ noncomputable def codLift :
     M →ₛₗ[σ₁₂] M₂' where
   toFun c := (h c).choose
   map_add' b c := by apply hp; simp_rw [map_add, (h _).choose_spec, ← map_add, (h _).choose_spec]
-  map_smul' r c := by apply hp; simp_rw [map_smul, (h _).choose_spec, map_smulₛₗ]
+  map_smul' r c := by
+    apply hp
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [map_smul, (h _).choose_spec, map_smulₛₗ])
 
 @[simp] theorem codLift_apply (x : M) :
     (f.codLift p hp h x) = (h x).choose :=

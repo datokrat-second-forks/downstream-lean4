@@ -73,6 +73,7 @@ namespace CategoryTheory.Limits.Types
 
 variable {X : Type u} {ι : Type w} {A : Set X} {U : ι → Set X} {V : ι → ι → Set X}
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Given `X : Type u`, `A : Set X`, `U : ι → Set X` and `V : ι → ι → Set X` such

@@ -894,7 +894,8 @@ theorem sum_mk : sum (mk L) = List.sum (L.map fun x => cond x.2 x.1 (-x.1)) :=
 
 @[simp]
 theorem sum.of {x : α} : sum (of x) = x :=
-  @prod.of _ (_) _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  @prod.of _ (_) _)
 
 -- note: there are no bundled homs with different notation in the domain and codomain, so we copy
 -- these manually

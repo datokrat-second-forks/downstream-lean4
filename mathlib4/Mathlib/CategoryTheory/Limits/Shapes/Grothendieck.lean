@@ -234,7 +234,9 @@ between `fiberwiseColim F H ⋙ colim` and `colim`. -/
 @[simps!]
 def fiberwiseColimCompColimIso : fiberwiseColim F H ⋙ colim ≅ colim :=
   NatIso.ofComponents (fun G => colimitFiberwiseColimitIso G)
-    fun _ => by (iterate 2 apply colimit.hom_ext; intro); simp
+    fun _ => by
+      (iterate 2 apply colimit.hom_ext; intro)
+      (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 /-- Composing `fiberwiseColim F H` with the evaluation functor `(evaluation C H).obj c` is
 naturally isomorphic to precomposing the Grothendieck inclusion `Grothendieck.ι` to `colim`. -/

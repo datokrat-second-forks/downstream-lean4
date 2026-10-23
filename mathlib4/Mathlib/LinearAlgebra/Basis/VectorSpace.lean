@@ -367,7 +367,8 @@ theorem exists_basis_of_pairing_ne_zero
     rintro x -
     simp only [n, mem_span_insert']
     use -f x / f v
-    simp only [hs, mem_ker, map_add, map_smul, smul_eq_mul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [hs, mem_ker, map_add, map_smul, smul_eq_mul])
     field
   set b := Basis.mk H₁ (by simpa using H₂)
   set i : n := ⟨v, s.mem_insert v⟩

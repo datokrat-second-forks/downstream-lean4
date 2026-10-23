@@ -463,6 +463,7 @@ def CorepresentableBy.equivOfIsoObj {F : C ⥤ Type w} {X Y : C} (e : Y ≅ X) :
   left_inv _ := by ext; simp
   right_inv _ := by ext; simp
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Representing `F` composed with universe lifting is the same as representing `F`. -/
@@ -476,6 +477,7 @@ def representableByUliftFunctorEquiv {F : Cᵒᵖ ⥤ Type v} {X : C} :
     { homEquiv {Y} := R.homEquiv.trans Equiv.ulift.symm
       homEquiv_comp f g := by simp [R.homEquiv_comp] }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Corepresenting `F` composed with universe lifting is the same as corepresenting `F`. -/
@@ -839,7 +841,8 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C :=
     (by intro (X, F) (Y, G) f
         ext (a : yoneda.obj X.unop ⟶ F)
         apply ULift.ext
-        dsimp [yonedaEvaluation, yonedaEquiv]
+        (set_option backward.dsimp.instanceTypes false in
+        dsimp [yonedaEvaluation, yonedaEquiv])
         simp [← NatTrans.naturality_apply])
 
 variable {C}
@@ -1079,7 +1082,8 @@ def coyonedaLemma : coyonedaPairing C ≅ coyonedaEvaluation C :=
     (by intro (X, F) (Y, G) f
         ext (a : coyoneda.obj (op X) ⟶ F)
         apply ULift.ext
-        dsimp [coyonedaEquiv, coyonedaEvaluation]
+        (set_option backward.dsimp.instanceTypes false in
+        dsimp [coyonedaEquiv, coyonedaEvaluation])
         simp [← NatTrans.naturality_apply])
 
 variable {C}
@@ -1185,8 +1189,9 @@ lemma uliftCoyonedaEquiv_symm_map {X Y : C} (f : X ⟶ Y) {F : C ⥤ Type (max w
 
 @[simp]
 lemma uliftCoyonedaEquiv_uliftCoyoneda_map {X Y : Cᵒᵖ} (f : X ⟶ Y) :
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     DFunLike.coe (β := fun _ ↦ ULift.{w} (Y.unop ⟶ X.unop))
-        uliftCoyonedaEquiv.{w} (uliftCoyoneda.map f) = ULift.up f.unop := by
+        uliftCoyonedaEquiv.{w} (uliftCoyoneda.map f)) = ULift.up f.unop := by
   simp [uliftCoyonedaEquiv, uliftYoneda]
 
 /-- Two morphisms of presheaves of types `P ⟶ Q` coincide if the precompositions
@@ -1246,6 +1251,10 @@ def uliftYonedaMap (X : C) :
     uliftYoneda.{max w v₂}.obj X ⟶ F.op ⋙ uliftYoneda.{max w v₁}.obj (F.obj X) where
   app _ := ↾fun f ↦ ULift.up (F.map (ULift.down f))
 
+-- With the instance type check, `dsimp%` keeps `(F.op ⋙ uliftYoneda.obj (F.obj Y)).obj X` in the
+-- type arguments of the coercion (as in `chosenCoend.map_apply`), and the statement no longer
+-- matches its uses.
+set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma uliftYonedaMap_app_apply {Y : C} {X : Cᵒᵖ} (f : X.unop ⟶ Y) :
     dsimp% (uliftYonedaMap.{w} F Y).app X (ULift.up f) = ULift.up (F.map f) := rfl

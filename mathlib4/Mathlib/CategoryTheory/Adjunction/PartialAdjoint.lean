@@ -166,13 +166,17 @@ noncomputable def corepresentableByCompCoyonedaObjOfIsColimit {J : Type*} [Categ
           naturality := fun j j' φ ↦ by
             apply F.partialLeftAdjointHomEquiv.injective
             have := c.w φ
-            dsimp at this ⊢
+            (set_option backward.dsimp.instanceTypes false in
+            dsimp at this ⊢)
             rw [comp_id, Equiv.apply_symm_apply, partialLeftAdjointHomEquiv_map_comp,
               Equiv.apply_symm_apply, reassoc_of% this] })
-      left_inv := fun f ↦ hc'.hom_ext (fun j ↦ by simp)
-      right_inv := fun g ↦ hc.hom_ext (fun j ↦ by simp) }
+      left_inv := fun f ↦ hc'.hom_ext (fun j ↦ by
+        (set_option backward.dsimp.instanceTypes false in simp))
+      right_inv := fun g ↦ hc.hom_ext (fun j ↦ by
+        (set_option backward.dsimp.instanceTypes false in simp)) }
   homEquiv_comp {Y Y'} g f := hc.hom_ext (fun j ↦ by
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     simp only [IsColimit.fac, IsColimit.fac_assoc, partialLeftAdjointHomEquiv_comp,
       F.map_comp, assoc])
 
@@ -317,13 +321,17 @@ noncomputable def representableByCompYonedaObjOfIsLimit {J : Type*} [Category* J
           naturality := fun j j' φ ↦ by
             apply F.partialRightAdjointHomEquiv.injective
             have := c.w φ
-            dsimp at this ⊢
+            (set_option backward.dsimp.instanceTypes false in
+            dsimp at this ⊢)
             rw [id_comp, Equiv.apply_symm_apply, partialRightAdjointHomEquiv_map_comp,
               Equiv.apply_symm_apply, assoc, this] })
-      left_inv := fun f ↦ hc'.hom_ext (fun j ↦ by simp)
-      right_inv := fun g ↦ hc.hom_ext (fun j ↦ by simp) }
+      left_inv := fun f ↦ hc'.hom_ext (fun j ↦ by
+        (set_option backward.dsimp.instanceTypes false in simp))
+      right_inv := fun g ↦ hc.hom_ext (fun j ↦ by
+        (set_option backward.dsimp.instanceTypes false in simp)) }
   homEquiv_comp {Y Y'} g f := hc.hom_ext (fun j ↦ by
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     simp only [IsLimit.fac, partialRightAdjointHomEquiv_comp, assoc])
 
 lemma rightAdjointObjIsDefined_of_isLimit {J : Type*} [Category* J] {R : J ⥤ D} {c : Cone R}

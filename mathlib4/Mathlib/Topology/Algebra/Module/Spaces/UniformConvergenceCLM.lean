@@ -125,7 +125,8 @@ theorem topologicalSpace_eq [UniformSpace F] [IsUniformAddGroup F] (𝔖 : Set (
     instTopologicalSpace σ F 𝔖 = TopologicalSpace.induced (UniformOnFun.ofFun 𝔖 ∘ DFunLike.coe)
       (UniformOnFun.topologicalSpace E F 𝔖) := by
   rw [instTopologicalSpace]
-  congr
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  congr)
   exact IsUniformAddGroup.rightUniformSpace_eq
 
 /-- The uniform structure associated with `ContinuousLinearMap.strongTopology`. We make sure
@@ -403,14 +404,16 @@ variable {𝔖₁ 𝔖₂ : Set (Set E)}
 theorem uniformSpace_mono [UniformSpace F] [IsUniformAddGroup F] (h : 𝔖₂ ⊆ 𝔖₁) :
     instUniformSpace σ F 𝔖₁ ≤ instUniformSpace σ F 𝔖₂ := by
   simp_rw [uniformSpace_eq]
-  exact UniformSpace.comap_monotone (UniformOnFun.mono (le_refl _) h)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact UniformSpace.comap_monotone (UniformOnFun.mono (le_refl _) h))
 
 theorem topologicalSpace_mono [TopologicalSpace F] [IsTopologicalAddGroup F] (h : 𝔖₂ ⊆ 𝔖₁) :
     instTopologicalSpace σ F 𝔖₁ ≤ instTopologicalSpace σ F 𝔖₂ := by
   let := IsTopologicalAddGroup.rightUniformSpace F
   have : IsUniformAddGroup F := isUniformAddGroup_of_addCommGroup
   simp_rw [← uniformity_toTopologicalSpace_eq]
-  exact UniformSpace.toTopologicalSpace_mono (uniformSpace_mono σ F h)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact UniformSpace.toTopologicalSpace_mono (uniformSpace_mono σ F h))
 
 variable {𝕜₁ : Type*} [NontriviallyNormedField 𝕜₁] {σ : 𝕜₁ →+* 𝕜₂} [Module 𝕜₁ E] in
 variable {F} in

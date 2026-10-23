@@ -36,6 +36,7 @@ section
 
 variable {M : Type*} [AddGroup M] [HasShift C M] [HasZeroMorphisms C]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 instance [P.IsStableUnderShift M] : P.rightOrthogonal.IsStableUnderShift M where
   isStableUnderShiftBy n := ⟨fun Y hY X f hX ↦ by

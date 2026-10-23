@@ -453,7 +453,9 @@ variable {R : Type u} {A : Type v} {B : Type w} {C : Type w'} [CommSemiring R]
 /-- Range of an `NonUnitalAlgHom` as a non-unital subalgebra. -/
 protected def range (φ : A →ₙₐ[R] B) : NonUnitalSubalgebra R B where
   toNonUnitalSubsemiring := NonUnitalRingHom.srange (φ : A →ₙ+* B)
-  smul_mem' := fun r a => by rintro ⟨a, rfl⟩; exact ⟨r • a, map_smul φ r a⟩
+  smul_mem' := fun r a => by
+    rintro ⟨a, rfl⟩
+    exact ⟨r • a, (set_option backward.instanceTypes.subsingletons.prop false in map_smul φ r a)⟩
 
 @[simp]
 theorem mem_range (φ : A →ₙₐ[R] B) {y : B} : y ∈ φ.range ↔ ∃ x : A, φ x = y :=
@@ -479,7 +481,8 @@ theorem range_comp_le_range (f : A →ₙₐ[R] B) (g : B →ₙₐ[R] C) :
 /-- Restrict the codomain of a non-unital algebra homomorphism. -/
 def codRestrict (f : A →ₙₐ[R] B) (S : NonUnitalSubalgebra R B) (hf : ∀ x, f x ∈ S) : A →ₙₐ[R] S :=
   { NonUnitalRingHom.codRestrict (f : A →ₙ+* B) S.toNonUnitalSubsemiring hf with
-    map_smul' := fun r a => Subtype.ext <| map_smul f r a }
+    map_smul' := fun r a => Subtype.ext <|
+      (set_option backward.instanceTypes.subsingletons.prop false in map_smul f r a) }
 
 @[simp]
 theorem subtype_comp_codRestrict
@@ -512,7 +515,9 @@ def equalizer (ϕ ψ : A →ₙₐ[R] B) : NonUnitalSubalgebra R A where
     rw [Set.mem_ofPred_eq, map_add, map_add, hx, hy]
   mul_mem' {x y} (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
     rw [Set.mem_ofPred_eq, map_mul, map_mul, hx, hy]
-  smul_mem' r x (hx : ϕ x = ψ x) := by rw [Set.mem_ofPred_eq, map_smul, map_smul, hx]
+  smul_mem' r x (hx : ϕ x = ψ x) := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [Set.mem_ofPred_eq, map_smul, map_smul, hx])
 
 @[simp]
 theorem mem_equalizer (φ ψ : A →ₙₐ[R] B) (x : A) :

@@ -55,6 +55,7 @@ theorem toTensorAlgebra_gMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
   rw [List.ofFn_comp' _ (TensorAlgebra.ι R), List.ofFn_comp' _ (TensorAlgebra.ι R),
     List.ofFn_comp' _ (TensorAlgebra.ι R), ← List.map_append, List.ofFn_fin_append]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 theorem toTensorAlgebra_galgebra_toFun (r : R) :
     TensorPower.toTensorAlgebra (DirectSum.GAlgebra.toFun (R := R) (A := fun n => ⨂[R]^n M) r) =
@@ -129,7 +130,7 @@ theorem _root_.TensorPower.list_prod_gradedMonoid_mk_single (n : ℕ) (x : Fin n
     simp_rw [Function.comp_def, Fin.cons_zero, Fin.cons_succ]
     rw [ih, GradedMonoid.mk_mul_mk, TensorPower.tprod_mul_tprod]
     refine TensorPower.gradedMonoid_eq_of_cast (add_comm _ _) ?_
-    dsimp only [GradedMonoid.mk]
+    (set_option backward.dsimp.instanceTypes false in dsimp only [GradedMonoid.mk])
     rw [TensorPower.cast_tprod]
     simp_rw [Fin.append_left_eq_cons, Function.comp_def]
     congr 1 with i

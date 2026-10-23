@@ -196,6 +196,7 @@ lemma epi_f [IsFiltered J] : Epi (f z) := by
 
 end surjectivity
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 include hc in

@@ -89,6 +89,7 @@ Validated, but perhaps too invasive, fix: Make all of the following definitions 
 Then both backward compatibility options can go: first `respectTransparency false`, then
 `instanceSearchTypes false`.
 -/
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]

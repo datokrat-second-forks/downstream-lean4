@@ -143,7 +143,8 @@ noncomputable def colim.coconeFlip : Cocone F.flip where
 the colimit of `F.flip` is `F ⋙ colim`. -/
 @[no_expose]
 noncomputable def colim.isColimitCoconeFlip : IsColimit (colim.coconeFlip F) :=
-  evaluationJointlyReflectsColimits _ (fun _ ↦ colimit.isColimit _)
+  evaluationJointlyReflectsColimits _ (fun _ ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in colimit.isColimit _))
 
 /-- Given a bifunctor `F : J ⥤ K ⥤ C`, and assuming that `C` has limits of shape `J`,
 this is the cone of `F` with point `F.flip ⋙ lim`. -/
@@ -157,7 +158,8 @@ noncomputable def lim.cone : Cone F where
 the limit of `F` is `F.flip ⋙ lim`. -/
 @[no_expose]
 noncomputable def lim.isLimitCone : IsLimit (lim.cone F) :=
-  evaluationJointlyReflectsLimits _ (fun _ ↦ limit.isLimit _)
+  evaluationJointlyReflectsLimits _ (fun _ ↦
+    (set_option backward.instanceTypes.subsingletons.prop false in limit.isLimit _))
 
 /-- Given a bifunctor `F : J ⥤ K ⥤ C`, and assuming that `C` has limits of shape `J` and
 colimit of shape `K`, this is the canonical morphism from the colimit of `F.flip ⋙ lim`

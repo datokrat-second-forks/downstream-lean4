@@ -110,13 +110,15 @@ instance instLawfulApplicativeComp : LawfulApplicative (Comp F G) where
 
 theorem applicative_id_comp {F} [AF : Applicative F] [LawfulApplicative F] :
     @instApplicativeComp Id F _ _ = AF :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   @Applicative.ext F _ _ (instLawfulApplicativeComp (F := Id)) _
-    (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ _ => rfl))
 
 theorem applicative_comp_id {F} [AF : Applicative F] [LawfulApplicative F] :
     @Comp.instApplicativeComp F Id _ _ = AF :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   @Applicative.ext F _ _ (instLawfulApplicativeComp (G := Id)) _
-    (fun _ => rfl) (fun f x => show id <$> f <*> x = f <*> x by rw [id_map])
+    (fun _ => rfl) (fun f x => show id <$> f <*> x = f <*> x by rw [id_map]))
 
 open CommApplicative
 

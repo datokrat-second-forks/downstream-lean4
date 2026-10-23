@@ -183,8 +183,10 @@ instance instLinearOrderedCommMonoidWithZeroMultiplicativeOrderDual
     [LinearOrderedAddCommMonoidWithTop α] :
     LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) where
   zero := .ofAdd <| .toDual ⊤
-  zero_mul := @top_add _ (_)
-  mul_zero := @add_top _ (_)
+  zero_mul := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    @top_add _ (_))
+  mul_zero := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    @add_top _ (_))
   isBot_zero _ := (le_top : _ ≤ ⊤)
   mul_lt_mul_of_pos_left := by
     simpa [← ofAdd_add, ← toDual_add]

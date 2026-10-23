@@ -76,7 +76,8 @@ nonrec theorem _root_.Commute.tprod {a₁ a₂ : Π i, A i} (ha : Commute a₁ a
 
 lemma smul_tprod_mul_smul_tprod (r s : R) (x y : Π i, A i) :
     (r • tprod R x) * (s • tprod R y) = (r * s) • tprod R (x * y) := by
-  simp only [mul_def, map_smul, LinearMap.smul_apply, mul_tprod_tprod, mul_comm r s, mul_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [mul_def, map_smul, LinearMap.smul_apply, mul_tprod_tprod, mul_comm r s, mul_smul])
 
 instance instNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring (⨂[R] i, A i) where
   __ := instMul

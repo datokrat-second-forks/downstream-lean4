@@ -58,11 +58,13 @@ open Lean.PrettyPrinter.Delaborator in
 @[app_delab BialgCat.of]
 meta def delabOf : Delab := CategoryTheory.delabOf
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma of_comul {X : Type v} [Ring X] [Bialgebra R X] :
     Coalgebra.comul (A := of R X) = Coalgebra.comul (R := R) (A := X) := rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma of_counit {X : Type v} [Ring X] [Bialgebra R X] :

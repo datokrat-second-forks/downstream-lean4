@@ -660,6 +660,7 @@ set_option backward.defeqAttrib.useBackward true in
 def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where
   app X := Grp.homMk' ((mapMonNatTrans f).app X.toMon)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural isomorphisms between functors lift to group objects. -/
@@ -668,6 +669,7 @@ set_option backward.defeqAttrib.useBackward true in
 def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
   NatIso.ofComponents fun X ↦ Grp.mkIso (e.app _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local instance] Monoidal.ofChosenFiniteProducts in

@@ -58,7 +58,8 @@ set_option backward.defeqAttrib.useBackward true in
 /-- The isomorphism `X.functorN' ≅ X.functorN` for a nonsingular simplicial set `X`. -/
 noncomputable def functorN'Iso : X.functorN' ≅ X.functorN :=
   NatIso.ofComponents (fun x ↦ Nonsingular.iso _ x.nonDegenerate) (fun _ ↦ by
-    simp [← cancel_mono (Subcomplex.ι _)])
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← cancel_mono (Subcomplex.ι _)]))
 
 /-- If `X` is a nonsingular simplicial set, this is the cocone consisting
 of the (mono)morphisms `Δ[x.dim] ⟶ X` for all nondegenerate simplices `x : X.N`. -/

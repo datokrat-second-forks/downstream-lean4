@@ -222,6 +222,7 @@ def mkIso {M N : Comon C} (f : M.X ≅ N.X) (f_counit : f.hom ≫ ε[N.X] = ε[M
   have : IsComonHom f.hom := ⟨f_counit, f_comul⟩
   ⟨⟨f.hom⟩, ⟨f.inv⟩, by cat_disch, by cat_disch⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simps]
@@ -265,6 +266,7 @@ Turn a comonoid object into a monoid object in the opposite category.
 
 set_option backward.defeqAttrib.useBackward true in
 variable (C) in
+set_option backward.dsimp.instanceTypes false in
 /--
 The contravariant functor turning comonoid objects into monoid objects in the opposite category.
 -/
@@ -295,6 +297,7 @@ Turn a monoid object in the opposite category into a comonoid object.
 
 variable (C)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /--
 The contravariant functor turning monoid objects in the opposite category into comonoid objects.
@@ -326,6 +329,9 @@ So we spell out all the other ones.
 #adaptation_note
 /-- `respectTransparency.types true` changes the auto-generated lemmas' signature -/
 set_option backward.isDefEq.respectTransparency.types false in
+-- So does the instance type check of `dsimp`: `monoidal_tensorObj_comon_comul` would be stated in
+-- `C` with `tensorμ` instead of via `Quiver.Hom.unop`, which its uses are written for.
+set_option backward.dsimp.instanceTypes false in
 /--
 Comonoid objects in a braided category form a monoidal category.
 

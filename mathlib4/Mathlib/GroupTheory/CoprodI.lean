@@ -133,7 +133,8 @@ theorem ext_hom (f g : CoprodI M →* N) (h : ∀ i, f.comp (of : M i →* _) = 
     FreeMonoid.hom_eq fun ⟨i, x⟩ => by
       rw [MonoidHom.comp_apply, MonoidHom.comp_apply, ← of_apply]
       unfold CoprodI
-      rw [← MonoidHom.comp_apply, ← MonoidHom.comp_apply, h]
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      rw [← MonoidHom.comp_apply, ← MonoidHom.comp_apply, h])
 
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
 universal property of the free product, characterizing it as a categorical coproduct. -/

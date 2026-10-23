@@ -396,7 +396,10 @@ theorem Interval.pow_mem [Pow α ℕ] [Zero α] [One α] [Neg α] [LinearOrder �
       · apply pow_le_pow_left₀ _ (hl _ ha) n
         simpa [ha, map_zero] using f.monotone.withBot_map hpos
       · exact pow_le_pow_left₀ hx0 (hu _ ha) n
-  all_goals obtain ⟨hn, _⟩ : Even n ∧ ¬0 ≤ I.lb := by grind
+  all_goals
+    obtain ⟨hn, _⟩ : Even n ∧ ¬0 ≤ I.lb := by
+      (set_option backward.instanceTypes.subsingletons.decidable false in
+      grind)
   · obtain ⟨ub, hub, hub0⟩ := WithTop.le_coe_iff.mp hneg
     have hub0 : f ub ≤ 0 := by simpa [map_zero] using f.monotone hub0
     constructor

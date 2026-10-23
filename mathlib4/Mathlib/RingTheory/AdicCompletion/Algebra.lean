@@ -310,8 +310,9 @@ instance smul : SMul (AdicCompletion I R) (AdicCompletion I M) where
     property := fun {m n} hmn ↦ by
       apply induction_on I R r (fun r ↦ ?_)
       apply induction_on I M x (fun x ↦ ?_)
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [coe_eval, mapQ_eq_factor, mk_apply_coe, mkQ_apply, Ideal.Quotient.mk_eq_mk,
-        mk_smul_mk, map_smul, mapQ_apply, LinearMap.id_coe, id_eq]
+        mk_smul_mk, map_smul, mapQ_apply, LinearMap.id_coe, id_eq])
       rw [smul_mk I hmn]
   }
 

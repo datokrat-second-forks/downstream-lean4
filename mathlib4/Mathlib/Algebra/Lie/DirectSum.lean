@@ -86,7 +86,9 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
 /-- The projection map onto one component, as a morphism of Lie modules. -/
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
-    map_lie' := fun {x m} => by simp [component, lapply] }
+    map_lie' := fun {x m} => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [component, lapply]) }
 
 end Modules
 
@@ -158,7 +160,9 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
 def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with
     toFun := component R ι L j
-    map_lie' := fun {x y} => by simp [component, lapply] }
+    map_lie' := fun {x y} => by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp [component, lapply]) }
 
 -- Note(kmill): `ext` cannot generate an iff theorem here since `x` and `y` do not determine `R`.
 @[ext (iff := false)]

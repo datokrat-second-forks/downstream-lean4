@@ -133,7 +133,8 @@ lemma ext {x y : I.{u}} (h : homeomorph x = homeomorph y) : x = y :=
 
 /-- The symmetrization map `TopCat.I ⟶ TopCat.I`. -/
 def symm : I.{u} ⟶ I :=
-  ofHom ⟨homeomorph.symm ∘ unitInterval.symm ∘ homeomorph, by fun_prop⟩
+  ofHom ⟨homeomorph.symm ∘ unitInterval.symm ∘ homeomorph, by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in fun_prop)⟩
 
 @[simp]
 lemma homeomorph_symm (x : I) :

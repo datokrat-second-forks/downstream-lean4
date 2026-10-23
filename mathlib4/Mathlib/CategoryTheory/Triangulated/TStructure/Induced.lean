@@ -136,7 +136,7 @@ instance : t.minus.HasInducedTStructure t :=
   .mk' (by rintro X ⟨a, _⟩ n; exact ⟨⟨a, inferInstance⟩, ⟨a, inferInstance⟩⟩)
 
 instance : t.bounded.HasInducedTStructure t := by
-  dsimp [bounded]
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp [bounded])
   infer_instance
 
 /-- The t-structure induced on the full subcategory of `t`-bounded above objects. -/

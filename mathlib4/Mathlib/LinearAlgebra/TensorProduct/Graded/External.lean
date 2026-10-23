@@ -197,7 +197,8 @@ theorem tmul_of_gradedMul_of_tmul (j₁ i₂ : ι)
   -- the tower smul lemmas elaborate too slowly
   rw [Units.smul_def, Units.smul_def, ← Int.cast_smul_eq_zsmul R, ← Int.cast_smul_eq_zsmul R]
   -- Note: https://github.com/leanprover-community/mathlib4/pull/8386 had to specialize `map_smul` to avoid timeouts.
-  rw [← smul_tmul', LinearEquiv.map_smul, tmul_smul, LinearEquiv.map_smul, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← smul_tmul', LinearEquiv.map_smul, tmul_smul, LinearEquiv.map_smul, map_smul])
   dsimp
 
 variable {R}
@@ -235,6 +236,7 @@ theorem gradedMul_one (x : (⨁ i, 𝒜 i) ⊗[R] (⨁ i, ℬ i)) :
   -- Note: https://github.com/leanprover-community/mathlib4/pull/8386 had to specialize `map_one` to avoid timeouts.
   simpa only [RingHom.map_one, one_smul] using! gradedMul_algebraMap 𝒜 ℬ x 1
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 theorem gradedMul_assoc (x y z : DirectSum _ 𝒜 ⊗[R] DirectSum _ ℬ) :
     gradedMul R 𝒜 ℬ (gradedMul R 𝒜 ℬ x y) z = gradedMul R 𝒜 ℬ x (gradedMul R 𝒜 ℬ y z) := by
@@ -254,6 +256,7 @@ theorem gradedMul_assoc (x y z : DirectSum _ 𝒜 ⊗[R] DirectSum _ ℬ) :
   congr 2
   abel
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 theorem gradedComm_gradedMul (x y : DirectSum _ 𝒜 ⊗[R] DirectSum _ ℬ) :
     gradedComm R 𝒜 ℬ (gradedMul R 𝒜 ℬ x y)

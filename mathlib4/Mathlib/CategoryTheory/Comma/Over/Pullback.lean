@@ -178,6 +178,7 @@ instance : (star X).IsRightAdjoint := ⟨_, ⟨forgetAdjStar X⟩⟩
 `Over.forget X` is equivalent to the existence of each binary product `X ⨯ -`. -/
 instance : (forget X).IsLeftAdjoint := ⟨_, ⟨forgetAdjStar X⟩⟩
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Lifting to over `Y` and pulling back along `X ⟶ Y` is the same as lifting to over `X`. -/
 @[simps!]
@@ -206,6 +207,7 @@ def pushout {X Y : C} (f : X ⟶ Y) [HasPushoutsAlong f] :
     Under.homMk (pushout.desc (u.right ≫ pushout.inl _ _) (pushout.inr _ _)
       (by simp [← pushout.condition]))
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `Under.pushout f` is left adjoint to `Under.map f`. -/
 @[simps! unit_app counit_app]

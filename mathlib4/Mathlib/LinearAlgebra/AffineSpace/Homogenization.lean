@@ -139,7 +139,8 @@ theorem induction_of_point {motive : Homogenization R P → Prop} (p : P) (x : H
     (h : ∀ (v : V) (c : R), motive (ofVector v + c • ofPoint p)) : motive x := by
   cases x with | _ v c q =>
   convert h (v - c • (p -ᵥ q)) c using 1
-  simp only [map_sub, map_smul, ofVector_vsub]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [map_sub, map_smul, ofVector_vsub])
   match_scalars <;> norm_num
 
 /-- Over a division ring `R`, every element of `Homogenization R P` is either a nonzero multiple of
@@ -152,7 +153,8 @@ theorem ofVector_ofPoint_cases {R V P : Type*} [DivisionRing R] [AddCommGroup V]
   rcases eq_or_ne c 0 with rfl | hc
   · simpa using ofVector v
   · convert smul_ofPoint c (c⁻¹ • v +ᵥ p) hc using 1
-    rw [AffineMap.map_vadd, ofPoint_linear, vadd_eq_add, smul_add, map_smul, smul_inv_smul₀ hc]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [AffineMap.map_vadd, ofPoint_linear, vadd_eq_add, smul_add, map_smul, smul_inv_smul₀ hc])
 
 theorem span_range_ofPoint : Submodule.span R (Set.range (ofPoint (R := R) (P := P))) = ⊤ := by
   refine Submodule.eq_top_iff'.mpr fun x => ?_

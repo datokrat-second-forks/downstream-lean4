@@ -61,6 +61,7 @@ maps `k : ∀ i, I i` to `∏ᶜ fun (s : α) => (F s).obj (k s)`. -/
 noncomputable abbrev pointwiseProduct : (∀ i, I i) ⥤ C :=
   Functor.pi F ⋙ Pi.functor α
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp] Functor.pi in
@@ -91,7 +92,8 @@ noncomputable def coconePointwiseProductIso {c c' : ∀ i, Cocone (F i)} (e : �
   Cocone.ext (Pi.mapIso fun i ↦ (Cocone.forget _).mapIso (e i)) fun i ↦ by
     dsimp
     ext
-    simp [Functor.pi]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Functor.pi])
 
 /-- The natural morphism `colim_k (∏ᶜ s ↦ (F s).obj (k s)) ⟶ ∏ᶜ s ↦ colim_k (F s).obj (k s)`.
 A category has the `IPC` property of shape `α` if this morphism is an isomorphism as long
@@ -110,7 +112,8 @@ theorem ι_colimitPointwiseProductToProductColimit_π (k : ∀ i, I i) (s : α) 
     colimit.ι (pointwiseProduct F) k ≫
       colimitPointwiseProductToProductColimit F ≫ Pi.π _ s =
       Pi.π _ s ≫ colimit.ι (F s) (k s) := by
-  simp [colimitPointwiseProductToProductColimit, Functor.pi, Pi.functor]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [colimitPointwiseProductToProductColimit, Functor.pi, Pi.functor])
 
 end
 
@@ -129,7 +132,9 @@ noncomputable def pointwiseProductCompEvaluation (d : D) :
     pointwiseProduct F ⋙ (evaluation D C).obj d ≅
       pointwiseProduct (fun s => F s ⋙ (evaluation _ _).obj d) :=
   NatIso.ofComponents (fun k => piObjIso _ _)
-    (fun f => Pi.hom_ext _ _ (by simp [Functor.pi, ← NatTrans.comp_app]))
+    (fun f => Pi.hom_ext _ _ (by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp [Functor.pi, ← NatTrans.comp_app])))
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
@@ -141,7 +146,8 @@ noncomputable def evaluationCoconePointwiseProductIso (X : D) (c : ∀ i, Cocone
   Cocone.ext (piObjIso (fun i ↦ (c i).pt) X) fun j ↦ by
     dsimp
     ext
-    simp [Functor.pi, NatTrans.pi, ← NatTrans.comp_app]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Functor.pi, NatTrans.pi, ← NatTrans.comp_app])
 
 variable [∀ i, HasColimitsOfShape (I i) C] [HasColimitsOfShape (∀ i, I i) C]
 
@@ -158,7 +164,8 @@ theorem colimitPointwiseProductToProductColimit_app (d : D) :
   simp only [← Category.assoc]
   rw [Iso.eq_comp_inv]
   refine Pi.hom_ext _ _ (fun s => colimit.hom_ext (fun k => ?_))
-  simp [← NatTrans.comp_app, Functor.pi]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [← NatTrans.comp_app, Functor.pi])
 
 end functorCategory
 
@@ -219,7 +226,8 @@ lemma IsIPCOfShape.of_equiv {ι' : Type*} [HasProductsOfShape ι' C] [IsIPCOfSha
         h.whiskerEquivalence (Pi.equivalenceOfEquiv J e).symm
     · exact (Pi.equivalenceOfEquivCompPointwiseProduct F e)
     · -- Without the double `symm`, one runs into DTT hell
-      exact (Cocone.ext (Pi.whiskerEquiv e fun _ ↦ Iso.refl _).symm).symm
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      exact (Cocone.ext (Pi.whiskerEquiv e fun _ ↦ Iso.refl _).symm).symm)
 
 variable (C) in
 /-- A category `C` has the `w`-IPC property it satisfies the IPC-property for every `ι : Type w`. -/
@@ -238,6 +246,8 @@ section types
 
 variable {α : Type u} {I : α → Type u} [∀ i, SmallCategory (I i)] [∀ i, IsFiltered (I i)]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem Types.isIso_colimitPointwiseProductToProductColimit (F : ∀ i, I i ⥤ Type u) :

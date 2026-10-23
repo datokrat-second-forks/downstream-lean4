@@ -161,7 +161,8 @@ theorem isLUB_iff_of_subset_of_subset_closure {α : Type*} [TopologicalSpace α]
 theorem isGLB_iff_of_subset_of_subset_closure {α : Type*} [TopologicalSpace α] [Preorder α]
     [ClosedIciTopology α] {s t : Set α} (hst : s ⊆ t) (hts : t ⊆ closure s) {x : α} :
     IsGLB s x ↔ IsGLB t x :=
-  isLUB_iff_of_subset_of_subset_closure (α := αᵒᵈ) hst hts
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  isLUB_iff_of_subset_of_subset_closure (α := αᵒᵈ) hst hts)
 
 theorem Dense.isLUB_inter_iff {α : Type*} [TopologicalSpace α] [Preorder α] [ClosedIicTopology α]
     {s t : Set α} (hs : Dense s) (ht : IsOpen t) {x : α} :

@@ -85,9 +85,10 @@ lemma preReflection_preReflection (g : Dual R M) (h : f x = 2) :
     preReflection (preReflection x f y) (preReflection f (Dual.eval R M x) g) =
     (preReflection x f) ∘ₗ (preReflection y g) ∘ₗ (preReflection x f) := by
   ext m
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [h, preReflection_apply, mul_comm (g x) (f m), mul_two, mul_assoc, Dual.eval_apply,
     LinearMap.sub_apply, LinearMap.coe_comp, LinearMap.smul_apply, smul_eq_mul, smul_sub, sub_smul,
-    smul_smul, sub_mul, comp_apply, map_sub, map_smul, add_smul]
+    smul_smul, sub_mul, comp_apply, map_sub, map_smul, add_smul])
   abel
 
 /-- Given an element `x` in a module `M` and a linear form `f` on `M` for which `f x = 2`, we define
@@ -199,7 +200,8 @@ lemma reflection_mul_reflection_pow_apply (m : ℕ) (z : M)
     -- Apply the inductive hypothesis.
     rw [pow_succ', LinearEquiv.mul_apply, ih, LinearEquiv.mul_apply]
     -- Expand out all the reflections and use `hf`, `hg`.
-    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg])
     -- `m` can be written in the form `2 * k + e`, where `e` is `0` or `1`.
     push_cast
     rw [← Int.mul_ediv_add_emod m 2]
@@ -285,7 +287,8 @@ lemma reflection_mul_reflection_zpow_apply_self (m : ℤ)
     -- Apply the inductive hypothesis.
     rw [add_comm (m : ℤ) 1, zpow_one_add, LinearEquiv.mul_apply, LinearEquiv.mul_apply, ih]
     -- Expand out all the reflections and use `hf`, `hg`.
-    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg])
     -- Equate coefficients of `x` and `y`.
     match_scalars
     · linear_combination (norm := ring_nf) -S_eval_t_sub_two (m + 1)
@@ -295,7 +298,8 @@ lemma reflection_mul_reflection_zpow_apply_self (m : ℤ)
     rw [sub_eq_add_neg (-m : ℤ) 1, add_comm (-m : ℤ) (-1), zpow_add, zpow_neg_one, mul_inv_rev,
       reflection_inv, reflection_inv, LinearEquiv.mul_apply, LinearEquiv.mul_apply, ih]
     -- Expand out all the reflections and use `hf`, `hg`.
-    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [reflection_apply, map_add, map_sub, map_smul, hf, hg])
     -- Equate coefficients of `x` and `y`.
     match_scalars
     · linear_combination (norm := ring_nf) -S_eval_t_sub_two (-m)
@@ -316,7 +320,8 @@ lemma reflection_mul_reflection_mul_reflection_zpow_apply_self (m : ℤ)
       ((S R m).eval t + (S R (m - 1)).eval t) • x + ((S R m).eval t * -g x) • y := by
   rw [LinearEquiv.mul_apply, reflection_mul_reflection_zpow_apply_self hf hg m t ht]
   -- Expand out all the reflections and use `hf`, `hg`.
-  simp only [reflection_apply, map_add, map_smul, hg]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [reflection_apply, map_add, map_smul, hg])
   -- Equate coefficients of `x` and `y`.
   module
 
@@ -346,10 +351,11 @@ lemma Dual.eq_of_preReflection_mapsTo [CharZero R] [IsDomain R] [IsTorsionFree R
   let u := reflection hg₁ * reflection hf₁
   have hu : u = LinearMap.id (R := R) (M := M) + (f - g).smulRight x := by
     ext y
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [u, reflection_apply, hg₁, two_smul, LinearEquiv.coe_toLinearMap_mul,
       LinearMap.id_coe, LinearEquiv.coe_coe, Module.End.mul_apply, LinearMap.add_apply, id_eq,
       LinearMap.coe_smulRight, LinearMap.sub_apply, map_sub, map_smul, sub_add_cancel_left,
-      smul_neg, sub_neg_eq_add, sub_smul]
+      smul_neg, sub_neg_eq_add, sub_smul])
     abel
   replace hu : ∀ (n : ℕ),
       ↑(u ^ n) = LinearMap.id (R := R) (M := M) + (n : R) • (f - g).smulRight x := by
@@ -408,9 +414,10 @@ lemma reflection_reflection_iterate
       intro z
       rw [smul_smul, hgxfy, smul_smul, ← Nat.cast_smul_eq_nsmul R (2 * 2), show 2 * 2 = 4 from rfl,
         Nat.cast_ofNat]
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [iterate_succ', comp_apply, ih, two_smul, smul_sub, smul_add, map_add,
       LinearEquiv.trans_apply, reflection_apply_self, map_neg, reflection_apply, neg_sub, map_sub,
-      map_nsmul, map_smul, smul_neg, hz, add_smul]
+      map_nsmul, map_smul, smul_neg, hz, add_smul])
     abel
 
 lemma infinite_range_reflection_reflection_iterate_iff [HasUniqueDiv M]

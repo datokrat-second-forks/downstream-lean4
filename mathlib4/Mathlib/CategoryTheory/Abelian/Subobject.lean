@@ -53,9 +53,10 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
   · change (kernelOrderHom X).comp (cokernelOrderHom X) = _
     refine OrderHom.ext _ _ (funext (Subobject.ind _ ?_))
     intro A f hf
+    (set_option backward.instanceTypes.subsingletons.prop false in
     dsimp only [OrderHom.comp_coe, Function.comp_apply, cokernelOrderHom_coe, Subobject.lift_mk,
       kernelOrderHom_coe, OrderHom.id_coe, id, unop_op, Quiver.Hom.unop_op]
-    refine Subobject.mk_eq_mk_of_comm _ _ ⟨?_, ?_, ?_, ?_⟩ ?_
+    refine Subobject.mk_eq_mk_of_comm _ _ ⟨?_, ?_, ?_, ?_⟩ ?_)
     · exact Abelian.monoLift f _ (kernel.condition (cokernel.π f))
     · exact kernel.lift _ _ (cokernel.condition f)
     · simp only [← cancel_mono (kernel.ι (cokernel.π f)), Category.assoc, image.fac, monoLift_comp,

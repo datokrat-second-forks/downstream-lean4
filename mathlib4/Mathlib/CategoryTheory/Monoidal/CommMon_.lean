@@ -322,6 +322,7 @@ instance (A : CommMon C) : (commMonToLaxBraidedObj A).LaxBraided where
 
 variable (C)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `CommMon.equivLaxBraidedFunctorPUnit`. -/
@@ -333,6 +334,7 @@ def commMonToLaxBraided : CommMon C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 1
       { hom := { app _ := f.hom.hom }
         isMonoidal := { } } }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `CommMon.equivLaxBraidedFunctorPUnit`. -/

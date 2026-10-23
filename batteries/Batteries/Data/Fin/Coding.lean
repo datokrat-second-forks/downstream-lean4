@@ -106,14 +106,17 @@ def encodeChar (c : Char) : Fin Char.count :=
     Char.ofNatAux (i.val + (Char.maxSurrogate + 1 - Char.minSurrogate)) (by grind)
 
 @[simp] theorem encodeChar_decodeChar (x) : encodeChar (decodeChar x) = x := by
-  simp only [decodeChar, encodeChar]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [decodeChar, encodeChar])
   split
   · simp [*]
   · have : ¬ x.val + (Char.maxSurrogate + 1 - Char.minSurrogate) < Char.minSurrogate := by grind
     simp [*]
 
 @[simp] theorem decodeChar_encodeChar (x) : decodeChar (encodeChar x) = x := by
-  ext; simp only [decodeChar, encodeChar]
+  ext
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [decodeChar, encodeChar])
   split
   · simp only [Char.ofNatAux, Char.toNat]; rfl
   · have : ¬ x.toNat - (Char.maxSurrogate + 1 - Char.minSurrogate) < Char.minSurrogate := by

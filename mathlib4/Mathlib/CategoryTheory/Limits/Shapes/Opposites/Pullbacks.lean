@@ -396,7 +396,7 @@ lemma op_pullbackMap {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [HasPul
         (by simp [eq₁, ← op_comp]) (by simp [eq₂, ← op_comp]) ≫
         (pushoutIsoOpPullback _ _).hom := by
   rw [Iso.eq_inv_comp]
-  ext <;> simp [← op_comp]
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp [← op_comp])
 
 lemma op_pushoutMap {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPushout f₁ f₂]
     (g₁ : T ⟶ Y) (g₂ : T ⟶ Z) [HasPushout g₁ g₂]
@@ -408,7 +408,7 @@ lemma op_pushoutMap {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPush
         (by simp [eq₁, ← op_comp]) (by simp [eq₂, ← op_comp]) ≫
         (pullbackIsoOpPushout _ _).hom := by
   rw [← Category.assoc, ← Iso.comp_inv_eq]
-  ext <;> simp [← op_comp]
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp [← op_comp])
 
 end Map
 

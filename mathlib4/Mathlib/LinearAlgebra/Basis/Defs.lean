@@ -126,7 +126,9 @@ theorem repr_symm_single : b.repr.symm (Finsupp.single i c) = c • b i :=
   calc
     b.repr.symm (Finsupp.single i c) = b.repr.symm (c • Finsupp.single i (1 : R)) := by
       { rw [Finsupp.smul_single', mul_one] }
-    _ = c • b i := by rw [map_smul, repr_symm_single_one]
+    _ = c • b i := by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [map_smul, repr_symm_single_one])
 
 @[simp]
 theorem repr_self : b.repr (b i) = Finsupp.single i 1 :=
@@ -440,7 +442,8 @@ theorem reindexRange_repr' (x : M) {bi : M} {i : ι} (h : b i = bi) :
     simp only [Pi.add_apply, map_add, Finsupp.coe_add]
   · intro c x
     ext i
-    simp
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp)
   · intro i
     ext j
     simp only [reindexRange_repr_self]
@@ -641,7 +644,8 @@ theorem equiv'_symm_apply (f : M → M') (g : M' → M) (hf hg hgf hfg) (i : ι'
 theorem sum_repr_mul_repr {ι'} [Fintype ι'] (b' : Basis ι' R M) (x : M) (i : ι) :
     (∑ j : ι', b.repr (b' j) i * b'.repr x j) = b.repr x i := by
   conv_rhs => rw [← b'.sum_repr x]
-  simp_rw [map_sum, map_smul, Finset.sum_apply']
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [map_sum, map_smul, Finset.sum_apply'])
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Finsupp.smul_apply, smul_eq_mul, mul_comm]
 

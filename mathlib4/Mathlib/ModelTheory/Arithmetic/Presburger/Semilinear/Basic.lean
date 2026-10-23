@@ -562,9 +562,11 @@ private theorem fract_mem_fundamentalDomain (x) : hs.fract x ∈ hs.fundamentalD
   intro i
   constructor
   · rw [hs.toRatVec_fract_eq, add_sub_cancel_left]
-    simp [← hs.basis_apply, Finsupp.single_apply]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← hs.basis_apply, Finsupp.single_apply])
   · rw [hs.toRatVec_fract_eq, add_sub_cancel_left]
-    simp [← hs.basis_apply, Finsupp.single_apply, Int.fract_lt_one]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← hs.basis_apply, Finsupp.single_apply, Int.fract_lt_one])
 
 private theorem fract_eq_self_of_mem_fundamentalDomain {x} (hx : x ∈ hs.fundamentalDomain) :
     hs.fract x = x := by

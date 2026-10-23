@@ -191,8 +191,9 @@ theorem range_proj_eq_span (A : Finset β) :
 open scoped Classical in
 /-- Composition of projections: `proj A (proj B x) = proj (A ∩ B) x`. -/
 theorem proj_comp (A B : Finset β) (x : X) : b.proj A (b.proj B x) = b.proj (A ∩ B) x := by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [proj_apply, map_sum, map_smul, b.ortho, Pi.single_apply, ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', smul_ite, smul_zero, Finset.sum_ite_mem]
+    Finset.sum_ite_eq', smul_ite, smul_zero, Finset.sum_ite_mem])
   congr 1
   ext _
   simp [and_comm]
@@ -481,6 +482,7 @@ lemma basisCoeff_spec (n : ℕ) (x : X) :
     basisCoeff D n x • D.e n = (succSub D.P n) x :=
   Classical.choose_spec (exists_coeff D n x)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Constructs a Schauder basis from rank one decomposition. -/
 def basis : SchauderBasis 𝕜 X :=
   let coeff := basisCoeff D

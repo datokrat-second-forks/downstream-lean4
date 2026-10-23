@@ -107,7 +107,8 @@ def lapply (a : α) : (α →₀ M) →ₗ[R] M :=
   { Finsupp.applyAddHom a with map_smul' := fun _ _ => rfl }
 
 instance [Nonempty α] [FaithfulSMul R M] : FaithfulSMul R (α →₀ M) :=
-  .of_injective (Finsupp.lsingle <| Classical.arbitrary _) (Finsupp.single_injective _)
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  .of_injective (Finsupp.lsingle <| Classical.arbitrary _) (Finsupp.single_injective _))
 
 section LSubtypeDomain
 
@@ -333,7 +334,8 @@ that commutes with all `R`-endomorphisms of `ι →₀ M`. -/
       (fun _ _ h h' ↦ by rw [smul_add, map_add, h, h', map_add, smul_add]) fun i m ↦ by
         ext j
         change f (Finsupp.lapply j ∘ₗ g ∘ₗ Finsupp.lsingle i • m) = _
-        rw [map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        rw [map_smul])
         simp }
   map_one' := by ext; simp
   map_mul' _ _ := by ext; simp
@@ -342,6 +344,7 @@ that commutes with all `R`-endomorphisms of `ι →₀ M`. -/
 
 variable {ι}
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- If `M` is an `R`-module and `ι` is a nonempty type, then every additive endomorphism
 of `ι →₀ M` that commutes with all `R`-endomorphisms of `ι →₀ M` comes from an additive
 endomorphism of `M` that commutes with all `R`-endomorphisms of `M`.

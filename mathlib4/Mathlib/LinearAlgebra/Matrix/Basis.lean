@@ -89,7 +89,8 @@ theorem toMatrix_unitsSMul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι →
     e.toMatrix (e.unitsSMul w) = diagonal ((↑) ∘ w) := by
   ext i j
   by_cases h : i = j <;>
-    simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def])
 
 /-- The basis constructed by `isUnitSMul` has vectors given by a diagonal matrix. -/
 @[simp]
@@ -133,7 +134,8 @@ def toMatrixEquiv [Fintype ι] (e : Basis ι R M) : (ι → M) ≃ₗ[R] Matrix 
   map_smul' := by
     intro c v
     ext i j
-    rw [e.toMatrix_apply, Pi.smul_apply, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [e.toMatrix_apply, Pi.smul_apply, map_smul])
     rfl
   invFun m j := ∑ i, m i j • e i
   left_inv := by

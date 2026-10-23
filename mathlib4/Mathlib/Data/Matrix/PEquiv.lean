@@ -162,7 +162,8 @@ theorem toMatrix_swap [DecidableEq n] [AddGroupWithOne α] (i j : n) :
       (1 : Matrix n n α) - (single i i).toMatrix - (single j j).toMatrix + (single i j).toMatrix +
         (single j i).toMatrix := by
   ext
-  dsimp [toMatrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, Matrix.one_apply]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dsimp [toMatrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, Matrix.one_apply])
   split_ifs <;> simp_all
 
 @[simp]

@@ -61,7 +61,8 @@ lemma CoconeTypes.isColimit_iff (c : CoconeTypes.{u} F) :
           congrm $(hc.fac (F.coconeTypesEquiv.symm s) j) x
         uniq s m hm := by
           ext x
-          congrm $(hc.funext fun j ↦ funext fun y ↦ by simp [← hm j]) x }⟩
+          congrm $(hc.funext fun j ↦ funext fun y ↦ by
+            (set_option backward.dsimp.instanceTypes false in simp [← hm j])) x }⟩
   · rintro ⟨hc⟩
     classical
     refine ⟨⟨fun x y h ↦ ?_, fun x ↦ ?_⟩⟩

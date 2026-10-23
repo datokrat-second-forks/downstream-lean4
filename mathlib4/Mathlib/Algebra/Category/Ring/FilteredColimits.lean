@@ -71,7 +71,8 @@ instance colimitSemiring : Semiring.{max v u} <| R.{v, u} F :=
       obtain ⟨j, x⟩ := x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id]
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp)
       rw [mul_zero x]
       rfl
     zero_mul := fun x => by
@@ -79,7 +80,8 @@ instance colimitSemiring : Semiring.{max v u} <| R.{v, u} F :=
       obtain ⟨j, x⟩ := x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id]
-      dsimp
+      (set_option backward.dsimp.instanceTypes false in
+      dsimp)
       rw [zero_mul x]
       rfl
     left_distrib := fun x y z => by

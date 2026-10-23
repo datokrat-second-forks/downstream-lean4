@@ -148,6 +148,7 @@ noncomputable def presheaf : Cᵒᵖ ⥤ Ab where
 lemma presheaf_obj_coe (X : Cᵒᵖ) :
     (M.presheaf.obj X : Type _) = M.obj X := rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma presheaf_map_apply_coe {X Y : Cᵒᵖ} (f : X ⟶ Y) (x : M.obj X) :
     DFunLike.coe (α := M.obj X) (β := fun _ ↦ M.obj Y) (M.presheaf.map f).hom x = M.map f x := rfl
@@ -175,6 +176,7 @@ noncomputable def toPresheaf : PresheafOfModules.{v} R ⥤ Cᵒᵖ ⥤ Ab where
 lemma toPresheaf_obj_coe (X : Cᵒᵖ) :
     (((toPresheaf R).obj M).obj X : Type _) = M.obj X := rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma toPresheaf_map_app_apply (f : M₁ ⟶ M₂) (X : Cᵒᵖ) (x : M₁.obj X) :
     DFunLike.coe (α := M₁.obj X) (β := fun _ ↦ M₂.obj X)
@@ -222,7 +224,10 @@ noncomputable def homMk (φ : M₁.presheaf ⟶ M₂.presheaf)
     M₁ ⟶ M₂ where
   app X := ModuleCat.ofHom
     { toFun := φ.app X
-      map_add' := by simp +instances
+      map_add' := by
+        (set_option backward.dsimp.instanceTypes false in
+        set_option backward.instanceTypes.subsingletons.prop false in
+        simp +instances)
       map_smul' := hφ X }
   naturality := fun f ↦ by
     ext x
@@ -304,11 +309,12 @@ noncomputable def unit : PresheafOfModules R where
   obj X := ↧(R.obj X)
   -- TODO: after https://github.com/leanprover-community/mathlib4/pull/19511 we need to hint `(Y := ...)`.
   -- This suggests `restrictScalars` needs to be redesigned.
-  map {X Y} f := ModuleCat.ofHom
+  map {X Y} f := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ModuleCat.ofHom
       (Y := (ModuleCat.restrictScalars (R.map f).hom).obj ↧(R.obj Y))
     { toFun := fun x ↦ R.map f x
       map_add' := by simp
-      map_smul' := by cat_disch }
+      map_smul' := by cat_disch })
 
 lemma unit_map_one {X Y : Cᵒᵖ} (f : X ⟶ Y) : (unit R).map f (1 : R.obj X) = (1 : R.obj Y) :=
   (R.map f).hom.map_one
@@ -353,6 +359,7 @@ lemma sectionsMap_comp {M N P : PresheafOfModules.{v} R} (f : M ⟶ N) (g : N �
 lemma sectionsMap_id {M : PresheafOfModules.{v} R} (s : M.sections) :
     sectionsMap (𝟙 M) s = s := rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The bijection `(unit R ⟶ M) ≃ M.sections` for `M : PresheafOfModules R`. -/
@@ -405,6 +412,7 @@ set_option backward.isDefEq.respectTransparency false in
 noncomputable def forgetToPresheafModuleCatObjMap {Y Z : Cᵒᵖ} (f : Y ⟶ Z) :
     forgetToPresheafModuleCatObjObj X hX M Y ⟶
       forgetToPresheafModuleCatObjObj X hX M Z :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   ModuleCat.ofHom
     (X := forgetToPresheafModuleCatObjObj X hX M Y) (Y := forgetToPresheafModuleCatObjObj X hX M Z)
   { toFun := fun x => M.map f x
@@ -413,7 +421,7 @@ noncomputable def forgetToPresheafModuleCatObjMap {Y Z : Cᵒᵖ} (f : Y ⟶ Z) 
       simp only [ModuleCat.restrictScalars.smul_def (R := R.obj X), RingHom.id_apply, M.map_smul]
       rw [← RingCat.comp_apply, ← R.map_comp]
       congr
-      apply hX.hom_ext }
+      apply hX.hom_ext })
 
 @[simp]
 lemma forgetToPresheafModuleCatObjMap_apply {Y Z : Cᵒᵖ} (f : Y ⟶ Z) (m : M.obj Y) :
@@ -449,12 +457,13 @@ morphism level `(f : M ⟶ N) ↦ (c ↦ f(c))`.
 noncomputable def forgetToPresheafModuleCatMap
     (X : Cᵒᵖ) (hX : Limits.IsInitial X) {M N : PresheafOfModules.{v} R} (f : M ⟶ N) :
     forgetToPresheafModuleCatObj X hX M ⟶ forgetToPresheafModuleCatObj X hX N where
-  app Y := ModuleCat.ofHom
+  app Y := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    ModuleCat.ofHom
       (X := (forgetToPresheafModuleCatObj X hX M).obj Y)
       (Y := (forgetToPresheafModuleCatObj X hX N).obj Y)
     { toFun := f.app Y
       map_add' := by simp
-      map_smul' := fun r ↦ (f.app Y).hom.map_smul (R.map (hX.to Y) _) }
+      map_smul' := fun r ↦ (f.app Y).hom.map_smul (R.map (hX.to Y) _) })
   naturality Y Z g := by
     ext x
     exact naturality_apply f g x

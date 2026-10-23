@@ -393,11 +393,13 @@ theorem _root_.LinearMap.existsUnique_eq_smul_id_of_finrank_eq_one
     simp only [this, true_and]
     intro d hcd
     rw [LinearMap.ext_iff] at hcd
-    simpa using (LinearEquiv.congr_arg (e := e.symm) (hcd (e 1))).symm
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa using (LinearEquiv.congr_arg (e := e.symm) (hcd (e 1))).symm)
   ext x
   have (x : M) : x = (e.symm x) • (e 1) := by simp [← LinearEquiv.map_smul]
   rw [this x]
-  simp only [hc, map_smul, LinearMap.smul_apply, LinearMap.id_coe, id_eq]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [hc, map_smul, LinearMap.smul_apply, LinearMap.id_coe, id_eq])
   rw [← this]
 
 /-- Endomorphisms of a free module of rank one are homotheties. -/

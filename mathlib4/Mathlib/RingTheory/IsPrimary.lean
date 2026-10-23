@@ -118,7 +118,8 @@ lemma isPrimary_iff_zero_divisor_quotient_imp_nilpotent_smul :
     S.IsPrimary ↔ S ≠ ⊤ ∧ ∀ (r : R) (x : M ⧸ S), x ≠ 0 → r • x = 0 →
       ∃ n : ℕ, r ^ n • (⊤ : Submodule R (M ⧸ S)) = ⊥ := by
   refine (and_congr_right fun _ ↦ ?_)
-  simp_rw [S.mkQ_surjective.forall, ← map_smul, ne_eq, ← LinearMap.mem_ker, ker_mkQ]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [S.mkQ_surjective.forall, ← map_smul, ne_eq, ← LinearMap.mem_ker, ker_mkQ])
   congr! 2
   rw [forall_comm, ← or_iff_not_imp_left,
     ← LinearMap.range_eq_top.mpr S.mkQ_surjective, ← map_top]

@@ -268,11 +268,13 @@ theorem starAlgHomClass_ext [T2Space B] {F : Type*} {a : A}
     [FunLike F (elemental R a) B] [AlgHomClass F R _ B] [StarHomClass F _ B]
     {φ ψ : F} (hφ : Continuous φ)
     (hψ : Continuous ψ) (h : φ ⟨a, self_mem R a⟩ = ψ ⟨a, self_mem R a⟩) : φ = ψ := by
-  refine StarAlgHomClass.ext_topologicalClosure hφ hψ fun x => ?_
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  refine StarAlgHomClass.ext_topologicalClosure hφ hψ fun x => ?_)
   refine adjoin_induction_subtype x ?_ ?_ ?_ ?_ ?_
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   exacts [fun y hy => by simpa only [Set.mem_singleton_iff.mp hy] using! h, fun r => by
     simp only [AlgHomClass.commutes], fun x y hx hy => by simp only [map_add, hx, hy],
-    fun x y hx hy => by simp only [map_mul, hx, hy], fun x hx => by simp only [map_star, hx]]
+    fun x y hx hy => by simp only [map_mul, hx, hy], fun x hx => by simp only [map_star, hx]])
 
 end elemental
 

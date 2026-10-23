@@ -471,7 +471,8 @@ adjoint and going back is isomorphic to the identity functor. -/
 @[simps!]
 def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
     𝟭 (Algebra F) ≅ Algebra.toCoalgebraOf adj ⋙ Coalgebra.toAlgebraOf adj :=
-  NatIso.ofComponents (fun _ ↦ Algebra.isoMk <| Iso.refl _)
+  NatIso.ofComponents (fun _ ↦
+    (set_option backward.dsimp.instanceTypes false in Algebra.isoMk <| Iso.refl _))
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -480,7 +481,8 @@ adjoint and going back is isomorphic to the identity functor. -/
 @[simps!]
 def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
     Coalgebra.toAlgebraOf adj ⋙ Algebra.toCoalgebraOf adj ≅ 𝟭 (Coalgebra G) :=
-  NatIso.ofComponents (fun _ ↦ Coalgebra.isoMk <| Iso.refl _)
+  NatIso.ofComponents (fun _ ↦
+    (set_option backward.dsimp.instanceTypes false in Coalgebra.isoMk <| Iso.refl _))
 
 set_option backward.defeqAttrib.useBackward true in
 /-- If `F` is left adjoint to `G`, then the category of algebras over `F` is equivalent to the

@@ -82,7 +82,7 @@ noncomputable def Arrow.shrinkHomsEquiv (C : Type u) [Category.{v} C] [LocallySm
   toFun := (ShrinkHoms.equivalence C).inverse.mapArrow.obj
   invFun := (ShrinkHoms.equivalence C).functor.mapArrow.obj
   left_inv _ := by simp
-  right_inv _ := by simp
+  right_inv _ := by (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.defeqAttrib.useBackward true in
 /-- The bijection `Arrow (Shrink C) ≃ Arrow C`. -/

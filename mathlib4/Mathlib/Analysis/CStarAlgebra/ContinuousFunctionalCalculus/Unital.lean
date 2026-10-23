@@ -287,7 +287,7 @@ section cfcL
 noncomputable def cfcL {a : A} (ha : p a) : C(spectrum R a, R) →L[R] A :=
   { cfcHom ha with
     toFun := cfcHom ha
-    map_smul' := map_smul _ }
+    map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _) }
 
 end cfcL
 
@@ -528,7 +528,7 @@ lemma cfc_smul {S : Type*} [SMul S R] [ContinuousConstSMul S R]
   by_cases ha : p a
   · rw [cfc_apply f a, cfc_apply _ a]
     simp_rw [← Pi.smul_def, ← smul_one_smul R s _]
-    rw [← map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in rw [← map_smul])
     congr
   · grind [smul_zero]
 

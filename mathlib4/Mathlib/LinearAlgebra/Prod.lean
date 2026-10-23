@@ -95,7 +95,9 @@ theorem snd_surjective : Function.Surjective (snd R M M₂) := fun x => ⟨(0, x
 def prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : M →ₗ[R] M₂ × M₃ where
   toFun := Function.prod f g
   map_add' x y := by simp only [Function.prod_apply, Prod.mk_add_mk, map_add]
-  map_smul' c x := by simp only [Function.prod_apply, Prod.smul_mk, map_smul, RingHom.id_apply]
+  map_smul' c x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Function.prod_apply, Prod.smul_mk, map_smul, RingHom.id_apply])
 
 theorem coe_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) : ⇑(f.prod g) = Function.prod f g :=
   rfl
@@ -891,7 +893,8 @@ def graph : Submodule R (M × M₂) where
   zero_mem' := Eq.symm (map_zero f)
   smul_mem' c x (hx : _ = _) := by
     change _ • _ = f (_ • _)
-    rw [map_smul, hx]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [map_smul, hx])
 
 @[simp]
 theorem mem_graph_iff (x : M × M₂) : x ∈ f.graph ↔ x.2 = f x.1 :=

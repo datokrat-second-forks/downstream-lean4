@@ -176,6 +176,7 @@ lemma right_coherence_app {ψ ψ' : CatCospanTransform F G F' G'}
     α.base.app (G.obj x) ≫ ψ'.squareRight.iso.hom.app x :=
   congr_app α.right_coherence x
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Whiskering left of a `CatCospanTransformMorphism` by a `CatCospanTransform`. -/
@@ -199,13 +200,15 @@ def whiskerRight {ψ ψ' : CatCospanTransform F G F' G'} (α : ψ ⟶ ψ')
   base := Functor.whiskerRight α.base φ.base
   left_coherence := by
     ext x
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     simp only [CatCommSq.vComp_iso_hom_app, Category.assoc]
     rw [← Functor.map_comp_assoc, ← left_coherence_app, Functor.map_comp_assoc]
     simp
   right_coherence := by
     ext x
-    dsimp
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp)
     simp only [CatCommSq.vComp_iso_hom_app, Category.assoc]
     rw [← Functor.map_comp_assoc, ← right_coherence_app, Functor.map_comp_assoc]
     simp
@@ -305,6 +308,7 @@ def baseIso : ψ.base ≅ ψ'.base where
   inv_hom_id := by simp [← category_comp_base]
 
 omit [IsIso f] in
+set_option backward.instanceTypes.subsingletons.decidable false in
 lemma isIso_iff : IsIso f ↔ IsIso f.left ∧ IsIso f.base ∧ IsIso f.right where
   mp h := ⟨inferInstance, inferInstance, inferInstance⟩
   mpr h := by
@@ -315,6 +319,7 @@ lemma isIso_iff : IsIso f ↔ IsIso f.left ∧ IsIso f.base ∧ IsIso f.right wh
 
 end Iso
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The left unitor isomorphism for categorical cospan transformations. -/
@@ -323,6 +328,7 @@ def leftUnitor (φ : CatCospanTransform F G F' G') :
     (CatCospanTransform.id F G).comp φ ≅ φ :=
   mkIso φ.left.leftUnitor φ.right.leftUnitor φ.base.leftUnitor
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The right unitor isomorphism for categorical cospan transformations. -/
@@ -331,6 +337,7 @@ def rightUnitor (φ : CatCospanTransform F G F' G') :
     φ.comp (.id F' G') ≅ φ :=
   mkIso φ.left.rightUnitor φ.right.rightUnitor φ.base.rightUnitor
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The associator isomorphism for categorical cospan transformations. -/

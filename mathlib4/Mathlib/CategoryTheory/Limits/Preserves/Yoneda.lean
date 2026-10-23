@@ -69,7 +69,8 @@ theorem yonedaYonedaColimit_app_inv {X : C} : ((yonedaYonedaColimit F).app (op X
   change _ = colimit.ι (F ⋙ coyoneda.obj (op (yoneda.obj X))) j ≫
     colimit.post F (coyoneda.obj (op (yoneda.obj X)))
   rw [colimit.ι_post]
-  simp only [← CategoryTheory.Functor.assoc, comp_evaluation]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [← CategoryTheory.Functor.assoc, comp_evaluation])
   rw [ι_preservesColimitIso_inv_assoc]
   simp only [← comp_evaluation, comp_obj, evaluation_obj_obj, yoneda_obj_obj, uliftFunctor_obj,
     whiskerLeft_app, uliftFunctor_map, Functor.comp_map, evaluation_obj_map, yoneda_map_app]

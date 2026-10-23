@@ -37,6 +37,8 @@ instance (M : Grp C) (X : Cᵒᵖ) : Small.{w} ((yonedaGrp.obj M).obj X) := by
   dsimp
   infer_instance
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The Yoneda embedding `Mon C ⥤ Cᵒᵖ ⥤ MonCat.{w}` for a locally `w`-small category `C`. -/
@@ -51,8 +53,11 @@ open MonObj
 /-- The type `(shrinkYonedaMon.obj M).obj Y` is equivalent to `Y.unop ⟶ M.X`. -/
 noncomputable def shrinkYonedaMonObjObjEquiv {M : Mon C} {Y : Cᵒᵖ} :
     (shrinkYonedaMon.{w}.obj M).obj Y ≃* (Y.unop ⟶ M.X) :=
-  Shrink.mulEquiv
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  Shrink.mulEquiv)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma shrinkYonedaMon_obj_map_shrinkYonedaMonObjObjEquiv_symm
@@ -66,6 +71,8 @@ lemma shrinkYonedaMonObjObjEquiv_symm_comp {M : Mon C} {Y Y' : C} (g : Y' ⟶ Y)
     (shrinkYonedaMon.obj _).map g.op (shrinkYonedaMonObjObjEquiv.symm f) :=
   (shrinkYonedaMon_obj_map_shrinkYonedaMonObjObjEquiv_symm g.op f).symm
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma shrinkYonedaMon_map_app_shrinkYonedaObjObjEquiv_symm
@@ -74,6 +81,8 @@ lemma shrinkYonedaMon_map_app_shrinkYonedaObjObjEquiv_symm
       shrinkYonedaMonObjObjEquiv.symm (f ≫ g.hom) := by
   simp [shrinkYonedaMon, shrinkYonedaMonObjObjEquiv]
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The Yoneda embedding `Grp C ⥤ Cᵒᵖ ⥤ GrpCat.{w}` for a locally `w`-small category `C`. -/
@@ -86,8 +95,11 @@ noncomputable def shrinkYonedaGrp :
 /-- The type `(shrinkYonedaGrp.obj M).obj Y` is equivalent to `Y.unop ⟶ M.X`. -/
 noncomputable def shrinkYonedaGrpObjObjEquiv {M : Grp C} {Y : Cᵒᵖ} :
     (shrinkYonedaGrp.{w}.obj M).obj Y ≃* (Y.unop ⟶ M.X) :=
-  Shrink.mulEquiv
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  Shrink.mulEquiv)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma shrinkYonedaGrp_obj_map_shrinkYonedaGrpObjObjEquiv_symm
@@ -101,6 +113,8 @@ lemma shrinkYonedaGrpObjObjEquiv_symm_comp {M : Grp C} {Y Y' : C} (g : Y' ⟶ Y)
     (shrinkYonedaGrp.obj _).map g.op (shrinkYonedaGrpObjObjEquiv.symm f) :=
   (shrinkYonedaGrp_obj_map_shrinkYonedaGrpObjObjEquiv_symm g.op f).symm
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma shrinkYonedaGrp_map_app_shrinkYonedaObjObjEquiv_symm

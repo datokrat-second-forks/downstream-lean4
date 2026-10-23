@@ -514,7 +514,9 @@ lemma shrinkFunctor_ι_comp_eq_iff_isAmalgamation [LocallySmall.{w} C] (F : Cᵒ
   dsimp [Presieve.FamilyOfElements.IsAmalgamation]
   refine ⟨?_, fun h ↦ ?_⟩
   · rintro rfl Y f hf
-    simp [shrinkYonedaEquiv_naturality, shrinkYonedaEquiv_comp, shrinkYonedaEquiv_shrinkYoneda_map]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [shrinkYonedaEquiv_naturality, shrinkYonedaEquiv_comp,
+      shrinkYonedaEquiv_shrinkYoneda_map])
   · ext Y ⟨u, hu⟩
     convert! h (shrinkYonedaObjObjEquiv u) hu
     · rw [shrinkYonedaEquiv_naturality, shrinkYonedaEquiv_comp, shrinkYonedaEquiv_shrinkYoneda_map]
@@ -549,7 +551,8 @@ theorem isSheafFor_iff_yonedaSheafCondition {P : Cᵒᵖ ⥤ Type v₁} :
   rw [NatTrans.ext_iff, NatTrans.ext_iff, funext_iff, funext_iff]
   congr!
   rw [ConcreteCategory.hom_ext_iff, ConcreteCategory.hom_ext_iff]
-  dsimp [functor]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [functor])
   simp only [Subtype.forall, shrinkYonedaObjObjEquiv.forall_congr_left, Equiv.apply_symm_apply]
   congr!
   simp

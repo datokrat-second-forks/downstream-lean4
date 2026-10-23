@@ -103,7 +103,8 @@ instance preservesLimit_diagramFunctor
         uniq := by
           intro E m hm
           refine Multiequalizer.hom_ext _ _ _ (fun a => limit_obj_ext (fun j => ?_))
-          dsimp [liftToDiagramLimitObj]
+          (set_option backward.instanceTypes.subsingletons.prop false in
+          dsimp [liftToDiagramLimitObj])
           rw [Multiequalizer.lift_ι, Category.assoc, liftToDiagramLimitObjAux_fac, ← hm,
             Category.assoc]
           dsimp
@@ -302,7 +303,8 @@ lemma toSheafify_plusPlusIsoSheafify_hom (P : Cᵒᵖ ⥤ D) :
     Adjunction.unit_leftAdjointUniq_hom_app (plusPlusAdjunction J D) (sheafificationAdjunction J D)
       P
   ext1 P
-  dsimp [GrothendieckTopology.toSheafify, plusPlusAdjunction]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp [GrothendieckTopology.toSheafify, plusPlusAdjunction])
   rw [Category.comp_id]
 
 instance [PreservesLimits (forget D)] [HasFiniteLimits D]

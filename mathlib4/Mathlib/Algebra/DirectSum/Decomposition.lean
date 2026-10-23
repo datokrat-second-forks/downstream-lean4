@@ -259,7 +259,9 @@ variable [Decomposition ℳ]
 a module to a direct sum of components. -/
 def decomposeLinearEquiv : M ≃ₗ[R] ⨁ i, ℳ i :=
   LinearEquiv.symm
-    { (decomposeAddEquiv ℳ).symm with map_smul' := map_smul (DirectSum.coeLinearMap ℳ) }
+    { (decomposeAddEquiv ℳ).symm with
+      map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in
+        map_smul (DirectSum.coeLinearMap ℳ)) }
 
 theorem decomposeLinearEquiv_apply (m : M) :
     decomposeLinearEquiv ℳ m = decompose ℳ m := rfl
@@ -269,7 +271,8 @@ theorem decomposeLinearEquiv_symm_apply (m : ⨁ i, ℳ i) :
 
 @[simp]
 theorem decompose_smul (r : R) (x : M) : decompose ℳ (r • x) = r • decompose ℳ x :=
-  map_smul (decomposeLinearEquiv ℳ) r x
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  map_smul (decomposeLinearEquiv ℳ) r x)
 
 @[simp] theorem decomposeLinearEquiv_symm_comp_lof (i : ι) :
     (decomposeLinearEquiv ℳ).symm ∘ₗ lof R ι (ℳ ·) i = (ℳ i).subtype :=

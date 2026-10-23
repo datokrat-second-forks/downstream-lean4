@@ -134,7 +134,7 @@ lemma isPullback_of_forall_isPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶
   have heq : pullback.snd (pullback.lift fst snd h) ((𝒰.pullbackCoverOfLeft f g).f i) =
       H'.isoPullback.inv ≫ (H i).isoPullback.hom := by
     rw [Iso.eq_inv_comp]
-    cat_disch
+    (set_option backward.instanceTypes.subsingletons.prop false in cat_disch)
   rw [heq]
   infer_instance
 

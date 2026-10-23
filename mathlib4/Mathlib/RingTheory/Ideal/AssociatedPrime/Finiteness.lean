@@ -48,6 +48,8 @@ variable {A : Type u} [CommRing A] {M : Type v} [AddCommGroup M] [Module A M]
 def Submodule.IsQuotientEquivQuotientPrime (N₁ N₂ : Submodule A M) :=
   N₁ ≤ N₂ ∧ ∃ (p : PrimeSpectrum A), Nonempty ((↥N₂ ⧸ N₁.submoduleOf N₂) ≃ₗ[A] A ⧸ p.1)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 open LinearMap in
 theorem Submodule.isQuotientEquivQuotientPrime_iff {N₁ N₂ : Submodule A M} :
@@ -145,9 +147,10 @@ theorem IsNoetherianRing.induction_on_isQuotientEquivQuotientPrime
   | succ n ih =>
     specialize ih (n.lt_add_one.trans h)
     obtain ⟨hle, p, ⟨f⟩⟩ := s.step ⟨n, (add_lt_add_iff_right _).1 h⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
     replace ih := equiv _ _ (Submodule.submoduleOfEquivOfLe hle).symm ih
     exact exact _ _ _ _ _ (Submodule.injective_subtype _) (Submodule.mkQ_surjective _)
-      (LinearMap.exact_subtype_mkQ _) ih (quotient _ p f)
+      (LinearMap.exact_subtype_mkQ _) ih (quotient _ p f))
 
 /-- There are only finitely many associated primes of a finitely generated module
 over a Noetherian ring. -/

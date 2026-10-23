@@ -345,7 +345,8 @@ lemma isColimit_precompose_iff {G : J ⥤ Type w₀'} (e : ∀ j, G.obj j ≃ F.
     (naturality : ∀ {j j'} (f : j ⟶ j'), e j' ∘ G.map f = F.map f ∘ e j) :
     (c.precompose _ naturality).IsColimit ↔ c.IsColimit :=
   ⟨fun hc ↦ (hc.precompose (fun j ↦ (e j).symm)
-      (FunctorToTypes.naturality_symm e naturality)).of_equiv (Equiv.refl _) (by simp),
+      (FunctorToTypes.naturality_symm e naturality)).of_equiv (Equiv.refl _)
+        (by (set_option backward.dsimp.instanceTypes false in simp)),
     fun hc ↦ hc.precompose e naturality⟩
 
 end CoconeTypes

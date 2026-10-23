@@ -808,6 +808,7 @@ end Sorted
 
 section Approximates
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- Coinductive predicate stating that `ms` approximates its attached function on `basis`.
 * If `basis = []`, i.e. `ms` is just a real number, `Approximates` holds unconditionally.
 * If `basis = basis_hd :: basis_tl` and `ms = nil`, then `f =ᶠ[atTop] 0`.

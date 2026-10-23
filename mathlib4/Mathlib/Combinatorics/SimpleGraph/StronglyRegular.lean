@@ -97,8 +97,10 @@ theorem IsSRGWith.card_neighborFinset_union_eq {v w : V} (h : G.IsSRGWith n k �
       2 * k - Fintype.card (G.commonNeighbors v w) := by
   apply Nat.add_right_cancel (m := Fintype.card (G.commonNeighbors v w))
   rw [Nat.sub_add_cancel, ← Set.toFinset_card]
-  · simp [commonNeighbors, ← neighborFinset_def, Finset.card_union_add_card_inter,
-      h.regular.degree_eq, two_mul]
+  · (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [commonNeighbors, ← neighborFinset_def, Finset.card_union_add_card_inter,
+      h.regular.degree_eq, two_mul])
   · apply le_trans (card_commonNeighbors_le_degree_left _ _ _)
     simp [h.regular.degree_eq, two_mul]
 

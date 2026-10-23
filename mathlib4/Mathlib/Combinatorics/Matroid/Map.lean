@@ -298,7 +298,8 @@ def mapSetEmbedding (M : Matroid α) (f : M.E ↪ β) : Matroid β := Matroid.of
     obtain (rfl | ⟨⟨e, he⟩⟩) := eq_emptyOn_or_nonempty M
     · refine ⟨emptyOn β, ?_⟩
       simp only [emptyOn_ground] at f
-      simp [range_eq_empty f, subset_empty_iff]
+      (set_option backward.dsimp.instanceTypes false in
+      simp [range_eq_empty f, subset_empty_iff])
     have _ : Nonempty M.E := ⟨⟨e,he⟩⟩
     have _ : Nonempty α := ⟨e⟩
     refine ⟨M.comapOn (range f) (fun x ↦ ↑(invFunOn f univ x)), rfl, ?_⟩

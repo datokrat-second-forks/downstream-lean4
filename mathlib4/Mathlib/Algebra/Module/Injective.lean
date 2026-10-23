@@ -184,6 +184,7 @@ theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤
 
 variable (i f) [Fact <| Function.Injective i]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 instance ExtensionOf.inhabited : Inhabited (ExtensionOf i f) where
   default :=
     { domain := LinearMap.range i
@@ -334,6 +335,7 @@ theorem ExtensionOfMaxAdjoin.extensionToFun_wd (h : Module.Baer R Q) {y : N}
   rw [Subtype.coe_mk, add_sub, ← eq1]
   exact eq_sub_of_add_eq (ExtensionOfMaxAdjoin.eqn i x).symm
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- The linear map `M ⊔ ⟨y⟩ ⟶ Q` by `x + r • y ↦ f x + φ r` is an extension of `f` -/
 def extensionOfMaxAdjoin (h : Module.Baer R Q) (y : N) : ExtensionOf i f where
   domain := supExtensionOfMaxSingleton i f y -- (extensionOfMax i f).domain ⊔ Submodule.span R {y}
@@ -479,6 +481,7 @@ instance Module.Injective.pi
 set_option backward.isDefEq.respectTransparency false in
 universe u' in
 attribute [local instance] RingHomInvPair.of_ringEquiv in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem Module.Injective.of_ringEquiv {R : Type u} [Ring R] [Small.{v} R] {S : Type u'} [Ring S]
     {M : Type v} {N : Type v'} [AddCommGroup M] [AddCommGroup N] [Module R M] [Module S N]
     (e₁ : R ≃+* S) (e₂ : M ≃ₛₗ[RingHomClass.toRingHom e₁] N)

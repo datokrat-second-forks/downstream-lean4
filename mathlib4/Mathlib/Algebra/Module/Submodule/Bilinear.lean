@@ -70,8 +70,9 @@ theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N)
         exact subset_span ⟨_, ‹_›, _, ‹_›, rfl⟩
     all_goals
       intros
+      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [*, add_mem, smul_mem, zero_mem, map_zero, map_add,
-        LinearMap.zero_apply, LinearMap.add_apply, LinearMap.smul_apply, map_smul]
+        LinearMap.zero_apply, LinearMap.add_apply, LinearMap.smul_apply, map_smul])
   · rw [span_le, image2_subset_iff]
     intro a ha b hb
     exact apply_mem_map₂ _ (subset_span ha) (subset_span hb)

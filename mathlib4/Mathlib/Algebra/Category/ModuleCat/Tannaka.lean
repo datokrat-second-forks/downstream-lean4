@@ -25,6 +25,7 @@ open CategoryTheory
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] add_smul mul_smul in
 attribute [local ext] End.ext in
+set_option backward.dsimp.instanceTypes false in
 /-- An ingredient of Tannaka duality for rings:
 A ring `R` is equivalent to
 the endomorphisms of the additive forgetful functor `Module R ⥤ AddCommGroup`.

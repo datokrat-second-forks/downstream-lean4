@@ -168,7 +168,7 @@ noncomputable def liftEquiv : ContinuousMultilinearMap 𝕜 E F ≃ₗ[𝕜] (�
   toFun f := LinearMap.mkContinuous (lift f.toMultilinearMap) ‖f‖ fun x ↦
     norm_eval_le_projectiveSeminorm f x
   map_add' f g := by ext; simp
-  map_smul' a f := by ext; simp
+  map_smul' a f := by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
   invFun l := MultilinearMap.mkContinuous (lift.symm l.toLinearMap) ‖l‖ fun x ↦
     ContinuousLinearMap.le_opNorm_of_le _ (projectiveSeminorm_tprod_le x)
   left_inv f := by ext; simp

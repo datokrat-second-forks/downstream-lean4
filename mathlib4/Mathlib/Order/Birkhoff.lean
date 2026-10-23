@@ -136,7 +136,9 @@ lemma supIrredLowerSet_symm_apply (s : {s : LowerSet α // SupIrred s}) [Fintype
   obtain ⟨a, rfl⟩ := supIrred_iff_of_finite.1 hs
   cases nonempty_fintype α
   have : LocallyFiniteOrder α := Fintype.toLocallyFiniteOrder
-  simp [symm_apply_eq]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [symm_apply_eq])
 
 end SemilatticeSup
 end OrderIso

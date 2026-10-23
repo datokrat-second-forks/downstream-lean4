@@ -46,8 +46,12 @@ variable (F : I ⥤ A.Elements)
 
 /-- (implementation) A system `(Fi, fi)_i` of elements induces an element in `lim_i A(Fi)`. -/
 noncomputable def liftedConeElement' : limit ((F ⋙ π A) ⋙ A) :=
-  Types.Limit.mk _ (fun i => (F.obj i).2) (by simp)
+  Types.Limit.mk _ (fun i => (F.obj i).2)
+    (by (set_option backward.dsimp.instanceTypes false in simp))
 
+-- With the instance type check, `dsimp%` keeps `((F ⋙ π A) ⋙ A).obj i` in the type arguments of
+-- the coercion (as in `chosenCoend.map_apply`), and the statement no longer matches its uses.
+set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma π_liftedConeElement' (i : I) :
     dsimp% limit.π ((F ⋙ π A) ⋙ A) i (liftedConeElement' F) = (F.obj i).2 :=
@@ -59,6 +63,8 @@ variable [HasLimitsOfShape I C] [PreservesLimitsOfShape I A]
 noncomputable def liftedConeElement : A.obj (limit (F ⋙ π A)) :=
   (preservesLimitIso A (F ⋙ π A)).inv (liftedConeElement' F)
 
+-- See the note on `π_liftedConeElement'`.
+set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma map_lift_mapCone (c : Cone F) :
     dsimp% A.map (limit.lift (F ⋙ π A) ((π A).mapCone c)) c.pt.val = liftedConeElement F := by
@@ -67,6 +73,8 @@ lemma map_lift_mapCone (c : Cone F) :
   have h₂ := (c.π.app i).map_val
   simpa [-Functor.comp_obj, ← comp_apply, ← Functor.map_comp, liftedConeElement, liftedConeElement']
 
+-- See the note on `π_liftedConeElement'`.
+set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma map_π_liftedConeElement (i : I) :
     dsimp% A.map (limit.π (F ⋙ π A) i) (liftedConeElement F) = (F.obj i).val := by
@@ -79,13 +87,15 @@ lemma map_π_liftedConeElement (i : I) :
 noncomputable def liftedCone : Cone F where
   pt := .mk (liftedConeElement F)
   π :=
-    { app := fun i => ⟨limit.π (F ⋙ π A) i, by simp⟩
+    { app := fun i =>
+        ⟨limit.π (F ⋙ π A) i, by (set_option backward.dsimp.instanceTypes false in simp)⟩
       naturality := fun i i' f => by ext; simpa using! (limit.w _ _).symm }
 
 /-- (implementation) The constructed limit cone is a lift of the limit cone in `C`. -/
 noncomputable def isValidLift : (π A).mapCone (liftedCone F) ≅ limit.cone (F ⋙ π A) :=
   Iso.refl _
 
+set_option backward.dsimp.instanceTypes false in
 /-- (implementation) The constructed limit cone is a limit cone. -/
 noncomputable def isLimit : IsLimit (liftedCone F) where
   lift s := homMk (limit.lift (F ⋙ π A) ((π A).mapCone s))

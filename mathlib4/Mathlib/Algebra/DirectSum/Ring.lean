@@ -290,11 +290,14 @@ theorem mul_eq_dfinsuppSum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' :
   -- simpa only [mul_hom, to_add_monoid, dfinsupp.lift_add_hom_apply, dfinsupp.sum_add_hom_apply,
   -- add_monoid_hom.dfinsupp_sum_apply, flip_apply, add_monoid_hom.dfinsupp_sum_add_hom_apply],
   rw [mulHom, toAddMonoid, DFinsupp.liftAddHom_apply]
-  dsimp only [DirectSum]
-  rw [DFinsupp.sumAddHom_apply, AddMonoidHom.dfinsuppSum_apply]
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp only [DirectSum])
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [DFinsupp.sumAddHom_apply, AddMonoidHom.dfinsuppSum_apply])
   apply congrArg _
   funext x
-  simp [AddMonoidHom.dfinsuppSum_apply, DFinsupp.sumAddHom_apply, DirectSum.toAddMonoid]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [AddMonoidHom.dfinsuppSum_apply, DFinsupp.sumAddHom_apply, DirectSum.toAddMonoid])
 
 /-- A heavily unfolded version of the definition of multiplication -/
 theorem mul_eq_sum_support_ghas_mul [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :

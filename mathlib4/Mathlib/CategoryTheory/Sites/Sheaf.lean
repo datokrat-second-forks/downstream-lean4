@@ -635,6 +635,7 @@ equivalent in `CategoryTheory.Presheaf.isSheaf_iff_isSheaf'`.
 def IsSheaf' (P : Cᵒᵖ ⥤ A) : Prop :=
   ∀ (U : C) (R : Presieve U) (_ : generate R ∈ J U), Nonempty (IsLimit (Fork.ofι _ (w R P)))
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 -- Again I wonder whether `UnivLE` can somehow be used to allow `s` to take

@@ -609,7 +609,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem AffineEquiv.affineIndependent_set_of_eq_iff {s : Set P} (e : P ≃ᵃ[k] P₂) :
     AffineIndependent k ((↑) : e '' s → P₂) ↔ AffineIndependent k ((↑) : s → P) := by
   have : e ∘ ((↑) : s → P) = ((↑) : e '' s → P₂) ∘ (e : P ≃ P₂).image s := rfl
-  simp [← e.affineIndependent_iff, this, affineIndependent_equiv]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [← e.affineIndependent_iff, this, affineIndependent_equiv])
 
 theorem affineIndependent_restrict_iff {s : Set ι} {p : ι → P} :
     AffineIndependent k (s.domRestrict p) ↔ AffineIndepOn k p s :=

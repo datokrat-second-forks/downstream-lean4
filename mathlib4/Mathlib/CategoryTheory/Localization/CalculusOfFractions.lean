@@ -848,14 +848,16 @@ set_option backward.defeqAttrib.useBackward true in
 lemma RightFraction.op_map
     {X Y : C} (φ : W.RightFraction X Y) (L : C ⥤ D) (hL : W.IsInvertedBy L) :
     (φ.map L hL).op = φ.op.map L.op hL.op := by
-  dsimp [map, LeftFraction.map]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  dsimp [map, LeftFraction.map])
   rw [op_inv]
 
 set_option backward.defeqAttrib.useBackward true in
 lemma LeftFraction.op_map
     {X Y : C} (φ : W.LeftFraction X Y) (L : C ⥤ D) (hL : W.IsInvertedBy L) :
     (φ.map L hL).op = φ.op.map L.op hL.op := by
-  dsimp [map, RightFraction.map]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  dsimp [map, RightFraction.map])
   rw [op_inv]
 
 instance [h : W.HasLeftCalculusOfFractions] : W.op.HasRightCalculusOfFractions where

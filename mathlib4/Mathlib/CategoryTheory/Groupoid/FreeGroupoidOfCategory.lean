@@ -290,7 +290,7 @@ set_option backward.isDefEq.respectTransparency false in
 def free : Cat.{u, u} ⥤ Grpd.{u, u} where
   obj C := ↧(FreeGroupoid C)
   map {C D} F := map F.toFunctor
-  map_id C := by simp [map_id, id_eq_id]
+  map_id C := by (set_option backward.dsimp.instanceTypes false in simp [map_id, id_eq_id])
   map_comp F G := by simp [Grpd.comp_eq_comp, map_comp]
 
 @[simp]

@@ -112,8 +112,9 @@ theorem exists_locallyConstant_fin_two (hC : IsLimit C) (f : LocallyConstant C.p
   classical
   use j, LocallyConstant.ofIsClopen hV
   apply LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [Fin.isValue, LocallyConstant.coe_comap, Set.preimage_comp,
-    LocallyConstant.ofIsClopen_fiber_zero]
+    LocallyConstant.ofIsClopen_fiber_zero])
   exact h
 
 set_option backward.defeqAttrib.useBackward true in
@@ -159,8 +160,9 @@ theorem exists_locallyConstant_finite_nonempty {α : Type*} [Finite α] [Nonempt
   let σ : (α → Fin 2) → α := fun f => if h : ∃ a : α, ι a = f then h.choose else default
   refine ⟨j, gg.map σ, ?_⟩
   ext x
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [LocallyConstant.coe_comap, LocallyConstant.map_apply,
-    Function.comp_apply]
+    Function.comp_apply])
   dsimp [σ]
   have h1 : ι (f x) = gg (C.π.app j x) := by
     change f.map (fun a b => if a = b then (0 : Fin 2) else 1) x = _
@@ -181,6 +183,7 @@ theorem exists_locallyConstant_finite_nonempty {α : Type*} [Finite α] [Nonempt
     · exact hh1.symm
     · exact False.elim (bot_ne_top hhh)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
 theorem exists_locallyConstant {α : Type*} (hC : IsLimit C) (f : LocallyConstant C.pt α) :

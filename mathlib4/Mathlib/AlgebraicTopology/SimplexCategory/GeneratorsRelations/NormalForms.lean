@@ -241,7 +241,8 @@ lemma simplicialEvalσ_of_isAdmissible
   induction L generalizing m₁ m₂ with
   | nil =>
     obtain rfl : m₁ = m₂ := by grind
-    simp [simplicialEvalσ]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [simplicialEvalσ])
   | cons a L h_rec =>
     simp only [List.length_cons] at hk
     subst hk
@@ -256,10 +257,11 @@ lemma simplicialEvalσ_of_isAdmissible
       · rfl
     have := h_rec _ _ hL.of_cons (by grind) hj
     have ha₀ : Fin.ofNat (m₂ + 1) a = a₀ := by ext; simpa [a₀] using hL.head.prop
+    (set_option backward.dsimp.instanceTypes false in
     simpa only [toSimplexCategory_obj_mk, SimplexCategory.len_mk, standardσ_cons, Functor.map_comp,
       toSimplexCategory_map_σ, SimplexCategory.σ, SimplexCategory.mkHom,
       SimplexCategory.comp_toOrderHom, SimplexCategory.Hom.toOrderHom_mk, OrderHom.comp_coe,
-      Function.comp_apply, Fin.predAboveOrderHom_coe, simplicialEvalσ, ha₀, ← this] using aux _
+      Function.comp_apply, Fin.predAboveOrderHom_coe, simplicialEvalσ, ha₀, ← this] using aux _)
 
 /-- Performing a simplicial insertion in a list is the same as composition on the right by the
 corresponding degeneracy operator. -/

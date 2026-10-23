@@ -110,6 +110,7 @@ variable (α)
 
 set_option backward.isDefEq.respectTransparency false in
 open scoped Classical in
+set_option backward.instanceTypes.subsingletons.decidable false in
 /-- A well-order is a `SuccOrder`. -/
 @[to_dual (attr := instance_reducible)
 /-- A linear order with well-founded greater-than relation is a `PredOrder`. -/]

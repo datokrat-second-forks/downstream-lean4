@@ -42,6 +42,7 @@ lemma rev_map_apply {n m : SimplexCategory} (f : n ⟶ m) (i : Fin (n.len + 1)) 
     (rev.map f).toOrderHom (a := n) (b := m) i = (f.toOrderHom i.rev).rev :=
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma rev_map_δ {n : ℕ} (i : Fin (n + 2)) :
     rev.map (δ i) = δ i.rev := by

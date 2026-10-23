@@ -123,7 +123,8 @@ lemma finsuppRight_symm_apply_single (i : ι) (m : M) (n : N) :
 
 lemma finsuppLeft_smul' (s : S) (t : (ι →₀ M) ⊗[R] N) :
     finsuppLeft R S M N ι (s • t) = s • finsuppLeft R S M N ι t := by
-  simp
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp)
 
 variable (R M N ι) in
 /-- The tensor product of `ι →₀ R` and `N` is linearly equivalent to `ι →₀ N` -/
@@ -182,7 +183,8 @@ lemma finsuppScalarRight_symm_apply_single (i : ι) (m : M) :
 
 theorem finsuppScalarRight_smul (s : S) (t) :
     finsuppScalarRight R S M ι (s • t) = s • finsuppScalarRight R S M ι t := by
-  simp
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp)
 
 end TensorProduct
 

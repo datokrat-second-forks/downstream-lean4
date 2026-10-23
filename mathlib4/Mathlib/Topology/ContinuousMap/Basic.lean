@@ -472,7 +472,8 @@ variable (hf : IsQuotientMap f) (g : C(X, Z)) (h : Function.FactorsThrough g f)
 noncomputable def lift : C(Y, Z) where
   toFun := ((fun i ↦ Quotient.liftOn' i g (fun _ _ (hab : f _ = f _) ↦ h hab)) :
     Quotient (Setoid.ker f) → Z) ∘ hf.homeomorph.symm
-  continuous_toFun := Continuous.comp (continuous_quot_lift _ g.2) (Homeomorph.continuous _)
+  continuous_toFun := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    Continuous.comp (continuous_quot_lift _ g.2) (Homeomorph.continuous _))
 
 /--
 The obvious triangle induced by `IsQuotientMap.lift` commutes:

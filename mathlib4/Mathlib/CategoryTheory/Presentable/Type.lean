@@ -108,7 +108,8 @@ noncomputable def isColimitCocone
     (hκ : Cardinal.aleph0 ≤ κ) : IsColimit (cocone X κ) := by
   have := isFiltered_of_aleph0_le X κ hκ
   refine Types.FilteredColimit.isColimitOf' _ _ (fun x ↦ ?_) ?_
-  · exact ⟨⟨{x}, hasCardinalLT_of_finite _ _ hκ⟩, ⟨x, by simp⟩, rfl⟩
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact ⟨⟨{x}, hasCardinalLT_of_finite _ _ hκ⟩, ⟨x, by simp⟩, rfl⟩)
   · rintro A ⟨x, hx⟩ ⟨y, hy⟩ rfl
     exact ⟨A, 𝟙 _, rfl⟩
 
@@ -135,7 +136,7 @@ lemma isCardinalPresentable_iff (κ : Cardinal.{u}) [Fact κ.IsRegular] :
   obtain rfl : A = .univ := by
     ext x
     have := congr_hom hf x
-    dsimp at this
+    (set_option backward.dsimp.instanceTypes false in dsimp at this)
     rw [← this]
     simp
   exact (hasCardinalLT_iff_of_equiv (Equiv.Set.univ X) _).1 hA

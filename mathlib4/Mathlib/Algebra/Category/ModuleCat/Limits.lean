@@ -77,6 +77,7 @@ instance limitModule :
     Module R (Types.Small.limitCone.{v, w} (F ⋙ forget (ModuleCat.{w} R))).pt :=
   inferInstanceAs <| Module R (Shrink (sectionsSubmodule F))
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `limit.π (F ⋙ forget (ModuleCat.{w} R)) j` as an `R`-linear map. -/
@@ -103,6 +104,7 @@ def limitCone : Cone F where
         ext
         simpa using! (Types.Small.limitCone (F ⋙ forget _)).π.naturality_apply f _ }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Witness that the limit cone in `ModuleCat R` is a limit cone.

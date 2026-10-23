@@ -527,7 +527,9 @@ theorem zero_le_coe {q : ℝ≥0} : 0 ≤ (q : ℝ) :=
 
 instance instIsStrictOrderedModule {M : Type*} [AddCommMonoid M] [PartialOrder M]
     [Module ℝ M] [IsStrictOrderedModule ℝ M] :
-    IsStrictOrderedModule ℝ≥0 M := inferInstanceAs <| IsStrictOrderedModule (Subtype _) M
+    IsStrictOrderedModule ℝ≥0 M :=
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsStrictOrderedModule (Subtype _) M)
 
 end NNReal
 

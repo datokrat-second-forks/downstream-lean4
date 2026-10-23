@@ -89,7 +89,8 @@ theorem of_algEquiv [hG : IsGaloisGroup G A B] (B' : Type*) [Semiring B']
       apply e.injective
       simp [he]
     apply e.symm.injective
-    simpa [h', map_smul] using hG.commutes.smul_comm g a (e.symm b')⟩
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa [h', map_smul] using hG.commutes.smul_comm g a (e.symm b'))⟩
   isInvariant := ⟨fun x' hx' ↦ by
     obtain ⟨a, ha⟩ := hG.isInvariant.isInvariant (e.symm x') (fun g ↦ by
       apply e.injective

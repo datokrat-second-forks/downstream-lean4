@@ -34,7 +34,8 @@ namespace CategoryTheory.Cat
 def isTerminalOfUniqueOfIsDiscrete {T : Type u} [Category.{v} T] [Unique T] [IsDiscrete T] :
     IsTerminal (Cat.of T) :=
   IsTerminal.ofUniqueHom (fun X ↦ ((const X).obj (default : T)).toCatHom)
-    (fun _ _ ↦ Cat.Hom.ext <| Functor.ext (by simp [eq_iff_true_of_subsingleton]))
+    (fun _ _ ↦ Cat.Hom.ext <| (set_option backward.dsimp.instanceTypes false in
+      Functor.ext (by simp [eq_iff_true_of_subsingleton])))
 
 instance : HasTerminal Cat.{v, u} := by
   have : IsDiscrete (ShrinkHoms.{u} PUnit.{u + 1}) := {

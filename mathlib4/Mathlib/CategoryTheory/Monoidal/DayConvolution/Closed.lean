@@ -175,7 +175,8 @@ lemma unit_app_ev_app_app (x y : C) :
   have := Functor.descOfIsLeftKanExtension_fac_app (F ⊛ H)
     (DayConvolution.unit F H) G
   dsimp at this
-  simp [this, ev_app]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [this, ev_app])
 
 set_option backward.defeqAttrib.useBackward true in
 lemma ev_naturality_app {G' H' : C ⥤ V} (ℌ' : DayConvolutionInternalHom F G' H')
@@ -184,7 +185,8 @@ lemma ev_naturality_app {G' H' : C ⥤ V} (ℌ' : DayConvolutionInternalHom F G'
   apply DayConvolution.corepresentableBy F H |>.homEquiv.injective
   dsimp
   ext ⟨x, y⟩
-  simp [MonoidalClosed.uncurry_eq, ← whiskerLeft_comp_assoc]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [MonoidalClosed.uncurry_eq, ← whiskerLeft_comp_assoc])
 
 end ev
 
@@ -211,7 +213,9 @@ def coev_app : G ⟶ H where
           simp only [MonoidalClosed.curry_natural_right] at this
           dsimp
           rw [← this]
-          simp [MonoidalClosed.curry_eq])
+          (set_option backward.dsimp.instanceTypes false in
+          set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          simp [MonoidalClosed.curry_eq]))
   naturality {c c'} f := by
     dsimp
     apply Wedge.IsLimit.hom_ext <| ℌ.isLimitWedge c'
@@ -231,7 +235,9 @@ def coev_app : G ⟶ H where
     replace this := congrArg MonoidalClosed.curry this
     simp only [MonoidalClosed.curry_natural_right] at this
     rw [← this]
-    simp [MonoidalClosed.curry_eq]
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [MonoidalClosed.curry_eq])
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -255,12 +261,13 @@ lemma coev_naturality_app {G' H' : C ⥤ V} [DayConvolution F G'] (η : G ⟶ G'
   apply Wedge.IsLimit.hom_ext <| ℌ'.isLimitWedge c
   intro j
   apply MonoidalClosed.uncurry_injective
-  dsimp
+  (set_option backward.dsimp.instanceTypes false in dsimp)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [Category.assoc, coev_app_π, Functor.comp_obj, tensor_obj,
     map_app_comp_π, coev_app_π_assoc, MonoidalClosed.uncurry_natural_right,
     MonoidalClosed.uncurry_curry, DayConvolution.unit_app_map_app,
     NatTrans.id_app, id_tensorHom]
-  simp [MonoidalClosed.uncurry_natural_left]
+  simp [MonoidalClosed.uncurry_natural_left])
 
 end coev
 
@@ -272,7 +279,8 @@ theorem left_triangle_components (G : C ⥤ V) [DayConvolution F G]
   dsimp
   ext ⟨x, y⟩
   apply MonoidalClosed.curry_injective
-  simp [MonoidalClosed.curry_natural_left]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [MonoidalClosed.curry_natural_left])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -284,7 +292,9 @@ theorem right_triangle_components (G : C ⥤ V) [DayConvolution F H]
   apply Wedge.IsLimit.hom_ext <| ℌ.isLimitWedge c
   intro j
   apply MonoidalClosed.uncurry_injective
-  simp [MonoidalClosed.uncurry_natural_right]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [MonoidalClosed.uncurry_natural_right])
 
 end DayConvolutionInternalHom
 

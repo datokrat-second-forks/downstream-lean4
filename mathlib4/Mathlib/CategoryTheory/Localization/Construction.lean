@@ -224,6 +224,7 @@ theorem morphismProperty_eq_top (P : MorphismProperty W.Localization)
       rcases Y with ⟨⟨Y⟩⟩
       simpa only [Functor.map_preimage] using! this _ _ (G.preimage f)
     intro X₁ X₂ p
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     induction p with
     | nil => simpa only [Functor.map_id] using! hP₁ (𝟙 X₁.obj)
     | @cons X₂ X₃ p g hp =>
@@ -232,7 +233,7 @@ theorem morphismProperty_eq_top (P : MorphismProperty W.Localization)
       refine P.comp_mem _ _ hp ?_
       rcases g with (g | ⟨g, hg⟩)
       · apply hP₁
-      · apply hP₂
+      · apply hP₂)
 
 /-- A `MorphismProperty` in `W.Localization` is satisfied by all
 morphisms in the localized category if it contains the image of the

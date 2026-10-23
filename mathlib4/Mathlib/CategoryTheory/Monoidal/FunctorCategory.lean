@@ -240,6 +240,7 @@ instance (E : Type*) [Category* E] [MonoidalCategory E] (e : C ≌ D) :
     (e.congrLeft (E := E)).inverse.Monoidal :=
   inferInstanceAs ((Functor.whiskeringLeft _ _ E).obj e.functor).Monoidal
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 instance (E : Type*) [Category* E] [MonoidalCategory E] (e : C ≌ D) :
     (e.congrLeft (E := E)).IsMonoidal where

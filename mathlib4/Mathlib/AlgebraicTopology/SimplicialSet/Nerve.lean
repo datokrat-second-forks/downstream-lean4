@@ -65,7 +65,8 @@ set_option backward.isDefEq.respectTransparency false in
 lemma nerveMap_app_mk₁ {x y : C} (f : x ⟶ y) :
     (nerveMap F).app (op ⦋1⦌) (ComposableArrows.mk₁ f) =
       ComposableArrows.mk₁ (F.map f) :=
-  ComposableArrows.ext₁ rfl rfl (by simp [nerveMap_app])
+  ComposableArrows.ext₁ rfl rfl (by
+    (set_option backward.dsimp.instanceTypes false in simp [nerveMap_app]))
 
 end
 
@@ -254,6 +255,9 @@ lemma σ_zero_nerveEquiv_symm (x : C) :
     (nerve C).σ 0 (nerveEquiv.symm x) = ComposableArrows.mk₁ (𝟙 x) := by
   cat_disch
 
+-- With the instance type check, `dsimp%` keeps `(nerve C).obj (op ⦋0⦌)` in the type arguments of
+-- the coercion (as in `chosenCoend.map_apply`) instead of `ComposableArrows C 0`.
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]

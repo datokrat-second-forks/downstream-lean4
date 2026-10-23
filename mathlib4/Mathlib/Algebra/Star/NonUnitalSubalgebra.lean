@@ -1084,7 +1084,8 @@ noncomputable def iSupLift [Nonempty ι] (K : ι → NonUnitalStarSubalgebra R A
           inclusion_mk, Eq.ndrec, id_eq, eq_mpr_eq_cast]
         apply Set.iUnionLift_unary (coe_iSup_of_directed dir) _ (fun _ x => r • x)
           (fun _ _ => rfl)
-        simp
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp)
       map_star' := by
         dsimp only [SetLike.coe_sort_coe, NonUnitalStarAlgHom.comp_apply, inclusion_mk, Eq.ndrec,
           id_eq, eq_mpr_eq_cast, ZeroMemClass.coe_zero, AddSubmonoid.mk_add_mk, Set.inclusion_mk,

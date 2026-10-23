@@ -207,7 +207,8 @@ instance (x : orbitRel.Quotient G α) : IsPretransitive G x.orbit where
     rcases zh with ⟨h, rfl⟩
     refine ⟨h * g⁻¹, ?_⟩
     ext
-    simp [mul_smul]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [mul_smul])
 
 variable (G) (α)
 

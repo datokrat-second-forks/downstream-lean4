@@ -61,11 +61,13 @@ def braiding : F ⊛ G ≅ G ⊛ F where
   hom_inv_id := by
     apply Functor.hom_ext_of_isLeftKanExtension (F ⊛ G) (unit F G)
     ext
-    simp [-tensor_obj]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [-tensor_obj])
   inv_hom_id := by
     apply Functor.hom_ext_of_isLeftKanExtension (G ⊛ F) (unit G F)
     ext
-    simp [-tensor_obj]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [-tensor_obj])
 
 set_option backward.defeqAttrib.useBackward true in
 @[reassoc (attr := simp)]
@@ -74,7 +76,8 @@ lemma unit_app_braiding_hom_app (x y : C) :
     (β_ _ _).hom ≫ (unit G F).app (_, _) ≫ (G ⊛ F).map (β_ _ _).hom := by
   change
     (unit F G).app (x, y) ≫ (braiding F G).hom.app ((tensor C).obj (x, y)) = _
-  simp [braiding, braidingHomCorepresenting, -tensor_obj]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [braiding, braidingHomCorepresenting, -tensor_obj])
 
 set_option backward.defeqAttrib.useBackward true in
 @[reassoc (attr := simp)]
@@ -83,7 +86,8 @@ lemma unit_app_braiding_inv_app (x y : C) :
     (β_ _ _).inv ≫ (unit F G).app (_, _) ≫ (F ⊛ G).map (β_ _ _).inv := by
   change
     (unit G F).app (x, y) ≫ (braiding F G).inv.app ((tensor C).obj (x, y)) = _
-  simp [braiding, braidingHomCorepresenting, -tensor_obj]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [braiding, braidingHomCorepresenting, -tensor_obj])
 
 end
 

@@ -424,6 +424,7 @@ variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorLeft X)]
 variable [∀ X : C, PreservesColimitsOfSize.{0, 0} (tensorRight X)]
 variable {R S T U : Mon C} (P : Bimod R S) (Q : Bimod S T) (L : Bimod T U)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- An auxiliary morphism for the definition of the underlying morphism of the forward component of
 the associator isomorphism. -/
 noncomputable def homAux : (P.tensorBimod Q).X ⊗ L.X ⟶ (P.tensorBimod (Q.tensorBimod L)).X :=
@@ -511,6 +512,7 @@ theorem hom_right_act_hom' :
     rw [← whiskerLeft_comp, TensorBimod.π_tensor_id_actRight, whiskerLeft_comp, whiskerLeft_comp]
   monoidal
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- An auxiliary morphism for the definition of the underlying morphism of the inverse component of
 the associator isomorphism. -/
 noncomputable def invAux : P.X ⊗ (Q.tensorBimod L).X ⟶ ((P.tensorBimod Q).tensorBimod L).X :=
@@ -551,6 +553,7 @@ noncomputable def inv :
       slice_rhs 3 4 => rw [associator_inv_naturality_middle]
       monoidal)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 theorem hom_inv_id : hom P Q L ≫ inv P Q L = 𝟙 _ := by
   dsimp [hom, homAux, inv, invAux]
@@ -566,6 +569,7 @@ theorem hom_inv_id : hom P Q L ≫ inv P Q L = 𝟙 _ := by
   slice_rhs 2 3 => rw [Category.comp_id]
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 theorem inv_hom_id : inv P Q L ≫ hom P Q L = 𝟙 _ := by
   dsimp [hom, homAux, inv, invAux]
@@ -594,8 +598,10 @@ noncomputable def hom : TensorBimod.X (regular R) P ⟶ P.X :=
 
 /-- The underlying morphism of the inverse component of the left unitor isomorphism. -/
 noncomputable def inv : P.X ⟶ TensorBimod.X (regular R) P :=
-  (λ_ P.X).inv ≫ (η[R.X] ▷ _) ≫ coequalizer.π _ _
+  (λ_ P.X).inv ≫ (η[R.X] ▷ _) ≫
+    (set_option backward.instanceTypes.subsingletons.prop false in coequalizer.π _ _)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
@@ -655,8 +661,10 @@ noncomputable def hom : TensorBimod.X P (regular S) ⟶ P.X :=
 
 /-- The underlying morphism of the inverse component of the right unitor isomorphism. -/
 noncomputable def inv : P.X ⟶ TensorBimod.X P (regular S) :=
-  (ρ_ P.X).inv ≫ (_ ◁ η[S.X]) ≫ coequalizer.π _ _
+  (ρ_ P.X).inv ≫ (_ ◁ η[S.X]) ≫
+    (set_option backward.instanceTypes.subsingletons.prop false in coequalizer.π _ _)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 theorem hom_inv_id : hom P ≫ inv P = 𝟙 _ := by
@@ -753,6 +761,7 @@ theorem whiskerLeft_comp_bimod {X Y Z : Mon C} (M : Bimod X Y) {N P Q : Bimod Y 
   apply Limits.coequalizer.hom_ext
   simp
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem id_whiskerLeft_bimod {X Y : Mon C} {M N : Bimod X Y} (f : M ⟶ N) :
@@ -819,6 +828,7 @@ theorem comp_whiskerRight_bimod {X Y Z : Mon C} {M N P : Bimod X Y} (f : M ⟶ N
   apply Limits.coequalizer.hom_ext
   simp
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem whiskerRight_id_bimod {X Y : Mon C} {M N : Bimod X Y} (f : M ⟶ N) :
@@ -868,6 +878,7 @@ theorem whiskerRight_comp_bimod {W X Y Z : Mon C} {M M' : Bimod W X} (f : M ⟶ 
   slice_lhs 1 2 => rw [whisker_exchange]
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem whisker_assoc_bimod {W X Y Z : Mon C} (M : Bimod W X) {N N' : Bimod X Y} (f : N ⟶ N')
@@ -908,6 +919,7 @@ theorem whisker_exchange_bimod {X Y Z : Mon C} {M N : Bimod X Y} {P Q : Bimod Y 
   slice_lhs 1 2 => rw [whisker_exchange]
   simp
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem pentagon_bimod {V W X Y Z : Mon C} (M : Bimod V W) (N : Bimod W X) (P : Bimod X Y)

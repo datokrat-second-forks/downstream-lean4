@@ -470,10 +470,13 @@ namespace Measure
 def completion {_ : MeasurableSpace α} (μ : Measure α) :
     MeasureTheory.Measure (NullMeasurableSpace α μ) where
   toOuterMeasure := μ.toOuterMeasure
-  m_iUnion _ hs hd := measure_iUnion₀ (hd.mono fun _ _ h => h.aedisjoint) hs
+  m_iUnion _ hs hd :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      measure_iUnion₀ (hd.mono fun _ _ h => h.aedisjoint) hs)
   trim_le := by
     nth_rewrite 2 [← μ.trimmed]
-    exact OuterMeasure.trim_anti_measurableSpace _ fun _ ↦ MeasurableSet.nullMeasurableSet
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    exact OuterMeasure.trim_anti_measurableSpace _ fun _ ↦ MeasurableSet.nullMeasurableSet)
 
 instance completion.isComplete {_m : MeasurableSpace α} (μ : Measure α) : μ.completion.IsComplete :=
   ⟨fun _z hz => NullMeasurableSet.of_null hz⟩
@@ -486,6 +489,8 @@ theorem completion_apply {_ : MeasurableSpace α} (μ : Measure α) (s : Set α)
     μ.completion s = μ s :=
   rfl
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 theorem ae_completion {_ : MeasurableSpace α} (μ : Measure α) : ae μ.completion = ae μ := rfl
 

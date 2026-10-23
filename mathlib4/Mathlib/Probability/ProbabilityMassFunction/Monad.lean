@@ -252,10 +252,12 @@ theorem bindOnSupport_bindOnSupport (p : PMF α) (f : ∀ a ∈ p.support, PMF �
         (f a ha).bindOnSupport fun b hb =>
           g b ((mem_support_bindOnSupport_iff f b).mpr ⟨a, ha, hb⟩) := by
   refine PMF.ext fun a => ?_
-  dsimp only [bindOnSupport_apply]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dsimp only [bindOnSupport_apply])
   simp only [← tsum_dite_right, ENNReal.tsum_mul_left.symm, ENNReal.tsum_mul_right.symm]
   classical
-  simp only [ENNReal.tsum_eq_zero]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  simp only [ENNReal.tsum_eq_zero])
   refine ENNReal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => ?_)
   split_ifs with h _ h_1 H h_2
   any_goals ring1

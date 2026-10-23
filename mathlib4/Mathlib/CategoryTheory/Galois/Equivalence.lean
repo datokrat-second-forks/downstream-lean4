@@ -42,11 +42,13 @@ def functorToContAction : C ⥤ ContAction FintypeCat (Aut F) :=
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : (functorToContAction F).Faithful :=
-  inferInstanceAs <| (ObjectProperty.lift _ _ _).Faithful
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  inferInstanceAs <| (ObjectProperty.lift _ _ _).Faithful)
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : (functorToContAction F).Full :=
-  inferInstanceAs <| (ObjectProperty.lift _ _ _).Full
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  inferInstanceAs <| (ObjectProperty.lift _ _ _).Full)
 
 instance {F : C ⥤ FintypeCat.{u₁}} [FiberFunctor F] : (functorToContAction F).EssSurj where
   mem_essImage X := by
@@ -67,13 +69,15 @@ instance : (functorToContAction F).EssSurj := by
           change Continuous ((fun p ↦ (FintypeCat.uSwitchEquiv X.obj.V).symm p) ∘
               (fun p : Aut F' × _ ↦ (X.obj.ρ p.1).asHom.hom p.2) ∘
               (fun p : Aut F' × _ ↦ (p.1, FintypeCat.uSwitchEquiv _ p.2)))
-          exact Continuous.comp (by fun_prop) (Continuous.comp X.2.1 (by fun_prop)))
+          (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          exact Continuous.comp (by fun_prop) (Continuous.comp X.2.1 (by fun_prop))))
        (fun X ↦ by
           rw [Action.isContinuous_def]
           change Continuous ((fun p ↦ (FintypeCat.uSwitchEquiv X.obj.V).symm p) ∘
               (fun p : Aut F' × _ ↦ (X.obj.ρ p.1).asHom.hom p.2) ∘
               (fun p : Aut F' × _ ↦ (p.1, FintypeCat.uSwitchEquiv _ p.2)))
-          exact Continuous.comp (by fun_prop) (Continuous.comp X.2.1 (by fun_prop)))).trans <|
+          (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          exact Continuous.comp (by fun_prop) (Continuous.comp X.2.1 (by fun_prop))))).trans <|
       ContAction.resEquiv _ f
   have : functorToContAction F ≅ functorToContAction F' ⋙ equiv.functor :=
     NatIso.ofComponents

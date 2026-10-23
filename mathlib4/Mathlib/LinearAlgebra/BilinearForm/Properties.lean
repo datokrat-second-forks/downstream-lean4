@@ -167,8 +167,9 @@ lemma isSymm_iff_basis {ι : Type*} (b : Basis ι R M) :
     obtain ⟨fy, ty, iy, -, hy⟩ := Submodule.mem_span_iff_exists_finset_subset.1
       (by simp : y ∈ Submodule.span R (Set.range b))
     rw [← hx, ← hy]
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_sum, map_smul, coe_sum, Finset.sum_apply, smul_apply, smul_eq_mul,
-      Finset.mul_sum]
+      Finset.mul_sum])
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl (fun b₁ h₁ ↦ Finset.sum_congr rfl fun b₂ h₂ ↦ ?_)
     rw [mul_left_comm]

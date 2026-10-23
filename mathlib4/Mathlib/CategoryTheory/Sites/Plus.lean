@@ -55,7 +55,8 @@ def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).o
   app S :=
     Multiequalizer.lift _ _ (fun I => Multiequalizer.ι (S.unop.index P) I.base) fun I =>
       Multiequalizer.condition (S.unop.index P) (Cover.Relation.mk' I.r.base)
-  naturality S T f := Multiequalizer.hom_ext _ _ _ (fun I => by simp; rfl)
+  naturality S T f := Multiequalizer.hom_ext _ _ _ (fun I => by
+    (set_option backward.instanceTypes.subsingletons.prop false in simp); rfl)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -103,6 +104,7 @@ def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.Cover X)ᵒᵖ ⥤ D where
 
 variable [∀ X : C, HasColimitsOfShape (J.Cover X)ᵒᵖ D]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The plus construction, associating a presheaf to any presheaf.
@@ -157,7 +159,8 @@ def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q w
       ι_colimMap_assoc, Category.assoc]
     simp_rw [← Category.assoc]
     congr 1
-    exact Multiequalizer.hom_ext _ _ _ (fun I => by simp)
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    exact Multiequalizer.hom_ext _ _ _ (fun I => by simp))
 
 @[simp]
 theorem plusMap_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ := by
@@ -206,7 +209,8 @@ def toPlus : P ⟶ J.plusObj P where
     refine Multiequalizer.hom_ext _ _ _ (fun I => ?_)
     simp only [Category.assoc]
     dsimp [Cover.Arrow.base]
-    simp
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp)
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -227,6 +231,7 @@ variable (D) in
 def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D where
   app P := J.toPlus P
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `(P ⟶ P⁺)⁺ = P⁺ ⟶ P⁺⁺` -/

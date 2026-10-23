@@ -252,7 +252,7 @@ noncomputable def homEquiv {N : ModuleCat.{w} cR.pt} :
         refine (map_smul_homEquiv'_iff hcR hcM φ).1 (fun U r m ↦ ?_)
         rw [hφ]
         erw [toPresheaf_map_app_apply]
-        rw [map_smul]
+        (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
         rfl }
   left_inv φ := (forget₂ _ AddCommGrpCat).map_injective (by
     ext : 1
@@ -289,7 +289,8 @@ set_option backward.defeqAttrib.useBackward true in
 noncomputable def map (f : M ⟶ M') :
     ModuleColimit hcR hcM →ₗ[cR.pt] ModuleColimit hcR hcM' where
   toFun := hcM.desc ((Cocone.precompose ((toPresheaf _).map f)).obj cM')
-  map_add' _ _ := map_add _ _ _
+  map_add' _ _ :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in map_add _ _ _)
   map_smul' r m := by
     obtain ⟨U, r, m, rfl, rfl⟩ := ModuleColimit.jointly_surjective₂ r m
     let c := (Cocone.precompose ((toPresheaf _).map f)).obj cM'

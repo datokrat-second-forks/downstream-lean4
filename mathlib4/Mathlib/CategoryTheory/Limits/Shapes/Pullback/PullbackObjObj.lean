@@ -543,6 +543,8 @@ attribute [local simp] ofHasPushout_inl ofHasPushout_inr ι
 
 namespace LeibnizAdjunction
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Given a parametrized adjunction `F ⊣₂ G` and an arrow `X₁ : Arrow C₁`, this is the induced
@@ -595,7 +597,10 @@ def leibnizAdjunction (adj₂ : F ⊣₂ G) [HasPullbacks C₂] [HasPushouts C�
   unit_whiskerRight_map _ := by
     ext
     · simp [← homEquiv_naturality_one, ← homEquiv_naturality_three]
-    · apply pullback.hom_ext <;> simp [← homEquiv_naturality_one, ← homEquiv_naturality_three]
+    · apply pullback.hom_ext <;>
+        (set_option backward.dsimp.instanceTypes false in
+        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        simp [← homEquiv_naturality_one, ← homEquiv_naturality_three])
 
 end
 

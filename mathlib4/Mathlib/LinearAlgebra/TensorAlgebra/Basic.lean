@@ -81,7 +81,8 @@ instance instAlgebra {R A M} [CommSemiring R] [AddCommMonoid M] [CommSemiring A]
     [Algebra R A] [Module R M] [Module A M]
     [IsScalarTower R A M] :
     Algebra R (TensorAlgebra A M) :=
-  inferInstanceAs <| Algebra R (RingCon.Quotient _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra R (RingCon.Quotient _))
 
 -- verify there is no diamond
 -- but doesn't work at `reducible_and_instances` https://github.com/leanprover-community/mathlib4/issues/10906
@@ -90,12 +91,14 @@ example : (Semiring.toNatAlgebra : Algebra ℕ (TensorAlgebra R M)) = instAlgebr
 instance {R S A M} [CommSemiring R] [CommSemiring S] [AddCommMonoid M] [CommSemiring A]
     [Algebra R A] [Algebra S A] [Module A M] :
     SMulCommClass R S (TensorAlgebra A M) :=
-  inferInstanceAs <| SMulCommClass R S (RingCon.Quotient _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| SMulCommClass R S (RingCon.Quotient _))
 
 instance {R S A M} [CommSemiring R] [CommSemiring S] [AddCommMonoid M] [CommSemiring A]
     [SMul R S] [Algebra R A] [Algebra S A] [Module A M] [IsScalarTower R S A] :
     IsScalarTower R S (TensorAlgebra A M) :=
-  inferInstanceAs <| IsScalarTower R S (RingCon.Quotient _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower R S (RingCon.Quotient _))
 
 instance {S : Type*} [CommRing S] [Module S M] : Ring (TensorAlgebra S M) :=
   inferInstanceAs <| Ring (RingCon.Quotient _)

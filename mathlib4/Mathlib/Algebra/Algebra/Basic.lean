@@ -254,7 +254,8 @@ variable {R : Type*} {A : Type*} {B : Type*} [CommSemiring R] [Semiring A] [Semi
 work with than `•`. -/
 theorem map_algebraMap_mul (f : A →ₗ[R] B) (a : A) (r : R) :
     f (algebraMap R A r * a) = algebraMap R B r * f a := by
-  rw [← Algebra.smul_def, ← Algebra.smul_def, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  rw [← Algebra.smul_def, ← Algebra.smul_def, map_smul])
 
 theorem map_mul_algebraMap (f : A →ₗ[R] B) (a : A) (r : R) :
     f (a * algebraMap R A r) = f a * algebraMap R B r := by
@@ -501,9 +502,12 @@ invertible when `algebraMap R A r` is. -/
 abbrev Invertible.algebraMapOfInvertibleAlgebraMap (f : A →ₗ[R] B) (hf : f 1 = 1) {r : R}
     (h : Invertible (algebraMap R A r)) : Invertible (algebraMap R B r) where
   invOf := f ⅟(algebraMap R A r)
-  invOf_mul_self := by rw [← Algebra.commutes, ← Algebra.smul_def, ← map_smul, Algebra.smul_def,
-    mul_invOf_self, hf]
-  mul_invOf_self := by rw [← Algebra.smul_def, ← map_smul, Algebra.smul_def, mul_invOf_self, hf]
+  invOf_mul_self := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← Algebra.commutes, ← Algebra.smul_def, ← map_smul, Algebra.smul_def, mul_invOf_self, hf])
+  mul_invOf_self := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← Algebra.smul_def, ← map_smul, Algebra.smul_def, mul_invOf_self, hf])
 
 /-- If there is a linear map `f : A →ₗ[R] B` that preserves `1`, then `algebraMap R B r` is
 a unit when `algebraMap R A r` is. -/
@@ -523,8 +527,9 @@ variable {F E : Type*} [CommSemiring F] [Semiring E] [Algebra F E] (b : F →ₗ
 then the algebra map from `F` to `E` is also injective. -/
 theorem injective_algebraMap_of_linearMap (hb : Injective b) :
     Injective (algebraMap F E) := fun x y e ↦ hb <| by
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [← mul_one x, ← mul_one y, ← smul_eq_mul, ← smul_eq_mul,
-    map_smul, map_smul, Algebra.smul_def, Algebra.smul_def, e]
+    map_smul, map_smul, Algebra.smul_def, Algebra.smul_def, e])
 
 /-- If `E` is an `F`-algebra, and there exists a surjective `F`-linear map from `F` to `E`,
 then the algebra map from `F` to `E` is also surjective. -/
@@ -535,9 +540,10 @@ theorem surjective_algebraMap_of_linearMap (hb : Surjective b) :
   refine ⟨x * y, ?_⟩
   obtain ⟨z, hz⟩ := hb 1
   apply_fun (x • z • ·) at hy
+  (set_option backward.instanceTypes.subsingletons.prop false in
   rwa [← map_smul, smul_eq_mul, mul_comm, ← smul_mul_assoc, ← map_smul _ z, smul_eq_mul, mul_one,
     ← smul_eq_mul, map_smul, hz, one_mul, ← map_smul, smul_eq_mul, mul_one, smul_smul,
-    ← Algebra.algebraMap_eq_smul_one] at hy
+    ← Algebra.algebraMap_eq_smul_one] at hy)
 
 /-- If `E` is an `F`-algebra, and there exists a bijective `F`-linear map from `F` to `E`,
 then the algebra map from `F` to `E` is also bijective.

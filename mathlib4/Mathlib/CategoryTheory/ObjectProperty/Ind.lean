@@ -151,7 +151,8 @@ instance isClosedUnderLimitsOfShape_ind_discrete {ι : Type*} [Small.{w} ι]
   have : P.IsClosedUnderLimitsOfShape (Discrete (Shrink.{w} ι)) :=
     .of_equivalence (Discrete.equivalence e)
   let iso : limit Y ≅ ∏ᶜ fun i ↦ Y.obj ⟨e.symm i⟩ :=
-    (Pi.isoLimit _).symm ≪≫ (Pi.reindex e.symm _).symm
+    (Pi.isoLimit _).symm ≪≫
+      (set_option backward.instanceTypes.subsingletons.prop false in (Pi.reindex e.symm _).symm)
   rw [(ind.{w} P).prop_iff_of_iso iso]
   exact ind_pi_of_ind fun i ↦ h _
 

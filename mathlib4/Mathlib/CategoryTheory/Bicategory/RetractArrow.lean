@@ -67,6 +67,7 @@ lemma comm' {f' : X' ⟶ Y'} {f : X ⟶ Y} (r : RetractArrow₁ f' f) :
   nth_rw 2 [r.comm_assoc]
   simp
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- If a `1`-morphism is a retract of another, it stays so
 after the applicaton of a pseudofunctor. -/
 @[implicit_reducible, simps]

@@ -106,7 +106,7 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A) 
     --   RingQuot.liftAlgHom_mkAlgHom_apply]
     simp only [LieHom.coe_comp, Function.comp_apply, AlgHom.coe_toLieHom,
       UniversalEnvelopingAlgebra.ι_apply, mkAlgHom]
-    simp [UniversalEnvelopingAlgebra]
+    (set_option backward.dsimp.instanceTypes false in simp [UniversalEnvelopingAlgebra])
   right_inv F := by
     apply RingCon.Quotient.hom_extₐ
     ext

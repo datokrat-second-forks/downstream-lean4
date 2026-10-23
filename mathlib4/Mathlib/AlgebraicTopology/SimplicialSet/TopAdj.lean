@@ -41,7 +41,8 @@ open SSet
 in `SSet` and the corresponding topological standard simplex. -/
 noncomputable def toTopHomeo (n : SimplexCategory) :
     |stdSimplex.{u}.obj n| ≃ₜ StdSimplex ℝ (Fin (n.len + 1)) :=
-  (TopCat.homeoOfIso (toTopSimplex.{u}.app n)).trans Homeomorph.ulift
+  (TopCat.homeoOfIso (toTopSimplex.{u}.app n)).trans
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in Homeomorph.ulift)
 
 lemma toTopHomeo_naturality {n m : SimplexCategory} (f : n ⟶ m) :
     toTopHomeo m ∘ SSet.toTop.{u}.map (SSet.stdSimplex.map f) =

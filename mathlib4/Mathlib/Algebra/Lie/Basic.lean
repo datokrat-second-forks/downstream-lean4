@@ -252,7 +252,8 @@ instance LinearMap.instLieRingModule : LieRingModule L (M →ₗ[R] N) where
         simp only [lie_add, map_add]
         abel
       map_smul' := fun t m => by
-        simp only [smul_sub, map_smul, lie_smul, RingHom.id_apply] }
+        (set_option backward.instanceTypes.subsingletons.prop false in
+        simp only [smul_sub, map_smul, lie_smul, RingHom.id_apply]) }
   add_lie x y f := by
     ext n
     simp only [add_lie, coe_mk, AddHom.coe_mk, add_apply, map_add]
@@ -273,7 +274,8 @@ theorem LieHom.lie_apply (f : M →ₗ[R] N) (x : L) (m : M) : ⁅x, f⁆ m = �
 instance LinearMap.instLieModule : LieModule R L (M →ₗ[R] N) where
   smul_lie t x f := by
     ext n
-    simp only [smul_sub, smul_lie, smul_apply, LieHom.lie_apply, map_smul]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [smul_sub, smul_lie, smul_apply, LieHom.lie_apply, map_smul])
   lie_smul t x f := by
     ext n
     simp only [smul_sub, smul_apply, LieHom.lie_apply, lie_smul]
@@ -488,7 +490,8 @@ theorem LieModule.compLieHom [Module R M] [LieModule R L₂ M] :
     @LieModule R L₁ M _ _ _ _ _ (LieRingModule.compLieHom M f) :=
   { __ := LieRingModule.compLieHom M f
     smul_lie := fun t x m => by
-      simp only [LieRingModule.compLieHom_apply, smul_lie, map_smul]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [LieRingModule.compLieHom_apply, smul_lie, map_smul])
     lie_smul := fun t x m => by
       simp only [LieRingModule.compLieHom_apply, lie_smul] }
 
@@ -565,7 +568,8 @@ instance : LinearEquivClass (L₁ ≃ₗ⁅R⁆ L₂) R L₁ L₂ where
   map_add _ _ _ := by
     rw [← coe_toLinearEquiv, map_add]
   map_smulₛₗ _ _ _ := by
-    rw [← coe_toLinearEquiv, map_smul, RingHom.id_apply]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← coe_toLinearEquiv, map_smul, RingHom.id_apply])
 
 @[ext]
 theorem ext {f g : L₁ ≃ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
@@ -940,7 +944,8 @@ instance : LinearEquivClass (M ≃ₗ⁅R,L⁆ N) R M N where
   map_add _ _ _ := by
     rw [← coe_toLinearEquiv, map_add]
   map_smulₛₗ _ _ _ := by
-    rw [← coe_toLinearEquiv, map_smul, RingHom.id_apply]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← coe_toLinearEquiv, map_smul, RingHom.id_apply])
 
 instance : One (M ≃ₗ⁅R,L⁆ M) :=
   ⟨{ (1 : M ≃ₗ[R] M) with map_lie' := rfl }⟩

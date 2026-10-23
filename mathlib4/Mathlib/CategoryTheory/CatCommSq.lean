@@ -112,11 +112,13 @@ def hInv (_ : CatCommSq T.functor L R B.functor) : CatCommSq T.inverse R L B.inv
 
 lemma hInv_hInv (h : CatCommSq T.functor L R B.functor) :
     hInv T.symm R L B.symm (hInv T L R B h) = h := by
-  ext X
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  ext X)
   rw [← cancel_mono (B.functor.map (L.map (T.unitIso.hom.app X)))]
   rw [← Functor.comp_map]
   erw [← h.iso.hom.naturality (T.unitIso.hom.app X)]
-  rw [hInv_iso_hom_app]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [hInv_iso_hom_app])
   simp only [Equivalence.symm_functor]
   rw [hInv_iso_inv_app]
   dsimp
@@ -152,8 +154,10 @@ def vInv (_ : CatCommSq T L.functor R.functor B) : CatCommSq B L.inverse R.inver
 
 lemma vInv_vInv (h : CatCommSq T L.functor R.functor B) :
     vInv B L.symm R.symm T (vInv T L R B h) = h := by
-  ext X
-  rw [vInv_iso_hom_app]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  ext X)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [vInv_iso_hom_app])
   dsimp
   rw [vInv_iso_inv_app]
   rw [← cancel_mono (B.map (L.functor.map (NatTrans.app L.unitIso.hom X)))]

@@ -53,6 +53,7 @@ theorem span_eq_top_of_isLocalizedModule {v : Set M} (hv : span R v = ⊤) :
   rw [← LinearMap.coe_restrictScalars R, ← LinearMap.map_span, hv]
   exact mem_map_of_mem mem_top
 
+set_option backward.instanceTypes.subsingletons.prop false in
 theorem LinearIndependent.of_isLocalizedModule {ι : Type*} {v : ι → M}
     (hv : LinearIndependent R v) : LinearIndependent Rₛ (f ∘ v) := by
   rw [linearIndependent_iff'ₛ] at hv ⊢
@@ -78,7 +79,8 @@ theorem LinearIndependent.of_isLocalizedModule_of_isRegular {ι : Type*} {v : ι
     rintro _ ⟨_, r, rfl⟩ _ ⟨_, r', rfl⟩ eq
     congr; ext i
     have ⟨s, eq⟩ := IsLocalizedModule.exists_of_eq (S := S) eq
-    simp_rw [Submonoid.smul_def, ← map_smul] at eq
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [Submonoid.smul_def, ← map_smul] at eq)
     exact (h s).1 congr($(hv eq) i)
 
 theorem LinearIndependent.localization [Module Rₛ M] [IsScalarTower R Rₛ M]
@@ -99,7 +101,8 @@ lemma IsLocalizedModule.linearIndependent_lift {ι} {v : ι → Mₛ} (hf : Line
   intro t g g' eq i hit
   refine (isRegular_of_smul_left_injective f inj (sec (v i)).2).2 <|
     hf t (fun i ↦ _ * (sec (v i)).2) (fun i ↦ _ * (sec (v i)).2) ?_ i hit
-  simp_rw [mul_smul, ← Submonoid.smul_def, hsec, ← map_smul, ← map_sum, eq]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp_rw [mul_smul, ← Submonoid.smul_def, hsec, ← map_smul, ← map_sum, eq])
 
 namespace Module.Basis
 

@@ -106,7 +106,8 @@ lemma trivialOnSet_le_isContinuous (H : OpenSubgroup G) :
     obtain ⟨x, eq⟩ := hs g
     simp [φ, eq, ← R.ρ_apply_eq_smul, h _ x.prop]
   rw [this]
-  fun_prop
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  fun_prop)
 
 /-- An action of a topological group on a finite set is continuous if and only if it is trivial
 when restricted to some open subgroup. -/

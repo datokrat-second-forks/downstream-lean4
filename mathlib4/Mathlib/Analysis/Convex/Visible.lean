@@ -197,7 +197,7 @@ lemma rank_le_card_isVisible (hs : IsClosed (convexHull ℝ s)) (hx : x ∉ conv
     Module.rank ℝ (span ℝ (-x +ᵥ s)) ≤
       Module.rank ℝ (span ℝ
         (-x +ᵥ affineSpan ℝ ({x} ∪ {y ∈ s | IsVisible ℝ (convexHull ℝ s) x y}) : Set V)) := by
-      push_cast
+      (set_option backward.dsimp.instanceTypes false in push_cast)
       refine Submodule.rank_mono ?_
       gcongr
       exact (subset_convexHull ..).trans <| hs.convexHull_subset_affineSpan_isVisible hx

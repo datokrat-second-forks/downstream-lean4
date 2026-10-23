@@ -323,7 +323,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem prod_cons {i} (g : G i) (w : NormalWord d) (hmw : w.fstIdx ≠ some i)
     (hgr : g ∉ (φ i).range) : (cons g w hmw hgr).prod = of i g * w.prod := by
-  simp [prod, cons, ← of_apply_eq_base φ i, equiv_fst_eq_mul_inv, mul_assoc]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [prod, cons, ← of_apply_eq_base φ i, equiv_fst_eq_mul_inv, mul_assoc])
 
 variable [DecidableEq ι] [∀ i, DecidableEq (G i)]
 

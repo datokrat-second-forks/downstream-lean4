@@ -160,7 +160,8 @@ def colimitCocone (F : J ⥤ PresheafedSpace.{_, _, v} C) : Cocone F where
   ι :=
     { app := fun j =>
         { base := colimit.ι (F ⋙ PresheafedSpace.forget C) j
-          c := limit.π _ (op j) }
+          c := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+            limit.π _ (op j)) }
       naturality := fun {j j'} f => by
         ext1
         · ext x
@@ -218,7 +219,8 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F)
   have w := Functor.congr_hom (congr_arg Opens.map
     (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j))) i.unop
   simp only [Opens.map_comp_map] at w
-  simp [congr($(w).op)]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp [congr($(w).op)])
 
 /-- Auxiliary definition for `AlgebraicGeometry.PresheafedSpace.colimitCoconeIsColimit`.
 -/
@@ -239,12 +241,14 @@ theorem desc_fac (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F) (j : J) 
   · simp [desc]
   · simp only [op_obj, desc, descCApp, Presheaf.comp_app, comp_c_app, colimitCocone_ι_app_c, assoc]
     rw [limitObjIsoLimitCompEvaluation_inv_π_app_assoc]
-    simp
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp)
 
 end ColimitCoconeIsColimit
 
 open ColimitCoconeIsColimit
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Auxiliary definition for `AlgebraicGeometry.PresheafedSpace.instHasColimits`.
@@ -317,7 +321,8 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpace.{_, _, v}
     simp only [Functor.op_obj, op_inj_iff, Opens.map_coe, SetLike.ext'_iff,
       Set.preimage_preimage]
     congrm Set.preimage $(funext fun x => ?_) U.1
-    simp only [colimitCocone, colimit, ← TopCat.comp_app]
+    (set_option backward.dsimp.instanceTypes false in
+    simp only [colimitCocone, colimit, ← TopCat.comp_app])
     congr
     exact ι_preservesColimitIso_inv (forget C) F (unop X)
   · intro X Y f

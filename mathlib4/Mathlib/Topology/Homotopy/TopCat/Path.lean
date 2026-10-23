@@ -46,7 +46,9 @@ def pathEquiv {x y : X} : X.Path x y ≃ _root_.Path x y where
       source' := p.hom₀
       target' := p.hom₁ }
   invFun p :=
-    { hom := ofHom (p.toContinuousMap.comp (ContinuousMap.ofClass TopCat.I.homeomorph))
+    { hom := ofHom (p.toContinuousMap.comp
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+          ContinuousMap.ofClass TopCat.I.homeomorph))
       hom₀ := p.source'
       hom₁ := p.target' }
 

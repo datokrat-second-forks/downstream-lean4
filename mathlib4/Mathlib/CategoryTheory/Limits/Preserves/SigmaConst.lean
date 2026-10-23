@@ -45,13 +45,16 @@ instance [HasCoproducts.{w} C] (R : C) :
       fac s j := by
         dsimp
         ext k
-        simp [dsimp% hc.fac_apply, dsimp% Sigma.ι_comp_desc (hc.desc (coconeTypes s)), coconeTypes]
+        (set_option backward.dsimp.instanceTypes false in
+        simp [dsimp% hc.fac_apply, dsimp% Sigma.ι_comp_desc (hc.desc (coconeTypes s)),
+          coconeTypes])
       uniq s m hm := by
         dsimp
         ext x
         obtain ⟨j, k, rfl⟩ := Functor.CoconeTypes.IsColimit.ι_jointly_surjective hc x
+        (set_option backward.dsimp.instanceTypes false in
         simp [coconeTypes, ← hm, dsimp% hc.fac_apply,
-          dsimp% Sigma.ι_comp_desc (hc.desc (coconeTypes s))] }⟩⟩⟩
+          dsimp% Sigma.ι_comp_desc (hc.desc (coconeTypes s))]) }⟩⟩⟩
 
 section
 

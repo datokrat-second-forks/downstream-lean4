@@ -71,7 +71,10 @@ theorem Splits.toPermHom_apply_eq_one_or_isSwap_of_ncard_le_of_mem_inertia
   split_ifs with hz hz'
   · subst hz
     have key := hp (g • g • x) (g • g • x).2 (g • x) (g • x).2 (g • x) (g • x).2 x x.2
-      (by simp [hπ]) (by simp [hπ]) (by simpa [← rootSet.coe_smul]) (by simpa [← rootSet.coe_smul])
+      (by simp [hπ]) (by simp [hπ])
+      (by (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        simpa [← rootSet.coe_smul]))
+      (by simpa [← rootSet.coe_smul])
     grind [rootSet.coe_smul]
   · simp [hz']
   · grind [rootSet.coe_smul, SetLike.coe_eq_coe]

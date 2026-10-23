@@ -297,6 +297,7 @@ def Functor.mapHomotopyCategoryCompIso {W' : Type*} [Category W'] [Preadditive W
   Quotient.natIsoLift _ (isoWhiskerRight (Functor.mapHomologicalComplexCompIso e c)
     (HomotopyCategory.quotient W' c))
 
+set_option backward.dsimp.instanceTypes false in
 variable {c} in
 set_option backward.defeqAttrib.useBackward true in
 /-- The preimage by a fully faithful functor of a homotopy between morphisms

@@ -422,6 +422,7 @@ theorem map_lift_pullbackComparison (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g
       pullback.lift (G.map h) (G.map k) (by simp only [← G.map_comp, w]) := by
   ext <;> simp [← G.map_comp]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 @[reassoc]
 lemma pullbackComparison_comp {E : Type*} [Category* E] (F : C ⥤ D) (G : D ⥤ E) {X Y S : C}

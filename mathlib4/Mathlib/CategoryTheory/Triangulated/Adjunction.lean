@@ -200,7 +200,9 @@ lemma mk' (h : E.functor.IsTriangulated) : E.IsTriangulated where
 
 /-- Constructor for `Equivalence.IsTriangulated`. -/
 lemma mk'' (h : E.inverse.IsTriangulated) : E.IsTriangulated where
-  leftAdjoint_isTriangulated := (mk' E.symm h).rightAdjoint_isTriangulated
+  leftAdjoint_isTriangulated :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (mk' E.symm h).rightAdjoint_isTriangulated)
 
 /--
 The identity equivalence is triangulated.

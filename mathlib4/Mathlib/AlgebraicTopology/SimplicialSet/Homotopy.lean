@@ -74,8 +74,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_zero_comp_δ_zero n := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.δ_naturality_apply, ← H.h₁]
-    dsimp
+      ← SSet.δ_naturality_apply, ← H.h₁, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · simp [dsimp% SimplexCategory.δ_comp_σ_self (i := (0 : Fin (n + 1)))]
@@ -84,8 +84,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_last_comp_δ_last n := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.δ_naturality_apply, ← H.h₀]
-    dsimp
+      ← SSet.δ_naturality_apply, ← H.h₀, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k
     · simp [dsimp% SimplexCategory.δ_comp_σ_succ (i := Fin.last n)]
@@ -93,8 +93,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_succ_comp_δ_castSucc_of_lt {n} i j hij := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.δ_naturality_apply]
-    dsimp
+      ← SSet.δ_naturality_apply, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · simpa [stdSimplex.δ_objEquiv_symm_apply, SSet.yonedaEquiv_symm_app_objEquiv_symm.{u}] using!
@@ -106,8 +106,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_succ_comp_δ_castSucc_succ {n} i := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.δ_naturality_apply]
-    dsimp
+      ← SSet.δ_naturality_apply, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · rw [SimplexCategory.δ_comp_σ_succ, ← Fin.castSucc_succ, SimplexCategory.δ_comp_σ_self]
@@ -116,8 +116,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_castSucc_comp_δ_succ_of_lt {n} i j hij := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.δ_naturality_apply]
-    dsimp
+      ← SSet.δ_naturality_apply, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · simp [SimplexCategory.δ_comp_σ_of_gt hij, ← δ_def]
@@ -126,8 +126,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_comp_σ_castSucc_of_le {n} i j hij := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.σ_naturality_apply]
-    dsimp
+      ← SSet.σ_naturality_apply, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · simp [SimplexCategory.σ_comp_σ hij]
@@ -136,8 +136,8 @@ noncomputable def toSimplicialObjectHomotopy (H : Homotopy f g) :
   h_comp_σ_succ_of_lt {n} i j hij := by
     ext x
     simp only [TypeCat.Fun.toFun_apply, types_comp_apply, TypeCat.hom_ofHom, TypeCat.Fun.coe_mk,
-      ← SSet.σ_naturality_apply]
-    dsimp
+      ← SSet.σ_naturality_apply, NatTrans.comp_app]
+    dsimp [prodStdSimplex₁.nonDegenerateEquiv]
     apply congr_arg
     ext k : 2
     · simp [← SimplexCategory.σ_comp_σ hij]

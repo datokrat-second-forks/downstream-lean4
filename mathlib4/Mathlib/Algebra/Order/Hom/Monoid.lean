@@ -234,13 +234,19 @@ theorem monotone_iff_map_nonneg [iamhc : AddMonoidHomClass F α β] :
 variable [iamhc : AddMonoidHomClass F α β]
 
 theorem antitone_iff_map_nonpos : Antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
-  monotone_toDual_comp_iff.symm.trans <| monotone_iff_map_nonneg (β := βᵒᵈ) (iamhc := iamhc) _
+  monotone_toDual_comp_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    monotone_iff_map_nonneg (β := βᵒᵈ) (iamhc := iamhc) _)
 
 theorem monotone_iff_map_nonpos : Monotone (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
-  antitone_comp_ofDual_iff.symm.trans <| antitone_iff_map_nonpos (α := αᵒᵈ) (iamhc := iamhc) _
+  antitone_comp_ofDual_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    antitone_iff_map_nonpos (α := αᵒᵈ) (iamhc := iamhc) _)
 
 theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
-  monotone_comp_ofDual_iff.symm.trans <| monotone_iff_map_nonneg (α := αᵒᵈ) (iamhc := iamhc) _
+  monotone_comp_ofDual_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    monotone_iff_map_nonneg (α := αᵒᵈ) (iamhc := iamhc) _)
 
 theorem strictMono_iff_map_pos :
     StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a := by
@@ -251,13 +257,19 @@ theorem strictMono_iff_map_pos :
     exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)
 
 theorem strictAnti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
-  strictMono_toDual_comp_iff.symm.trans <| strictMono_iff_map_pos (β := βᵒᵈ) (iamhc := iamhc) _
+  strictMono_toDual_comp_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    strictMono_iff_map_pos (β := βᵒᵈ) (iamhc := iamhc) _)
 
 theorem strictMono_iff_map_neg : StrictMono (f : α → β) ↔ ∀ a < 0, f a < 0 :=
-  strictAnti_comp_ofDual_iff.symm.trans <| strictAnti_iff_map_neg (α := αᵒᵈ) (iamhc := iamhc) _
+  strictAnti_comp_ofDual_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    strictAnti_iff_map_neg (α := αᵒᵈ) (iamhc := iamhc) _)
 
 theorem strictAnti_iff_map_pos : StrictAnti (f : α → β) ↔ ∀ a < 0, 0 < f a :=
-  strictMono_comp_ofDual_iff.symm.trans <| strictMono_iff_map_pos (α := αᵒᵈ) (iamhc := iamhc) _
+  strictMono_comp_ofDual_iff.symm.trans <|
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    strictMono_iff_map_pos (α := αᵒᵈ) (iamhc := iamhc) _)
 
 end OrderedAddCommGroup
 

@@ -54,10 +54,11 @@ def PreZeroHypercover.isLimitSigmaOfIsColimitEquiv (E : PreZeroHypercover.{w} S)
     Equiv.sigmaPUnit (E.toPreOneHypercover.I₀ × E.toPreOneHypercover.I₀)
   have hc' : IsColimit c' := by
     refine (c'.isColimitEquivOfEquiv equiv.symm).symm (Nonempty.some ?_)
+    (set_option backward.instanceTypes.subsingletons.prop false in
     exact IsUniversalColimit.nonempty_isColimit_prod_of_isPullback
       huniv huniv E.f E.f ((E.sigmaOfIsColimit hc).f ⟨⟩) ((E.sigmaOfIsColimit hc).f ⟨⟩)
       (fun i j ↦ .of_hasPullback _ _) (.of_hasPullback _ _) (.refl _) (by simp) (by simp)
-      (by simp [c', equiv, Equiv.sigmaPUnit]) (by simp [c', equiv, Equiv.sigmaPUnit])
+      (by simp [c', equiv, Equiv.sigmaPUnit]) (by simp [c', equiv, Equiv.sigmaPUnit]))
   refine .trans ?_ (E.toPreOneHypercover.isLimitSigmaOfIsColimitEquiv hc hc' F)
   apply PreOneHypercover.isLimitEquivOfIso
   refine PreOneHypercover.isoMk (.refl _) (fun _ ↦ .refl _) (fun _ _ ↦ .refl _)

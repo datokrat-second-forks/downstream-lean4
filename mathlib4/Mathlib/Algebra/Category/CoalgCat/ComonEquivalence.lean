@@ -130,7 +130,8 @@ theorem tensorObj_comul (K L : CoalgCat R) :
     Coalgebra.comul (R := R) (A := (K ⊗ L : CoalgCat R))
       = (TensorProduct.tensorTensorTensorComm R K K L L).toLinearMap
       ∘ₗ TensorProduct.map Coalgebra.comul Coalgebra.comul := by
-  rw [ofComonObjCoalgebraStruct_comul]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  rw [ofComonObjCoalgebraStruct_comul])
   simp only [Comon.monoidal_tensorObj_comon_comul,
     MonObj.tensorObj.mul_def, unop_comp, unop_tensorObj, unop_tensorHom,
     BraidedCategory.unop_tensorμ, tensorμ_eq_tensorTensorTensorComm, ModuleCat.hom_comp,
@@ -158,6 +159,7 @@ open TensorProduct
 
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] MonObj.tensorObj.one_def MonObj.tensorObj.mul_def in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem comul_tensorObj :
     Coalgebra.comul (R := R) (A := (↧M ⊗ ↧N : CoalgCat R))
       = Coalgebra.comul (A := M ⊗[R] N) := by
@@ -168,6 +170,7 @@ theorem comul_tensorObj :
 
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] MonObj.tensorObj.one_def MonObj.tensorObj.mul_def in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem comul_tensorObj_tensorObj_right :
     Coalgebra.comul (R := R) (A := (↧M ⊗
       (↧N ⊗ ↧P) : CoalgCat R))
@@ -181,6 +184,7 @@ theorem comul_tensorObj_tensorObj_right :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] MonObj.tensorObj.one_def MonObj.tensorObj.mul_def in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem comul_tensorObj_tensorObj_left :
     Coalgebra.comul (R := R)
       (A := ((↧M ⊗ ↧N) ⊗ ↧P : CoalgCat R))
@@ -190,6 +194,7 @@ theorem comul_tensorObj_tensorObj_left :
     AlgebraTensorModule.tensorTensorTensorComm_eq]
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem counit_tensorObj :
     Coalgebra.counit (R := R) (A := (↧M ⊗ ↧N : CoalgCat R))
@@ -198,6 +203,7 @@ theorem counit_tensorObj :
   simp [TensorProduct.counit_def, TensorProduct.AlgebraTensorModule.rid_eq_rid, ← lid_eq_rid]
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem counit_tensorObj_tensorObj_right :
     Coalgebra.counit (R := R)
@@ -207,6 +213,7 @@ theorem counit_tensorObj_tensorObj_right :
   simp [TensorProduct.counit_def, TensorProduct.AlgebraTensorModule.rid_eq_rid, ← lid_eq_rid]
   rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem counit_tensorObj_tensorObj_left :
     Coalgebra.counit (R := R)

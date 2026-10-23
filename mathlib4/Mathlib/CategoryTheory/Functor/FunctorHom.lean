@@ -110,6 +110,7 @@ lemma functorHom_ext {X : C} {x y : (F.functorHom G).obj X}
     (h : ∀ (Y : C) (f : X ⟶ Y), x.app Y f = y.app Y f) : x = y :=
   HomObj.ext (by ext; apply h)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The equivalence `(A ⟶ F.functorHom G) ≃ HomObj F G A`. -/
@@ -145,13 +146,15 @@ def natTransEquiv : (𝟙_ (C ⥤ Type (max v' v u)) ⟶ F.functorHom G) ≃ (F 
     congr 1
     have := HomObj.congr_app congr($(f.naturality φ) PUnit.unit) Y (𝟙 Y)
     dsimp [functorHom, homObjFunctor] at this
-    aesop ⟩
+    (set_option backward.dsimp.instanceTypes false in
+    aesop) ⟩
   invFun f := { app _ := ↾fun _ ↦ HomObj.ofNatTrans f }
   left_inv f := by
     ext X a Y φ
     have := HomObj.congr_app congr($(f.naturality φ) PUnit.unit) Y (𝟙 Y)
     dsimp [functorHom, homObjFunctor] at this
-    aesop
+    (set_option backward.dsimp.instanceTypes false in
+    aesop)
 
 end CategoryTheory.Functor
 

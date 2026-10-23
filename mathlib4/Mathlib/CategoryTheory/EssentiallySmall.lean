@@ -167,6 +167,7 @@ noncomputable instance : Category.{w} (ShrinkHoms C) where
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `ShrinkHoms.equivalence`. -/
 @[simps]
@@ -180,6 +181,7 @@ noncomputable def inverse : ShrinkHoms C ⥤ C where
   obj X := fromShrinkHoms X
   map {X Y} f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The categorical equivalence between `C` and `ShrinkHoms C`, when `C` is locally small.
@@ -196,11 +198,13 @@ instance : (inverse C).IsEquivalence := (equivalence C).isEquivalence_inverse
 
 instance {T : Type u} [Unique T] : Unique (ShrinkHoms.{u} T) where
   default := ShrinkHoms.toShrinkHoms (default : T)
-  uniq _ := congr(ShrinkHoms.fromShrinkHoms $(Unique.uniq ..))
+  uniq _ := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    congr(ShrinkHoms.fromShrinkHoms $(Unique.uniq ..)))
 
 instance {T : Type u} [Category.{v} T] [IsDiscrete T] : IsDiscrete (ShrinkHoms.{u} T) where
   subsingleton _ _ := { allEq _ _ := Shrink.ext (Subsingleton.elim _ _) }
-  eq_of_hom f := IsDiscrete.eq_of_hom (C := T) ((equivShrink _).symm f)
+  eq_of_hom f := (set_option backward.instanceTypes.subsingletons.prop false in
+    IsDiscrete.eq_of_hom (C := T) ((equivShrink _).symm f))
 
 end ShrinkHoms
 

@@ -118,9 +118,11 @@ theorem isIsotypicOfType_submodule_iff {N : Submodule R M} :
     IsIsotypicOfType R N S ↔ ∀ m ≤ N, [IsSimpleModule R m] → Nonempty (m ≃ₗ[R] S) := by
   rw [Subtype.forall', ← (Submodule.MapSubtype.orderIso N).forall_congr_right]
   have e := Submodule.equivMapOfInjective _ N.subtype_injective
-  simp_rw [Submodule.MapSubtype.orderIso, Equiv.coe_fn_mk, ← (e _).isSimpleModule_iff]
+  (set_option backward.dsimp.instanceTypes false in
+  simp_rw [Submodule.MapSubtype.orderIso, Equiv.coe_fn_mk, ← (e _).isSimpleModule_iff])
   exact forall₂_congr fun m _ ↦ ⟨fun ⟨e'⟩ ↦ ⟨(e m).symm.trans e'⟩, fun ⟨e'⟩ ↦ ⟨(e m).trans e'⟩⟩
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem isIsotypic_submodule_iff {N : Submodule R M} :
     IsIsotypic R N ↔ ∀ m ≤ N, [IsSimpleModule R m] → IsIsotypicOfType R N m := by

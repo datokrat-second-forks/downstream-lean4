@@ -134,7 +134,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma mapPower_id (U : FormalCoproduct.{w} C) (α : Type t)
     [HasProductsOfShape α C] :
     U.mapPower (id : α → α) = 𝟙 _ := by
-  ext <;> simp
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -147,7 +147,8 @@ lemma mapPower_comp (U : FormalCoproduct.{w} C) {α β γ : Type t}
   · cat_disch
   · dsimp
     ext
-    simp [Function.comp_def]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Function.comp_def])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -159,7 +160,8 @@ lemma mapPower_powerMap {U V : FormalCoproduct.{w} C} (f : U ⟶ V)
   · cat_disch
   · dsimp
     ext
-    simp [Function.comp_def]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [Function.comp_def])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

@@ -307,9 +307,11 @@ theorem colimitLimitToLimitColimit_surjective :
       -- and as each component is an equation in a colimit, we can verify it by
       -- pointing out the morphism which carries one representative to the other:
       -- `simp? [← comp_apply, -types_comp_apply]` says:
+      (set_option backward.dsimp.instanceTypes false in
       simp only [comp_obj, colim_obj, lim_obj, Bifunctor.map_id_comp, id_eq, ← comp_apply, assoc,
-        ι_colimitLimitToLimitColimit_π, curry_obj_obj_obj, swap_obj]
-      generalize_proofs _ _ _ _ h
+        ι_colimitLimitToLimitColimit_π, curry_obj_obj_obj, swap_obj])
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      generalize_proofs _ _ _ _ h)
       dsimp
       rw [← dsimp% e j, dsimp% Limit.π_mk _ _ h]
       dsimp only [comp_obj, colim_obj, ← curry_obj_obj_obj]

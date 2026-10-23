@@ -263,7 +263,9 @@ lemma preimage_map : (skeletonOfMono i d).preimage c.map = ∂Δ[d] := by
   · rw [Subcomplex.le_iff_contains_nonDegenerate]
     rintro n ⟨y, hy₁⟩ hy₂
     have : n < d := dim_lt_of_nonDegenerate (X := ∂Δ[d])
-      ⟨⟨y, hy₂⟩, by simpa [Subcomplex.mem_nonDegenerate_iff]⟩ d
+      ⟨⟨y, hy₂⟩, by
+        (set_option backward.dsimp.instanceTypes false in
+        simpa [Subcomplex.mem_nonDegenerate_iff])⟩ d
     simp [skeletonOfMono_obj_eq_top i this]
   · have := h.symm.le _ (show stdSimplex.objEquiv.symm (𝟙 ⦋d⦌) ∈ _ by simp)
     simpa [mem_skeletonOfMono_obj_iff]

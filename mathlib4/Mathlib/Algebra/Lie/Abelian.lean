@@ -208,7 +208,7 @@ def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L�
     (LieModuleHom.map_lie _ _ _).symm.trans <|
       congr(f $(m.property x)).trans (map_zero _)⟩
   map_add' m n := by ext; simp
-  map_smul' t m := by ext; simp
+  map_smul' t m := by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
   map_lie' {x m} := by simp [trivial_lie_zero]
 
 @[norm_cast, simp]

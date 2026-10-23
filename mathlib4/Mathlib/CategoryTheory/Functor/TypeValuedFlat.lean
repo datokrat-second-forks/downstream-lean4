@@ -71,6 +71,7 @@ def fromOverSubfunctor : Subfunctor (Over.forget X ⋙ F) where
   obj U := F.map U.hom ⁻¹' {x}
   map _ _ _ := by simpa [← comp_apply, ← Functor.map_comp]
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma mem_fromOverSubfunctor_iff {U : Over X} (u : F.obj U.left) :
     u ∈ (fromOverSubfunctor F x).obj U ↔ F.map U.hom u = x := Iff.rfl
@@ -81,6 +82,7 @@ corresponding to a morphism `f : Y ⟶ X` to the subtype of `F.obj Y`
 consisting of those elements `y : F.obj Y` such that `F.map f y = x`. -/
 abbrev fromOverFunctor : Over X ⥤ Type w := (fromOverSubfunctor F x).toFunctor
 
+set_option backward.dsimp.instanceTypes false in
 open Functor.Elements in
 /-- Given a functor `F : C ⥤ Type w`, an object `X : C` and `x : F.obj X`,
 this is the equivalence between the category of elements of `fromOverFunctor F x`

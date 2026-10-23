@@ -94,6 +94,7 @@ def inverseObj (F : C ⥤ Mon D) : Mon (C ⥤ D) where
   { one := { app X := η[(F.obj X).X] }
     mul := { app X := μ[(F.obj X).X] } }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Functor translating a functor into the category of monoid objects
 to a monoid object in the functor category
@@ -207,8 +208,14 @@ private def inverse : (C ⥤ Comon D) ⥤ Comon (C ⥤ D) where
     { hom :=
       { app := fun X => (α.app X).hom
         naturality _ _ f := congr($(α.naturality f).hom) }
-      isComonHom_hom.hom_counit := by ext x; dsimp; rw [IsComonHom.hom_counit (α.app x).hom]
-      isComonHom_hom.hom_comul := by ext x; dsimp; rw [IsComonHom.hom_comul (α.app x).hom] }
+      isComonHom_hom.hom_counit := by
+        ext x
+        (set_option backward.dsimp.instanceTypes false in dsimp)
+        rw [IsComonHom.hom_counit (α.app x).hom]
+      isComonHom_hom.hom_comul := by
+        ext x
+        (set_option backward.dsimp.instanceTypes false in dsimp)
+        rw [IsComonHom.hom_comul (α.app x).hom] }
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in

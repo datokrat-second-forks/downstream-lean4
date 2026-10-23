@@ -897,6 +897,7 @@ def mapMonCompIso : (F ⋙ G).mapMon ≅ F.mapMon ⋙ G.mapMon :=
 protected instance Faithful.mapMon [F.Faithful] : F.mapMon.Faithful where
   map_injective {_X _Y} _f _g hfg := Mon.Hom.ext <| map_injective congr(($hfg).hom)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural transformations between functors lift to monoid objects. -/
 @[to_additive (attr := simps!)
@@ -904,6 +905,7 @@ set_option backward.defeqAttrib.useBackward true in
 def mapMonNatTrans (f : F ⟶ F') [NatTrans.IsMonoidal f] : F.mapMon ⟶ F'.mapMon where
   app X := .mk' (f.app _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural isomorphisms between functors lift to monoid objects. -/
@@ -939,6 +941,7 @@ variable [F.Monoidal]
 
 open scoped Obj
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 @[to_additive]
 protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
@@ -1037,6 +1040,7 @@ instance [F.Braided] : F.mapMon.Braided where
 
 set_option backward.defeqAttrib.useBackward true in
 variable (C D) in
+set_option backward.dsimp.instanceTypes false in
 /-- `mapMon` is functorial in the lax monoidal functor. -/
 @[to_additive (attr := simps)
 /-- `mapAddMon` is functorial in the lax monoidal functor. -/]
@@ -1112,6 +1116,7 @@ lemma monToLaxMonoidalObj_μ (A : Mon C) (X Y) :
 
 variable (C)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/
@@ -1126,6 +1131,7 @@ def monToLaxMonoidal : Mon C ⥤ LaxMonoidalFunctor (Discrete PUnit.{w + 1}) C w
 attribute [local aesop safe tactic (rule_sets := [CategoryTheory])]
   CategoryTheory.Discrete.discreteCases
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/

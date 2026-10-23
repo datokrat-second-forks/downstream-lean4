@@ -204,6 +204,8 @@ theorem coproductCocone_inl :
 theorem coproductCocone_inr :
     (coproductCocone A B).inr = ofHom (Algebra.TensorProduct.includeRight (R := ℤ)).toRingHom := rfl
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The tensor product `A ⊗[ℤ] B` is a coproduct for `A` and `B`. -/
@@ -283,6 +285,7 @@ variable (A B : CommRingCat.{u})
 def prodFan : BinaryFan A B :=
   BinaryFan.mk (CommRingCat.ofHom <| RingHom.fst A B) (CommRingCat.ofHom <| RingHom.snd A B)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The product in `CommRingCat` is the Cartesian product. -/
@@ -345,7 +348,8 @@ variable {J : Type u'} [SmallCategory J] (F : J ⥤ CommRingCat.{u}) {c : Cone F
 
 theorem isUnit_iff_forall_isUnit (hc : IsLimit c) (r : c.pt) : IsUnit r ↔
     ∀ (j : J), IsUnit (c.π.app j r) := by
-  refine ⟨fun h _ ↦ h.map _, fun h ↦ ?_⟩
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  refine ⟨fun h _ ↦ h.map _, fun h ↦ ?_⟩)
   simp only [isUnit_iff_exists_inv] at h ⊢
   choose inv h_inv using h
   have map_inv {j k : J} (f : j ⟶ k) : F.map f (inv j) = inv k := by
@@ -480,6 +484,7 @@ def pullbackConeIsLimit (f : A ⟶ C) (g : B ⟶ C) :
 
 open WalkingCospan
 
+set_option backward.dsimp.instanceTypes false in
 instance pullbackFst_isLocalHom (f : A ⟶ C) (g : B ⟶ C) [IsLocalHom g.hom] :
     IsLocalHom (pullback.fst f g).hom := by
   refine Limits.π_isLocalHom _ (limit.isLimit _) left fun x hx i ↦ ?_

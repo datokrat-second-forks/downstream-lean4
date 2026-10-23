@@ -165,12 +165,18 @@ theorem range_liftHom (B : Basis A c₁ c₂ c₃) :
 @[simps i j k]
 def compHom (F : A →ₐ[R] B) : Basis B c₁ c₂ c₃ where
   i := F q.i
-  i_mul_i := by rw [← map_mul, q.i_mul_i, map_add, map_smul, map_smul, map_one]
+  i_mul_i := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← map_mul, q.i_mul_i, map_add, map_smul, map_smul, map_one])
   j := F q.j
-  j_mul_j := by rw [← map_mul, q.j_mul_j, map_smul, map_one]
+  j_mul_j := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← map_mul, q.j_mul_j, map_smul, map_one])
   k := F q.k
   i_mul_j := by rw [← map_mul, q.i_mul_j]
-  j_mul_i := by rw [← map_mul, q.j_mul_i, map_sub, map_smul]
+  j_mul_i := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← map_mul, q.j_mul_i, map_sub, map_smul])
 
 end Basis
 
@@ -185,7 +191,8 @@ def lift : Basis A c₁ c₂ c₃ ≃ (ℍ[R,c₁,c₂,c₃] →ₐ[R] A) where
     ext
     dsimp [Basis.lift]
     rw [← F.commutes]
-    simp only [← map_smul, ← map_add, mk_add_mk, smul_mk, smul_zero, algebraMap_eq]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [← map_smul, ← map_add, mk_add_mk, smul_mk, smul_zero, algebraMap_eq])
     congr <;> simp
 
 /-- Two `R`-algebra morphisms from a quaternion algebra are equal if they agree on `i` and `j`. -/

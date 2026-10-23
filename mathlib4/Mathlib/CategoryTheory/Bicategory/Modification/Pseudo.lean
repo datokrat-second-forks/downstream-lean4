@@ -64,6 +64,7 @@ namespace Modification
 
 variable (Γ : Modification η θ)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The modification between the corresponding strong transformation of the underlying oplax
 functors. -/

@@ -76,12 +76,13 @@ private lemma induction_structuredArrow'
     obtain ⟨g, rfl⟩ := (Quotient.functor (relations W)).map_surjective g
     exact this g
   intro Y₀ f
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   induction f with
   | nil => exact hP₀
   | cons f g hf =>
       obtain (g | ⟨w, hw⟩) := g
       · exact hP₁ g _ hf
-      · simpa only [← Construction.wInv_eq_isoOfHom_inv w hw] using! hP₂ w hw _ hf
+      · simpa only [← Construction.wInv_eq_isoOfHom_inv w hw] using! hP₂ w hw _ hf)
 
 end
 

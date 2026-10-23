@@ -197,10 +197,13 @@ instance lawfulFunctor : LawfulFunctor (Comp F G) where
 
 theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] :
     Comp.functor (G := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (G := Id)) _ fun _ _ _ _ => rfl
+  -- TODO: why doesn't instanceTypes.singletons.prop work here?
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  @Functor.ext F _ AF (Comp.lawfulFunctor (G := Id)) _ fun _ _ _ _ => rfl)
 
 theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : Comp.functor (F := Id) = AF :=
-  @Functor.ext F _ AF (Comp.lawfulFunctor (F := Id)) _ fun _ _ _ _ => rfl
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  @Functor.ext F _ AF (Comp.lawfulFunctor (F := Id)) _ fun _ _ _ _ => rfl)
 
 end Comp
 

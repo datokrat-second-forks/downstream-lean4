@@ -158,7 +158,8 @@ protected theorem map (f : M →ₗ[R] N) (hf : Function.Injective f) (hF : F.Is
   mem_of_smul_add_mem := by
     rintro _ _ a ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩ ha ⟨z, hz₁, hz₂⟩
     dsimp at hz₂
-    rw [← map_smul, ← map_add] at hz₂
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    rw [← map_smul, ← map_add] at hz₂)
     exact ⟨x, hF.mem_of_smul_add_mem hx hy ha (hf hz₂ ▸ hz₁), rfl⟩
 
 /-- The image of a face of a cone under an equivalence is a face of the image of the cone. -/
@@ -179,7 +180,8 @@ theorem of_map_injective {f : M →ₗ[R] N} (hf : Function.Injective f)
 /-- The comap of a face of a cone under a linear map is a face of the comap of the cone. -/
 protected theorem comap (f : N →ₗ[R] M) (hF : F.IsFaceOf C) : (F.comap f).IsFaceOf (C.comap f) := by
   refine ⟨comap_mono hF.le, ?_⟩
-  simp only [mem_comap, map_add, map_smul]
+  (set_option backward.instanceTypes.subsingletons.prop false in
+  simp only [mem_comap, map_add, map_smul])
   exact hF.mem_of_smul_add_mem
 
 theorem of_comap_surjective {f : N →ₗ[R] M} (hf : Function.Surjective f)

@@ -405,8 +405,9 @@ def coeLinearMap : (⨁ i, A i) →ₗ[R] M :=
 set_option backward.isDefEq.respectTransparency false in
 theorem coeLinearMap_eq_dfinsuppSum [DecidableEq M] (x : DirectSum ι fun i => A i) :
     coeLinearMap A x = DFinsupp.sum x fun i => (fun x : A i => ↑x) := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [coeLinearMap, toModule, DFinsupp.lsum, LinearEquiv.coe_mk, LinearMap.coe_mk,
-    AddHom.coe_mk]
+    AddHom.coe_mk])
   rw [DFinsupp.sumAddHom_apply]
   simp only [LinearMap.toAddMonoidHom_coe, Submodule.coe_subtype]
 
@@ -470,8 +471,9 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type*}
     (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σ i, α i ↦ ↑(v a.1 a.2) := by
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [IsInternal.collectedBasis, coeLinearMap, DFinsupp.mapRange.linearEquiv,
-    toModule, DFinsupp.lsum]
+    toModule, DFinsupp.lsum])
 
 theorem IsInternal.collectedBasis_mem (h : IsInternal A) {α : ι → Type*}
     (v : ∀ i, Basis (α i) R (A i)) (a : Σ i, α i) : h.collectedBasis v a ∈ A a.1 := by simp

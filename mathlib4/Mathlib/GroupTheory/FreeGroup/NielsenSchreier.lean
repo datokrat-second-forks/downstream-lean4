@@ -264,9 +264,11 @@ lemma endIsFree : IsFreeGroup (End (root' T)) :=
           rw [homOfPath, F'.map_comp, comp_as_mul, ih, mul_one]
           rcases e with ⟨e | e, eT⟩
           · rw [hF']
-            exact dite_eq_left (Or.inl eT)
+            (set_option backward.instanceTypes.subsingletons.decidable false in
+            exact dite_eq_left (Or.inl eT))
           · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
-            exact dite_eq_left (Or.inr eT)
+            (set_option backward.instanceTypes.subsingletons.decidable false in
+            exact dite_eq_left (Or.inr eT))
       · intro E hE
         ext x
         suffices (functorOfMonoidHom T E).map x.asHom = F'.map x.asHom by

@@ -113,7 +113,9 @@ def toSimultaneousImportNeeds (env : Environment)
               let some modIdx := env.getModuleIdx? modName | continue
               trace[ImportGraph.Shake] "indirect usage of `{modName}`"
               declImportNeeds := declImportNeeds.union
-                { isExported := false, isMeta := false, allowMeta := true } {modIdx}
+                { isExported := false, isMeta := false, allowMeta := true }
+                (set_option backward.isDefEq.respectTransparency.instanceTypes false in {modIdx})
           let k := stance.toImportNeedsKind k usedStance
-          declImportNeeds := declImportNeeds.union k {modIdx}
+          declImportNeeds := declImportNeeds.union k
+            (set_option backward.isDefEq.respectTransparency.instanceTypes false in {modIdx})
   return declImportNeeds

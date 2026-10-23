@@ -50,12 +50,14 @@ variable (R)
 
 instance ResidueField.algebra {R₀} [CommRing R₀] [Algebra R₀ R] :
     Algebra R₀ (ResidueField R) :=
-  inferInstanceAs <| Algebra R₀ (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| Algebra R₀ (_ ⧸ _))
 
 instance {R₁ R₂} [CommRing R₁] [CommRing R₂]
     [Algebra R₁ R₂] [Algebra R₁ R] [Algebra R₂ R] [IsScalarTower R₁ R₂ R] :
     IsScalarTower R₁ R₂ (ResidueField R) :=
-  inferInstanceAs <| IsScalarTower R₁ R₂ (_ ⧸ _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| IsScalarTower R₁ R₂ (_ ⧸ _))
 
 @[simp]
 theorem ResidueField.algebraMap_eq : algebraMap R (ResidueField R) = residue R :=

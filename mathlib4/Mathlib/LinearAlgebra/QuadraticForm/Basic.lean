@@ -531,7 +531,9 @@ variable [AddCommMonoid P] [Module R P]
 /-- Compose the quadratic map with a linear function on the right. -/
 def comp (Q : QuadraticMap R N P) (f : M →ₗ[R] N) : QuadraticMap R M P where
   toFun x := Q (f x)
-  toFun_smul a x := by simp only [Q.map_smul, map_smul]
+  toFun_smul a x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Q.map_smul, map_smul])
   exists_companion' :=
     let ⟨B, h⟩ := Q.exists_companion
     ⟨B.compl₁₂ f f, fun x y => by simp_rw [f.map_add]; exact h (f x) (f y)⟩
@@ -545,7 +547,9 @@ theorem comp_apply (Q : QuadraticMap R N P) (f : M →ₗ[R] N) (x : M) : (Q.com
 def _root_.LinearMap.compQuadraticMap (f : N →ₗ[R] P) (Q : QuadraticMap R M N) :
     QuadraticMap R M P where
   toFun x := f (Q x)
-  toFun_smul b x := by simp only [Q.map_smul, map_smul]
+  toFun_smul b x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [Q.map_smul, map_smul])
   exists_companion' :=
     let ⟨B, h⟩ := Q.exists_companion
     ⟨B.compr₂ f, fun x y => by simp only [h, map_add, LinearMap.compr₂_apply]⟩
@@ -666,7 +670,9 @@ variable {N' : Type*} [AddCommMonoid N'] [Module R N']
 /-- A bilinear map gives a quadratic map by applying the argument twice. -/
 def toQuadraticMap (B : BilinMap R M N) : QuadraticMap R M N where
   toFun x := B x x
-  toFun_smul a x := by simp only [map_smul, LinearMap.smul_apply, smul_smul]
+  toFun_smul a x := by
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp only [map_smul, LinearMap.smul_apply, smul_smul])
   exists_companion' := ⟨B + LinearMap.flip B, fun x y => by simp [add_add_add_comm, add_comm]⟩
 
 @[simp]
@@ -1172,7 +1178,7 @@ def toMatrix' (Q : QuadraticForm R (n → R)) : Matrix n n R :=
 
 theorem toMatrix'_smul (a : R) (Q : QuadraticForm R (n → R)) :
     (a • Q).toMatrix' = a • Q.toMatrix' := by
-  simp [toMatrix']
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [toMatrix'])
 
 theorem isSymm_toMatrix' (Q : QuadraticForm R (n → R)) : Q.toMatrix'.IsSymm := by
   ext i j
@@ -1217,7 +1223,7 @@ lemma toMatrix_eq_toMatrix' (Q : QuadraticForm R (n → R)) :
 
 theorem toMatrix_smul (a : R) (Q : QuadraticForm R N) :
     (a • Q).toMatrix b = a • (Q.toMatrix b) := by
-  simp [toMatrix]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [toMatrix])
 
 theorem isSymm_toMatrix (Q : QuadraticForm R N) : (Q.toMatrix b).IsSymm := by
   ext i j
@@ -1328,6 +1334,7 @@ open Module
 variable {V : Type u} {K : Type v} [Field K] [AddCommGroup V] [Module K V]
 variable [FiniteDimensional K V]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
 theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : LinearMap.BilinForm K V}
@@ -1419,6 +1426,7 @@ theorem weightedSumSquares_apply [Monoid S] [DistribMulAction S R] [SMulCommClas
     weightedSumSquares R w v = ∑ i : ι, w i • (v i * v i) :=
   sum_apply _ _ _
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- On an orthogonal basis, the basis representation of `Q` is just a sum of squares. -/
 theorem basisRepr_eq_of_iIsOrtho {R M} [CommRing R] [AddCommGroup M] [Module R M]
     [Invertible (2 : R)] (Q : QuadraticForm R M) (v : Basis ι R M)

@@ -371,10 +371,16 @@ set_option backward.isDefEq.respectTransparency false in
 /-- `Antisymmetrization` and `orderDual` commute. -/
 def OrderIso.dualAntisymmetrization :
     (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o Antisymmetrization αᵒᵈ (· ≤ ·) where
-  toFun := (Quotient.map' id) fun _ _ => And.symm
-  invFun := (Quotient.map' id) fun _ _ => And.symm
-  left_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk'', id]
-  right_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk'', id]
+  toFun := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (Quotient.map' id) fun _ _ => And.symm)
+  invFun := (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (Quotient.map' id) fun _ _ => And.symm)
+  left_inv a := Quotient.inductionOn' a fun a => by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp_rw [Quotient.map'_mk'', id])
+  right_inv a := Quotient.inductionOn' a fun a => by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp_rw [Quotient.map'_mk'', id])
   map_rel_iff' := @fun a b => Quotient.inductionOn₂' a b fun _ _ => Iff.rfl
 
 @[simp]

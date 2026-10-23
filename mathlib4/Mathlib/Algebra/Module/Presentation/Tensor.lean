@@ -56,11 +56,11 @@ noncomputable def tensor : (relations₁.tensor relations₂).Solution (M₁ ⊗
   var := fun ⟨g₁, g₂⟩ => solution₁.var g₁ ⊗ₜ solution₂.var g₂
   linearCombination_var_relation := by
     rintro (⟨r₁, g₂⟩ | ⟨g₁, r₂⟩)
-    · dsimp
+    · (set_option backward.dsimp.instanceTypes false in dsimp)
       rw [Finsupp.linearCombination_embDomain]
       exact (solution₁.postcomp (curry (TensorProduct.comm A M₂ M₁).toLinearMap
         (solution₂.var g₂))).linearCombination_var_relation r₁
-    · dsimp
+    · (set_option backward.dsimp.instanceTypes false in dsimp)
       rw [Finsupp.linearCombination_embDomain]
       exact (solution₂.postcomp (curry .id (solution₁.var g₁))).linearCombination_var_relation r₂
 
@@ -86,7 +86,8 @@ noncomputable def isPresentationCoreTensor :
         erw [Finsupp.linearCombination_embDomain] at this
         convert this
         ext g₁
-        simp) })
+        (set_option backward.dsimp.instanceTypes false in
+        simp)) })
   postcomp_desc _ := by aesop
   postcomp_injective h := curry_injective (h₁.postcomp_injective (by
     ext g₁ : 2

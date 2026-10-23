@@ -460,6 +460,7 @@ theorem le_span_singleton_iff {s : Submodule R M} {v₀ : M} :
     s ≤ R ∙ v₀ ↔ ∀ v ∈ s, ∃ r : R, r • v₀ = v := by
   simp_rw [IsConcreteLE.le_iff, mem_span_singleton]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 theorem eq_span_singleton_of_surjective {s : Submodule R M}
     {f : R →ₗ[R] s} (hf : Surjective f) : s = span R {(f 1 : M)} := by
   refine le_antisymm (fun x hx ↦ mem_span_singleton.mpr ?_)
@@ -687,7 +688,8 @@ theorem Module.IsPrincipal.of_surjective (f : M →ₗ[R] M₂) (hf : Function.S
     refine ⟨f m, .symm <| top_unique fun y _ ↦ ?_⟩
     obtain ⟨x, rfl⟩ := hf y
     obtain ⟨r, rfl⟩ := mem_span_singleton.mp (hm.le (trivial : x ∈ ⊤))
-    simpa only [map_smul] using smul_mem _ r (mem_span_singleton_self _)
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simpa only [map_smul] using smul_mem _ r (mem_span_singleton_self _))
 
 theorem LinearEquiv.isPrincipal_iff (e : M ≃ₗ[R] M₂) :
     Module.IsPrincipal R M ↔ Module.IsPrincipal R M₂ where

@@ -440,6 +440,7 @@ namespace AddMonoidAlgebra
 variable [Semiring R] [Add M]
 
 variable (R M) in
+set_option backward.instanceTypes.subsingletons.decidable false in
 /-- The equivalence between `AddMonoidAlgebra` and `MonoidAlgebra` in terms of
 `Multiplicative` -/
 @[simps]
@@ -465,6 +466,7 @@ namespace MonoidAlgebra
 variable [Semiring R] [Mul M]
 
 variable (R M) in
+set_option backward.instanceTypes.subsingletons.decidable false in
 /-- The equivalence between `MonoidAlgebra` and `AddMonoidAlgebra` in terms of `Additive` -/
 @[simps]
 def toAdditive : MonoidAlgebra R M ≃+* AddMonoidAlgebra R (Additive M) where

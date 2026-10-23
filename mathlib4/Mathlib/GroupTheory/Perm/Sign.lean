@@ -232,7 +232,8 @@ theorem signAux_mul {n : ℕ} (f g : Perm (Fin n)) : signAux (f * g) = signAux f
   rw [← prod_mul_distrib]
   refine prod_nbij (signBijAux g) signBijAux_mem signBijAux_injOn signBijAux_surj ?_
   rintro ⟨a, b⟩ hab
-  dsimp only [signBijAux]
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dsimp only [signBijAux])
   rw [mul_apply, mul_apply]
   rw [mem_finPairsLT] at hab
   by_cases hg : g b < g a

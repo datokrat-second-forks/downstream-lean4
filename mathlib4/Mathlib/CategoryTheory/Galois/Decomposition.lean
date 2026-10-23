@@ -221,7 +221,8 @@ set_option backward.isDefEq.respectTransparency false in
 set_option backward.privateInPublic true in
 private lemma selfProdProj_fiber (x : F.obj X) :
     F.map (selfProdProj u x) a = x := by
-  simp_all
+  (set_option backward.dsimp.instanceTypes false in
+  simp_all)
 
 variable [IsConnected A]
 

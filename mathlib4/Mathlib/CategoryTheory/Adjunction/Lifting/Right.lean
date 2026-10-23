@@ -148,7 +148,8 @@ noncomputable def constructRightAdjointEquiv (h : ∀ X : B, RegularMono (adj₁
       rw [← (adj₂.homEquiv _ _).injective.eq_iff, eq_comm, otherMap,
         ← adj₂.homEquiv_naturality_right_symm, adj₂.homEquiv_unit, ← adj₂.unit_naturality_assoc,
         adj₂.homEquiv_counit]
-      simp
+      (set_option backward.dsimp.instanceTypes false in
+      simp)
     _ ≃ { z : L.obj Y ⟶ U.obj (F.obj X) //
         z ≫ U.map (F.map (adj₁.unit.app X)) = z ≫ adj₁.unit.app (U.obj (F.obj X)) } := by
       apply (adj₁.homEquiv _ _).subtypeEquiv
@@ -172,7 +173,8 @@ noncomputable def constructRightAdjoint (h : ∀ X : B, RegularMono (adj₁.unit
   erw [Fork.IsLimit.homIso_natural, Fork.IsLimit.homIso_natural]
   simp only [Fork.ofι_pt, Functor.map_comp, assoc, limit.cone_x]
   erw [adj₂.homEquiv_naturality_left, Equiv.rightInverse_symm]
-  simp
+  (set_option backward.dsimp.instanceTypes false in
+  simp)
 
 end LiftRightAdjoint
 

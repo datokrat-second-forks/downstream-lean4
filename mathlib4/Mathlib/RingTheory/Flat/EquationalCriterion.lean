@@ -100,6 +100,7 @@ end Module
 
 namespace Module.Flat
 
+set_option backward.instanceTypes.subsingletons.prop false in
 variable (R M) in
 /-- **Equational criterion for flatness**, combined form.
 

@@ -903,7 +903,9 @@ lemma preservesBiproduct_of_mono_biproductComparison {f : J → C} [HasBiproduct
       (F.mapIso (biproduct.isoProduct f)).inv ≫
         biproductComparison F f ≫ (biproduct.isoProduct _).hom := by
     ext j
-    convert piComparison_comp_π F f j; simp [← Function.comp_def, ← Functor.map_comp]
+    convert piComparison_comp_π F f j
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← Function.comp_def, ← Functor.map_comp])
   have : IsIso (biproductComparison F f) := isIso_of_mono_of_isSplitEpi _
   have : IsIso (piComparison F f) := by
     rw [that]

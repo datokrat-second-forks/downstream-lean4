@@ -175,7 +175,8 @@ instance instFunLike (X Y : CpltSepUniformSpace) :
 /-- The concrete category instance on `CpltSepUniformSpace`. -/
 instance concreteCategory : ConcreteCategory CpltSepUniformSpace
     ({ f : · → · // UniformContinuous f }) :=
-  inferInstanceAs <| ConcreteCategory (InducedCategory _ toUniformSpace) _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| ConcreteCategory (InducedCategory _ toUniformSpace) _)
 
 instance hasForgetToUniformSpace : HasForget₂ CpltSepUniformSpace UniformSpaceCat :=
   inferInstanceAs <| HasForget₂ (InducedCategory _ toUniformSpace) _

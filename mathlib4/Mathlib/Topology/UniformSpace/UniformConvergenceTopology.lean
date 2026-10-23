@@ -469,11 +469,15 @@ protected def uniformEquivProdArrow [UniformSpace γ] : (α →ᵤ β × γ) ≃
     change
       comap (Prod.map (Equiv.arrowProdEquivProdArrow _ _ _) (Equiv.arrowProdEquivProdArrow _ _ _))
           _ = _
-    simp_rw [UniformFun]
-    rw [← uniformity_comap]
-    congr
+    (set_option backward.dsimp.instanceTypes false in
+    simp_rw [UniformFun])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← uniformity_comap])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    congr)
     unfold instUniformSpaceProd
-    rw [UniformSpace.comap_inf, ← UniformSpace.comap_comap, ← UniformSpace.comap_comap]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [UniformSpace.comap_inf, ← UniformSpace.comap_comap, ← UniformSpace.comap_comap])
     have := (@UniformFun.inf_eq α (β × γ)
       (UniformSpace.comap Prod.fst ‹_›) (UniformSpace.comap Prod.snd ‹_›)).symm
     rwa [UniformFun.comap_eq, UniformFun.comap_eq] at this
@@ -496,12 +500,15 @@ protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, 
       refine @IsUniformInducing.mk ?_ ?_ ?_ ?_ ?_ ?_
       change comap (Prod.map Function.swap Function.swap) _ = _
       rw [← uniformity_comap]
-      congr
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      congr)
       unfold Pi.uniformSpace
       rw [UniformSpace.ofCoreEq_toCore, UniformSpace.ofCoreEq_toCore,
         UniformSpace.comap_iInf, UniformFun.iInf_eq]
-      refine iInf_congr fun i => ?_
-      rw [← UniformSpace.comap_comap, UniformFun.comap_eq]
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      refine iInf_congr fun i => ?_)
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      rw [← UniformSpace.comap_comap, UniformFun.comap_eq])
       rfl
 
 -- Like in the previous lemma, the diagram actually commutes by definition
@@ -631,7 +638,8 @@ protected theorem hasBasis_uniformity_of_basis_aux₁ {p : ι → Prop} {s : ι 
     (@uniformity (α →ᵤ[𝔖] β) ((UniformFun.uniformSpace S β).comap S.domRestrict)).HasBasis p
       fun i =>
       UniformOnFun.gen 𝔖 S (s i) := by
-  simp_rw [UniformOnFun.gen_eq_preimage_restrict, uniformity_comap]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp_rw [UniformOnFun.gen_eq_preimage_restrict, uniformity_comap])
   exact (UniformFun.hasBasis_uniformity_of_basis S β hb).comap _
 
 protected theorem hasBasis_uniformity_of_basis_aux₂ (h : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
@@ -888,6 +896,7 @@ protected theorem inf_eq {u₁ u₂ : UniformSpace γ} :
   refine iInf_congr fun i => ?_
   cases i <;> rfl
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- If `u` is a uniform structure on `β` and `f : γ → β`, then
 `𝒱(α, γ, 𝔖, comap f u) = comap (fun g ↦ f ∘ g) 𝒱(α, γ, 𝔖, u₁)`. -/
@@ -1082,13 +1091,16 @@ protected def uniformEquivProdArrow [UniformSpace γ] :
       apply_fun (fun u ↦ @uniformity (α →ᵤ[𝔖] β × γ) u) at H
       convert H.symm using 1
       rw [UniformOnFun.comap_eq, UniformOnFun.comap_eq]
-      erw [inf_uniformity]
-      rw [uniformity_comap, uniformity_comap]
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      erw [inf_uniformity])
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      rw [uniformity_comap, uniformity_comap])
       rfl
 -- the relevant diagram commutes by definition
 
 set_option backward.isDefEq.respectTransparency false in
 variable (𝔖) (δ : ι → Type*) [∀ i, UniformSpace (δ i)] in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The natural bijection between `α → Π i, δ i` and `Π i, α → δ i`, upgraded to a uniform
 isomorphism between `α →ᵤ[𝔖] (Π i, δ i)` and `Π i, α →ᵤ[𝔖] δ i`. -/
 protected def uniformEquivPiComm : (α →ᵤ[𝔖] ((i : ι) → δ i)) ≃ᵤ ((i : ι) → α →ᵤ[𝔖] δ i) :=
@@ -1127,6 +1139,7 @@ alias isClosed_setOf_continuous := isClosed_setOfPred_continuous
 
 set_option backward.isDefEq.respectTransparency false in
 variable (𝔖) in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem uniformSpace_eq_inf_precomp_of_cover {δ₁ δ₂ : Type*} (φ₁ : δ₁ → α) (φ₂ : δ₂ → α)
     (𝔗₁ : Set (Set δ₁)) (𝔗₂ : Set (Set δ₂))
     (h_image₁ : MapsTo (φ₁ '' ·) 𝔗₁ 𝔖) (h_image₂ : MapsTo (φ₂ '' ·) 𝔗₂ 𝔖)
@@ -1154,6 +1167,7 @@ theorem uniformSpace_eq_inf_precomp_of_cover {δ₁ δ₂ : Type*} (φ₁ : δ�
 
 set_option backward.isDefEq.respectTransparency false in
 variable (𝔖) in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem uniformSpace_eq_iInf_precomp_of_cover {δ : ι → Type*} (φ : Π i, δ i → α)
     (𝔗 : ∀ i, Set (Set (δ i))) (h_image : ∀ i, MapsTo (φ i '' ·) (𝔗 i) 𝔖)
     (h_preimage : ∀ i, MapsTo (φ i ⁻¹' ·) 𝔖 (𝔗 i))

@@ -132,7 +132,7 @@ theorem prodComparison_comp :
     prodComparison (F ⋙ G) A B =
       G.map (prodComparison F A B) ≫ prodComparison G (F.obj A) (F.obj B) := by
   unfold prodComparison
-  ext <;> simp [← G.map_comp]
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp [← G.map_comp])
 
 @[reassoc]
 lemma map_braiding_hom_comp_prodComparison

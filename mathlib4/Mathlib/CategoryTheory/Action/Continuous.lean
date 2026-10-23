@@ -155,7 +155,8 @@ namespace DiscreteContAction
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : HasForget₂ (DiscreteContAction V G) (ContAction V G) :=
-  inferInstanceAs <| HasForget₂ (ObjectProperty.FullSubcategory _) _
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  inferInstanceAs <| HasForget₂ (ObjectProperty.FullSubcategory _) _)
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : HasForget₂ (DiscreteContAction V G) TopCat :=
@@ -187,6 +188,7 @@ def mapContAction (F : V ⥤ W) (H : ∀ X : ContAction V G, ((F.mapAction G).ob
     ContAction V G ⥤ ContAction W G :=
   ObjectProperty.lift _ (ObjectProperty.ι _ ⋙ F.mapAction G) H
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Continuous version of `Functor.mapActionComp`. -/
@@ -209,10 +211,12 @@ def mapContActionCongr
     (H : ∀ X : ContAction V G, ((F.mapAction G).obj X.obj).IsContinuous)
     (H' : ∀ X : ContAction V G, ((F'.mapAction G).obj X.obj).IsContinuous) :
     Functor.mapContAction G F H ≅ Functor.mapContAction G F' H' :=
-  NatIso.ofComponents (fun X ↦ ObjectProperty.isoMk _ (Action.mkIso (e.app X.obj.V) (by simp)))
+  NatIso.ofComponents (fun X ↦ ObjectProperty.isoMk _ (Action.mkIso (e.app X.obj.V)
+    (by (set_option backward.dsimp.instanceTypes false in simp))))
 
 end Functor
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Continuous version of `Equivalence.mapAction`. -/

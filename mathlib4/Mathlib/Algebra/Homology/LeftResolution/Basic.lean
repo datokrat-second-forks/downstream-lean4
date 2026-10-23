@@ -103,7 +103,7 @@ lemma exactAt_map_chainComplex_succ (n : ℕ) :
     ShortComplex.exact_iff_epi_kernel_lift]
   convert! epi_comp (ι.map (Λ.chainComplexXIso X n).hom) (Λ.π.app _)
   rw [← cancel_mono (kernel.ι _), kernel.lift_ι]
-  simp [map_chainComplex_d]
+  (set_option backward.instanceTypes.subsingletons.prop false in simp [map_chainComplex_d])
 
 variable {X Y Z}
 

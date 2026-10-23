@@ -132,6 +132,7 @@ theorem w : forkMap P (S : Presieve X) ≫ firstMap P S = forkMap P S ≫ second
   ext
   simp [firstMap, secondMap, forkMap]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /--
 The family of elements given by `x : FirstObj P S` is compatible iff `firstMap` and `secondMap`
@@ -219,6 +220,7 @@ theorem w : forkMap P R ≫ firstMap P R = forkMap P R ≫ secondMap P R := by
   rw [← P.map_comp, ← op_comp, pullback.condition]
   simp
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /--
 The family of elements given by `x : FirstObj P S` is compatible iff `firstMap` and `secondMap`

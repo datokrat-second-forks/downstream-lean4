@@ -49,6 +49,7 @@ section
 variable {C : Type u₂} [Category.{v₂} C] {D : Type u₃}
   [Category.{v₃} D] {E : Type u₄} [Category.{v₄} E]
 
+set_option backward.dsimp.instanceTypes false in
 /-- The isomorphism of categories of bifunctors given by currying. -/
 @[simps!]
 def curryingIso : Cat.of (C ⥤ D ⥤ E) ≅ Cat.of (C × D ⥤ E) :=

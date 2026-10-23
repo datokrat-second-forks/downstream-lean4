@@ -404,7 +404,8 @@ lemma full_res (f_surj : Function.Surjective f) : (res V f).Full where
     · obtain ⟨a, rfl⟩ := f_surj h
       have : X.ρ (f a) = ((res V f).obj X).ρ a := rfl
       rw [this, g.comm a]
-      simp
+      (set_option backward.dsimp.instanceTypes false in
+      simp)
 
 end Action
 
@@ -456,6 +457,7 @@ def mapActionComp {T : Type*} [Category* T] (F : V ⥤ W) (F' : W ⥤ T) :
     (F ⋙ F').mapAction G ≅ F.mapAction G ⋙ F'.mapAction G :=
   NatIso.ofComponents (fun X ↦ Iso.refl _)
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- `Functor.mapAction` preserves isomorphisms of functors. -/
 @[simps! hom inv]

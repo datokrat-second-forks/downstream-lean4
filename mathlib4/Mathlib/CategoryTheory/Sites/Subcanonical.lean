@@ -148,7 +148,7 @@ lemma uliftYonedaEquiv_naturality {X Y : C} {F : Sheaf J (Type (max v v'))}
       F.obj.map g.op (J.uliftYonedaEquiv f) = J.uliftYonedaEquiv (J.uliftYoneda.map g ≫ f) := by
   change (f.hom.app (op X) ≫ F.obj.map g.op) ⟨𝟙 X⟩ = f.hom.app (op Y) ⟨𝟙 Y ≫ g⟩
   rw [← f.hom.naturality]
-  simp [uliftYoneda]
+  (set_option backward.dsimp.instanceTypes false in simp [uliftYoneda])
 
 /-- Variant of `uliftYonedaEquiv_naturality` with general `g`. This is technically strictly more
 general than `uliftYonedaEquiv_naturality`, but `uliftYonedaEquiv_naturality` is sometimes
@@ -295,7 +295,7 @@ noncomputable def isColimitCofanMkYoneda {ι : Type*} (X : ι → C) {c : Cofan 
     dsimp
     apply Presieve.IsSheafFor.unique_extend
     ext Y ⟨g, hg⟩
-    simp [← hm (Sieve.ofArrows.i hg)]
+    (set_option backward.dsimp.instanceTypes false in simp [← hm (Sieve.ofArrows.i hg)])
 
 /-- If the coproduct inclusions form a covering of `J` and coproducts are disjoint,
 the yoneda embedding to `J`-sheaves preserves coproducts. -/

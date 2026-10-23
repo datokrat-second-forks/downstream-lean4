@@ -315,6 +315,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       ext ⟨a, ha⟩
       simp
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The augmented Čech conerve construction is left adjoint to the `toArrow` functor. -/
@@ -388,11 +389,13 @@ def wideCospan.limitIsoPi [Finite ι] (X : C) :
   (IsLimit.conePointUniqueUpToIso (limit.isLimit _)
     (wideCospan.limitCone ι X).2)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma wideCospan.limitIsoPi_inv_comp_pi [Finite ι] (X : C) (j : ι) :
     (wideCospan.limitIsoPi ι X).inv ≫ WidePullback.π _ j = Pi.π _ j :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ _
 
+set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma wideCospan.limitIsoPi_hom_comp_pi [Finite ι] (X : C) (j : ι) :
     (wideCospan.limitIsoPi ι X).hom ≫ Pi.π _ j = WidePullback.π _ j := by
@@ -405,7 +408,8 @@ def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFr
   NatIso.ofComponents (fun _ => wideCospan.limitIsoPi _ _) (fun {m n} f => by
     dsimp only [cechNerveTerminalFrom, Arrow.cechNerve]
     ext ⟨j⟩
-    simp)
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp))
 
 end CechNerveTerminalFrom
 

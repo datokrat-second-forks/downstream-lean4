@@ -75,6 +75,7 @@ theorem borel_eq_generateFrom_Iio : borel α = .generateFrom (range Iio) := by
     intro a
     exact GenerateMeasurable.basic _ isOpen_Iio
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem borel_eq_generateFrom_Ioi : borel α = .generateFrom (range Ioi) :=
   @borel_eq_generateFrom_Iio αᵒᵈ _ (by infer_instance : SecondCountableTopology α) _ _
 
@@ -463,7 +464,8 @@ theorem ext_of_Ioc_finite {α : Type*} [TopologicalSpace α] {m : MeasurableSpac
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] (μ ν : Measure α)
     [IsFiniteMeasure μ] (hμν : μ univ = ν univ) (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) :
     μ = ν := by
-  refine @ext_of_Ico_finite αᵒᵈ _ _ _ _ _ ‹_› μ ν _ hμν fun a b hab => ?_
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  refine @ext_of_Ico_finite αᵒᵈ _ _ _ _ _ ‹_› μ ν _ hμν fun a b hab => ?_)
   erw [Ico_toDual (α := α)]
   exact h hab
 
@@ -498,7 +500,9 @@ theorem ext_of_Ioc' {α : Type*} [TopologicalSpace α] {m : MeasurableSpace α}
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] [NoMinOrder α]
     (μ ν : Measure α) (hμ : ∀ ⦃a b⦄, a < b → μ (Ioc a b) ≠ ∞)
     (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν := by
-  refine @ext_of_Ico' αᵒᵈ _ _ _ _ _ ‹_› _ μ ν ?_ ?_ <;> intro a b hab <;> erw [Ico_toDual (α := α)]
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  refine @ext_of_Ico' αᵒᵈ _ _ _ _ _ ‹_› _ μ ν ?_ ?_) <;>
+    intro a b hab <;> erw [Ico_toDual (α := α)]
   exacts [hμ hab, h hab]
 
 /-- Two measures which are finite on closed-open intervals are equal if they agree on all
@@ -538,7 +542,8 @@ intervals. -/
 theorem ext_of_Ici {α : Type*} [TopologicalSpace α] {_ : MeasurableSpace α}
     [SecondCountableTopology α] [LinearOrder α] [OrderTopology α] [BorelSpace α] (μ ν : Measure α)
     [IsFiniteMeasure μ] (h : ∀ a, μ (Ici a) = ν (Ici a)) : μ = ν :=
-  @ext_of_Iic αᵒᵈ _ _ _ _ _ ‹_› _ _ _ h
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  @ext_of_Iic αᵒᵈ _ _ _ _ _ ‹_› _ _ _ h)
 
 /-- Two measures which are finite on closed intervals are equal if they agree on all
 closed intervals. -/

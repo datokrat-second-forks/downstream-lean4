@@ -117,6 +117,8 @@ theorem hasColimit_map_comp_ι_comp_grothendieckProj {X Y : D} (f : X ⟶ Y) :
       grothendieckProj L ⋙ F) :=
   hasColimit_of_iso (isoWhiskerRight (mapCompιCompGrothendieckProj L f) F)
 
+set_option backward.dsimp.instanceTypes false in
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The left Kan extension of `F : C ⥤ H` along a functor `L : C ⥤ D` is isomorphic to the
@@ -186,7 +188,8 @@ lemma isIso_lanAdjunction_counit_app_iff (G : D ⥤ H) :
 lemma isIso_lanAdjunction_homEquiv_symm_iff {F : C ⥤ H} {G : D ⥤ H} (α : F ⟶ L ⋙ G) :
     IsIso (((L.lanAdjunction H).homEquiv _ _).symm α) ↔ G.IsLeftKanExtension α :=
   (isLeftKanExtension_iff_isIso ((((L.lanAdjunction H).homEquiv _ _).symm α))
-    (L.lanUnit.app F) α (by simp [lanAdjunction])).symm
+    (L.lanUnit.app F) α
+    (by (set_option backward.dsimp.instanceTypes false in simp [lanAdjunction]))).symm
 
 /-- Composing the left Kan extension of `L : C ⥤ D` with `colim` on shapes `D` is isomorphic
 to `colim` on shapes `C`. -/
@@ -235,7 +238,9 @@ lemma ι_colimitIsoColimitGrothendieck_inv (X : Grothendieck (CostructuredArrow.
     colimit.ι (CostructuredArrow.grothendieckProj L ⋙ G) X ≫
       (colimitIsoColimitGrothendieck L G).inv =
     colimit.ι G ((CostructuredArrow.proj L X.base).obj X.fiber) := by
-  simp [colimitIsoColimitGrothendieck]
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  simp [colimitIsoColimitGrothendieck])
 
 set_option backward.isDefEq.respectTransparency.types false in
 @[reassoc (attr := simp)]
@@ -379,8 +384,10 @@ lemma isIso_ranAdjunction_unit_app_iff (G : D ⥤ H) :
 lemma isIso_ranAdjunction_homEquiv_iff {F : C ⥤ H} {G : D ⥤ H} (α : L ⋙ G ⟶ F) :
     IsIso (((L.ranAdjunction H).homEquiv _ _) α) ↔ G.IsRightKanExtension α :=
   (isRightKanExtension_iff_isIso ((((L.ranAdjunction H).homEquiv _ _) α))
-    (L.ranCounit.app F) α (by simp [ranAdjunction])).symm
+    (L.ranCounit.app F) α
+    (by (set_option backward.dsimp.instanceTypes false in simp [ranAdjunction]))).symm
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Composing the right Kan extension of `L : C ⥤ D` with `lim` on shapes `D` is isomorphic
 to `lim` on shapes `C`. -/
 @[simps!]

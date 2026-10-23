@@ -366,7 +366,7 @@ theorem diagonal_pullback_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
         ((Over.pullback f).map
               (Over.homMk (diagonal g) : Over.mk g ⟶ Over.mk (pullback.snd _ _ ≫ g))).left ≫
           (diagonalObjPullbackFstIso f g).inv := by
-  ext <;> simp
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
 
 /-- Informally, this is a special case of `pullback_map_diagonal_isPullback` for `T = X`. -/
 lemma pullback_lift_diagonal_isPullback (g : Y ⟶ X) (f : X ⟶ S) :
@@ -510,7 +510,7 @@ theorem inr_codiagonal : pushout.inr _ _ ≫ codiagonal f = 𝟙 _ :=
 lemma op_codiagonal :
     (pushout.codiagonal f).op = pullback.diagonal f.op ≫ (pullbackIsoOpPushout _ _).hom := by
   rw [← Iso.comp_inv_eq]
-  ext <;> simp [← op_comp]
+  ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp [← op_comp])
 
 instance : IsSplitEpi (codiagonal f) :=
   ⟨⟨⟨pushout.inl _ _, inl_codiagonal f⟩⟩⟩
@@ -554,7 +554,9 @@ theorem isPushout_map_codiagonal {S T : C} (f : T ⟶ X) (g : T ⟶ Y) (i : S �
   simp only [op_pushoutMap, Quiver.Hom.unop_op, op_comp, unop_comp, op_id, pushout.op_codiagonal]
   exact .of_iso (pullback_map_diagonal_isPullback f.op g.op i.op)
     (pullbackIsoOpPushout _ _) (.refl _) (pullbackIsoOpPushout _ _) (pullbackIsoOpPushout _ _)
-    (by simp [← Iso.inv_comp_eq]) (by simp) (by simp) (by simp)
+    (by (set_option backward.instanceTypes.subsingletons.prop false in simp [← Iso.inv_comp_eq]))
+    (by (set_option backward.instanceTypes.subsingletons.prop false in simp)) (by simp)
+    (by (set_option backward.instanceTypes.subsingletons.prop false in simp))
 
 end Codiagonal
 

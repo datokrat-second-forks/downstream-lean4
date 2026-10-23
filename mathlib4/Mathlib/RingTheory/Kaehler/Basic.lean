@@ -553,6 +553,7 @@ theorem KaehlerDifferential.derivationQuotKerTotal_apply (x) :
     KaehlerDifferential.derivationQuotKerTotal R S x = 1𝖣x :=
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 theorem KaehlerDifferential.derivationQuotKerTotal_lift_comp_linearCombination :
     (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential.comp
         (Finsupp.linearCombination S (KaehlerDifferential.D R S)) =
@@ -745,6 +746,7 @@ This is the first map in the exact sequence `B ⊗[A] Ω[A⁄R] → Ω[B⁄R] �
 noncomputable def KaehlerDifferential.mapBaseChange : B ⊗[A] Ω[A⁄R] →ₗ[B] Ω[B⁄R] :=
   (TensorProduct.isBaseChange A Ω[A⁄R] B).lift (KaehlerDifferential.map R R A B)
 
+set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 theorem KaehlerDifferential.mapBaseChange_tmul (x : B) (y : Ω[A⁄R]) :
     KaehlerDifferential.mapBaseChange R A B (x ⊗ₜ y) = x • KaehlerDifferential.map R R A B y := by
@@ -759,7 +761,8 @@ lemma KaehlerDifferential.range_mapBaseChange :
     induction x with
     | tmul r s =>
       obtain ⟨x, rfl⟩ := linearCombination_surjective _ _ s
-      simp only [mapBaseChange_tmul, LinearMap.mem_ker, map_smul]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp only [mapBaseChange_tmul, LinearMap.mem_ker, map_smul])
       induction x using Finsupp.induction_linear
       · simp
       · simp [smul_add, *]
@@ -805,9 +808,10 @@ def KaehlerDifferential.kerCotangentToTensor :
     apply iSup_le_iff.mpr
     simp only [Submodule.map_le_iff_le_comap, Subtype.forall]
     rintro x hx y -
+    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [Submodule.mem_comap, LinearMap.lsmul_apply, LinearMap.mem_ker, map_smul,
       kerToTensor_apply, TensorProduct.smul_tmul', ← algebraMap_eq_smul_one,
-      RingHom.mem_ker.mp hx, TensorProduct.zero_tmul]
+      RingHom.mem_ker.mp hx, TensorProduct.zero_tmul])
 
 @[simp]
 lemma KaehlerDifferential.kerCotangentToTensor_toCotangent (x) :

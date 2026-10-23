@@ -130,7 +130,8 @@ instance precomp₁ {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C�
     dsimp [commShiftIso] at this ⊢
     simp only [Category.comp_id, Category.id_comp, map_comp, Category.assoc]
     rw [NatTrans.shift_app (G.map ((F.commShiftIso m).hom.app X₁')) n X₂]
-    simp [this]
+    (set_option backward.dsimp.instanceTypes false in
+    simp [this])
 
 set_option backward.defeqAttrib.useBackward true in
 instance precomp₂ {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C₂' M]

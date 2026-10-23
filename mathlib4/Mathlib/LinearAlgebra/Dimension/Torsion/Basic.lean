@@ -30,7 +30,8 @@ theorem rank_quotient_eq_of_le_torsion {R M : Type*} [CommRing R] [AddCommGroup 
     rw [Module.rank]
     refine ciSup_le fun ⟨s, hs⟩ ↦ LinearIndependent.cardinal_le_rank (v := (M'.mkQ ·)) ?_
     rw [LinearIndepOn, linearIndependent_iff'] at hs
-    simp_rw [linearIndependent_iff', ← map_smul, ← map_sum, mkQ_apply, Quotient.mk_eq_zero]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp_rw [linearIndependent_iff', ← map_smul, ← map_sum, mkQ_apply, Quotient.mk_eq_zero])
     intro t g hg i hi
     obtain ⟨r, hg⟩ := hN hg
     simp_rw [Finset.smul_sum, Submonoid.smul_def, smul_smul] at hg

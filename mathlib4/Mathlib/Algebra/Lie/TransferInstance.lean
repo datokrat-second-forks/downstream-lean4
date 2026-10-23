@@ -41,7 +41,9 @@ protected abbrev LinearEquiv.lieAlgebra (e : M ≃ₗ[R] L) :
     letI := e.toAddEquiv.lieRing
     LieAlgebra R M :=
   letI := e.toAddEquiv.lieRing
-  { lie_smul _ _ _ := by simp [AddEquiv.bracket_def] }
+  { lie_smul _ _ _ := by
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      simp [AddEquiv.bracket_def]) }
 
 variable (R) in
 /-- An equivalence `e : M ≃ₗ[R] L` gives a Lie algebra equivalence `M ≃ₗ⁅R⁆ L` where the Lie bracket

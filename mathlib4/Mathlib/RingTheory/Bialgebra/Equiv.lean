@@ -57,7 +57,7 @@ variable {F R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B]
 
 instance (priority := 100) toBialgHomClass : BialgHomClass F R A B where
   map_add := map_add
-  map_smulₛₗ := map_smul
+  map_smulₛₗ := (set_option backward.instanceTypes.subsingletons.prop false in map_smul)
   counit_comp := CoalgHomClass.counit_comp
   map_comp_comul := CoalgHomClass.map_comp_comul
   map_mul := map_mul
@@ -314,7 +314,7 @@ variable [Semiring A] [Semiring B] [Bialgebra R A] [Bialgebra R B]
     (map_comp_comul : (Algebra.TensorProduct.map f f).comp (Bialgebra.comulAlgHom R A) =
         (Bialgebra.comulAlgHom R B).comp f) : A ≃ₐc[R] B where
   __ := f
-  map_smul' := map_smul f
+  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f)
   counit_comp := congr($(counit_comp).toLinearMap)
   map_comp_comul := congr($(map_comp_comul).toLinearMap)
 

@@ -715,8 +715,9 @@ lemma rescale_homogeneous_eq_smul {n : ℕ} {r : R} {f : MvPowerSeries σ R}
     (hf : ∀ d ∈ f.support, d.degree = n) :
     MvPowerSeries.rescale (Function.const σ r) f = r ^ n • f := by
   ext e
+  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [MvPowerSeries.coeff_rescale, map_smul, Finsupp.prod, Function.const_apply,
-    Finset.prod_pow_eq_pow_sum, smul_eq_mul]
+    Finset.prod_pow_eq_pow_sum, smul_eq_mul])
   by_cases he : e ∈ f.support
   · rw [← hf e he, Finsupp.degree_apply]
   · simp only [Function.mem_support, ne_eq, not_not] at he

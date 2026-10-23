@@ -68,6 +68,7 @@ def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X) where
       a := prod.lift f.hom (𝟙 _) }
   map g := { f := g.left }
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
@@ -86,6 +87,7 @@ section
 
 variable [HasBinaryCoproducts C]
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps!]
 def coprodMonad : Monad C where
@@ -103,6 +105,7 @@ def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X where
   obj A := Under.mk (coprod.inl ≫ A.a)
   map f := Under.homMk f.f (by simp [← dsimp% f.h])
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The backward direction of the equivalence from algebras for the coproduct monad to the under
 category.
@@ -114,6 +117,7 @@ def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
       a := coprod.desc f.hom (𝟙 _) }
   map g := { f := g.right }
 
+set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The equivalence from algebras for the coproduct monad to the under category.

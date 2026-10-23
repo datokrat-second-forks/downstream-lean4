@@ -84,6 +84,7 @@ lemma pullbackShiftFunctorZero_inv_app :
   congr 2
   apply eqToHom_map
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma pullbackShiftFunctorZero_hom_app :
     (shiftFunctorZero _ A).hom.app X =
@@ -101,6 +102,7 @@ lemma pullbackShiftFunctorZero'_inv_app :
     Iso.trans_inv, NatTrans.comp_app, eqToIso_refl, Iso.refl_inv, NatTrans.id_app, assoc]
   erw [comp_id]
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma pullbackShiftFunctorZero'_hom_app :
     (shiftFunctorZero _ A).hom.app X = (pullbackShiftIso C φ 0 (φ 0) rfl).hom.app X ≫
@@ -128,6 +130,7 @@ lemma pullbackShiftFunctorAdd'_inv_app :
   congr 2
   apply eqToHom_map
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma pullbackShiftFunctorAdd'_hom_app :
     (shiftFunctorAdd' _ a₁ a₂ a₃ h).hom.app X =
@@ -187,8 +190,9 @@ instance commShiftPullback : (PullbackShift.functor φ F).CommShift A where
       ← shiftFunctorAdd'_eq_shiftFunctorAdd, ← shiftFunctorAdd'_eq_shiftFunctorAdd,
       pullbackShiftFunctorAdd'_hom_app φ _ _ _ _ rfl _ _ _ rfl rfl rfl,
       pullbackShiftFunctorAdd'_inv_app φ _ _ _ _ rfl _ _ _ rfl rfl rfl]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp only [CommShift.isoAdd'_hom_app, assoc, map_comp, NatTrans.naturality_assoc,
-      Iso.inv_hom_id_app_assoc]
+      Iso.inv_hom_id_app_assoc])
     slice_rhs 9 10 => rw [← map_comp, Iso.inv_hom_id_app, map_id]
     simp only [comp_obj, id_comp]
     rw [← Functor.comp_map F (shiftFunctor D _), ← (F.commShiftIso _).hom.naturality_assoc]

@@ -28,6 +28,7 @@ namespace Set
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 open CompleteLattice in
+set_option backward.dsimp.instanceTypes false in
 instance {J : Type w} [Category.{w'} J] {X : Type u} [IsFilteredOrEmpty J] :
     PreservesColimitsOfShape J (functorToTypes (X := X)) where
   preservesColimit {F} := by

@@ -709,7 +709,8 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
   apply Quotient.sound
   apply ThinSkeleton.equiv_of_both_ways
   · refine MonoOver.homMk (pullback.lift (pullback.fst _ _) _ ?_) (pullback.lift_snd _ _ _)
-    simp [← comm, pullback.condition_assoc]
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← comm, pullback.condition_assoc])
   · refine MonoOver.homMk (pullback.lift (pullback.fst _ _)
       (PullbackCone.IsLimit.lift t (pullback.fst _ _ ≫ a.arrow) (pullback.snd _ _) _)
       (PullbackCone.IsLimit.lift_fst _ _ _ ?_).symm) ?_

@@ -65,6 +65,7 @@ lemma pentagon {C D E F G : Type u} [Category* C] [Category* D] [Category* E]
   ext _ _ ⟨_, ⟨_, ⟨_, _, _⟩, _⟩, _⟩
   rfl
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] Types.chosenCoend_def in

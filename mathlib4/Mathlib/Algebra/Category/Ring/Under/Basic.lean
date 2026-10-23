@@ -153,6 +153,7 @@ lemma pushout_inr_tensorProdObjIsoPushoutObj_inv_right (A : Under R) :
       (CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom) := by
   simp [tensorProdObjIsoPushoutObj]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable (R S) in

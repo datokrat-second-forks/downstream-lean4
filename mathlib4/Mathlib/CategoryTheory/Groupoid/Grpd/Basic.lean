@@ -113,7 +113,8 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.IsLimit 
     (by
       intros
       dsimp only [piLimitFan]
-      simp [comp_eq_comp])
+      (set_option backward.dsimp.instanceTypes false in
+      simp [comp_eq_comp]))
     (by
       intro s m w
       apply Functor.pi_ext

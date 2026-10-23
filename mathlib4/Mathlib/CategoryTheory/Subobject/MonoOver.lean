@@ -177,6 +177,7 @@ theorem lift_obj_arrow {Y : D} (F : Over Y ⥤ Over X)
     ((lift F h).obj f).arrow = (F.obj ((forget Y).obj f)).hom :=
   rfl
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- Monomorphisms over an object `f : Over A` in an over category
 are equivalent to monomorphisms over the source of `f`.
 -/
@@ -277,11 +278,13 @@ def pullback (f : X ⟶ Y) : MonoOver Y ⥤ MonoOver X :=
 
 /-- pullback commutes with composition (up to a natural isomorphism) -/
 def pullbackComp (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
-  liftIso _ _ (Over.pullbackComp _ _) ≪≫ (liftComp _ _ _ _).symm
+  liftIso _ _ (Over.pullbackComp _ _) ≪≫
+    (set_option backward.instanceTypes.subsingletons.prop false in (liftComp _ _ _ _).symm)
 
 /-- pullback preserves the identity (up to a natural isomorphism) -/
 def pullbackId : pullback (𝟙 X) ≅ 𝟭 _ :=
-  liftIso _ _ Over.pullbackId ≪≫ liftId
+  liftIso _ _ Over.pullbackId ≪≫
+    (set_option backward.instanceTypes.subsingletons.prop false in liftId)
 
 @[simp]
 theorem pullback_obj_left (f : X ⟶ Y) (g : MonoOver Y) :
@@ -328,11 +331,13 @@ by post-composition with a monomorphism `f : X ⟶ Y`.
 def map (f : X ⟶ Y) [Mono f] : MonoOver X ⥤ MonoOver Y :=
   lift (Over.map f) fun g => mono_comp g.arrow f
 
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- `MonoOver.map` commutes with composition (up to a natural isomorphism). -/
 def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) [Mono f] [Mono g] : map (f ≫ g) ≅ map f ⋙ map g :=
   liftIso _ _ (Over.mapComp _ _) ≪≫ (liftComp _ _ _ _).symm
 
 variable (X) in
+set_option backward.instanceTypes.subsingletons.prop false in
 /-- `MonoOver.map` preserves the identity (up to a natural isomorphism). -/
 def mapId : map (𝟙 X) ≅ 𝟭 _ :=
   liftIso _ _ (Over.mapId X) ≪≫ liftId
@@ -437,6 +442,7 @@ def image : Over X ⥤ MonoOver X where
             e := k.left ≫ factorThruImage g.hom }
     · apply image.lift_fac
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `MonoOver.image : Over X ⥤ MonoOver X` is left adjoint to
 `MonoOver.forget : MonoOver X ⥤ Over X`

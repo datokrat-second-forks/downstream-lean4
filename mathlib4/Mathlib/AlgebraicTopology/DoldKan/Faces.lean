@@ -120,7 +120,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _⦋n + 1⦌} (v : Highe
     simp only [comp_id, pow_add _ (a + 1) 1, pow_one, mul_neg, mul_one, neg_mul, neg_smul,
       add_neg_cancel]
   · -- c + a = 0
-    rw [← Finset.sum_add_distrib]
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [← Finset.sum_add_distrib])
     apply Finset.sum_eq_zero
     rintro ⟨i, hi⟩ _
     simp only
@@ -129,10 +130,10 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _⦋n + 1⦌} (v : Highe
       rw [Fin.le_iff_val_le_val]
       dsimp
       lia
-    generalize_proofs
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in generalize_proofs)
     rw [← Fin.succ_mk (n + 1) a ‹_›, ← Fin.castSucc_mk (n + 2) i ‹_›,
       δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
-    congr 2
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in congr 2)
     ring
 
 theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _⦋n + 1⦌} (v : HigherFacesVanish q φ)

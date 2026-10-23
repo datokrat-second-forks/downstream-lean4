@@ -518,7 +518,8 @@ variable (R L M)
     map_rel_iff' := Iff.rfl }
 
 instance wellFoundedGT_of_noetherian [IsNoetherian R M] : WellFoundedGT (LieSubmodule R L M) :=
-  RelHomClass.wellFounded' (toSubmodule_orderEmbedding R L M).dual.ltEmbedding
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  RelHomClass.wellFounded' (toSubmodule_orderEmbedding R L M).dual.ltEmbedding)
 
 instance wellFoundedLT_of_isArtinian [IsArtinian R M] : WellFoundedLT (LieSubmodule R L M) :=
   RelHomClass.wellFounded' (toSubmodule_orderEmbedding R L M).ltEmbedding
@@ -838,7 +839,9 @@ noncomputable def equivMapOfInjective (hf : Function.Injective f) :
     N ≃ₗ⁅R,L⁆ N.map f :=
   { Submodule.equivMapOfInjective (f : M →ₗ[R] M') hf N with
     -- Note: https://github.com/leanprover-community/mathlib4/pull/8386 had to specify `invFun` explicitly this way, otherwise we'd get a type mismatch
-    invFun := by exact DFunLike.coe (Submodule.equivMapOfInjective (f : M →ₗ[R] M') hf N).symm
+    invFun := by
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      exact DFunLike.coe (Submodule.equivMapOfInjective (f : M →ₗ[R] M') hf N).symm)
     map_lie' := by rintro x ⟨m, hm : m ∈ N⟩; ext; exact f.map_lie x m }
 
 /-- An equivalence of Lie modules yields an order-preserving equivalence of their lattices of Lie

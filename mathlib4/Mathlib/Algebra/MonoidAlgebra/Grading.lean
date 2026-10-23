@@ -112,8 +112,9 @@ def decomposeAux : R[M] →ₐ[R] ⨁ i : ι, gradeBy R f i :=
     toFun m := .of (fun i ↦ gradeBy R f i) (f m.toAdd) ⟨single m.toAdd 1, single_mem_gradeBy _ _ _⟩
     map_one' := of_eq_of_gradedMonoid_eq (by congr 2 <;> simp)
     map_mul' i j := by
+      (set_option backward.dsimp.instanceTypes false in
       simpa [toAdd_mul, of_mul_of, GradedMonoid.GMul.mul, single_mul_single, mul_one] using
-        DirectSum.of_eq_of_gradedMonoid_eq <| Sigma.subtype_ext (f.map_add _ _) rfl
+        DirectSum.of_eq_of_gradedMonoid_eq <| Sigma.subtype_ext (f.map_add _ _) rfl)
   }
 
 theorem decomposeAux_single (m : M) (r : R) :

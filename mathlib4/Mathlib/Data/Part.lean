@@ -231,11 +231,13 @@ theorem eq_of_mem {a b : Part α} (ha : a.Dom) (hb : a.get ha ∈ b) : a = b := 
 
 @[simp]
 theorem none_toOption [Decidable (@none α).Dom] : (none : Part α).toOption = Option.none :=
-  dite_eq_right id
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dite_eq_right id)
 
 @[simp]
 theorem some_toOption (a : α) [Decidable (some a).Dom] : (some a).toOption = Option.some a :=
-  dite_eq_left trivial
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dite_eq_left trivial)
 
 instance noneDecidable : Decidable (@none α).Dom :=
   instDecidableFalse

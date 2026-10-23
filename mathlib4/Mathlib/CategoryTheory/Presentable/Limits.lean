@@ -70,7 +70,7 @@ lemma surjective (x : c.pt.obj cX.pt) :
     have H {k k' : K} (φ : k ⟶ k') :=
       (Types.FilteredColimit.isColimit_eq_iff' (ht := hF k')
         (x := (F.map φ).app _ (z k)) (y := z k')).1 (by
-          dsimp at hz ⊢
+          (set_option backward.dsimp.instanceTypes false in dsimp at hz ⊢)
           simpa only [← NatTrans.naturality_apply, ← hz] using! y.2 φ)
     let j {k k' : K} (φ : k ⟶ k') : J := (H φ).choose
     let g {k k' : K} (φ : k ⟶ k') : j₀ ⟶ j φ := (H φ).choose_spec.choose
@@ -91,7 +91,7 @@ lemma surjective (x : c.pt.obj cX.pt) :
   let s : (F ⋙ (evaluation C (Type w')).obj (X.obj j₁)).sections :=
     { val k := (F.obj k).map (X.map α) (z k)
       property {k k'} φ := by
-        dsimp
+        (set_option backward.dsimp.instanceTypes false in dsimp)
         rw [NatTrans.naturality_apply, ← hα φ] }
   refine ⟨j₁, (Types.isLimitEquivSections (hc (X.obj j₁))).symm s, ?_⟩
   apply (Types.isLimitEquivSections (hc cX.pt)).injective
@@ -100,7 +100,7 @@ lemma surjective (x : c.pt.obj cX.pt) :
   have h₁ := Types.isLimitEquivSections_apply (hc cX.pt) k
     (c.pt.map (cX.ι.app j₁) ((Types.isLimitEquivSections (hc (X.obj j₁))).symm s))
   have h₂ := Types.isLimitEquivSections_symm_apply (hc (X.obj j₁)) s k
-  dsimp at h₁ h₂ ⊢
+  (set_option backward.dsimp.instanceTypes false in dsimp at h₁ h₂ ⊢)
   rw [h₁, hz, NatTrans.naturality_apply, h₂, ← comp_apply, ← Functor.map_comp, cX.w]
   rfl
 

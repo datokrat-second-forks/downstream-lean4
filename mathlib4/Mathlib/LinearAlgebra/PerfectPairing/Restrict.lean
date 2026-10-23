@@ -101,7 +101,7 @@ private lemma restrictScalars_injective_aux
       simpa [f] using congr($hx n')
     | zero => simp
     | add => rw [map_add]; aesop
-    | smul => rw [map_smul]; aesop
+    | smul => (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul]; aesop)
   rw [← i.map_eq_zero_iff hi, ← p.map_eq_zero_iff p.toPerfPair.injective]
   ext n
   simpa using hx n
@@ -243,6 +243,7 @@ lemma IsPerfPair.restrictScalars_of_field
       (FaithfulSMul.algebraMap_injective K L) p hp).IsPerfPair := by
   have : (p.compl₁₂ (span L <| .range i).subtype (span L <| .range j).subtype).IsPerfPair :=
     .restrict _ _ _ (by simp) (by simp) (by simpa)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   exact restrictScalars_field_aux
     (p.compl₁₂ (span L <| .range i).subtype (span L <| .range j).subtype)
     ((LinearMap.range i).inclusionSpan L ∘ₗ i.rangeRestrict)
@@ -256,7 +257,7 @@ lemma IsPerfPair.restrictScalars_of_field
     fun x y ↦ LinearMap.BilinMap.apply_apply_mem_of_mem_span
       (LinearMap.range <| Algebra.linearMap K L) (range i) (range j)
       ((LinearMap.restrictScalarsₗ K L _ _ _).comp (p.restrictScalars K))
-      (by simpa) (i x) (j y) (subset_span <| by simp) (subset_span <| by simp)
+      (by simpa) (i x) (j y) (subset_span <| by simp) (subset_span <| by simp))
 
 omit [p.IsPerfPair] in
 @[simp] lemma restrictScalarsField_apply_apply (hp : ∀ m n, p (i m) (j n) ∈ (algebraMap K L).range)

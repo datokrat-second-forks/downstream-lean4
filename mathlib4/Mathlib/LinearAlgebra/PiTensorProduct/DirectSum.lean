@@ -42,7 +42,8 @@ theorem ofDirectSumEquiv_tprod_lof [Fintype ι] [(i : ι) → DecidableEq (κ i)
       DirectSum.lof R _ _ p (⨂ₜ[R] i, x i) := by
   classical
   rw [ofDirectSumEquiv]
-  convert! ofDFinsuppEquiv_tprod_single p x
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! ofDFinsuppEquiv_tprod_single p x)
 
 @[simp]
 theorem ofDirectSumEquiv_symm_lof_tprod [Fintype ι] [(i : ι) → DecidableEq (κ i)]
@@ -51,7 +52,8 @@ theorem ofDirectSumEquiv_symm_lof_tprod [Fintype ι] [(i : ι) → DecidableEq (
       (⨂ₜ[R] i, DirectSum.lof R _ _ (p i) (x i)) := by
   classical
   rw [ofDirectSumEquiv]
-  convert! ofDFinsuppEquiv_symm_single_tprod p x
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  convert! ofDFinsuppEquiv_symm_single_tprod p x)
 
 @[simp]
 theorem ofDirectSumEquiv_tprod_apply [Finite ι]

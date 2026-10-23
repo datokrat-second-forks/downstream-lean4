@@ -206,7 +206,8 @@ lemma exists_basis_of_basis_baseChange [Module.FinitePresentation R M]
       rw [LinearMap.baseChange_eq_lTensor]
       erw [← LinearMap.comp_apply (i.lTensor k), ← LinearMap.lTensor_comp]
       rw [(LinearMap.exact_subtype_ker_map i).linearMap_comp_eq_zero]
-      simp only [LinearMap.lTensor_zero, LinearMap.zero_apply, map_zero]
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      simp only [LinearMap.lTensor_zero, LinearMap.zero_apply, map_zero])
   use Basis.ofRepr iequiv.symm
   intro j
   simp [iequiv, i]
@@ -271,7 +272,8 @@ theorem IsLocalRing.linearIndependent_of_flat [Flat R M] {ι : Type u} (v : ι �
     simp_rw [a_eq, Finset.sum_coe_sort _ (fun i ↦ f i * a' i), s.sum_insert hn, n_def]
   let c (i : ι) : R := -(if i = n then 0 else a' i) * hj.unit⁻¹
   specialize ih (v + (c · • v n)) ?_ ?_
-  · convert! (linearIndependent_add_smul_iff (c := Ideal.Quotient.mk _ ∘ c) (i := n.1) ?_).mpr h
+  · (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! (linearIndependent_add_smul_iff (c := Ideal.Quotient.mk _ ∘ c) (i := n.1) ?_).mpr h)
     · ext; simp [tmul_add]; rfl
     simp_rw [Function.comp_def, c, ite_eq_left, neg_zero, zero_mul, map_zero]
   · rw [Finset.sum_coe_sort _ (fun i ↦ f i • v i), s.sum_insert hn, add_comm, hfn] at hfv

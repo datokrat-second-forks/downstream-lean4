@@ -209,7 +209,7 @@ set_option backward.defeqAttrib.useBackward true in
 lemma reflects_exact_of_faithful [F.Faithful] (S : ShortComplex C) (hS : (S.map F).Exact) :
     S.Exact := by
   rw [ShortComplex.exact_iff_kernel_ι_comp_cokernel_π_zero] at hS ⊢
-  dsimp at hS
+  (set_option backward.instanceTypes.subsingletons.prop false in dsimp at hS)
   apply F.zero_of_map_zero
   obtain ⟨k, hk⟩ :=
     kernel.lift' (F.map S.g) (F.map (kernel.ι S.g))

@@ -409,6 +409,7 @@ def withAbstractMVars (e : Expr) (k : Expr → MetaM Simp.Step) : MetaM Simp.Ste
     | .visit res => return .visit (← subst res)
     | .continue res? => return .continue (← res?.mapM subst)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The implementation of `existsAndEq`, for an expression without metavariables. -/
 def existsAndEqCore (e : Expr) : MetaM Simp.Step := do
   let_expr f@Exists α p := e | return .continue

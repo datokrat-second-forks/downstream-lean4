@@ -313,6 +313,7 @@ noncomputable def restrictPreimage (e : Pretrivialization F proj) {s : Set B}
     ⟨⟨e.invFun ⟨z, f⟩, Set.mem_preimage.mpr <| (e.proj_symm_apply' hzb).symm ▸ hzs⟩⟩
   e.restrictPreimage' s
 
+set_option backward.instanceTypes.subsingletons.decidable false in
 /-- Extend the total space of a pretrivialization from the preimage of a set to the whole space. -/
 @[simps invFun source target baseSet]
 noncomputable def domExtend {s : Set B} (e : Pretrivialization F fun z : proj ⁻¹' s ↦ proj z)
@@ -689,7 +690,8 @@ protected noncomputable def symm (e : Trivialization F (π F E)) (b : B) (y : F)
 theorem symm_apply (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
     e.symm b y =
       cast (congr_arg E (e.symm_coe_proj hb)) (e.toOpenPartialHomeomorph.symm (b, y)).2 :=
-  dite_eq_left hb
+  (set_option backward.instanceTypes.subsingletons.decidable false in
+  dite_eq_left hb)
 
 @[deprecated "The junk values of `Trivialization.symm` were changed from `0` to
 `Classical.arbitrary` and should not be relied on; this lemma will be removed soon. Note that this
@@ -830,7 +832,9 @@ noncomputable def restrictPreimage' (e : Trivialization F proj) (s : Set B)
       fun z hz ↦ by ext; exacts [(e.proj_toFun _ hz).symm, rfl]
   continuousOn_invFun := Topology.IsInducing.subtypeVal.continuousOn_iff.mpr <|
     (e.continuousOn_invFun.comp (continuous_subtype_val.prodMap continuous_id).continuousOn
-      fun _ ↦ id).congr fun x hx ↦ congr_arg Subtype.val (dite_eq_left hx)
+      fun _ ↦ id).congr fun x hx ↦
+        (set_option backward.instanceTypes.subsingletons.decidable false in
+        congr_arg Subtype.val (dite_eq_left hx))
 
 /-- The restriction of a trivialization to a set with nonempty intersection with the base set. -/
 @[simps! apply source target baseSet]

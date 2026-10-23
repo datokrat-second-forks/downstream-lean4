@@ -293,19 +293,22 @@ theorem Monotone.le_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedT
     [Preorder β] [IsCodirectedOrder β] {f : β → α} {a : α} (hf : Monotone f)
     (ha : Tendsto f atBot (𝓝 a)) (b : β) :
     a ≤ f b :=
-  hf.dual.ge_of_tendsto ha b
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  hf.dual.ge_of_tendsto ha b)
 
 theorem Antitone.le_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Preorder β] [IsDirectedOrder β] {f : β → α} {a : α} (hf : Antitone f)
     (ha : Tendsto f atTop (𝓝 a)) (b : β) :
     a ≤ f b :=
-  hf.dual_right.ge_of_tendsto ha b
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  hf.dual_right.ge_of_tendsto ha b)
 
 theorem Antitone.ge_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Preorder β] [IsCodirectedOrder β] {f : β → α} {a : α} (hf : Antitone f)
     (ha : Tendsto f atBot (𝓝 a)) (b : β) :
     f b ≤ a :=
-  hf.dual_right.le_of_tendsto ha b
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  hf.dual_right.le_of_tendsto ha b)
 
 theorem isLUB_of_tendsto_atTop [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Preorder β] [IsDirectedOrder β] [Nonempty β] {f : β → α} {a : α} (hf : Monotone f)

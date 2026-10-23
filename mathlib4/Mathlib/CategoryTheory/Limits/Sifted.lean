@@ -175,9 +175,10 @@ lemma factorization_prodComparison_colim :
     CartesianMonoidalCategory.prodComparison colim X Y := by
   apply colimit.hom_ext
   intro j
+  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp [externalProductBifunctor, CartesianMonoidalCategory.prodComparison,
     externalProductBifunctorCurried, externalProduct]
-  cat_disch
+  cat_disch)
 
 variable [IsSifted C]
 

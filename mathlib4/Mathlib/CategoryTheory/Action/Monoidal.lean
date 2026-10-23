@@ -274,8 +274,9 @@ theorem diagonalSuccIsoTensorTrivial_inv_hom_apply {n : ℕ} (g : G) (f : Fin n 
   induction n generalizing g with
   | zero =>
     funext (x : Fin 1)
+    (set_option backward.dsimp.instanceTypes false in
     simp [diagonalSuccIsoTensorTrivial, diagonalOneIsoLeftRegular, Subsingleton.elim x 0,
-      ofMulAction_V, types_tensorObj_def, types_tensorUnit_def]
+      ofMulAction_V, types_tensorObj_def, types_tensorUnit_def])
   | succ n hn =>
     funext x
     induction x using Fin.cases with

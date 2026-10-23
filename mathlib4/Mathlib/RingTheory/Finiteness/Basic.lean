@@ -430,7 +430,8 @@ variable {S : Submodule A M}
 set_option backward.isDefEq.respectTransparency false in
 theorem FG.restrictScalars [Module.Finite R A] (hS : S.FG) : (S.restrictScalars R).FG := by
   rw [← Module.Finite.iff_fg] at *
-  exact Module.Finite.trans A S
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact Module.Finite.trans A S)
 
 @[simp]
 theorem FG.restrictScalars_iff [Module.Finite R A] : (S.restrictScalars R).FG ↔ S.FG :=

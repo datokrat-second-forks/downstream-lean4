@@ -508,7 +508,8 @@ irreducible_def preLiftAlgHom {s : A → A → Prop} {f : A →ₐ[S] B}
     simp only [mul_quot, map_mul _ x y]
   commutes' := by
     rintro x
-    simp [← one_quot, smul_quot, Algebra.algebraMap_eq_smul_one] }
+    (set_option backward.instanceTypes.subsingletons.prop false in
+    simp [← one_quot, smul_quot, Algebra.algebraMap_eq_smul_one]) }
 
 /-- Any `S`-algebra homomorphism `f : A →ₐ[S] B` which respects a relation `s : A → A → Prop`
 factors uniquely through a morphism `RingQuot s →ₐ[S] B`.

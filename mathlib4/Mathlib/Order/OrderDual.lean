@@ -181,7 +181,9 @@ instance OrderDual.denselyOrdered (α : Type*) [LT α] [h : DenselyOrdered α] :
 
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
-  ⟨by convert! @OrderDual.denselyOrdered αᵒᵈ _, @OrderDual.denselyOrdered α _⟩
+  ⟨by
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    convert! @OrderDual.denselyOrdered αᵒᵈ _), @OrderDual.denselyOrdered α _⟩
 
 /-! ### Pushing order definitions through `Equiv` -/
 
