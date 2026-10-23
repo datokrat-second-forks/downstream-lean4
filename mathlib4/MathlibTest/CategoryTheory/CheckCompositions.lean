@@ -42,7 +42,7 @@ example (j : J) :
 
   -- In this case, we can "fix" this by reassociating in the goal, but usually at this point the
   -- right thing to do is to back off and check how we ended up with a bad goal in the first place.
-  dsimp only [Functor.assoc]
+  (set_option backward.dsimp.instanceTypes false in dsimp only [Functor.assoc])
 
   -- This would work now, but it is not needed, because simp works as well
   -- rw [ι_preservesColimitIso_inv]
