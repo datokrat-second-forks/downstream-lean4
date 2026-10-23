@@ -55,6 +55,7 @@ theorem fst_x_pseudo_eq_fst_y : PseudoEqual _ (app biprod.fst x) (app biprod.fst
   · dsimp [x, y]
     simp
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `biprod.snd ≫ x` is pseudoequal to `biprod.snd y`. -/
 theorem snd_x_pseudo_eq_snd_y : PseudoEqual _ (app biprod.snd x) (app biprod.snd y) := by
@@ -70,7 +71,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem x_not_pseudo_eq : ¬PseudoEqual _ x y := by
   intro h
   replace h := ModuleCat.eq_range_of_pseudoequal h
-  dsimp [x, y] at h
+  (set_option backward.dsimp.instanceTypes false in dsimp [x, y] at h)
   let φ := biprod.lift (𝟙 (of ℤ ℚ)) (2 • 𝟙 (of ℤ ℚ))
   have mem_range := mem_range_self φ.hom (1 : ℚ)
   rw [h] at mem_range

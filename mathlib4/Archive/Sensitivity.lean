@@ -175,7 +175,9 @@ instance : DecidableEq (V n) := by induction n <;> · dsimp only [V]; infer_inst
 instance : AddCommGroup (V n) := by induction n <;> · dsimp only [V]; infer_instance
 
 set_option backward.isDefEq.respectTransparency false in
-instance : Module ℝ (V n) := by induction n <;> · dsimp only [V]; infer_instance
+instance : Module ℝ (V n) := by
+  induction n <;>
+    · (set_option backward.dsimp.instanceTypes false in dsimp only [V]); infer_instance
 
 end V
 
@@ -199,13 +201,18 @@ variable {n : ℕ}
 set_option backward.isDefEq.respectTransparency false in
 theorem duality (p q : Q n) : ε p (e q) = if p = q then 1 else 0 := by
   induction n with
-  | zero => simp [Subsingleton.elim (α := Q 0) p q, ε, e]
+  | zero =>
+    (set_option backward.dsimp.instanceTypes false in
+    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [Subsingleton.elim (α := Q 0) p q, ε, e])
   | succ n IH =>
-    dsimp [ε, e]
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp [ε, e])
     cases hp : p 0 <;> cases hq : q 0
     all_goals
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       simp only [Bool.cond_true, Bool.cond_false, LinearMap.fst_apply, LinearMap.snd_apply,
-        LinearMap.comp_apply, IH]
+        LinearMap.comp_apply, IH])
       congr 1; simp [Q.succ_n_eq, hp, hq]
 
 /-- Any vector in `V n` annihilated by all `ε p`'s is zero. -/
@@ -285,7 +292,9 @@ theorem f_squared (v : V n) : (f n) (f n v) = (n : ℝ) • v := by
   induction n with
   | zero => simp only [Nat.cast_zero, zero_smul, f_zero, LinearMap.zero_apply]
   | succ n IH =>
-    cases v; rw [f_succ_apply, f_succ_apply]; simp [IH, add_smul (n : ℝ) 1, add_assoc]; abel
+    cases v; rw [f_succ_apply, f_succ_apply]
+    (set_option backward.dsimp.instanceTypes false in simp [IH, add_smul (n : ℝ) 1, add_assoc])
+    abel
 
 /-! We now compute the matrix of `f` in the `e` basis (`p` is the line index,
 `q` the column index). -/
@@ -295,17 +304,23 @@ open scoped Classical in
 theorem f_matrix (p q : Q n) : |ε q (f n (e p))| = if p ∈ q.adjacent then 1 else 0 := by
   induction n with
   | zero =>
-    dsimp [f]
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp [f])
     simp [Q.not_adjacent_zero]
     rfl
   | succ n IH =>
     have ite_nonneg : ite (π q = π p) (1 : ℝ) 0 ≥ 0 := by split_ifs <;> norm_num
-    dsimp only [e, ε, f, V]; rw [LinearMap.prod_apply]; dsimp; cases hp : p 0 <;> cases hq : q 0
+    (set_option backward.dsimp.instanceTypes false in
+    dsimp only [e, ε, f, V])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    rw [LinearMap.prod_apply])
+    dsimp; cases hp : p 0 <;> cases hq : q 0
     all_goals
       repeat rw [Bool.cond_true]
       repeat rw [Bool.cond_false]
+      (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       simp [hp, hq, IH, duality, abs_of_nonneg ite_nonneg, Q.adj_iff_proj_eq,
-        Q.adj_iff_proj_adj]
+        Q.adj_iff_proj_adj])
 
 /-- The linear operator $g_m$ corresponding to Knuth's matrix $B_m$. -/
 noncomputable def g (m : ℕ) : V m →ₗ[ℝ] V m.succ :=
@@ -321,13 +336,14 @@ variable {m : ℕ}
 
 set_option backward.isDefEq.respectTransparency false in
 theorem g_apply : ∀ v, g m v = (f m v + √(m + 1) • v, v) := by
-  delta g; intro v; simp
+  delta g; intro v; (set_option backward.dsimp.instanceTypes false in simp)
 
 set_option backward.isDefEq.respectTransparency false in
 theorem g_injective : Injective (g m) := by
   rw [g]
   intro x₁ x₂ h
-  simp only [V, LinearMap.prod_apply, LinearMap.id_apply, Prod.mk_inj, Function.prod_apply] at h
+  (set_option backward.dsimp.instanceTypes false in
+  simp only [V, LinearMap.prod_apply, LinearMap.id_apply, Prod.mk_inj, Function.prod_apply] at h)
   exact h.right
 
 set_option backward.isDefEq.respectTransparency false in
@@ -335,7 +351,8 @@ theorem f_image_g (w : V m.succ) (hv : ∃ v, g m v = w) : f m.succ w = √(m + 
   rcases hv with ⟨v, rfl⟩
   have : √(m + 1) * √(m + 1) = m + 1 := Real.mul_self_sqrt (mod_cast zero_le)
   rw [f_succ_apply, g_apply]
-  simp [this, f_squared, smul_add, add_smul, smul_smul]
+  (set_option backward.dsimp.instanceTypes false in
+  simp [this, f_squared, smul_add, add_smul, smul_smul])
   abel
 
 /-!
@@ -426,7 +443,8 @@ theorem huang_degree_theorem (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
   let coeffs := (dualBases_e_ε m.succ).coeffs
   calc
     s * |ε q y| = |ε q (s • y)| := by
-      rw [map_smul, smul_eq_mul, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]
+      (set_option backward.instanceTypes.subsingletons.prop false in
+      rw [map_smul, smul_eq_mul, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)])
     _ = |ε q (f m.succ y)| := by rw [← f_image_g y (by simpa using! y_mem_g)]
     _ = |ε q (f m.succ (lc _ (coeffs y)))| := by rw [(dualBases_e_ε _).lc_coeffs y]
     _ =

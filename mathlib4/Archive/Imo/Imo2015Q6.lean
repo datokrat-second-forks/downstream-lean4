@@ -135,7 +135,8 @@ lemma b_pos : 0 < b := by
       rwa [hbN _ le_rfl, nonpos_iff_eq_zero] at this
     · exact hbN _ h.le
   have cp1 : #(pool a 1) = 1 := by
-    simp_rw [card_pool_succ ha, pool, card_empty, notMem_empty, ite_false]
+    (set_option backward.instanceTypes.subsingletons.decidable false in
+    simp_rw [card_pool_succ ha, pool, card_empty, notMem_empty, ite_false])
   apply absurd (hbN 1); lia
 
 include ht in

@@ -115,10 +115,14 @@ This is a technical device, used to apply Hahn-Banach theorem to construct an ex
 integral to all bounded functions. -/
 def boundedIntegrableFunctions [MeasurableSpace α] (μ : Measure α) :
     Subspace ℝ (DiscreteCopy α →ᵇ ℝ) where
-  carrier := {f | Integrable f μ}
-  zero_mem' := integrable_zero _ _ _
-  add_mem' hf hg := Integrable.add hf hg
-  smul_mem' c _ hf := Integrable.smul c hf
+  carrier := {f | Integrable f
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in μ)}
+  zero_mem' :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in integrable_zero _ _ _)
+  add_mem' hf hg :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in Integrable.add hf hg)
+  smul_mem' c _ hf :=
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in Integrable.smul c hf)
 
 /-- The integral, as a continuous linear map on the subspace of integrable functions in the space
 of all bounded functions on a type. This is a technical device, that we will extend through
@@ -128,7 +132,9 @@ def boundedIntegrableFunctionsIntegralCLM [MeasurableSpace α] (μ : Measure α)
   LinearMap.mkContinuous (E := ↥(boundedIntegrableFunctions μ))
     { toFun := fun f => ∫ x, f.1 x ∂μ
       map_add' := fun f g => integral_add f.2 g.2
-      map_smul' := fun c f => integral_smul c f.1 } (μ.real univ)
+      map_smul' := fun c f =>
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        integral_smul c f.1) } (μ.real univ)
     (by
       intro f
       rw [mul_comm]
@@ -137,6 +143,7 @@ def boundedIntegrableFunctionsIntegralCLM [MeasurableSpace α] (μ : Measure α)
       intro x
       exact BoundedContinuousFunction.norm_coe_le_norm f.1 x)
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- Given a measure, there exists a continuous linear form on the space of all bounded functions
 (not necessarily measurable) that coincides with the integral on bounded measurable functions. -/
 theorem exists_linear_extension_to_boundedFunctions [MeasurableSpace α] (μ : Measure α)
@@ -146,12 +153,14 @@ theorem exists_linear_extension_to_boundedFunctions [MeasurableSpace α] (μ : M
   rcases exists_extension_norm_eq _ (boundedIntegrableFunctionsIntegralCLM μ) with ⟨φ, hφ⟩
   exact ⟨φ, fun f hf => hφ.1 ⟨f, hf⟩⟩
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- An arbitrary extension of the integral to all bounded functions, as a continuous linear map.
 It is not at all canonical, and constructed using Hahn-Banach. -/
 def _root_.MeasureTheory.Measure.extensionToBoundedFunctions [MeasurableSpace α] (μ : Measure α)
     [IsFiniteMeasure μ] : (DiscreteCopy α →ᵇ ℝ) →L[ℝ] ℝ :=
   (exists_linear_extension_to_boundedFunctions μ).choose
 
+set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem extensionToBoundedFunctions_apply [MeasurableSpace α] (μ : Measure α) [IsFiniteMeasure μ]
     (f : DiscreteCopy α →ᵇ ℝ) (hf : Integrable f μ) :
     μ.extensionToBoundedFunctions f = ∫ x, f x ∂μ :=
@@ -444,7 +453,8 @@ theorem toFunctions_toMeasure_continuousPart [MeasurableSpace α] [MeasurableSin
   simp only [measureReal_def]
   congr 1
   rw [inter_comm, ← inter_sdiff_assoc, inter_univ]
-  exact measure_sdiff_null (f.countable_discreteSupport.measure_zero _)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  exact measure_sdiff_null (f.countable_discreteSupport.measure_zero _))
 
 end
 
@@ -516,13 +526,14 @@ theorem countable_ne (Hcont : #ℝ = ℵ₁) (φ : (DiscreteCopy ℝ →ᵇ ℝ)
     simp only [mem_ofPred] at *
     contrapose! hx
     exact apply_f_eq_continuousPart Hcont φ x hx |>.symm
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   have B :
     {x | (φ.toBoundedAdditiveMeasure.discreteSupport ∩ spf Hcont x).Nonempty} ⊆
       ⋃ y ∈ φ.toBoundedAdditiveMeasure.discreteSupport, {x | y ∈ spf Hcont x} := by
     intro x hx
     dsimp at hx
     simp only [exists_prop, mem_iUnion, mem_ofPred_eq]
-    exact hx
+    exact hx)
   apply Countable.mono (Subset.trans A B)
   exact Countable.biUnion (countable_discreteSupport _) fun a _ => countable_spf_mem Hcont a
 
