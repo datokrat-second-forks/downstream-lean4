@@ -209,13 +209,11 @@ lemma coprodMap {X Y X' Y' : Scheme.{u}} (f : X ⟶ X') (g : Y ⟶ Y') (hf : P f
   · rw [← MorphismProperty.cancel_left_of_respectsIso P
       (isPullback_inl_inl_coprodMap f g).flip.isoPullback.hom]
     convert! hf
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [Scheme.Cover.pullbackHom, coprodOpenCover])
+    simp [Scheme.Cover.pullbackHom, coprodOpenCover]
   · rw [← MorphismProperty.cancel_left_of_respectsIso P
       (isPullback_inr_inr_coprodMap f g).flip.isoPullback.hom]
     convert! hg
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [Scheme.Cover.pullbackHom, coprodOpenCover])
+    simp [Scheme.Cover.pullbackHom, coprodOpenCover]
 
 end IsZariskiLocalAtTarget
 
@@ -244,7 +242,7 @@ protected lemma mk' {P : MorphismProperty Scheme} [P.RespectsIso]
       P.cancel_left_of_respectsIso]
     exact restrict _ _ hf
   · refine of_sSup_eq_top f _ (Scheme.OpenCover.iSup_opensRange <| .ulift 𝒰) fun i ↦ ?_
-    (set_option backward.instanceTypes.subsingletons.prop false in dsimp)
+    dsimp
     rw [← IsOpenImmersion.isoOfRangeEq_inv_fac (𝒰.f _) (Scheme.Opens.ι _)
       congr($((𝒰.f _).opensRange.opensRange_ι.symm).carrier), Category.assoc,
       P.cancel_left_of_respectsIso]
@@ -457,7 +455,6 @@ theorem of_targetAffineLocally_of_isPullback
   exact (P.arrow_mk_iso_iff
     (morphismRestrictOpensRange f _)).mp (hf ⟨_, isAffineOpen_opensRange iY⟩)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 instance (P : AffineTargetMorphismProperty) [P.toProperty.RespectsIso] :
     (targetAffineLocally P).RespectsIso := by
@@ -545,16 +542,14 @@ theorem of_iSup_eq_top
   | basicOpen U r h =>
     have := AffineTargetMorphismProperty.IsLocal.to_basicOpen (f ∣_ U.1) (U.1.topIso.inv r) h
     exact (Q.arrow_mk_iso_iff
-      (morphismRestrictRestrictBasicOpen f _ r)).mp
-        (set_option backward.instanceTypes.subsingletons.prop false in this)
+      (morphismRestrictRestrictBasicOpen f _ r)).mp this
   | openCover U s hs H =>
     apply AffineTargetMorphismProperty.IsLocal.of_basicOpenCover _
       (s.image (Scheme.Opens.topIso _).inv) (by simp [← Ideal.map_span, hs, Ideal.map_top])
     intro ⟨r, hr⟩
     obtain ⟨r, hr', rfl⟩ := Finset.mem_image.mp hr
     exact (Q.arrow_mk_iso_iff
-      (morphismRestrictRestrictBasicOpen f _ r).symm).mp
-        (set_option backward.instanceTypes.subsingletons.prop false in H ⟨r, hr'⟩)
+      (morphismRestrictRestrictBasicOpen f _ r).symm).mp (H ⟨r, hr'⟩)
   | hU i => exact hU' i
 
 theorem iff_of_iSup_eq_top

@@ -99,7 +99,6 @@ scoped[Isocrystal]
   notation3:50 M " →ᶠˡ[" p ", " k "] " M₂ =>
     LinearMap (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The Frobenius automorphism of `k`, as a linear equivalence -/
 scoped[Isocrystal]
   notation3:50 M " ≃ᶠˡ[" p ", " k "] " M₂ =>
@@ -112,14 +111,13 @@ scoped[Isocrystal]
 Frobenius-linear automorphism.
 -/
 class Isocrystal (V : Type*) [AddCommGroup V] extends Module K(p, k) V where
-  frob : (set_option backward.instanceTypes.subsingletons.prop false in V ≃ᶠˡ[p, k] V)
+  frob : V ≃ᶠˡ[p, k] V
 
 open WittVector
 
 variable (V : Type*) [AddCommGroup V] [Isocrystal p k V]
 variable (V₂ : Type*) [AddCommGroup V₂] [Isocrystal p k V₂]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 variable {V} in
 /--
 Project the Frobenius automorphism from an isocrystal. Denoted by `Φ(p, k)` when V can be inferred.
@@ -129,14 +127,12 @@ def Isocrystal.frobenius : V ≃ᶠˡ[p, k] V :=
 
 @[inherit_doc] scoped[Isocrystal] notation "Φ(" p ", " k ")" => WittVector.Isocrystal.frobenius p k
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- A homomorphism between isocrystals respects the Frobenius map.
 Notation `M →ᶠⁱ [p, k]` in the `Isocrystal` namespace. -/
 structure IsocrystalHom extends V →ₗ[K(p, k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p, k) (toLinearMap x) = toLinearMap (Φ(p, k) x)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- An isomorphism between isocrystals respects the Frobenius map.
 
@@ -171,11 +167,9 @@ variable [IsDomain k] [CharP k p] [PerfectRing k p]
 /-- The standard one-dimensional isocrystal of slope `m : ℤ` is an isocrystal. -/
 instance (m : ℤ) : Isocrystal p k (StandardOneDimIsocrystal p k m) where
   frob :=
-    (set_option backward.instanceTypes.subsingletons.prop false in
     (FractionRing.frobenius p k).toSemilinearEquiv.trans
-      (LinearEquiv.smulOfNeZero _ _ _ (zpow_ne_zero m (WittVector.FractionRing.p_nonzero p k))))
+      (LinearEquiv.smulOfNeZero _ _ _ (zpow_ne_zero m (WittVector.FractionRing.p_nonzero p k)))
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIsocrystal p k m) :
@@ -183,7 +177,6 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 /-- A one-dimensional isocrystal over an algebraically closed field

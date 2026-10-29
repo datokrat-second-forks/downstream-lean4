@@ -299,8 +299,7 @@ lemma contentRegular_rieszContent : (rieszContent Λ).ContentRegular := by
   obtain ⟨f, hfleoneonK, hfle⟩ := exists_lt_rieszContentAux_add_pos Λ K (Real.toNNReal_pos.mpr hε)
   rw [rieszContentAux, Real.toNNReal_of_nonneg hε.le, ← NNReal.coe_lt_coe] at hfle
   refine ((le_iff_forall_one_lt_le_mul₀ (zero_le (a := Λ f))).mpr fun α hα ↦ ?_).trans hfle.le
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [mul_comm, ← smul_eq_mul, ← map_smul])
+  rw [mul_comm, ← smul_eq_mul, ← map_smul]
   set K' := f ⁻¹' Ici α⁻¹
   have hKK' : ↑K ⊆ interior K' :=
     subset_interior_iff.2 ⟨f ⁻¹' Ioi α⁻¹, isOpen_Ioi.preimage f.1.2,

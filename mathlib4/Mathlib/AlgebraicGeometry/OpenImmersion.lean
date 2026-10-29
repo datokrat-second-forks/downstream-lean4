@@ -49,7 +49,7 @@ protected def scheme (X : LocallyRingedSpace.{u})
     (h :
       ∀ x : X,
         ∃ (R : CommRingCat) (f : Spec.toLocallyRingedSpace.obj (op R) ⟶ X),
-          ((x ∈ Set.range f.base) :) ∧ LocallyRingedSpace.IsOpenImmersion f) :
+          (x ∈ Set.range f.base :) ∧ LocallyRingedSpace.IsOpenImmersion f) :
     Scheme where
   toLocallyRingedSpace := X
   local_affine := by
@@ -592,8 +592,7 @@ instance hasPullback_of_right : HasPullback g f :=
 
 instance : IsOpenImmersion (pullback.snd f g) := by
   have := PreservesPullback.iso_hom_snd forget f g
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  dsimp only [Scheme.forgetToLocallyRingedSpace, inducedFunctor_map] at this)
+  dsimp only [Scheme.forgetToLocallyRingedSpace, inducedFunctor_map] at this
   change LocallyRingedSpace.IsOpenImmersion _
   rw [← this]
   infer_instance

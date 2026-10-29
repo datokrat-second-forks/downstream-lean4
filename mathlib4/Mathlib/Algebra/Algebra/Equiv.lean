@@ -976,10 +976,7 @@ variable (R) in
 endomorphisms. -/
 @[simps!] def conjAlgEquiv (e : M₁ ≃ₗ[S] M₂) : Module.End S M₁ ≃ₐ[R] Module.End S M₂ where
   __ := e.conjRingEquiv
-  commutes' _ := by
-    ext
-    change e.restrictScalars R _ = _
-    (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  commutes' _ := by ext; change e.restrictScalars R _ = _; simp
 
 theorem conjAlgEquiv_apply (e : M₁ ≃ₗ[S] M₂) (f : Module.End S M₁) :
     e.conjAlgEquiv R f = e.toLinearMap ∘ₗ f ∘ₗ e.symm.toLinearMap := rfl

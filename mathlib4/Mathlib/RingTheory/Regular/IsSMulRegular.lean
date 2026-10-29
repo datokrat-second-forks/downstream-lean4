@@ -48,8 +48,7 @@ variable {R M M' M'' : Type*}
 
 lemma IsSMulRegular.submodule [Semiring R] [AddCommMonoid M] [Module R M]
     (N : Submodule R M) (r : R) (h : IsSMulRegular M r) : IsSMulRegular N r :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  h.of_injective N.subtype N.injective_subtype)
+  h.of_injective N.subtype N.injective_subtype
 
 section TensorProduct
 
@@ -86,8 +85,7 @@ lemma isSMulRegular_quotient_iff_mem_of_smul_mem :
     IsSMulRegular (M ⧸ N) r ↔ ∀ x : M, r • x ∈ N → x ∈ N :=
   isSMulRegular_iff_right_eq_zero_of_smul.trans <|
     N.mkQ_surjective.forall.trans <| by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp_rw [← map_smul, N.mkQ_apply, Submodule.Quotient.mk_eq_zero])
+      simp_rw [← map_smul, N.mkQ_apply, Submodule.Quotient.mk_eq_zero]
 
 variable {N r}
 
@@ -182,8 +180,7 @@ lemma QuotSMulTop.map_first_exact_on_four_term_exact_of_isSMulRegular_last
     dsimp [map, mapQLinear]
     rw [Exact.exact_mapQ_iff h₁₂, map_pointwise_smul, Submodule.map_top, inf_comm]
     exact smul_top_inf_eq_smul_of_isSMulRegular_on_quot this
-  (set_option backward.instanceTypes.subsingletons.prop false in
   h.of_injective _ <| LinearMap.ker_eq_bot.mp <|
-    ker_liftQ_eq_bot' _ _ h₂₃.linearMap_ker_eq.symm)
+    ker_liftQ_eq_bot' _ _ h₂₃.linearMap_ker_eq.symm
 
 end CommRing

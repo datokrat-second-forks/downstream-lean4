@@ -122,8 +122,7 @@ def diracHom : G →* D(G, R) where
 
 /-- Measures form a `R`-algebra. -/
 noncomputable instance : Algebra R D(G, R) := Algebra.ofModule
-  (by intros; ext; simp [mul_apply])
-  (by intros; ext; (set_option backward.instanceTypes.subsingletons.prop false in simp [mul_apply]))
+  (by intros; ext; simp [mul_apply]) (by intros; ext; simp [mul_apply])
 
 /-- The canonical homomorphism from the monoid algebra `R[G]` to `D(G, R)`. -/
 def monoidAlgebraHom : MonoidAlgebra R G →ₐ[R] D(G, R) :=

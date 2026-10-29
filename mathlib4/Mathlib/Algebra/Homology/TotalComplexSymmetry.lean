@@ -162,9 +162,8 @@ set_option backward.isDefEq.respectTransparency.types false in
 lemma flip_totalFlipIso : K.flip.totalFlipIso c = (K.totalFlipIso c).symm := by
   ext j i₁ i₂ h
   rw [Iso.symm_hom, ιTotal_totalFlipIso_f_hom]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp only [flip_flip]
-  rw [ιTotal_totalFlipIso_f_inv, ComplexShape.σ_symm])
+  rw [ιTotal_totalFlipIso_f_inv, ComplexShape.σ_symm]
 
 end
 

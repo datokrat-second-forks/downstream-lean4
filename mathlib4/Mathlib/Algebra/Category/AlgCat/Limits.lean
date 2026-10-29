@@ -157,8 +157,8 @@ instance forget₂Ring_preservesLimitsOfSize [UnivLE.{v, w}] :
   preservesLimitsOfShape :=
     { preservesLimit := fun {K} ↦
         preservesLimit_of_preserves_limit_cone (limitConeIsLimit K)
-          (set_option backward.instanceTypes.subsingletons.prop false in
-          RingCat.limitConeIsLimit.{v, w} (_ ⋙ forget₂ (AlgCat.{w} R) RingCat.{w})) }
+          (RingCat.limitConeIsLimit.{v, w}
+            (_ ⋙ forget₂ (AlgCat.{w} R) RingCat.{w})) }
 
 instance forget₂Ring_preservesLimits : PreservesLimits (forget₂ (AlgCat R) RingCat.{w}) :=
   AlgCat.forget₂Ring_preservesLimitsOfSize.{w, w}

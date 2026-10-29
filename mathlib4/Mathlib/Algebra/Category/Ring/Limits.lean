@@ -133,8 +133,7 @@ def forget₂AddCommMonPreservesLimitsAux :
     IsLimit ((forget₂ SemiRingCat AddCommMonCat).mapCone (limitCone F)) := by
   let _ : Small.{u} (Functor.sections ((F ⋙ forget₂ _ AddCommMonCat) ⋙ forget _)) :=
     inferInstanceAs <| Small.{u} (Functor.sections (F ⋙ forget SemiRingCat))
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  apply AddCommMonCat.limitConeIsLimit.{v, u})
+  apply AddCommMonCat.limitConeIsLimit.{v, u}
 
 /-- The forgetful functor from semirings to additive commutative monoids preserves all limits.
 -/
@@ -223,13 +222,10 @@ instance :
             (F ⋙ forget₂ CommSemiRingCat.{u} SemiRingCat.{u})).π.naturality f } }
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone := c
-      validLift := IsLimit.uniqueUpToIso
-        (set_option backward.instanceTypes.subsingletons.prop false in
-          SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) t
+      validLift := IsLimit.uniqueUpToIso (SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) t
       makesLimit := by
         refine IsLimit.ofFaithful (forget₂ CommSemiRingCat.{u} SemiRingCat.{u})
-          (set_option backward.instanceTypes.subsingletons.prop false in
-            SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) (fun s => _) fun s => rfl }
+          (SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) (fun s => _) fun s => rfl }
 
 /-- A choice of limit cone for a functor into `CommSemiRingCat`.
 (Generally, you'll just want to use `limit F`.)
@@ -309,7 +305,6 @@ instance limitRing : Ring.{u} (Types.Small.limitCone.{v, u} (F ⋙ forget RingCa
   let _ : Ring (F ⋙ forget RingCat.{u}).sections := (sectionsSubring F).toRing
   inferInstanceAs <| Ring (Shrink _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- We show that the forgetful functor `CommRingCat ⥤ RingCat` creates limits.
 
 All we need to do is notice that the limit point has a `Ring` instance available,
@@ -370,8 +365,7 @@ instance forget₂SemiRing_preservesLimitsOfSize [UnivLE.{v, u}] :
   preservesLimitsOfShape {_ _} :=
       { preservesLimit := fun {F} =>
           preservesLimit_of_preserves_limit_cone (limitConeIsLimit.{v, u} F)
-            (set_option backward.instanceTypes.subsingletons.prop false in
-              SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) }
+            (SemiRingCat.HasLimits.limitConeIsLimit.{v, u} _) }
 
 instance forget₂SemiRing_preservesLimits : PreservesLimits (forget₂ RingCat SemiRingCat.{u}) :=
   RingCat.forget₂SemiRing_preservesLimitsOfSize.{u, u}
@@ -427,7 +421,6 @@ instance limitCommRing :
     (RingCat.sectionsSubring.{v, u} (F ⋙ forget₂ CommRingCat RingCat.{u}))
   inferInstanceAs <| CommRing (Shrink _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- We show that the forgetful functor `CommRingCat ⥤ RingCat` creates limits.
 
 All we need to do is notice that the limit point has a `CommRing` instance available,
@@ -502,8 +495,7 @@ instance forget₂Ring_preservesLimitsOfSize [UnivLE.{v, u}] :
   preservesLimitsOfShape {_ _} :=
     { preservesLimit := fun {F} =>
         preservesLimit_of_preserves_limit_cone.{w, v} (limitConeIsLimit.{v, u} F)
-          (set_option backward.instanceTypes.subsingletons.prop false in
-            RingCat.limitConeIsLimit.{v, u} _) }
+          (RingCat.limitConeIsLimit.{v, u} _) }
 
 instance forget₂Ring_preservesLimits : PreservesLimits (forget₂ CommRingCat RingCat.{u}) :=
   CommRingCat.forget₂Ring_preservesLimitsOfSize.{u, u}

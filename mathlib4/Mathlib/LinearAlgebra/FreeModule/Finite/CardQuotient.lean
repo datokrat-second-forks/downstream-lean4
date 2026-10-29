@@ -70,9 +70,8 @@ theorem Submodule.natAbs_det_equiv (N : Submodule ℤ M) {E : Type*} [EquivLike 
     _ = Nat.card (M ⧸ N) := ?_
   -- since `LinearMap.toMatrix b' b' f` is the diagonal matrix with `a` along the diagonal.
   · congr 2; ext i j
-    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [LinearMap.toMatrix_apply, ha, map_smul, Basis.repr_self, Finsupp.smul_single,
-      smul_eq_mul, mul_one])
+      smul_eq_mul, mul_one]
     by_cases h : i = j
     · rw [h, Matrix.diagonal_apply_eq, Finsupp.single_eq_same]
     · rw [Matrix.diagonal_apply_ne _ h, Finsupp.single_eq_of_ne h]

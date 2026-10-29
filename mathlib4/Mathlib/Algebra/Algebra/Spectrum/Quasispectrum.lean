@@ -321,9 +321,7 @@ theorem NonUnitalAlgHom.apply_mem_quasispectrum {F : Type*} [FunLike F A R]
   simp_rw [isQuasiregular_iff, IsUnit.unit_of_val_units]
   rintro ⟨b, hb, -⟩
   replace hb := congr(φ $hb)
-  have h1 : φ (r⁻¹ • a) = 1 := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [Units.smul_def, hr])
+  have h1 : φ (r⁻¹ • a) = 1 := by simp [Units.smul_def, hr]
   have := congr(φ ($(neg_add_cancel (r⁻¹ • a))))
   replace h1 : φ (-(r⁻¹ • a)) + 1 = 0 := by simp [← h1, ← map_add]
   grind =>
@@ -344,8 +342,7 @@ lemma NonUnitalAlgHom.quasispectrum_apply_subset' {F R : Type*} (S : Type*) {A B
     forall_exists_index]
   refine fun hx this ↦ ⟨hx, ?_⟩
   rw [Units.smul_def, ← smul_one_smul S] at this ⊢
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simpa [-smul_assoc] using this.map φ)
+  simpa [-smul_assoc] using this.map φ
 
 /-- If `φ` is non-unital algebra homomorphism over a scalar ring `R`, then
 `quasispectrum R (φ a) ⊆ quasispectrum R a`. -/

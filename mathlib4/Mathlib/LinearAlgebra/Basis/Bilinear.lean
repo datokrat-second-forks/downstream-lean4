@@ -64,8 +64,7 @@ theorem sum_repr_mul_repr_mul {B : Mₗ →ₗ[Rₗ] Nₗ →ₗ[Rₗ] Pₗ} (x 
     ((b₁'.repr x).sum fun i xi => (b₂'.repr y).sum fun j yj => xi • yj • B (b₁' i) (b₂' j)) =
       B x y := by
   conv_rhs => rw [← b₁'.linearCombination_repr x, ← b₂'.linearCombination_repr y]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum₂, map_sum, map_smul₂, map_smul])
+  simp_rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum₂, map_sum, map_smul₂, map_smul]
 
 end AddCommMonoid
 

@@ -121,15 +121,13 @@ theorem exists_mem_center_apply_eq_smul_of_forall_notLinearIndependent_of_basis
     intro j
     simp only [LinearIndependent.pair_iff, not_forall] at h
     obtain ⟨s, t, ⟨h, h'⟩⟩ := h (b i)
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [Basis.coord_apply, _root_.map_smul, Basis.repr_self, smul_single,
-      smul_eq_mul, mul_one, Finsupp.single_apply])
+      smul_eq_mul, mul_one, Finsupp.single_apply]
     split_ifs with hj
     · simp [hj]
     · have : t = 0 ∨ b.repr (f (b i)) j = 0 := by
         rw [b.ext_elem_iff] at h
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        simpa [single_eq_of_ne' hj] using h j)
+        simpa [single_eq_of_ne' hj] using h j
       apply Or.resolve_left this
       contrapose h'
       refine ⟨?_, h'⟩
@@ -144,9 +142,8 @@ theorem exists_mem_center_apply_eq_smul_of_forall_notLinearIndependent_of_basis
     simp only [Nat.succ_eq_add_one, Nat.reduceAdd,
       LinearIndependent.pair_iff, not_forall, not_and] at h
     obtain ⟨s, t, h, hst⟩ := h
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [b.ext_elem_iff, map_add, _root_.map_smul, coe_add, Finsupp.coe_smul,
-      Pi.add_apply, Pi.smul_apply, smul_eq_mul, map_zero, Finsupp.coe_zero, Pi.zero_apply] at h)
+      Pi.add_apply, Pi.smul_apply, smul_eq_mul, map_zero, Finsupp.coe_zero, Pi.zero_apply] at h
     have hx : x = b i + r • b j := by
       simp only [Basis.repr_symm_apply, linearCombination_apply, x]
       rw [← add_right_cancel_iff, sum_update_add] <;>
@@ -155,16 +152,14 @@ theorem exists_mem_center_apply_eq_smul_of_forall_notLinearIndependent_of_basis
       suffices s + t * ((b.repr (f (b i))) i + r * (b.repr (f (b j))) i) = 0 by
         rw [mul_add, ← add_assoc, ← mul_assoc, add_eq_zero_iff_eq_neg] at this
         rw [Basis.coord_apply, this, feq]
-        (set_option backward.instanceTypes.subsingletons.prop false in simp [single_eq_of_ne hij])
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [hx, single_eq_of_ne hij] using h i)
+        simp [single_eq_of_ne hij]
+      simpa [hx, single_eq_of_ne hij] using h i
     have h2 : s * r + t * r * b.coord j (f (b j)) = 0 := by
       suffices s * r + t * ((b.repr (f (b i))) j + r * (b.repr (f (b j))) j) = 0 by
         rw [mul_add, ← add_assoc, add_right_comm, add_eq_zero_iff_eq_neg, ← mul_assoc] at this
         rw [Basis.coord_apply, this, feq]
-        (set_option backward.instanceTypes.subsingletons.prop false in simp [single_eq_of_ne' hij])
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [hx, single_eq_same, single_eq_of_ne' hij] using h j)
+        simp [single_eq_of_ne' hij]
+      simpa [hx, single_eq_same, single_eq_of_ne' hij] using h j
     rw [add_eq_zero_iff_eq_neg] at h1
     rw [h1, neg_mul, neg_add_eq_sub, mul_assoc, mul_assoc,
       ← mul_sub, mul_eq_zero, sub_eq_zero] at h2

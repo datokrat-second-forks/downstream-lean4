@@ -615,9 +615,8 @@ lemma sign_decomposeFin'Symm (i : Fin (n + 2)) (σ : Perm (Fin (n + 1))) :
     have hS : S.card = i.val := by
       simp only [this, Finset.card_image_of_injective _ (Equiv.injective _)]
       exact Finset.card_eq_of_bijective (fun j hj ↦ ⟨j, by grind⟩) (by grind) (by grind) (by simp)
-    (set_option backward.instanceTypes.subsingletons.decidable false in
     simp only [← hS, Fin.Ioi_zero_eq_map, decomposeFin'Symm_zero, Finset.prod_map, Fin.coe_succEmb,
-      decomposeFin'Symm_succ, ← S.prod_mul_prod_compl, ← Finset.prod_const])
+      decomposeFin'Symm_succ, ← S.prod_mul_prod_compl, ← Finset.prod_const]
     nth_rw 2 [Finset.prod_eq_one (by simp [S]; grind [Fin.succAbove])]
     rw [mul_one]
     exact Finset.prod_congr rfl (by grind)

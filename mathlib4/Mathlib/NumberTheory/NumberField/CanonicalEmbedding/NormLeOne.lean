@@ -538,21 +538,19 @@ theorem logMap_expMapBasis (x : realSpace K) :
       ↔ ∀ w, w ≠ w₀ → x w ∈ Set.Ico 0 1 := by
   simp_rw [ZSpan.mem_fundamentalDomain, equivFinRank.forall_congr_left, Subtype.forall]
   refine forall₂_congr fun w hw ↦ ?_
-  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [expMapBasis_apply'', map_smul, logMap_real_smul (norm_expMapBasis_ne_zero _)
     (Real.exp_ne_zero _), expMapBasis_apply, logMap_expMap (by rw [← expMapBasis_apply,
     norm_expMapBasis, ite_eq_left rfl, Real.exp_zero, one_pow]), Basis.equivFun_symm_apply,
-    Fintype.sum_eq_add_sum_subtype_ne _ w₀, ite_eq_left rfl, zero_smul, zero_add])
+    Fintype.sum_eq_add_sum_subtype_ne _ w₀, ite_eq_left rfl, zero_smul, zero_add]
   conv_lhs =>
     enter [2, 1, 2, w, 2, i]
     rw [ite_eq_right i.prop]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp_rw [Finset.sum_apply, ← sum_fn, map_sum, Pi.smul_apply, ← Pi.smul_def, map_smul,
     completeBasis_apply_of_ne, expMap_symm_apply, normAtAllPlaces_mixedEmbedding,
     ← logEmbedding_component, logEmbedding_fundSystem, Finsupp.coe_finsetSum, Finsupp.coe_smul,
     Finset.sum_apply, Pi.smul_apply, Basis.ofZLatticeBasis_repr_apply, Basis.repr_self,
     Finsupp.single_apply, EmbeddingLike.apply_eq_iff_eq, Int.cast_ite, Int.cast_one, Int.cast_zero,
-    smul_ite, smul_eq_mul, mul_one, mul_zero, Fintype.sum_ite_eq'])
+    smul_ite, smul_eq_mul, mul_one, mul_zero, Fintype.sum_ite_eq']
 
 theorem normAtAllPlaces_image_preimage_expMapBasis (s : Set (realSpace K)) :
     normAtAllPlaces '' normAtAllPlaces ⁻¹' expMapBasis '' s = expMapBasis '' s := by

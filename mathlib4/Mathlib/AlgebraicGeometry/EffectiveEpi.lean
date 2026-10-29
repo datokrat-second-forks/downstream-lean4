@@ -66,12 +66,11 @@ private lemma of_isAffine_target {X Y S : Scheme.{u}} [IsAffine X] [IsAffine Y] 
     apply AffineScheme.equivCommRingCat.functor.effectiveEpi_of_map
     apply CommRingCat.Opposite.effectiveEpi_of_faithfullyFlat
     exact (Flat.flat_and_surjective_iff_faithfullyFlat_of_isAffine π).mp ⟨‹_›, ‹_›⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   obtain ⟨u, hu⟩ := IsRegularEpi.exists_of_isKernelPair
     (AffineScheme.ofHom π)
     (IsPullback.of_map (f := AffineScheme.ofHom (pullback.fst π π)) (AffineScheme.forgetToScheme)
       (InducedCategory.Hom.ext pullback.condition) (.of_hasPullback _ _))
-    (AffineScheme.ofHom f) (InducedCategory.Hom.ext hf))
+    (AffineScheme.ofHom f) (InducedCategory.Hom.ext hf)
   use u.hom, InducedCategory.Hom.ext_iff.mp hu
 
 set_option backward.defeqAttrib.useBackward true in

@@ -250,8 +250,7 @@ lemma lineDerivCLM_smul {c : ℝ} {v : E} :
     (lineDerivCLM (c • v) : 𝓓'^{k}(Ω, F) →L[ℝ] 𝓓'^{n}(Ω, F)) =
       c • lineDerivCLM v := by
   ext T f
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [lineDerivCLM_apply, TestFunction.lineDerivCLM_smul])
+  simp [lineDerivCLM_apply, TestFunction.lineDerivCLM_smul]
 
 open LineDeriv
 
@@ -276,8 +275,7 @@ noncomputable instance : LineDerivAdd E 𝓓'(Ω, F) 𝓓'(Ω, F) where
   lineDerivOp_left_add _ _ T := congr($lineDerivCLM_add T)
 
 noncomputable instance : LineDerivSMul ℝ E 𝓓'(Ω, F) 𝓓'(Ω, F) where
-  lineDerivOp_smul v :=
-    (set_option backward.instanceTypes.subsingletons.prop false in map_smul (lineDerivCLM v))
+  lineDerivOp_smul v := map_smul (lineDerivCLM v)
 
 noncomputable instance : LineDerivLeftSMul ℝ E 𝓓'(Ω, F) 𝓓'(Ω, F) where
   lineDerivOp_left_smul _ _ T := congr($lineDerivCLM_smul T)

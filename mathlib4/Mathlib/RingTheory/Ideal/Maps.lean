@@ -880,17 +880,13 @@ instance (priority := low) : (Module.annihilator R M).IsTwoSided :=
 
 theorem LinearMap.annihilator_le_of_injective (f : M →ₗ[R] M') (hf : Function.Injective f) :
     Module.annihilator R M' ≤ Module.annihilator R M := fun x h ↦ by
-  rw [Module.mem_annihilator] at h ⊢
-  exact fun m ↦ hf (by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_smul, h, f.map_zero]))
+  rw [Module.mem_annihilator] at h ⊢; exact fun m ↦ hf (by rw [map_smul, h, f.map_zero])
 
 theorem LinearMap.annihilator_le_of_surjective (f : M →ₗ[R] M')
     (hf : Function.Surjective f) : Module.annihilator R M ≤ Module.annihilator R M' := fun x h ↦ by
   rw [Module.mem_annihilator] at h ⊢
   intro m; obtain ⟨m, rfl⟩ := hf m
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← map_smul, h, f.map_zero])
+  rw [← map_smul, h, f.map_zero]
 
 theorem LinearEquiv.annihilator_eq (e : M ≃ₗ[R] M') :
     Module.annihilator R M = Module.annihilator R M' :=

@@ -550,7 +550,7 @@ theorem maxTail_isGood (l : MaxProducts C ho)
     simp only [map_finsuppSum]
     apply Finsupp.sum_congr
     intro q hq
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
+    rw [map_smul]
     rw [Finsupp.mem_supported] at hmmem
     have hx'' : q < l.val.Tail := hmmem hq
     have : ∃ (p : Products I), p.val ≠ [] ∧ p.val.head! = term I ho ∧ q = p.Tail :=
@@ -579,7 +579,7 @@ theorem maxTail_isGood (l : MaxProducts C ho)
   apply Submodule.add_mem
   · apply Submodule.finsuppSum_mem
     intro q _
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
+    rw [map_smul]
     apply Submodule.smul_mem
     apply Submodule.subset_span
     dsimp only [eval]

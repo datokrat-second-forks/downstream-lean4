@@ -329,7 +329,6 @@ lemma finitePresentation_universalFactorizationMap :
   letI := (universalFactorizationMap R n m k hn).toAlgebra
   (universalFactorizationMapPresentation R n m k hn).finitePresentation_of_isFinite
 
-set_option backward.instanceTypes.subsingletons.prop false in
 lemma finite_universalFactorizationMap :
     (universalFactorizationMap R n m k hn).Finite := by
   refine RingHom.IsIntegral.to_finite ?_

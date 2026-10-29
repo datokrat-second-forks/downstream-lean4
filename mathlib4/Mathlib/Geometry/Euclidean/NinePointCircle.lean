@@ -88,8 +88,7 @@ theorem ninePointCircle_map {V₂ P₂ : Type*} [NormedAddCommGroup V₂] [Inner
     (s.map f.toAffineMap f.injective).ninePointCircle =
     { center := f s.ninePointCircle.center, radius := s.ninePointCircle.radius } := by
   ext
-  · (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [ninePointCircle_center, centroid_map])
+  · simp [ninePointCircle_center, centroid_map]
   · simp [ninePointCircle_radius]
 
 theorem ninePointCircle_restrict {n : ℕ} (s : Simplex ℝ P n) (S : AffineSubspace ℝ P)
@@ -153,7 +152,7 @@ theorem eulerPoint_map {V₂ P₂ : Type*} [NormedAddCommGroup V₂] [InnerProdu
     [MetricSpace P₂] [NormedAddTorsor V₂ P₂]
     {n : ℕ} (s : Simplex ℝ P n) (f : P →ᵃⁱ[ℝ] P₂) (i : Fin (n + 1)) :
     (s.map f.toAffineMap f.injective).eulerPoint i = f (s.eulerPoint i) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp [eulerPoint])
+  simp [eulerPoint]
 
 @[simp]
 theorem eulerPoint_restrict {n : ℕ} (s : Simplex ℝ P n) (S : AffineSubspace ℝ P)

@@ -187,7 +187,7 @@ def liftAux (f : X → CommutatorRing L) :=
 
 theorem liftAux_map_smul (f : X → L) (t : R) (a : lib R X) :
     liftAux R f (t • a) = t • liftAux R f a :=
-  (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ t a)
+  map_smul _ t a
 
 theorem liftAux_map_add (f : X → L) (a b : lib R X) :
     liftAux R f (a + b) = liftAux R f a + liftAux R f b :=

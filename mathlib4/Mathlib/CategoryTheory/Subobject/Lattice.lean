@@ -68,8 +68,7 @@ def pullbackTop (f : X ⟶ Y) : (pullback f).obj ⊤ ≅ ⊤ :=
 as the category is thin this is an isomorphism. -/
 def topLEPullbackSelf {A B : C} (f : A ⟶ B) [Mono f] :
     (⊤ : MonoOver A) ⟶ (pullback f).obj (mk f) :=
-  homMk _ (set_option backward.instanceTypes.subsingletons.prop false in
-    pullback.lift_snd _ _ rfl)
+  homMk _ (pullback.lift_snd _ _ rfl)
 
 /-- The pullback of a monomorphism along itself is isomorphic to the top object. -/
 def pullbackSelf {A B : C} (f : A ⟶ B) [Mono f] : (pullback f).obj (mk f) ≅ ⊤ :=
@@ -484,8 +483,7 @@ theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] (f₁ f₂) :
   apply Quotient.ind'
   intro f₁
   erw [inf_def, inf_def, inf_eq_map_pullback', inf_eq_map_pullback', ← map_comp]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  dsimp)
+  dsimp
   rw [pullback_comp, pullback_map_self]
 
 end SemilatticeInfTop

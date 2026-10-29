@@ -80,8 +80,7 @@ theorem norm_extendRCLike_apply_sq (fr : Dual ℝ F) (x : F) :
   ‖(fr.extendRCLike x : 𝕜)‖ ^ 2 = re (conj (fr.extendRCLike x) * fr.extendRCLike x : 𝕜) := by
     rw [RCLike.conj_mul, ← ofReal_pow, ofReal_re]
   _ = fr (conj (fr.extendRCLike x : 𝕜) • x) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← smul_eq_mul, ← map_smul, re_extendRCLike_apply])
+    rw [← smul_eq_mul, ← map_smul, re_extendRCLike_apply]
 
 /-- The extension `Module.Dual.extendRCLike` as a linear equivalence between the algebraic duals. -/
 @[simps -isSimp apply symm_apply]

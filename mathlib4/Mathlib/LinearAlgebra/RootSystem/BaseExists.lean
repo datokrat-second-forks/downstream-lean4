@@ -212,9 +212,8 @@ private lemma baseOf_root_eq_baseOf_coroot_aux
     have hl (i : ι) : 0 < l i := by
       simpa only [l, ← posRootForm_eq] using RootPositiveForm.zero_lt_posForm_apply_root _ _
     refine ⟨l i / l j, by simp [hl], l i / l k, by simp [hl], ?_⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [P.coroot_eq_polarizationEquiv_apply_root, ← map_smul, ← map_add,
-      P.PolarizationEquiv.injective.eq_iff] at contra)
+      P.PolarizationEquiv.injective.eq_iff] at contra
     let l' (i : ι) := P.RootForm (P.root i) (P.root i)
     have hll' (i : ι) : l i = l' i := P.algebraMap_rootFormIn ℚ _ _
     change (2 / l' i) • P.root i = (2 / l' j) • P.root j + (2 / l' k) • P.root k at contra

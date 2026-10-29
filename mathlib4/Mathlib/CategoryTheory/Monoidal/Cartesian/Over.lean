@@ -80,42 +80,36 @@ lemma snd_left {R S : Over X} : (snd R S).left = pullback.snd _ _ := rfl
 @[simp]
 lemma toUnit_left {R : Over X} : (toUnit R).left = R.hom := rfl
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_hom_left_fst (R S T : Over X) :
     (α_ R S T).hom.left ≫ pullback.fst _ (pullback.fst _ _ ≫ _) =
       pullback.fst _ _ ≫ pullback.fst _ _ :=
   limit.lift_π _ _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_hom_left_snd_fst (R S T : Over X) :
     (α_ R S T).hom.left ≫ pullback.snd _ (pullback.fst _ _ ≫ _) ≫ pullback.fst _ _ =
       pullback.fst _ _ ≫ pullback.snd _ _ :=
   (limit.lift_π_assoc _ _ _).trans (limit.lift_π _ _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_hom_left_snd_snd (R S T : Over X) :
     (α_ R S T).hom.left ≫ pullback.snd _ (pullback.fst _ _ ≫ _) ≫ pullback.snd _ _ =
       pullback.snd _ _ :=
   (limit.lift_π_assoc _ _ _).trans (limit.lift_π _ _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_inv_left_fst_fst (R S T : Over X) :
     (α_ R S T).inv.left ≫ pullback.fst (pullback.fst _ _ ≫ _) _ ≫ pullback.fst _ _ =
       pullback.fst _ _ :=
   (limit.lift_π_assoc _ _ _).trans (limit.lift_π _ _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_inv_left_fst_snd (R S T : Over X) :
     (α_ R S T).inv.left ≫ pullback.fst (pullback.fst _ _ ≫ _) _ ≫ pullback.snd _ _ =
       pullback.snd _ _ ≫ pullback.fst _ _ :=
   (limit.lift_π_assoc _ _ _).trans (limit.lift_π _ _)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma associator_inv_left_snd (R S T : Over X) :
     (α_ R S T).inv.left ≫ pullback.snd (pullback.fst _ _ ≫ _) _ =
@@ -126,30 +120,25 @@ lemma associator_inv_left_snd (R S T : Over X) :
 lemma leftUnitor_hom_left (Y : Over X) :
     (λ_ Y).hom.left = pullback.snd _ _ := rfl
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma leftUnitor_inv_left_fst (Y : Over X) :
     (λ_ Y).inv.left ≫ pullback.fst (𝟙 X) _ = Y.hom :=
   limit.lift_π _ _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma leftUnitor_inv_left_snd (Y : Over X) :
     (λ_ Y).inv.left ≫ pullback.snd (𝟙 X) _ = 𝟙 Y.left :=
   limit.lift_π _ _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 lemma rightUnitor_hom_left (Y : Over X) :
     (ρ_ Y).hom.left = pullback.fst _ (𝟙 X) := rfl
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma rightUnitor_inv_left_fst (Y : Over X) :
     (ρ_ Y).inv.left ≫ pullback.fst _ (𝟙 X) = 𝟙 _ :=
   limit.lift_π _ _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[reassoc (attr := simp)]
 lemma rightUnitor_inv_left_snd (Y : Over X) :
     (ρ_ Y).inv.left ≫ pullback.snd _ (𝟙 X) = Y.hom :=
@@ -260,7 +249,6 @@ lemma μ_pullback_left_snd' (g₁ : Y ⟶ X) (g₂ : Z ⟶ X) :
       pullback.snd (pullback.fst g₁ g₂ ≫ g₁) f =
         pullback.snd _ _ ≫ pullback.snd _ _ := μ_pullback_left_snd ..
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 lemma preservesTerminalIso_pullback (f : R ⟶ S) :
     preservesTerminalIso (Over.pullback f) =
@@ -274,8 +262,7 @@ lemma prodComparisonIso_pullback_inv_left_fst_fst (f : X ⟶ Y) (A B : Over Y) :
         pullback.fst (pullback.snd A.hom f) (pullback.snd B.hom f) ≫ pullback.fst _ _ := by
   rw [← cancel_epi (prodComparisonIso (Over.pullback f) A B).hom.left,
     Over.hom_left_inv_left_assoc]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [CartesianMonoidalCategory.prodComparison, fst])
+  simp [CartesianMonoidalCategory.prodComparison, fst]
 
 @[simp]
 lemma prodComparisonIso_pullback_Spec_inv_left_fst_fst' (f : X ⟶ Y) (gA : A ⟶ Y) (gB : B ⟶ Y) :
@@ -291,8 +278,7 @@ lemma prodComparisonIso_pullback_inv_left_fst_snd' (f : X ⟶ Y) (gA : A ⟶ Y) 
         pullback.snd _ _ ≫ pullback.fst _ _ := by
   rw [← cancel_epi (prodComparisonIso (Over.pullback f) _ _).hom.left,
     Over.hom_left_inv_left_assoc]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [CartesianMonoidalCategory.prodComparison, snd])
+  simp [CartesianMonoidalCategory.prodComparison, snd]
 
 @[simp]
 lemma prodComparisonIso_pullback_inv_left_snd' (f : X ⟶ Y) (gA : A ⟶ Y) (gB : B ⟶ Y) :
@@ -300,8 +286,7 @@ lemma prodComparisonIso_pullback_inv_left_snd' (f : X ⟶ Y) (gA : A ⟶ Y) (gB 
       pullback.snd (pullback.fst gA gB ≫ gA) f = pullback.snd _ _ ≫ pullback.snd _ _ := by
   rw [← cancel_epi (prodComparisonIso (Over.pullback f) _ _).hom.left,
     Over.hom_left_inv_left_assoc]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [CartesianMonoidalCategory.prodComparison])
+  simp [CartesianMonoidalCategory.prodComparison]
 
 /-- The pullback of a monoid object is a monoid object. -/
 @[simps! -isSimp mul one]
@@ -319,7 +304,6 @@ instance isCommMonObj_mk_pullbackSnd [MonObj (Over.mk f)] [IsCommMonObj (Over.mk
 abbrev grpObjMkPullbackSnd [GrpObj (Over.mk f)] : GrpObj (Over.mk (pullback.snd f g)) :=
   ((Over.pullback g).mapGrp.obj <| .mk <| .mk f).grp
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp] monObjMkPullbackSnd_one in
 instance isMonHom_pullbackFst_id_right [MonObj (Over.mk f)] :

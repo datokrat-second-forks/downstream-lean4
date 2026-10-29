@@ -296,8 +296,7 @@ noncomputable def toCycles (n : ℤ) :
   kernel.lift _ ((X.H n).map (twoδ₁Toδ₀ f g fg h)) (by simp)
 
 instance (n : ℤ) : Epi (X.toCycles f g fg h n) :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  (ShortComplex.exact_iff_epi_kernel_lift _).1 (X.exact₃ f g fg h n (n + 1)))
+  (ShortComplex.exact_iff_epi_kernel_lift _).1 (X.exact₃ f g fg h n (n + 1))
 
 @[reassoc (attr := simp)]
 lemma toCycles_i (n : ℤ) :
@@ -327,8 +326,7 @@ noncomputable def fromOpcycles (n : ℤ) :
   cokernel.desc _ ((X.H n).map (twoδ₂Toδ₁ f g fg h)) (by simp)
 
 instance (n : ℤ) : Mono (X.fromOpcycles f g fg h n) :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  (ShortComplex.exact_iff_mono_cokernel_desc _).1 (X.exact₁ f g fg h (n - 1) n))
+  (ShortComplex.exact_iff_mono_cokernel_desc _).1 (X.exact₁ f g fg h (n - 1) n)
 
 @[reassoc (attr := simp)]
 lemma p_fromOpcycles (n : ℤ) :
@@ -393,8 +391,7 @@ lemma cokernelSequenceCycles_exact (n : ℤ) :
   apply ShortComplex.exact_of_g_is_cokernel
   exact IsColimit.ofIsoColimit (cokernelIsCokernel _)
     (Cofork.ext (X.cokernelIsoCycles f g fg h n) (by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [← cancel_mono (X.iCycles f g n)])))
+      simp [← cancel_mono (X.iCycles f g n)]))
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -404,8 +401,7 @@ lemma kernelSequenceOpcycles_exact (n : ℤ) :
   apply ShortComplex.exact_of_f_is_kernel
   exact IsLimit.ofIsoLimit (kernelIsKernel _)
     (Iso.symm (Fork.ext (X.opcyclesIsoKernel f g fg h n) (by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [← cancel_epi (X.pOpcycles f g n)]))))
+      simp [← cancel_epi (X.pOpcycles f g n)])))
 
 lemma isIso_toCycles (n : ℤ) (hf : IsZero ((X.H n).obj (mk₁ f))) :
     IsIso (X.toCycles f g fg h n) := by

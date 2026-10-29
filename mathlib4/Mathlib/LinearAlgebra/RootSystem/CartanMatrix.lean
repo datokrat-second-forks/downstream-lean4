@@ -346,9 +346,7 @@ lemma apply_mem_range_root_of_cartanMatrixEq
       rw [← LinearEquiv.toLinearMap_inj]
       exact b.toWeightBasis.ext fun j ↦ by simpa using this j
     intro j
-    suffices P₂.pairing (e j) (e k) = P.pairing j k by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [reflection_apply, hf, this])
+    suffices P₂.pairing (e j) (e k) = P.pairing j k by simp [reflection_apply, hf, this]
     simpa only [cartanMatrixIn_def, algebraMap_pairingIn] using congr(algebraMap ℤ R $(he j k))
   obtain ⟨i, rfl⟩ := hm
   apply b.induction_reflect i

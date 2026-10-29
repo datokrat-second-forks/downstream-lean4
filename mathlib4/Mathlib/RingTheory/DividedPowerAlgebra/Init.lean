@@ -309,8 +309,7 @@ private theorem lift'_imp {f : ℕ × M → A} (hf_zero : ∀ m, f (0, m) = 1)
     (p q : MvPolynomial (ℕ × M) R) (h : (Rel R M) p q) :
     aeval f p = aeval f q := by
   rcases h <;>
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_all)
+  simp_all
 
 variable {R M}
 

@@ -49,14 +49,13 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-- Covariance of a measure on an inner product space, as a continuous bilinear form. -/
 noncomputable
 def covarianceBilin (μ : Measure E) : E →L[ℝ] E →L[ℝ] ℝ :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
   ContinuousLinearMap.bilinearComp (covarianceBilinDual μ)
-    (toDualMap ℝ E).toContinuousLinearMap (toDualMap ℝ E).toContinuousLinearMap)
+    (toDualMap ℝ E).toContinuousLinearMap (toDualMap ℝ E).toContinuousLinearMap
 
 @[simp]
 lemma covarianceBilin_zero : covarianceBilin (0 : Measure E) = 0 := by
   rw [covarianceBilin]
-  (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  simp
 
 lemma covarianceBilin_eq_covarianceBilinDual (x y : E) :
     covarianceBilin μ x y = covarianceBilinDual μ (toDualMap ℝ E x) (toDualMap ℝ E y) := rfl
@@ -69,8 +68,7 @@ lemma covarianceBilin_of_not_memLp (h : ¬MemLp id 2 μ) :
 
 lemma covarianceBilin_apply [CompleteSpace E] [IsFiniteMeasure μ] (h : MemLp id 2 μ) (x y : E) :
     covarianceBilin μ x y = ∫ z, ⟪x, z - μ[id]⟫ * ⟪y, z - μ[id]⟫ ∂μ := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [covarianceBilin, covarianceBilinDual_apply' h])
+  simp [covarianceBilin, covarianceBilinDual_apply' h]
 
 lemma covarianceBilin_comm (x y : E) :
     covarianceBilin μ x y = covarianceBilin μ y x := by
@@ -103,7 +101,7 @@ lemma covarianceBilin_real_self {μ : Measure ℝ} [IsFiniteMeasure μ] (x : ℝ
 @[simp]
 lemma covarianceBilin_self_nonneg (x : E) :
     0 ≤ covarianceBilin μ x x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp [covarianceBilin])
+  simp [covarianceBilin]
 
 lemma isPosSemidef_covarianceBilin :
     (covarianceBilin μ).toBilinForm.IsPosSemidef where
@@ -193,26 +191,23 @@ Note that the bilinear form `B` is the _uncentered_ covariance bilinear form ass
 measure `µ`, which is not to be confused with the covariance bilinear form defined earlier in this
 file as `covarianceBilin μ`. -/
 noncomputable def covarianceOperator (μ : Measure E) : E →L[ℝ] E :=
-  continuousLinearMapOfBilin <| (set_option backward.instanceTypes.subsingletons.prop false in
-    ContinuousLinearMap.bilinearComp (uncenteredCovarianceBilinDual μ)
-    (toDualMap ℝ E).toContinuousLinearMap (toDualMap ℝ E).toContinuousLinearMap)
+  continuousLinearMapOfBilin <| ContinuousLinearMap.bilinearComp (uncenteredCovarianceBilinDual μ)
+    (toDualMap ℝ E).toContinuousLinearMap (toDualMap ℝ E).toContinuousLinearMap
 
 @[simp]
 lemma covarianceOperator_zero : covarianceOperator (0 : Measure E) = 0 := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp [covarianceOperator])
+  simp [covarianceOperator]
 
 @[simp]
 lemma covarianceOperator_of_not_memLp (hμ : ¬MemLp id 2 μ) :
     covarianceOperator μ = 0 := by
   ext x
   refine (unique_continuousLinearMapOfBilin _ fun y ↦ ?_).symm
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [hμ, uncenteredCovarianceBilinDual_of_not_memLp])
+  simp [hμ, uncenteredCovarianceBilinDual_of_not_memLp]
 
 lemma covarianceOperator_inner (hμ : MemLp id 2 μ) (x y : E) :
     ⟪covarianceOperator μ x, y⟫ = ∫ z, ⟪x, z⟫ * ⟪y, z⟫ ∂μ := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [covarianceOperator, uncenteredCovarianceBilinDual_apply hμ])
+  simp [covarianceOperator, uncenteredCovarianceBilinDual_apply hμ]
 
 lemma covarianceOperator_apply (hμ : MemLp id 2 μ) (x : E) :
     covarianceOperator μ x = ∫ y, ⟪x, y⟫ • y ∂μ := by

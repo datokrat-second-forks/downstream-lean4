@@ -163,8 +163,7 @@ private theorem rat_prop (r : ℚ) : innerProp' E (r : 𝕜) := by
   let hom : 𝕜 →ₗ[ℚ] 𝕜 := AddMonoidHom.toRatLinearMap <|
     AddMonoidHom.mk' (fun r ↦ inner_ 𝕜 (r • x) y) <| fun a b ↦ by
       simpa [add_smul] using add_left (a • x) (b • x) y
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simpa [hom, Rat.smul_def] using map_smul hom r 1)
+  simpa [hom, Rat.smul_def] using map_smul hom r 1
 
 private theorem real_prop (r : ℝ) : innerProp' E (r : 𝕜) := by
   intro x y

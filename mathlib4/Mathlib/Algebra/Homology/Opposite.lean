@@ -57,8 +57,7 @@ theorem imageToKernel_unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f 
               (by rw [← cancel_mono (image.ι g), Category.assoc, image.fac, w, zero_comp])).unop ≫
           (kernelSubobjectIso _ ≪≫ kernelUnopUnop _).inv := by
   ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [imageUnopUnop, ← unop_comp, factorThruImage_comp_imageUnopOp_inv])
+  simp [imageUnopUnop, ← unop_comp, factorThruImage_comp_imageUnopOp_inv]
 
 end
 

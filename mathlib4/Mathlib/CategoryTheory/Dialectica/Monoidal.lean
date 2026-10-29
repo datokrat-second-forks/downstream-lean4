@@ -53,30 +53,27 @@ set_option backward.isDefEq.respectTransparency false in
     · have := (Subobject.pullback (prod.map π₁ π₁ :
         (X₁.src ⨯ Y₁.src) ⨯ X₂.tgt ⨯ Y₂.tgt ⟶ _)).monotone (Hom.le f)
       rw [← Subobject.pullback_comp, ← Subobject.pullback_comp] at this
-      convert this using 3 <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
+      convert this using 3 <;> simp
     · have := (Subobject.pullback (prod.map π₂ π₂ :
         (X₁.src ⨯ Y₁.src) ⨯ X₂.tgt ⨯ Y₂.tgt ⟶ _)).monotone (Hom.le g)
       rw [← Subobject.pullback_comp, ← Subobject.pullback_comp] at this
-      convert this using 3 <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
+      convert this using 3 <;> simp
 
 /-- The unit for the tensor `X ⊗ Y` in `Dial C`. -/
 @[simps] def tensorUnitImpl : Dial C := { src := ⊤_ _, tgt := ⊤_ _, rel := ⊤ }
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Left unit cancellation `1 ⊗ X ≅ X` in `Dial C`. -/
 @[simps!] def leftUnitorImpl (X : Dial C) : tensorObjImpl tensorUnitImpl X ≅ X :=
   isoMk (Limits.prod.leftUnitor _) (Limits.prod.leftUnitor _) <| by simp [Subobject.pullback_top]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Right unit cancellation `X ⊗ 1 ≅ X` in `Dial C`. -/
 @[simps!] def rightUnitorImpl (X : Dial C) : tensorObjImpl X tensorUnitImpl ≅ X :=
   isoMk (Limits.prod.rightUnitor _) (Limits.prod.rightUnitor _) <| by simp [Subobject.pullback_top]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The associator for tensor, `(X ⊗ Y) ⊗ Z ≅ X ⊗ (Y ⊗ Z)` in `Dial C`. -/
@@ -92,7 +89,6 @@ set_option backward.isDefEq.respectTransparency.types false in
 -- So do the instance type checks: `leftUnitor_hom_f` would keep `(prod.leftUnitor X.src).hom`
 -- instead of `π₂` (similarly for the other unitors), which its uses are written for.
 set_option backward.dsimp.instanceTypes false in
-set_option backward.instanceTypes.subsingletons.prop false in
 @[simps!]
 instance : MonoidalCategoryStruct (Dial C) where
   tensorUnit := tensorUnitImpl
@@ -104,13 +100,11 @@ instance : MonoidalCategoryStruct (Dial C) where
   rightUnitor := rightUnitorImpl
   associator := associatorImpl
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem id_tensorHom_id (X₁ X₂ : Dial C) : (𝟙 X₁ ⊗ₘ 𝟙 X₂ : _ ⟶ _) = 𝟙 (X₁ ⊗ X₂ : Dial C) := by
   cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem tensorHom_comp_tensorHom {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : Dial C}
@@ -119,7 +113,6 @@ theorem tensorHom_comp_tensorHom {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : Dial C}
   ext <;> simp only [tensorObj_src, comp_f, tensorHom_f, prod.map_map, tensorObj_tgt]
   ext <;> simp [← Category.assoc]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : Dial C}
@@ -127,7 +120,6 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : Dial C}
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).hom =
     (associator X₁ X₂ X₃).hom ≫ tensorHom f₁ (tensorHom f₂ f₃) := by cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem leftUnitor_naturality {X Y : Dial C} (f : X ⟶ Y) :
@@ -138,7 +130,6 @@ theorem leftUnitor_naturality {X Y : Dial C} (f : X ⟶ Y) :
     tensorHom_F, tensorUnit_tgt, BinaryFan.mk_snd, limit.lift_π, prod.lift_map_assoc]
   congr 1; ext <;> simp
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem rightUnitor_naturality {X Y : Dial C} (f : X ⟶ Y) :
@@ -149,7 +140,6 @@ theorem rightUnitor_naturality {X Y : Dial C} (f : X ⟶ Y) :
     tensorHom_F, tensorUnit_tgt, BinaryFan.mk_fst, limit.lift_π, prod.lift_map_assoc]
   congr 1; ext <;> simp
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem pentagon (W X Y Z : Dial C) :
@@ -158,7 +148,6 @@ theorem pentagon (W X Y Z : Dial C) :
     (associator (tensorObj W X) Y Z).hom ≫ (associator W X (tensorObj Y Z)).hom := by
   ext <;> simp
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem triangle (X Y : Dial C) :
@@ -186,19 +175,16 @@ set_option backward.isDefEq.respectTransparency false in
 theorem symmetry (X Y : Dial C) :
     (braiding X Y).hom ≫ (braiding Y X).hom = 𝟙 (tensorObj X Y) := by cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem braiding_naturality_right (X : Dial C) {Y Z : Dial C} (f : Y ⟶ Z) :
     tensorHom (𝟙 X) f ≫ (braiding X Z).hom = (braiding X Y).hom ≫ tensorHom f (𝟙 X) := by cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem braiding_naturality_left {X Y : Dial C} (f : X ⟶ Y) (Z : Dial C) :
     tensorHom f (𝟙 Z) ≫ (braiding Y Z).hom = (braiding X Z).hom ≫ tensorHom (𝟙 Z) f := by cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem hexagon_forward (X Y Z : Dial C) :
@@ -206,7 +192,6 @@ theorem hexagon_forward (X Y Z : Dial C) :
       tensorHom (braiding X Y).hom (𝟙 Z) ≫ (associator Y X Z).hom ≫
       tensorHom (𝟙 Y) (braiding X Z).hom := by cat_disch
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem hexagon_reverse (X Y Z : Dial C) :

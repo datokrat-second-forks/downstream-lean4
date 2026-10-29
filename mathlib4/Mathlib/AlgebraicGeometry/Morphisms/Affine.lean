@@ -317,7 +317,6 @@ theorem diagonal_isAffine_iff_forall_isAffineOpen_inf [IsAffine Y] (f : X ⟶ Y)
     change IsAffine _ at this
     exact .of_isIso (pullback.fst f₁ f₂ ≫ f₁).isoOpensRange.hom
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 theorem isAffineHom_diagonal_iff {f : X ⟶ Y} :
     IsAffineHom (pullback.diagonal f) ↔

@@ -265,7 +265,7 @@ identification with (continuous) linear endomorphisms of `EuclideanSpace 𝕜 n`
 @[instance_reducible]
 def instL2OpNormedSpace : NormedSpace 𝕜 (Matrix m n 𝕜) where
   norm_smul_le r x := by
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [l2_opNorm_def, map_smul])
+    rw [l2_opNorm_def, map_smul]
     exact norm_smul_le r ((toEuclideanLin (𝕜 := 𝕜) (m := m) (n := n)).trans toContinuousLinearMap x)
 
 scoped[Matrix.Norms.L2Operator] attribute [instance] Matrix.instL2OpNormedSpace

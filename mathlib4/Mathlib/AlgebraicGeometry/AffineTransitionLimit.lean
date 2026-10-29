@@ -573,21 +573,20 @@ lemma exists_eq (j : A.𝒰D.I₀) : ∃ (k : I) (hki' : k ⟶ A.i'),
       (A.𝒰D.pullback₁ (D.map hki')).f j ≫ D.map (hki' ≫ A.hii') ≫ A.b := by
   have : IsAffine (A.𝒰D.X j) := by dsimp [𝒰D]; infer_instance
   have (i : _) : IsAffine ((Over.post D ⋙ Over.pullback (A.𝒰D.f j) ⋙ Over.forget _).obj i) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in dsimp); infer_instance
+    dsimp; infer_instance
   have : IsAffine ((Over.pullback (A.𝒰D.f j) ⋙ Over.forget (A.𝒰D.X j)).mapCone
       ((Over.conePost D A.i').obj A.c)).pt := by
-    (set_option backward.instanceTypes.subsingletons.prop false in dsimp); infer_instance
+    dsimp; infer_instance
   have : LocallyOfFiniteType ((A.𝒰X j.fst.fst).f j.fst.snd ≫ A.𝒰S.pullbackHom f j.fst.fst) := by
     dsimp [Scheme.Cover.pullbackHom]; infer_instance
   have H₁ := congr($(pullback.condition (f := A.g) (g := (Scheme.Pullback.diagonalCover f
     A.𝒰S A.𝒰X).f ⟨j.1.1, (j.1.2, j.1.2)⟩)) ≫ pullback.fst _ _)
   have H₂ := congr($(pullback.condition (f := A.g) (g := (Scheme.Pullback.diagonalCover f
     A.𝒰S A.𝒰X).f ⟨j.1.1, (j.1.2, j.1.2)⟩)) ≫ pullback.snd _ _)
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [Scheme.Pullback.openCoverOfBase_I₀, Scheme.Pullback.openCoverOfBase_X,
     Scheme.Cover.pullbackHom, Scheme.Pullback.openCoverOfLeftRight_I₀,
     g, Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
-    Scheme.Pullback.diagonalCover_map] at H₁ H₂)
+    Scheme.Pullback.diagonalCover_map] at H₁ H₂
   obtain ⟨k, hik, hjk, H⟩ := Scheme.exists_hom_hom_comp_eq_comp_of_isAffine_of_locallyOfFiniteType
     (Over.post D ⋙ Over.pullback (A.𝒰D.f j) ⋙ Over.forget _)
     ((Over.post D ⋙ Over.pullback (A.𝒰D.f j)).whiskerLeft (Comma.natTrans _ _) ≫
@@ -605,22 +604,20 @@ lemma exists_eq (j : A.𝒰D.I₀) : ∃ (k : I) (hki' : k ⟶ A.i'),
     (pullback.snd _ _ ≫ (A.𝒰D₀.X j.1).affineCover.f j.2 ≫
       (Scheme.Pullback.diagonalCover f A.𝒰S A.𝒰X).pullbackHom _ _ ≫
       pullback.fst _ _)
-    (by (set_option backward.instanceTypes.subsingletons.prop false in simp))
+    (by simp)
     (j := Over.mk (𝟙 _))
     (pullback.snd _ _ ≫ (A.𝒰D₀.X j.1).affineCover.f j.2 ≫
       (Scheme.Pullback.diagonalCover f A.𝒰S A.𝒰X).pullbackHom _ _ ≫
       pullback.snd _ _)
-    (by (set_option backward.instanceTypes.subsingletons.prop false in simp [pullback.condition]))
+    (by simp [pullback.condition])
     (by
       rw [← cancel_mono ((A.𝒰X j.1.1).f j.1.2), ← cancel_mono (pullback.fst f (A.𝒰S.f j.1.1))]
       have H₃ := congr(pullback.fst (A.c.π.app A.i') (A.𝒰D.f j) ≫ $A.hab)
       simp only [pullback.condition_assoc, 𝒰D, ← A.c.w A.hii', Category.assoc] at H₃
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [Scheme.Cover.pullbackHom, g, ← H₁, ← H₂, -Cone.w, -Cone.w_assoc] using! H₃))
+      simpa [Scheme.Cover.pullbackHom, g, ← H₁, ← H₂, -Cone.w, -Cone.w_assoc] using! H₃)
   refine ⟨k.left, k.hom, ?_⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simpa [← cancel_mono ((A.𝒰X j.1.1).f j.1.2), ← cancel_mono (pullback.fst f (A.𝒰S.f j.1.1)),
-    Scheme.Cover.pullbackHom, g, ← H₁, ← H₂, pullback.condition_assoc] using! H)
+    Scheme.Cover.pullbackHom, g, ← H₁, ← H₂, pullback.condition_assoc] using! H
 
 end
 
@@ -1225,7 +1222,6 @@ private nonrec lemma Scheme.exists_π_app_comp_eq_of_locallyOfFinitePresentation
   exact ⟨i.unop, Spec.map g, by simpa using! congr(Spec.map $hg').symm,
     by simpa using! congr(Spec.map $hg)⟩
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 open TopologicalSpace in

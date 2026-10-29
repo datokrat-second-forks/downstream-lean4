@@ -66,16 +66,12 @@ nonrec lemma isSheaf_type_propQCTopology_iff [P.IsMultiplicative] (F : Scheme.{u
         · rw [← Sieve.pullbackArrows_comm, ← Presieve.ofArrows_pullback,
             ← Presieve.isSheafFor_iff_generate]
           let 𝒰' := (𝒱.cover.pullback₂ f).pullback₂ (V.affineCover.f i)
-          exact this _ (.ofQuasiCompactCover 𝒰' (qc := by
-            (set_option backward.instanceTypes.subsingletons.prop false in
-            dsimp [𝒰']); infer_instance))
+          exact this _ (.ofQuasiCompactCover 𝒰' (qc := by dsimp [𝒰']; infer_instance))
             ⟨fun j ↦ .of_isIso (pullbackLeftPullbackSndIso (𝒱.f j) f (V.affineCover.f i)).hom, hfin⟩
         · rw [← Sieve.pullbackArrows_comm, ← Presieve.ofArrows_pullback,
             ← Presieve.isSeparatedFor_iff_generate]
           exact (this _ (.ofQuasiCompactCover ((𝒱.cover.pullback₂ f).pullback₂ _)
-              (qc := by
-                (set_option backward.instanceTypes.subsingletons.prop false in
-                dsimp); infer_instance))
+              (qc := by dsimp; infer_instance))
             ⟨fun l ↦ .of_isIso (pullbackLeftPullbackSndIso (𝒱.f l) f _).hom, hfin⟩).isSeparatedFor
       refine f.isSheafFor_iff ?_ fun f ↦ (H _ f).isSeparatedFor
       exact this _ (.ofQuasiCompactCover 𝒱.cover)

@@ -68,7 +68,6 @@ protected def fix (x : α) : Part (β x) :=
     WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 
 open scoped Classical in
-set_option backward.instanceTypes.subsingletons.prop false in
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     Part.fix f x = Fix.approx f (Nat.succ (Nat.find h')) x := by
   let p := fun i : ℕ => (Fix.approx f i x).Dom

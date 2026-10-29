@@ -376,8 +376,7 @@ variable {J : Type w₁} (f : J → C) [HasBiproduct f] [PreservesBiproduct f F]
 theorem biproduct.map_lift_mapBiprod (g : ∀ j, W ⟶ f j) :
     F.map (biproduct.lift g) ≫ (F.mapBiproduct f).hom = biproduct.lift fun j => F.map (g j) := by
   ext j
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  dsimp only [Function.comp_def])
+  dsimp only [Function.comp_def]
   simp only [mapBiproduct_hom, Category.assoc, biproduct.lift_π, ← F.map_comp]
 
 theorem biproduct.mapBiproduct_inv_map_desc (g : ∀ j, f j ⟶ W) :

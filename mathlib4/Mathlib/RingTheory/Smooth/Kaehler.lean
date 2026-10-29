@@ -164,10 +164,9 @@ def sectionOfRetractionKerToTensorAux : S →ₐ[R] P where
   map_mul' a b := by
     have (x y : _) : (l x).1 * (l y).1 = 0 := by
       rw [← Ideal.mem_bot, ← hf', pow_two]; exact Ideal.mul_mem_mul (l x).2 (l y).2
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [sectionOfRetractionKerToTensorAux_prop l hl (σ (a * b)) (σ a * σ b) (by simp [hσ]),
       Derivation.leibniz, tmul_add, tmul_smul, map_add, map_smul, Submodule.coe_add,
-      SetLike.val_smul, smul_eq_mul, mul_sub, sub_mul, this, sub_zero])
+      SetLike.val_smul, smul_eq_mul, mul_sub, sub_mul, this, sub_zero]
     ring
   map_add' a b := by
     simp only [sectionOfRetractionKerToTensorAux_prop l hl (σ (a + b)) (σ a + σ b) (by simp [hσ]),

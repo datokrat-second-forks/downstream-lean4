@@ -219,8 +219,7 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F)
   have w := Functor.congr_hom (congr_arg Opens.map
     (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j))) i.unop
   simp only [Opens.map_comp_map] at w
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [congr($(w).op)])
+  simp [congr($(w).op)]
 
 /-- Auxiliary definition for `AlgebraicGeometry.PresheafedSpace.colimitCoconeIsColimit`.
 -/
@@ -241,14 +240,12 @@ theorem desc_fac (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F) (j : J) 
   · simp [desc]
   · simp only [op_obj, desc, descCApp, Presheaf.comp_app, comp_c_app, colimitCocone_ι_app_c, assoc]
     rw [limitObjIsoLimitCompEvaluation_inv_π_app_assoc]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp)
+    simp
 
 end ColimitCoconeIsColimit
 
 open ColimitCoconeIsColimit
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Auxiliary definition for `AlgebraicGeometry.PresheafedSpace.instHasColimits`.

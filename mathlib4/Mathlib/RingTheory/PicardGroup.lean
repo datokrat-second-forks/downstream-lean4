@@ -266,8 +266,7 @@ private theorem bijective_self_of_surjective (f : R →ₗ[R] M) (hf : Function.
     Function.Bijective f where
   left {r₁ r₂} eq := smul_left_injective' (α := M) <| funext fun m ↦ by
     obtain ⟨r, rfl⟩ := hf m
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp_rw [← map_smul, smul_eq_mul, mul_comm _ r, ← smul_eq_mul, map_smul, eq])
+    simp_rw [← map_smul, smul_eq_mul, mul_comm _ r, ← smul_eq_mul, map_smul, eq]
   right := hf
 
 variable {R M N} in
@@ -807,8 +806,7 @@ noncomputable def tensorSubmoduleAlgebraEquiv : A ⊗[R] submoduleAlgebra e ≃�
     obtain ⟨m, rfl⟩ := (submoduleAlgebraEquiv e).symm.surjective x
     suffices a * toAlgebra e m = e (a ⊗ₜ[R] m) by simpa using! this
     dsimp [toAlgebra]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_one, ← smul_eq_mul, ← map_smul, smul_tmul', smul_eq_mul, mul_one])
+    rw [map_one, ← smul_eq_mul, ← map_smul, smul_tmul', smul_eq_mul, mul_one]
 
 theorem top_mul_submoduleAlgebra : ⊤ * submoduleAlgebra e = ⊤ := by
   rw [← Submodule.mulMap_range]
@@ -927,8 +925,7 @@ theorem Ideal.eq_top_of_mk_tensor_eq_one [IsFractionRing R R] (I J : Ideal R)
       IsRegular.mem_nonZeroDivisors <| isRightRegular_iff_isRegular.mp <| by
     rw [IsRightRegular]
     convert! Subtype.val_injective.comp e.injective using 2
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← smul_eq_mul, ← Submodule.coe_smul, ← map_smul, smul_eq_mul, mul_one, Function.comp_apply])
+    rw [← smul_eq_mul, ← Submodule.coe_smul, ← map_smul, smul_eq_mul, mul_one, Function.comp_apply]
   constructor <;> refine eq_top_of_isUnit_mem _ ?_ this
   exacts [mul_le_left (e 1).2, mul_le_right (e 1).2]
 

@@ -828,8 +828,7 @@ theorem truncLT_mem_range_extendFun [IsOrderedAddMonoid R] [Archimedean R] {x : 
   obtain ⟨k, hk⟩ := Submodule.mem_span_singleton.mp hb
   simp_rw [extendFun, ← hab, ← hk]
   rw [LinearPMap.supSpanSingleton_apply_mk _ _ _ _ _ ha]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [ofLex_add, map_add, toLex_add, ofLex_smul, map_smul, toLex_smul])
+  rw [ofLex_add, map_add, toLex_add, ofLex_smul, map_smul, toLex_smul]
   refine Submodule.add_mem _ ?_ (Submodule.smul_mem _ _ ?_)
   · obtain ⟨⟨a', ha'mem⟩, ha'⟩ := LinearMap.mem_range.mp (f.prop.truncLT_mem_range ⟨a, ha⟩ c)
     refine LinearMap.mem_range.mpr ⟨⟨a', by simpa using Submodule.mem_sup_left ha'mem⟩, ?_⟩

@@ -571,7 +571,7 @@ lemma nonUnitalStarAlgebraAdjoin_id_subset_ker_evalStarAlgHom {s : Set 𝕜} (h0
   | mul f g _ _ _ hg => exact Ideal.mul_mem_left _ f hg
   | smul r f _ hf =>
     rw [SetLike.mem_coe, RingHom.mem_ker] at hf ⊢
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, hf, smul_zero])
+    rw [map_smul, hf, smul_zero]
   | star f _ hf =>
     rw [SetLike.mem_coe, RingHom.mem_ker] at hf ⊢
     rw [map_star, hf, star_zero]
@@ -610,8 +610,7 @@ theorem AlgHom.closure_ker_inter {F S K A : Type*} [CommRing K] [Ring A] [Algebr
       exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
     refine mem_closure_of_tendsto this <| eventually_inf_principal.mpr ?_
     filter_upwards [] with g hg using
-      ⟨sub_mem hg (SMulMemClass.smul_mem _ <| one_mem _), by
-        (set_option backward.instanceTypes.subsingletons.prop false in simp [RingHom.mem_ker])⟩
+      ⟨sub_mem hg (SMulMemClass.smul_mem _ <| one_mem _), by simp [RingHom.mem_ker]⟩
 
 lemma ker_evalStarAlgHom_eq_closure_adjoin_id (s : Set 𝕜) (h0 : 0 ∈ s) [CompactSpace s] :
     (RingHom.ker (evalStarAlgHom 𝕜 𝕜 (⟨0, h0⟩ : s)) : Set C(s, 𝕜)) =
@@ -693,9 +692,7 @@ lemma ContinuousMapZero.nonUnitalStarAlgHom_apply_mul_eq_zero {𝕜 A : Type*}
   | star_id => exact hmul_star_id
   | add _ _ h₁ h₂ => simp only [map_add, add_mul, h₁, h₂, zero_add]
   | mul _ _ _ h => simp only [map_mul, mul_assoc, h, mul_zero]
-  | smul _ _ h =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_smul, smul_mul_assoc, h, smul_zero])
+  | smul _ _ h => rw [map_smul, smul_mul_assoc, h, smul_zero]
   | frequently f h =>
     exact h.mem_of_closed (s := {g | φ g * a = 0}) <|
       isClosed_eq (by fun_prop) continuous_zero
@@ -712,9 +709,7 @@ lemma ContinuousMapZero.mul_nonUnitalStarAlgHom_apply_eq_zero {𝕜 A : Type*}
   | star_id => exact hmul_star_id
   | add _ _ h₁ h₂ => simp only [map_add, mul_add, h₁, h₂, zero_add]
   | mul _ _ h _ => simp only [map_mul, ← mul_assoc, h, zero_mul]
-  | smul _ _ h =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_smul, mul_smul_comm, h, smul_zero])
+  | smul _ _ h => rw [map_smul, mul_smul_comm, h, smul_zero]
   | frequently f h =>
     exact h.mem_of_closed (s := {g | a * φ g = 0}) <|
       isClosed_eq (by fun_prop) continuous_zero

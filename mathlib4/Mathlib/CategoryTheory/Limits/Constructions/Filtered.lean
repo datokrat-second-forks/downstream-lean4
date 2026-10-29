@@ -68,14 +68,13 @@ def liftToFinsetColimitCocone [HasColimitsOfShape (Finset (Discrete α)) C]
       uniq := fun s m h => by
         apply colimit.hom_ext
         rintro t
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        dsimp [liftToFinsetObj])
+        dsimp [liftToFinsetObj]
         apply colimit.hom_ext
         rintro ⟨⟨j, hj⟩⟩
         convert! h j using 1
         · simp [← colimit.w (liftToFinsetObj F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]
           rfl
-        · (set_option backward.instanceTypes.subsingletons.prop false in simp) }
+        · simp }
 
 set_option backward.defeqAttrib.useBackward true in
 variable (C) (α) in
@@ -165,8 +164,7 @@ def liftToFinsetColimIso : liftToFinset C α ⋙ colim ≅ colim :=
       ext J
       simp only [liftToFinset_obj_obj]
       ext j
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [liftToFinset, liftToFinsetColimIso_aux, liftToFinsetColimIso_aux_assoc]))
+      simp [liftToFinset, liftToFinsetColimIso_aux, liftToFinsetColimIso_aux_assoc])
 
 end
 
@@ -177,7 +175,7 @@ def liftToFinsetEvaluationIso [HasFiniteCoproducts C] (I : Finset (Discrete α))
     liftToFinset C α ⋙ (evaluation _ _).obj I ≅
     (Functor.whiskeringLeft _ _ _).obj (Discrete.functor (·.val)) ⋙ colim (J := Discrete I) :=
   NatIso.ofComponents (fun _ => HasColimit.isoOfNatIso (Discrete.natIso fun _ => Iso.refl _))
-    fun _ => by dsimp; ext; (set_option backward.instanceTypes.subsingletons.prop false in simp)
+    fun _ => by dsimp; ext; simp
 
 end CoproductsFromFiniteFiltered
 
@@ -213,14 +211,13 @@ def liftToFinsetLimitCone [HasLimitsOfShape (Finset (Discrete α))ᵒᵖ C]
       uniq := fun s m h => by
         apply limit.hom_ext
         rintro t
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        dsimp [liftToFinsetObj])
+        dsimp [liftToFinsetObj]
         apply limit.hom_ext
         rintro ⟨⟨j, hj⟩⟩
         convert! h j using 1
         · simp [← limit.w (liftToFinsetObj F) ⟨⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩⟩]
           rfl
-        · (set_option backward.instanceTypes.subsingletons.prop false in simp) }
+        · simp }
 
 set_option backward.defeqAttrib.useBackward true in
 /-- The converse of the construction in `liftToFinsetLimitCone`: we can form a cone on the
@@ -270,8 +267,7 @@ def liftToFinsetLimIso [HasLimitsOfShape (Finset (Discrete α))ᵒᵖ C]
     (fun β => by
       simp only [Functor.comp_obj, lim_obj, Functor.comp_map, lim_map, Iso.symm_hom]
       ext J
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [liftToFinset]))
+      simp [liftToFinset])
 
 set_option backward.defeqAttrib.useBackward true in
 /-- `liftToFinset`, when composed with the evaluation functor, results in the whiskering composed
@@ -280,8 +276,7 @@ def liftToFinsetEvaluationIso (I : Finset (Discrete α)) :
     liftToFinset C α ⋙ (evaluation _ _).obj ⟨I⟩ ≅
     (Functor.whiskeringLeft _ _ _).obj (Discrete.functor (·.val)) ⋙ lim (J := Discrete I) :=
   NatIso.ofComponents (fun _ => HasLimit.isoOfNatIso (Discrete.natIso fun _ => Iso.refl _))
-    fun _ => by
-      dsimp; ext; (set_option backward.instanceTypes.subsingletons.prop false in simp [Pi.map])
+    fun _ => by dsimp; ext; simp [Pi.map]
 
 end ProductsFromFiniteCofiltered
 

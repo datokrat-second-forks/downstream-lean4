@@ -979,16 +979,14 @@ theorem _root_.MvPowerSeries.prod_smul_X_eq_smul_monomial_one
 theorem _root_.MvPowerSeries.monomial_eq (e : σ →₀ ℕ) (r : σ → R) :
     MvPowerSeries.monomial e (e.prod (fun s n => r s ^ n))
       = e.prod fun s e => (r s • MvPowerSeries.X s) ^ e := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [MvPowerSeries.prod_smul_X_eq_smul_monomial_one, ← map_smul, smul_eq_mul, mul_one])
+  rw [MvPowerSeries.prod_smul_X_eq_smul_monomial_one, ← map_smul, smul_eq_mul, mul_one]
 
 theorem _root_.MvPowerSeries.monomial_smul_const
     {σ : Type*} {R : Type*} [CommSemiring R]
     (e : σ →₀ ℕ) (r : R) :
     MvPowerSeries.monomial e (r ^ (e.sum fun _ n => n))
       = (e.prod fun s e => (r • MvPowerSeries.X s) ^ e) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [MvPowerSeries.prod_smul_X_eq_smul_monomial_one, ← map_smul, smul_eq_mul, mul_one])
+  rw [MvPowerSeries.prod_smul_X_eq_smul_monomial_one, ← map_smul, smul_eq_mul, mul_one]
   simp only [Finsupp.sum, Finsupp.prod, Finset.prod_pow_eq_pow_sum]
 
 end Algebra

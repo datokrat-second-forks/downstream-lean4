@@ -45,13 +45,18 @@ abbrev mathlibLeanOptions := #[
     ⟨`maxSynthPendingDepth, .ofNat 3⟩,
     ⟨`weak.linter.unreachableTactic, false⟩, -- superseded by the unused tactic linter
     ⟨`weak.linter.unnecessarySeqFocus, false⟩, -- superseded by the unused tactic linter
+    -- exempt `Prop`-valued and `Decidable` instances from the instance type checks
+    ⟨`backward.instanceTypes.subsingletons.prop, false⟩,
+    ⟨`backward.instanceTypes.subsingletons.decidable, false⟩,
   ] ++ -- options that are used in `lake build`
     mathlibOnlyLinters.map fun s ↦ { s with name := `weak ++ s.name }
 
 /-- These options are passed as `leanOptions` when building `MathlibTest`. We don't use the typical
 mathlib options in order to simulate the default downstream environment. -/
 abbrev mathlibTestOptions : Array LeanOption := #[
-    ⟨`pp.mvars.anonymous, false⟩ -- test stability: pretty-print `?m.37` as `?_`
+    ⟨`pp.mvars.anonymous, false⟩, -- test stability: pretty-print `?m.37` as `?_`
+    ⟨`backward.instanceTypes.subsingletons.prop, false⟩,
+    ⟨`backward.instanceTypes.subsingletons.decidable, false⟩,
   ]
 
 package mathlib where

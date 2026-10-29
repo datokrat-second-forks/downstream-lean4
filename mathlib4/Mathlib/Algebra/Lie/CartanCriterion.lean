@@ -121,8 +121,7 @@ theorem isNilpotent_derivedSeries_of_traceForm_eq_zero_aux {K : Type*}
     (Finset.sum_eq_zero_iff_of_nonneg (fun _ _ ↦ sq_nonneg _)).mp this i (Finset.mem_univ _)
   /- Which will follow from the fact that the following `f`-linear expression vanishes. -/
   suffices ∑ i, (f ⟨μ i, hμ i⟩) • (⟨μ i, hμ i⟩ : E) = 0 by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa only [map_sum, map_zero, map_smul, sq] using! f.congr_arg this)
+    simpa only [map_sum, map_zero, map_smul, sq] using! f.congr_arg this
   let fμ (i : I) : K := f ⟨μ i, hμ i⟩
   /- Defining `fμ i = f ⟨μ i, hμ i⟩`, we can restate our goal as `∑ i, fμ i * μ i = 0`. -/
   suffices ∑ i, fμ i * μ i = 0 by simp [Subtype.ext_iff, fμ, ← this, smul_def]
@@ -169,9 +168,7 @@ theorem isNilpotent_derivedSeries_of_traceForm_eq_zero_aux {K : Type*}
     (isNilpotent_trace_of_isNilpotent (hny_comm.isNilpotent_mul_right hn_nil)).eq_zero
   have htr_s : trace K M (s * y) = ∑ i, fμ i * μ i := by
     rw [trace_eq_matrix_trace _ v, Matrix.trace]
-    exact Finset.sum_congr rfl <| by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [toMatrix_apply, hyv, hsv])
+    exact Finset.sum_congr rfl <| by simp [toMatrix_apply, hyv, hsv]
   rw [hX_ns, add_mul, map_add, htr_n, htr_s, zero_add]
 
 /-- If the trace form of `M` is zero, then the `⁅L, L⁆`-module `M` is nilpotent. -/

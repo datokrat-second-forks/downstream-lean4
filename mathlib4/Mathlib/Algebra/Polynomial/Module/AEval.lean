@@ -71,8 +71,7 @@ lemma of_aeval_smul (f : R[X]) (m : M) : of R M a (aeval a f • m) = f • of R
     (of R M a).symm (f • m) = aeval a f • (of R M a).symm m := rfl
 
 @[simp] lemma C_smul (t : R) (m : AEval R M a) : C t • m = t • m :=
-  (of R M a).symm.injective <| by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  (of R M a).symm.injective <| by simp
 
 lemma X_smul_of (m : M) : (X : R[X]) • (of R M a m) = of R M a (a • m) := by
   rw [← of_aeval_smul, aeval_X]
@@ -87,8 +86,7 @@ lemma of_symm_X_smul (m : AEval R M a) :
 instance instIsScalarTowerOrigPolynomial : IsScalarTower R R[X] <| AEval R M a where
   smul_assoc r f m := by
     apply (of R M a).symm.injective
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [of_symm_smul, map_smul, smul_assoc, map_smul, of_symm_smul])
+    rw [of_symm_smul, map_smul, smul_assoc, map_smul, of_symm_smul]
 
 instance instFinitePolynomial [Module.Finite R M] : Module.Finite R[X] <| AEval R M a :=
   Finite.of_restrictScalars_finite R _ _

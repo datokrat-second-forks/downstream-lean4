@@ -359,8 +359,7 @@ lemma Polynomial.Monic.quotient_isIntegral {g : S[X]} (mon : g.Monic) {I : Ideal
       have : g = (Polynomial.aeval ((Ideal.Quotient.mkₐ S I) X)) g' := by
         nth_rw 1 [← hg, aeval_eq_sum_range' (lt_add_one _),
           as_sum_range_C_mul_X_pow g', map_sum]
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        simp only [Polynomial.C_mul', ← map_pow, map_smul])
+        simp only [Polynomial.C_mul', ← map_pow, map_smul]
       exact this ▸ (aeval_mem_adjoin_singleton S ((Ideal.Quotient.mk I) Polynomial.X))
   exact fun a ↦ (eq_top ▸ adjoin_le_integralClosure <| mon.quotient_isIntegralElem h)
     Algebra.mem_top

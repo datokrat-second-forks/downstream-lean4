@@ -306,8 +306,7 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} :
     δ (Fin.castSucc i) ≫ σ i = 𝟙 ⦋n⦌ := by
   rcases i with ⟨i, hi⟩
   ext ⟨j, hj⟩
-  (set_option backward.instanceTypes.subsingletons.decidable false in
-  dsimp [σ, δ, Fin.predAbove, Fin.succAbove])
+  dsimp [σ, δ, Fin.predAbove, Fin.succAbove]
   simp only [Fin.lt_def, Fin.dite_val, Fin.ite_val, Fin.val_pred]
   split_ifs
   any_goals simp

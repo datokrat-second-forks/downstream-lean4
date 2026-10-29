@@ -309,9 +309,8 @@ lemma eq_one_or_neg_one_of_mem_support_of_smul_mem_aux [Finite ι]
   use f ⟨i, h⟩
   replace hf : P.coroot i = linearCombination R (fun k : b.support ↦ P.coroot k)
       (t • (linearEquivFunOnFinite R _ _).symm (fun x ↦ (f x : R))) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [map_smul, linearCombination_eq_fintype_linearCombination_apply,
-      Fintype.linearCombination_apply, hf])
+      Fintype.linearCombination_apply, hf]
     simp_rw [mul_smul, ← Finset.smul_sum]
   let g : b.support →₀ R := single ⟨i, h⟩ 1
   have hg : P.coroot i = linearCombination R (fun k : b.support ↦ P.coroot k) g := by simp [g]

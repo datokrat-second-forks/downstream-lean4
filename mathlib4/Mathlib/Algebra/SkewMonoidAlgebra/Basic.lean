@@ -470,8 +470,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem sum_ite_eq' {N : Type*} [AddCommMonoid N] [DecidableEq G] (f : SkewMonoidAlgebra k G)
     (a : G) (b : G → k → N) : (f.sum fun (x : G) (v : k) ↦ if x = a then b x v else 0) =
       if a ∈ f.support then b a (f.coeff a) else 0 := by
-  (set_option backward.instanceTypes.subsingletons.decidable false in
-  simp only [sum_def', f.coeff.support.sum_ite_eq', support])
+  simp only [sum_def', f.coeff.support.sum_ite_eq', support]
 
 @[deprecated Finsupp.smul_sum +typeChanged (since := "2026-07-04")]
 theorem smul_sum {M : Type*} {R : Type*} [AddCommMonoid M] [DistribSMul R M]

@@ -302,7 +302,6 @@ theorem mul_ι_mul_ι_mul_comm_of_isOrtho
 
 end isOrtho
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- $aba$ is a vector. -/
 theorem ι_mul_ι_mul_ι (a b : M) :
     ι Q a * ι Q b * ι Q a = ι Q (QuadraticMap.polar Q a b • a - Q a • b) := by

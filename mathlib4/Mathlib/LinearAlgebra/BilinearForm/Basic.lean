@@ -67,8 +67,7 @@ theorem smul_left (a : R) (x y : M) : B (a • x) y = a * B x y := map_smul₂ _
 
 theorem add_right (x y z : M) : B x (y + z) = B x y + B x z := map_add _ _ _
 
-theorem smul_right (a : R) (x y : M) : B x (a • y) = a * B x y :=
-  (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ _ _)
+theorem smul_right (a : R) (x y : M) : B x (a • y) = a * B x y := map_smul _ _ _
 
 theorem zero_left (x : M) : B 0 x = 0 := map_zero₂ _ _
 

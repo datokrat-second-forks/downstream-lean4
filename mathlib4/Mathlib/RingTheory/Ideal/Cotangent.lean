@@ -106,8 +106,7 @@ lemma cotangentToQuotientSquare_injective : Function.Injective I.cotangentToQuot
 lemma Cotangent.smul_eq_zero_of_mem {I : Ideal R}
     {x} (hx : x ∈ I) (m : I.Cotangent) : x • m = 0 := by
   obtain ⟨m, rfl⟩ := Ideal.toCotangent_surjective _ m
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← map_smul, Ideal.toCotangent_eq_zero, pow_two])
+  rw [← map_smul, Ideal.toCotangent_eq_zero, pow_two]
   exact Ideal.mul_mem_mul hx m.2
 
 lemma isTorsionBySet_cotangent :
@@ -237,7 +236,7 @@ def lift (f : I →ₗ[R] M) (hf : ∀ (x y : I), f (x * y) = 0) :
     simp only [map_add, hx, hy, add_zero]
   map_smul' r x := by
     obtain ⟨x, rfl⟩ := I.toCotangent_surjective x
-    (set_option backward.instanceTypes.subsingletons.prop false in exact map_smul f _ _)
+    exact map_smul f _ _
 
 @[simp]
 lemma lift_toCotangent (f : I →ₗ[R] M) (hf : ∀ (x y : I), f (x * y) = 0) (x : I) :

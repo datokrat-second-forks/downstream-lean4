@@ -71,7 +71,6 @@ lemma linearEquiv_apply (a : α) : e.linearEquiv R a = e a := rfl
 lemma linearEquiv_symm_apply (b : β) : (e.linearEquiv R).symm b = e.symm b := rfl
 
 variable (R) in
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- Transfer `Module.IsTorsionFree` across an `Equiv` -/
 protected lemma moduleIsTorsionFree [Module.IsTorsionFree R β] :
     letI := e.module R

@@ -62,8 +62,7 @@ lemma Module.free_quotSMulTop_iff_free [Module.FinitePresentation R M] {x : R}
     intro y hy
     have : y ∈ x • (⊤ : Submodule R (I →₀ R)) := by simp [← kerf, ← hg, LinearMap.mem_ker.mp hy]
     rcases (Submodule.mem_smul_pointwise_iff_exists _ _ _).mp this with ⟨z, _, hz⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [← hz, LinearMap.mem_ker, map_smul] at hy)
+    simp only [← hz, LinearMap.mem_ker, map_smul] at hy
     have := LinearMap.mem_ker.mpr (IsSMulRegular.right_eq_zero_of_smul reg hy)
     simpa [hz] using Submodule.smul_mem_pointwise_smul z x _ this
   exact Module.Free.of_equiv (LinearEquiv.ofBijective g ⟨injg, surjg⟩)

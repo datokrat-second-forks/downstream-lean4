@@ -526,8 +526,7 @@ instance [∀ i, AddZeroClass (G i)] [∀ i, DistribSMul R (G i)]
 instance [Monoid R] [∀ i, AddMonoid (G i)] [∀ i, DistribMulAction R (G i)]
     [∀ i j h, DistribMulActionHomClass (T h) R (G i) (G j)] :
     DistribMulAction R (DirectLimit G f) :=
-  have _ i j h : MulActionHomClass (T h) R (G i) (G j) :=
-    (set_option backward.instanceTypes.subsingletons.prop false in inferInstance)
+  have _ i j h : MulActionHomClass (T h) R (G i) (G j) := inferInstance
   { smul_zero := smul_zero, smul_add := smul_add }
 
 instance [Monoid R] [∀ i, Monoid (G i)] [∀ i, MulDistribMulAction R (G i)]
@@ -683,7 +682,7 @@ def lift (g : ∀ i, G i →ₗ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) = g
     DirectLimit G f →ₗ[R] P where
   toFun := _root_.DirectLimit.lift _ (g · ·) fun i j h x ↦ (Hg i j h x).symm
   map_add' := lift_add _ _
-  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in lift_smul _ _)
+  map_smul' := lift_smul _ _
 
 variable (g : ∀ i, G i →ₗ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 
@@ -916,7 +915,7 @@ def lift (g : ∀ i, G i →ₙₐ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) 
     DirectLimit G f →ₙₐ[R] P where
   toFun := _root_.DirectLimit.lift _ (g · ·) fun i j h x ↦ (Hg i j h x).symm
   __ := DirectLimit.NonUnitalRing.lift G f P (g := fun i => (g i)) (Hg := Hg)
-  map_smul' m := by (set_option backward.instanceTypes.subsingletons.prop false in apply lift_smul)
+  map_smul' m := by apply lift_smul
 
 variable (g : ∀ i, G i →ₙₐ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 

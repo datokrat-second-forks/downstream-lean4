@@ -314,9 +314,7 @@ map. -/
 def smulRight (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M where
   toFun b := f b • x
   map_add' x y := by rw [f.map_add, add_smul]
-  map_smul' b y := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [RingHom.id_apply, map_smul, smul_assoc])
+  map_smul' b y := by rw [RingHom.id_apply, map_smul, smul_assoc]
 
 @[simp]
 theorem coe_smulRight (f : M₁ →ₗ[R] S) (x : M) : (smulRight f x : M₁ → M) = fun c => f c • x :=
@@ -387,8 +385,7 @@ This is the `LinearMap` version of `toAddMonoidHom.eval`. -/
 def applyₗ : M →ₗ[R] (M →ₗ[R] M₂) →ₗ[R] M₂ :=
   { applyₗ' R with
     toFun := fun v => { applyₗ' R v with toFun := fun f => f v }
-    map_smul' := fun _ _ => LinearMap.ext fun f =>
-      (set_option backward.instanceTypes.subsingletons.prop false in map_smul f _ _) }
+    map_smul' := fun _ _ => LinearMap.ext fun f => map_smul f _ _ }
 
 /--
 The family of linear maps `M₂ → M` parameterised by `f ∈ M₂ → R`, `x ∈ M`, is linear in `f`, `x`.

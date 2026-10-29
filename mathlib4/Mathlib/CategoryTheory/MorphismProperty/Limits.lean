@@ -255,7 +255,7 @@ theorem pullbackMap
           ((Over.pullback _).map (Over.homMk _ e₂.symm : Over.mk g ⟶ Over.mk g')).left) ≫
         (pullbackSymmetry _ _).hom ≫
           ((Over.pullback g').map (Over.homMk _ e₁.symm : Over.mk f ⟶ Over.mk f')).left := by
-    ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
+    ext <;> simp
   rw [this]
   apply P.comp_mem <;> rw [P.cancel_left_of_respectsIso]
   exacts [overPullbackMap _ (Over.homMk _ e₂.symm : Over.mk g ⟶ Over.mk g') h₂,
@@ -365,7 +365,7 @@ theorem pushoutMap
         ((Under.pushout f).map (Under.homMk _ e₂.symm : Under.mk g ⟶ Under.mk g')).right) ≫
         (pushoutSymmetry _ _).hom ≫
         ((Under.pushout g').map (Under.homMk _ e₁.symm : Under.mk f ⟶ Under.mk f')).right := by
-    ext <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
+    ext <;> simp
   rw [this]
   apply P.comp_mem <;> rw [P.cancel_left_of_respectsIso]
   exacts [underPushoutMap _ _ h₂, underPushoutMap _ _ h₁]

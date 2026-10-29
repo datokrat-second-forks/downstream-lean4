@@ -245,8 +245,7 @@ noncomputable instance forget₂CreatesLimit : CreatesLimit F (forget₂ CommMon
       validLift := by apply IsLimit.uniqueUpToIso (MonCat.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ CommMonCat MonCat.{u})
-          (set_option backward.instanceTypes.subsingletons.prop false in
-          MonCat.HasLimits.limitConeIsLimit _) (fun _ => _) fun _ => rfl }
+          (MonCat.HasLimits.limitConeIsLimit _) (fun _ => _) fun _ => rfl }
 
 /-- A choice of limit cone for a functor into `CommMonCat`.
 (Generally, you'll just want to use `limit F`.)

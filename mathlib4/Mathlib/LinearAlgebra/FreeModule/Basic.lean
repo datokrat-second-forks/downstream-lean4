@@ -112,8 +112,7 @@ theorem infinite [Infinite R] [Nontrivial M] : Infinite M :=
   (Equiv.infinite_iff (chooseBasis R M).repr.toEquiv).mpr Finsupp.infinite_of_right
 
 instance [Nontrivial M] : FaithfulSMul R M :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  .of_injective _ (chooseBasis R M).repr.symm.injective)
+  .of_injective _ (chooseBasis R M).repr.symm.injective
 
 variable {R M N}
 
@@ -181,9 +180,7 @@ variable {R} in
 each `r : R` gets represented as `s • B i` as an element of `S`. -/
 theorem repr_algebraMap {ι : Type*} {B : Basis ι R S} {i : ι} (hBi : B i = 1) (r : R) :
     B.repr (algebraMap R S r) = Finsupp.single i r := by
-  ext j
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [Algebra.algebraMap_eq_smul_one, ← hBi])
+  ext j; simp [Algebra.algebraMap_eq_smul_one, ← hBi]
 
 end Basis
 

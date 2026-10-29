@@ -395,8 +395,7 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [AddCommMonoid M] [CommSemir
     exact ⟨P + Q, map_add _ _ _⟩
   | smul r f ih =>
     rcases ih with ⟨P, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact ⟨r • P, map_smul _ _ _⟩)
+    exact ⟨r • P, map_smul _ _ _⟩
 
 variable [AddMonoid M]
 
@@ -424,8 +423,7 @@ theorem freeAlgebra_lift_of_surjective_of_closure [CommSemiring R] {S : Set M}
     exact ⟨P + Q, map_add _ _ _⟩
   | smul r f ih =>
     rcases ih with ⟨P, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact ⟨r • P, map_smul _ _ _⟩)
+    exact ⟨r • P, map_smul _ _ _⟩
 
 variable (R M)
 
@@ -544,8 +542,7 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [CommMonoid M] [CommSemiring
     exact ⟨P + Q, map_add _ _ _⟩
   | smul r f ih =>
     rcases ih with ⟨P, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact ⟨r • P, map_smul _ _ _⟩)
+    exact ⟨r • P, map_smul _ _ _⟩
 
 
 variable [Monoid M]
@@ -573,8 +570,7 @@ theorem freeAlgebra_lift_of_surjective_of_closure [CommSemiring R] {S : Set M}
     exact ⟨P + Q, map_add _ _ _⟩
   | smul r f ih =>
     rcases ih with ⟨P, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact ⟨r • P, map_smul _ _ _⟩)
+    exact ⟨r • P, map_smul _ _ _⟩
 
 /-- If a monoid `M` is finitely generated then `R[M]` is of finite type. -/
 instance finiteType_of_fg [CommRing R] [Monoid.FG M] : FiniteType R R[M] :=
@@ -672,9 +668,7 @@ instance (priority := 100) CommRing.orzechProperty
         exact smul_mem _ _ (subset_span (by simp))
     | zero => simp
     | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
-    | smul a x _ hx =>
-      (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
-      exact smul_mem _ _ hx
+    | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
   · induction hx using span_induction with
     | mem x hx =>
       change f x ∈ M'
@@ -684,9 +678,7 @@ instance (priority := 100) CommRing.orzechProperty
       · exact subset_span (by simp [hnj])
     | zero => simp
     | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
-    | smul a x _ hx =>
-      (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
-      exact smul_mem _ _ hx
+    | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
   suffices x ∈ LinearMap.range ((f.restrictScalars A).domRestrict N') by
     obtain ⟨a, ha⟩ := this
     exact ⟨a, Subtype.val_injective ha⟩

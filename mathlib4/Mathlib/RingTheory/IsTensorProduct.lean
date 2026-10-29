@@ -185,8 +185,7 @@ private noncomputable def assocAux
   haveI heq (s : S) (y : M₁) (x : M₂) : s • y ⊗ₜ[R] x = y ⊗ₜ[R] (s • x) := by
     change hf.equiv.symm (s • _) = _
     dsimp
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← map_smul])
+    rw [← map_smul]
     apply hf.equiv_symm_apply
   haveI : IsScalarTower R S (M₁ ⊗[R] M₂) := hf.equiv.isScalarTower S
   letI e₀ : M₂ ⊗[R] M₁ ≃ₗ[S] M₁ ⊗[R] M₂ :=
@@ -418,8 +417,7 @@ lemma IsBaseChange.of_equiv (e : S ⊗[R] M ≃ₗ[S] N) (he : ∀ x, e (1 ⊗�
     IsBaseChange S f := by
   apply IsTensorProduct.of_equiv (e.restrictScalars R)
   intro x y
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [show x ⊗ₜ[R] y = x • (1 ⊗ₜ[R] y) by simp [smul_tmul'], he])
+  simp [show x ⊗ₜ[R] y = x • (1 ⊗ₜ[R] y) by simp [smul_tmul'], he]
 
 variable (R S) in
 theorem IsBaseChange.linearMap : IsBaseChange S (Algebra.linearMap R S) :=

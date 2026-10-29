@@ -555,9 +555,7 @@ def llcomp : IntertwiningMap σ τ →ₗ[A] IntertwiningMap ρ σ →ₗ[A] Int
     { toFun g := ((f.toLinearMap.comp g.toLinearMap).intertwiningMap_of_isIntertwiningMap ρ τ
       (by intro γ v; simp [f.isIntertwining, g.isIntertwining]))
       map_add' _ _ := by ext; simp [map_add, toLinearMap_apply]
-      map_smul' _ _ := by
-        ext
-        (set_option backward.instanceTypes.subsingletons.prop false in simp [toLinearMap_apply]) }
+      map_smul' _ _ := by ext; simp [toLinearMap_apply] }
   map_add' _ _ := by ext; simp [toLinearMap_apply]
   map_smul' _ _ := by ext; simp [toLinearMap_apply]
 

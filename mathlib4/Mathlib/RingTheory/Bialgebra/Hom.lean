@@ -71,8 +71,7 @@ instance (priority := 100) toAlgHomClass : AlgHomClass F R A B where
   map_add := map_add
   map_zero := map_zero
   commutes := fun c r => by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one])
+    simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one]
 
 /-- Turn an element of a type `F` satisfying `BialgHomClass F R A B` into an actual
 `BialgHom`. This is declared as the default coercion from `F` to `A →ₐc[R] B`. -/
@@ -323,7 +322,7 @@ def ofAlgHom (f : A →ₐ[R] B) (counit_comp : (counitAlgHom R B).comp f = coun
       (Algebra.TensorProduct.map f f).comp (comulAlgHom _ _) = (comulAlgHom _ _).comp f) :
     A →ₐc[R] B where
   __ := f
-  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f)
+  map_smul' := map_smul f
   counit_comp := congr(($counit_comp).toLinearMap)
   map_comp_comul := congr(($map_comp_comul).toLinearMap)
 

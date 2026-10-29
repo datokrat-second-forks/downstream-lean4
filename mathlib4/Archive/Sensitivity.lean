@@ -443,8 +443,7 @@ theorem huang_degree_theorem (H : Set (Q m.succ)) (hH : Card H ≥ 2 ^ m + 1) :
   let coeffs := (dualBases_e_ε m.succ).coeffs
   calc
     s * |ε q y| = |ε q (s • y)| := by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      rw [map_smul, smul_eq_mul, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)])
+      rw [map_smul, smul_eq_mul, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]
     _ = |ε q (f m.succ y)| := by rw [← f_image_g y (by simpa using! y_mem_g)]
     _ = |ε q (f m.succ (lc _ (coeffs y)))| := by rw [(dualBases_e_ε _).lc_coeffs y]
     _ =

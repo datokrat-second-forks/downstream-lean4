@@ -83,7 +83,7 @@ noncomputable abbrev T1 (c : k) :
 private lemma t1_comp_t1_neg (c : k) : (T1 f c).comp (T1 f (-c)) = AlgHom.id _ _ := by
   rw [comp_aeval, ← MvPolynomial.aeval_X_left]
   ext i v
-  cases i using Fin.cases <;> (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  cases i using Fin.cases <;> simp
 
 /-- The automorphism of `k[X_0, ..., X_n]` fixing `X_0` and sending `X_i` to `X_i + X_0 ^ r_i`. -/
 noncomputable abbrev varChange := AlgEquiv.ofAlgHom (T1 f 1) (T1 f (-1))

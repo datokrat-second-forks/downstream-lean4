@@ -301,8 +301,7 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D)
   NatIso.ofComponents (fun G =>
     IsColimit.coconePointUniqueUpToIso
     (Functor.isPointwiseLeftKanExtensionLeftKanExtensionUnit F G X)
-    (set_option backward.instanceTypes.subsingletons.prop false in colimit.isColimit _))
-    (fun {G₁ G₂} φ => by
+    (colimit.isColimit _)) (fun {G₁ G₂} φ => by
       apply (Functor.isPointwiseLeftKanExtensionLeftKanExtensionUnit F G₁ X).hom_ext
       intro T
       have h₁ := fun (G : C ⥤ E) => IsColimit.comp_coconePointUniqueUpToIso_hom

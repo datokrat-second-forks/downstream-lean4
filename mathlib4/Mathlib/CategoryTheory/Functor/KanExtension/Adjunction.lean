@@ -387,7 +387,6 @@ lemma isIso_ranAdjunction_homEquiv_iff {F : C ⥤ H} {G : D ⥤ H} (α : L ⋙ G
     (L.ranCounit.app F) α
     (by (set_option backward.dsimp.instanceTypes false in simp [ranAdjunction]))).symm
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- Composing the right Kan extension of `L : C ⥤ D` with `lim` on shapes `D` is isomorphic
 to `lim` on shapes `C`. -/
 @[simps!]

@@ -321,14 +321,13 @@ variable (X Y : Scheme.{u})
 The coproduct of the two schemes is given by indexed coproducts over `WalkingPair`. -/
 noncomputable
 def coprodIsoSigma : X ⨿ Y ≅ ∐ fun i : ULift.{u} WalkingPair ↦ i.1.casesOn X Y :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  Sigma.whiskerEquiv Equiv.ulift.symm (fun _ ↦ by exact Iso.refl _))
+  Sigma.whiskerEquiv Equiv.ulift.symm (fun _ ↦ by exact Iso.refl _)
 
 lemma ι_left_coprodIsoSigma_inv : Sigma.ι _ ⟨.left⟩ ≫ (coprodIsoSigma X Y).inv = coprod.inl :=
-  (set_option backward.instanceTypes.subsingletons.prop false in Sigma.ι_comp_map' _ _ _)
+  Sigma.ι_comp_map' _ _ _
 
 lemma ι_right_coprodIsoSigma_inv : Sigma.ι _ ⟨.right⟩ ≫ (coprodIsoSigma X Y).inv = coprod.inr :=
-  (set_option backward.instanceTypes.subsingletons.prop false in Sigma.ι_comp_map' _ _ _)
+  Sigma.ι_comp_map' _ _ _
 
 instance : IsOpenImmersion (coprod.inl : X ⟶ X ⨿ Y) := by
   rw [← ι_left_coprodIsoSigma_inv]; infer_instance
@@ -387,9 +386,7 @@ noncomputable
 def coprodOpenCover.{w} : (X ⨿ Y).OpenCover where
   I₀ := PUnit.{w + 1} ⊕ PUnit.{w + 1}
   X x := x.elim (fun _ ↦ X) (fun _ ↦ Y)
-  f x := x.rec (fun _ ↦
-    (set_option backward.instanceTypes.subsingletons.prop false in coprod.inl)) (fun _ ↦
-      (set_option backward.instanceTypes.subsingletons.prop false in coprod.inr))
+  f x := x.rec (fun _ ↦ coprod.inl) (fun _ ↦ coprod.inr)
   mem₀ := by
     rw [Scheme.presieve₀_mem_precoverage_iff]
     refine ⟨fun x ↦ ?_, fun x ↦ x.rec (fun _ ↦ inferInstance) (fun _ ↦ inferInstance)⟩

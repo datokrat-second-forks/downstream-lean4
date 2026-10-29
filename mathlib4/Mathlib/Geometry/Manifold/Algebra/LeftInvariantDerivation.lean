@@ -69,7 +69,7 @@ instance : FunLike (LeftInvariantDerivation I G) C^∞⟮I, G; 𝕜⟯ C^∞⟮I
 
 instance : LinearMapClass (LeftInvariantDerivation I G) 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯ where
   map_add f := map_add f.1
-  map_smulₛₗ f := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f.1.1)
+  map_smulₛₗ f := map_smul f.1.1
 
 variable {r : 𝕜} {X Y : LeftInvariantDerivation I G} {f f' : C^∞⟮I, G; 𝕜⟯}
 
@@ -102,8 +102,7 @@ protected theorem map_neg : X (-f) = -X f := by simp
 
 protected theorem map_sub : X (f - f') = X f - X f' := by simp
 
-protected theorem map_smul : X (r • f) = r • X f := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp)
+protected theorem map_smul : X (r • f) = r • X f := by simp
 
 @[simp]
 theorem leibniz : X (f * f') = f • X f' + f' • X f :=
@@ -162,8 +161,7 @@ instance : AddCommGroup (LeftInvariantDerivation I G) :=
 
 instance : SMul 𝕜 (LeftInvariantDerivation I G) where
   smul r X := ⟨r • X.1, fun g => by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [LinearMap.map_smul_of_tower, map_smul]); rw [left_invariant']⟩
+    simp only [LinearMap.map_smul_of_tower, map_smul]; rw [left_invariant']⟩
 
 variable (r)
 
@@ -260,7 +258,6 @@ instance : LieRing (LeftInvariantDerivation I G) where
 instance : LieAlgebra 𝕜 (LeftInvariantDerivation I G) where
   lie_smul r Y Z := by
     ext1
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply])
+    simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 
 end LeftInvariantDerivation

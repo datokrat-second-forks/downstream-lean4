@@ -160,10 +160,9 @@ def tensorCotangentInvFun
     obtain ⟨x, hx⟩ := e.surjective ⟨a, ha⟩
     obtain rfl : (e x).1 = a := congr($(hx).val)
     obtain ⟨y, rfl⟩ := e.surjective b
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [AddMonoidHom.mem_ker, AddMonoidHom.coe_ofClass, map_smul,
       LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      LinearEquiv.symm_apply_apply, f'])
+      LinearEquiv.symm_apply_apply, f']
     clear hx ha
     induction x with
     | add x y _ _ =>
@@ -222,8 +221,7 @@ def tensorCotangent [alg : Algebra P.Ring Q.Ring] (halg : algebraMap P.Ring Q.Ri
       induction x with
       | add x y _ _ => simp only [map_add, *]
       | tmul a b =>
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        simp only [LinearMap.liftBaseChange_tmul, map_smul])
+        simp only [LinearMap.liftBaseChange_tmul, map_smul]
         simp [Hom.mapKer, tensorCotangentInvFun_smul_mk] }
 
 set_option backward.isDefEq.respectTransparency.types false in

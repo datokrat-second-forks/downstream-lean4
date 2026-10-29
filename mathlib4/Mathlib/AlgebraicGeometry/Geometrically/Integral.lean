@@ -83,8 +83,7 @@ instance (s : S) [GeometricallyIntegral f] :
   MorphismProperty.pullback_snd _ _ inferInstance
 
 instance (s : S) [GeometricallyIntegral f] : IsIntegral (f.fiber s) :=
-  GeometricallyIntegral.geometrically_isIntegral _ _ _
-    (set_option backward.instanceTypes.subsingletons.prop false in .of_hasPullback _ _)
+  GeometricallyIntegral.geometrically_isIntegral _ _ _ (.of_hasPullback _ _)
 
 instance (priority := low) [GeometricallyIntegral f] : Surjective f :=
   ⟨fun x ↦ ⟨_, (f.range_fiberι x).le ⟨Nonempty.some inferInstance, rfl⟩⟩⟩

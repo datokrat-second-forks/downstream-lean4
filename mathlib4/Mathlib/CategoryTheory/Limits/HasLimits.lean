@@ -609,7 +609,6 @@ def limYoneda :
     lim ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u₁} ≅ CategoryTheory.cones J C :=
   NatIso.ofComponents fun F => NatIso.ofComponents fun W => limit.homIso F (unop W)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The constant functor and limit functor are adjoint to each other -/
 def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim := Adjunction.mk' {
   homEquiv := fun c g ↦
@@ -779,7 +778,6 @@ def colimCoyoneda : colim.op ⋙ coyoneda ⋙ (whiskeringRight _ _ _).obj uliftF
     ≅ CategoryTheory.cocones J C :=
   NatIso.ofComponents fun F => NatIso.ofComponents fun W => colimit.homIso (unop F) W
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The colimit functor and constant functor are adjoint to each other
 -/
 def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J := Adjunction.mk' {

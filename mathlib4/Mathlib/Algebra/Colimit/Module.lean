@@ -50,10 +50,7 @@ inductive DirectLimit.Eqv [DecidableEq ι] : DirectSum ι G → DirectSum ι G �
 
 /-- The congruence relation to quotient the direct sum by to obtain the direct limit. -/
 def DirectLimit.moduleCon [DecidableEq ι] : ModuleCon R (DirectSum ι G) :=
-  SMulCon.addConGen' (Eqv f) <| by
-    rintro _ _ _ ⟨⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa only [← map_smul] using .of_map ..)
+  SMulCon.addConGen' (Eqv f) <| by rintro _ _ _ ⟨⟩; simpa only [← map_smul] using .of_map ..
 
 variable (G)
 
@@ -131,10 +128,7 @@ def lift (g : ∀ i, G i →ₗ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) = g
     DirectLimit G f →ₗ[R] P where
   __ := AddCon.lift _ (DirectSum.toModule R ι P g) <|
     AddCon.addConGen_le.2 fun _ _ ⟨_, _⟩ ↦ by simpa using (Hg _ _ _ _).symm
-  map_smul' r := by
-    rintro ⟨x⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact map_smul (DirectSum.toModule R ι P g) r x)
+  map_smul' r := by rintro ⟨x⟩; exact map_smul (DirectSum.toModule R ι P g) r x
 
 variable (g : ∀ i, G i →ₗ[R] P) (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 

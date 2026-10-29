@@ -212,11 +212,10 @@ lemma IsStableUnderComposition.ind_of_preIndSpreads
         naturality k l a := by
           have h2 := s₁.naturality a.right
           simp only [Functor.const_obj_obj, Functor.const_obj_map, Category.id_comp] at h2
-          (set_option backward.instanceTypes.subsingletons.prop false in simp [h2, D']) }
+          simp [h2, D'] }
     obtain ⟨j₃, v, hcomp', hq⟩ := IsFinitelyPresentable.exists_hom_of_isColimit_under
         hc' p s' q <| fun k ↦ by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [c', s', hcomp, reassoc_of% (h₁ k.right).right])
+      simp [c', s', hcomp, reassoc_of% (h₁ k.right).right]
     refine ⟨D'.obj j₃, v, c'.ι.app j₃ ≫ t₂.app j₂, ?_, ?_⟩
     · rwa [reassoc_of% hq]
     · rw [hcomp']

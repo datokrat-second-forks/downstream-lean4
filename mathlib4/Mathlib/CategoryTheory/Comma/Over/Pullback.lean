@@ -178,7 +178,6 @@ instance : (star X).IsRightAdjoint := ⟨_, ⟨forgetAdjStar X⟩⟩
 `Over.forget X` is equivalent to the existence of each binary product `X ⨯ -`. -/
 instance : (forget X).IsLeftAdjoint := ⟨_, ⟨forgetAdjStar X⟩⟩
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Lifting to over `Y` and pulling back along `X ⟶ Y` is the same as lifting to over `X`. -/
 @[simps!]

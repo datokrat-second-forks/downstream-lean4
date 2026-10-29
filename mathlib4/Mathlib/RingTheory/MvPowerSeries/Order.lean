@@ -595,9 +595,8 @@ def weightedHomogeneousComponent (p : ℕ) : MvPowerSeries σ R →ₗ[R] MvPowe
     · rw [add_zero]
   map_smul' a f := by
     ext d
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_smul,
-      smul_eq_mul, RingHom.id_apply, coeff_apply, mul_ite, mul_zero])
+      smul_eq_mul, RingHom.id_apply, coeff_apply, mul_ite, mul_zero]
 
 theorem coeff_weightedHomogeneousComponent (p : ℕ) (d : σ →₀ ℕ) (f : MvPowerSeries σ R) :
     coeff d (weightedHomogeneousComponent w p f) =

@@ -108,8 +108,7 @@ lemma smul_coroot_eq_of_root_add_root_eq [P.IsAnisotropic] [IsDomain R] [IsTorsi
   have hlsq (i : ι) : lsq i = P.RootForm (P.root i) (P.root i) := rfl
   have h₁ : lsq k • P.coroot k = (m • lsq i) • P.coroot i + (n • lsq j) • P.coroot j := by
     simp only [hlsq, smul_assoc, P.rootForm_self_smul_coroot, smul_comm _ 2]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← map_smul _ m, ← map_smul _ n, ← nsmul_add, ← map_add, hk])
+    rw [← map_smul _ m, ← map_smul _ n, ← nsmul_add, ← map_add, hk]
   have h₂ :
       lsq k = (m * m) * lsq i + (m * n) * (2 * B.form (P.root i) (P.root j)) + (n * n) * lsq j := by
     have aux : P.RootForm (P.root j) (P.root i) = B.form (P.root i) (P.root j) :=
@@ -394,8 +393,7 @@ lemma coroot_eq_polarizationEquiv_apply_root (i : ι) :
 
 lemma polarizationEquiv_symm_apply_coroot {i : ι} :
     P.PolarizationEquiv.symm (P.coroot i) = (2 / P.RootForm (P.root i) (P.root i)) • P.root i := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [coroot_eq_polarizationEquiv_apply_root])
+  simp [coroot_eq_polarizationEquiv_apply_root]
 
 end IsRootSystem
 

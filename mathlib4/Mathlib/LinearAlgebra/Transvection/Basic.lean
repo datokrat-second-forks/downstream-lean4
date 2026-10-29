@@ -98,8 +98,7 @@ theorem comp_smul_smul {f : Dual R V} {v : V} {r s : R} :
     transvection f (r • v) ∘ₗ transvection f (s • v) =
       transvection f ((r + s + s * f v * r) • v) := by
   ext x
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [LinearMap.comp_apply, apply, map_add, map_smul, add_assoc])
+  simp only [LinearMap.comp_apply, apply, map_add, map_smul, add_assoc]
   simp only [smul_add, ← mul_smul, ← add_smul, ← mul_add (f x), mul_assoc]
 
 theorem eq_id_of_finrank_le_one
@@ -116,9 +115,8 @@ theorem eq_id_of_finrank_le_one
       simp [apply, this]
     let i : Fin (finrank R V) := ⟨0, by simp [h]⟩
     suffices ∀ x, x = b.repr x i • (b i) by
-      (set_option backward.instanceTypes.subsingletons.prop false in
       rw [this v, map_smul, smul_eq_mul, mul_comm] at hfv
-      rw [this x, this v, map_smul, smul_eq_mul, ← mul_smul, mul_assoc, hfv, mul_zero, zero_smul])
+      rw [this x, this v, map_smul, smul_eq_mul, ← mul_smul, mul_assoc, hfv, mul_zero, zero_smul]
     intro x
     have : x = ∑ i, b.repr x i • b i := (b.sum_equivFun x).symm
     rwa [Finset.sum_eq_single_of_mem i (Finset.mem_univ i) (by grind)] at this
@@ -126,7 +124,7 @@ theorem eq_id_of_finrank_le_one
 theorem congr {W : Type*} [AddCommMonoid W] [Module R W]
     (f : Dual R V) (v : V) (e : V ≃ₗ[R] W) :
     e ∘ₗ (transvection f v) ∘ₗ e.symm = transvection (f ∘ₗ e.symm) (e v) := by
-  ext; (set_option backward.instanceTypes.subsingletons.prop false in simp [transvection.apply])
+  ext; simp [transvection.apply]
 
 end LinearMap.transvection
 
@@ -302,8 +300,7 @@ theorem symm_mem_dilatransvections_iff {e : V ≃ₗ[R] V} :
   use f, - e.symm v
   ext x
   suffices x = e x - f x • v by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa [LinearMap.transvection.apply, ← sub_eq_add_neg, symm_apply_eq])
+    simpa [LinearMap.transvection.apply, ← sub_eq_add_neg, symm_apply_eq]
   rw [eq_comm, sub_eq_iff_eq_add, ← coe_coe, he, LinearMap.transvection.apply]
 
 @[simp]
@@ -574,9 +571,8 @@ private theorem det_ofField [FiniteDimensional K V] (f : Dual K V) (v : V) :
       rw [this, Matrix.det_transvection_of_ne i j hi 1, hfv, add_zero]
     ext x y
     rw [toMatrix_apply, transvection.apply, Matrix.transvection]
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [hj.2, Basis.coord_apply, Basis.repr_self, hj.1, map_add, map_smul,
-      Finsupp.smul_single, smul_eq_mul, mul_one, Finsupp.coe_add, Pi.add_apply, Matrix.add_apply])
+      Finsupp.smul_single, smul_eq_mul, mul_one, Finsupp.coe_add, Pi.add_apply, Matrix.add_apply]
     apply congr_arg₂
     · by_cases h : x = y
       · rw [h]; simp
@@ -601,9 +597,8 @@ private theorem det_ofField [FiniteDimensional K V] (f : Dual K V) (v : V) :
       · simp
     ext x y
     rw [toMatrix_apply, transvection.apply, Matrix.diagonal]
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_add, Basis.repr_self, map_smul, Finsupp.coe_add, Finsupp.coe_smul,
-      Pi.add_apply, Pi.smul_apply, smul_eq_mul, Matrix.of_apply])
+      Pi.add_apply, Pi.smul_apply, smul_eq_mul, Matrix.of_apply]
     rw [hv, Function.update_apply, Basis.repr_self, Pi.one_apply, hf]
     simp only [smul_apply, Basis.coord_apply, Basis.repr_self, smul_eq_mul,
       Finsupp.single_eq_same, mul_one]

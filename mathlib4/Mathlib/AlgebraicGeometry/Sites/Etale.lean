@@ -82,8 +82,7 @@ lemma ofArrows_mem_smallEtaleTopology_iff
       { over w := ⟨(Z (i w)).hom⟩
         isOver_map w := by cat_disch }
     have (w : W.left) : Etale (V.X w ↘ X) := (Z (i w)).prop
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    refine ⟨V, inferInstance, inferInstance, ?_⟩)
+    refine ⟨V, inferInstance, inferInstance, ?_⟩
     rintro _ _ ⟨w⟩
     refine ⟨_, 𝟙 _, _, ⟨i w⟩, by cat_disch⟩
 

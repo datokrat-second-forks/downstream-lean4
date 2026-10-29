@@ -219,8 +219,7 @@ noncomputable def lTensor.inverse_of_rightInverse {h : P → N} (hfg : Exact f g
       rw [← TensorProduct.tmul_smul, ← TensorProduct.tmul_sub]
       apply le_comap_range_lTensor f
       rw [exact_iff] at hfg
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp only [← hfg, mem_ker, map_sub, map_smul, hgh _, sub_self]) }
+      simp only [← hfg, mem_ker, map_sub, map_smul, hgh _, sub_self] }
 
 lemma lTensor.inverse_of_rightInverse_apply
     {h : P → N} (hgh : Function.RightInverse h g) (y : Q ⊗[R] N) :
@@ -327,8 +326,7 @@ noncomputable def rTensor.inverse_of_rightInverse {h : P → N} (hfg : Exact f g
       rw [TensorProduct.smul_tmul', ← TensorProduct.sub_tmul]
       apply le_comap_range_rTensor f
       rw [exact_iff] at hfg
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp only [← hfg, mem_ker, map_sub, map_smul, hgh _, sub_self]) }
+      simp only [← hfg, mem_ker, map_sub, map_smul, hgh _, sub_self] }
 
 lemma rTensor.inverse_of_rightInverse_apply
     {h : P → N} (hgh : Function.RightInverse h g) (y : N ⊗[R] Q) :

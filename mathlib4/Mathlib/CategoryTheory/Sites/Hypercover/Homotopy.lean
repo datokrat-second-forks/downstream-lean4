@@ -151,8 +151,7 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma toPullback_cylinder {i j : (cylinder f g).I₀} (k : (cylinder f g).I₁ i j) :
     (cylinder f g).toPullback k = pullback.fst _ _ := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  apply pullback.hom_ext <;> simp [toPullback])
+  apply pullback.hom_ext <;> simp [toPullback]
 
 set_option backward.isDefEq.respectTransparency false in
 lemma sieve₀_cylinder :
@@ -183,16 +182,14 @@ lemma sieve₁'_cylinder (i j : Σ (i : E.I₀), F.I₁ (f.s₀ i) (g.s₀ i)) :
   · rw [sieve₁', Sieve.ofArrows, Sieve.generate_le_iff]
     rintro - - ⟨k⟩
     refine ⟨E.Y k.down, pullback.snd _ _, E.toPullback k.down, Presieve.ofArrows.mk k.down, ?_⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [cylinder_Y, cylinder_f, toPullback_cylinder, pullback.condition])
+    simp only [cylinder_Y, cylinder_f, toPullback_cylinder, pullback.condition]
   · rw [sieve₁', Sieve.ofArrows, ← Sieve.pullbackArrows_comm, Sieve.generate_le_iff]
     rintro Z u ⟨W, v, ⟨k⟩⟩
     simp_rw [← pullbackSymmetry_inv_comp_fst]
     apply (((cylinder f g).sieve₁' i j)).downward_closed
     rw [sieve₁']
     convert! Sieve.ofArrows_mk _ _ (ULift.up k)
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [toPullback_cylinder f g ⟨k⟩])
+    simp [toPullback_cylinder f g ⟨k⟩]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- (Implementation): The refinement morphism `cylinder f g ⟶ E`. -/

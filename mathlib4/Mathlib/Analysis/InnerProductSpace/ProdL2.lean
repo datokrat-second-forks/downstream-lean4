@@ -181,8 +181,7 @@ noncomputable instance instQuotientInnerProductSpace :
     InnerProductSpace 𝕜 (E ⧸ K) where
   inner x y := ⟪K.quotientEquivOrthogonal x, K.quotientEquivOrthogonal y⟫_𝕜
   add_left x y z := by rw [map_add, inner_add_left]
-  smul_left x y r := by
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, inner_smul_left])
+  smul_left x y r := by rw [map_smul, inner_smul_left]
   conj_inner_symm x y := inner_conj_symm _ _
   norm_sq_eq_re_inner y := by rw [inner_self_eq_norm_sq, LinearIsometryEquiv.norm_map]
 

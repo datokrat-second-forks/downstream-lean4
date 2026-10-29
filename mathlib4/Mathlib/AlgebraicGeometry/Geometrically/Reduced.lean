@@ -68,8 +68,7 @@ instance (s : S) [GeometricallyReduced f] :
   MorphismProperty.pullback_snd _ _ inferInstance
 
 instance (s : S) [GeometricallyReduced f] : IsReduced (f.fiber s) :=
-  GeometricallyReduced.geometrically_isReduced _ _ _
-    (set_option backward.instanceTypes.subsingletons.prop false in .of_hasPullback _ _)
+  GeometricallyReduced.geometrically_isReduced _ _ _ (.of_hasPullback _ _)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma GeometricallyReduced.isReduced_of_flat_of_finite_irreducibleComponents

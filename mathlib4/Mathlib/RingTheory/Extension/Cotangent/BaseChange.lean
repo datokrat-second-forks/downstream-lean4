@@ -120,11 +120,10 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 lemma tensorCotangentOfFlat_tmul [Module.Flat R T] (t : T) (x : P.Cotangent) :
     P.tensorCotangentOfFlat T (t ⊗ₜ x) = t • Cotangent.map (P.toBaseChange T) x := by
   obtain ⟨x, rfl⟩ := Cotangent.mk_surjective x
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [tensorCotangentOfFlat, LinearEquiv.trans_apply, AlgebraTensorModule.congr_tmul,
     LinearEquiv.refl_apply, LinearEquiv.restrictScalars_apply, cotangentEquivCotangentKer_apply,
     Cotangent.val_mk, Ideal.tensorCotangentEquiv_tmul, map_smul, Cotangent.map_mk,
-    Hom.toAlgHom_apply, Ideal.Cotangent.equivOfEq_toCotangent])
+    Hom.toAlgHom_apply, Ideal.Cotangent.equivOfEq_toCotangent]
   rfl
 
 /-- The canonical map `T ⊗[R] P.H1Cotangent →ₗ[T] (P.baseChange).H1Cotangent`. -/
@@ -212,11 +211,10 @@ attribute [local instance] TensorProduct.rightAlgebra in
 lemma tensorH1CotangentOfFlat_tmul (T : Type*) [CommRing T] [Algebra R T] [Module.Flat R T]
     (t : T) (x : H1Cotangent R S) :
     tensorH1CotangentOfFlat R S T (t ⊗ₜ x) = t • H1Cotangent.map _ _ _ _ x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [tensorH1CotangentOfFlat, LinearEquiv.trans_apply,
     Extension.tensorH1CotangentOfFlat_tmul, map_smul, LinearEquiv.restrictScalars_apply,
     Extension.H1Cotangent.equiv, LinearEquiv.coe_mk, Generators.equivH1Cotangent,
-    Generators.H1Cotangent.equiv])
+    Generators.H1Cotangent.equiv]
   rw [← Extension.H1Cotangent.map_comp_apply, ← Extension.H1Cotangent.map_comp_apply,
     H1Cotangent.map, Extension.H1Cotangent.map_eq]
 

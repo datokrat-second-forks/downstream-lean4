@@ -252,8 +252,7 @@ theorem normDet_smul (f : U →ₗ[𝕜] V) (c : 𝕜) :
       (c • f).normDet_eq_norm_det_toMatrix_rangeRestrict bu bv', ← norm_pow, ← norm_mul]
     have : finrank 𝕜 U = Fintype.card (Fin (finrank 𝕜 U)) := by simp
     conv in c ^ finrank 𝕜 U => rw [this]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← Matrix.det_smul, ← map_smul])
+    rw [← Matrix.det_smul, ← map_smul]
     rfl
   · have h' : (c • f).ker ≠ ⊥ := by simpa [f.ker_smul _ hc] using h
     simp [normDet_eq_zero_iff_ker_ne_bot.mpr h, normDet_eq_zero_iff_ker_ne_bot.mpr h']

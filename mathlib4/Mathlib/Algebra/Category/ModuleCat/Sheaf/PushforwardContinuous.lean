@@ -320,10 +320,9 @@ instance isLeftAdjoint_pushforward_of_isIso [F.IsCocontinuous J K] [IsIso φ] [F
   · ext U : 2
     have := (inv φ).hom.naturality
     dsimp at this
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [ObjectProperty.hom_inv, NatIso.isIso_inv_app, sheafPushforwardContinuous_obj_obj_obj,
       IsIso.eq_inv_comp] at this
-    simp [ψ, shAdj, ← this, ← Functor.map_comp_assoc, ← op_comp])
+    simp [ψ, shAdj, ← this, ← Functor.map_comp_assoc, ← op_comp]
 
 noncomputable section
 
@@ -348,8 +347,7 @@ def overPushforwardOverAdj (x : C) :
   · ext y : 2
     simp [pushforwardOver]
   · ext y : 2
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [pushforwardOver, ← Functor.map_comp, ← op_comp])
+    simp [pushforwardOver, ← Functor.map_comp, ← op_comp]
 
 instance (x : C) : IsLeftAdjoint (pushforward.{w} (𝟙 (R.over x))) where
   exists_rightAdjoint := ⟨_, Nonempty.intro (overPushforwardOverAdj x)⟩

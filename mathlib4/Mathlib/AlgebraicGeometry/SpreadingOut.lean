@@ -156,8 +156,7 @@ lemma Scheme.IsGermInjective.Spec
   obtain ⟨⟨y, hy⟩, hy'⟩ := (IsLocalization.map_eq_zero_iff p.asIdeal.primeCompl
     ((Spec.structureSheaf R).presheaf.stalk p) _).mp hx
   obtain ⟨n, hn⟩ := H x y hy' hy
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  refine (@IsLocalization.mk'_eq_zero_iff ..).mpr ?_)
+  refine (@IsLocalization.mk'_eq_zero_iff ..).mpr ?_
   exact ⟨⟨_, n, rfl⟩, hn⟩
 
 instance (priority := 100) [IsIntegral X] : X.IsGermInjective := by

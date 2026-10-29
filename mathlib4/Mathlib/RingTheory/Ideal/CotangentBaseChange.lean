@@ -48,7 +48,6 @@ def tensorCotangentHom :
     simp only [AlgHom.toRingHom_eq_coe, LinearMap.coe_comp, LinearMap.coe_restrictScalars,
       Function.comp_apply, Algebra.idealMap_mul]
     (set_option backward.dsimp.instanceTypes false in
-    set_option backward.instanceTypes.subsingletons.prop false in
     simp only [RingHom.algebraMap_toAlgebra, AlgHom.toRingHom_eq_coe, LinearMap.coe_restrictScalars,
       toCotangent_eq_zero, sq, MulMemClass.coe_mul])
     exact mul_mem_mul ((Algebra.idealMap (T ⊗[R] S) I) x).property

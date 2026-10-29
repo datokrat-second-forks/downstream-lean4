@@ -416,8 +416,7 @@ lemma IsLittleOTVS.sup (hf₁ : f =o[𝕜; l₁] g) (hf₂ : f =o[𝕜; l₂] g)
 
 lemma _root_.ContinuousLinearMap.isBigOTVS_id {l : Filter E} (f : E →L[𝕜] F) : f =O[𝕜; l] id :=
   ⟨fun U hU ↦ ⟨f ⁻¹' U, (map_continuous f).tendsto' 0 0 (map_zero f) hU, .of_forall <|
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    (mapsTo_preimage f U).egauge_le 𝕜 f)⟩⟩
+    (mapsTo_preimage f U).egauge_le 𝕜 f⟩⟩
 
 lemma _root_.ContinuousLinearMap.isBigOTVS_comp (g : E →L[𝕜] F) : (g ∘ f) =O[𝕜; l] f :=
   g.isBigOTVS_id.comp_tendsto tendsto_top
@@ -425,7 +424,6 @@ lemma _root_.ContinuousLinearMap.isBigOTVS_comp (g : E →L[𝕜] F) : (g ∘ f)
 lemma _root_.ContinuousLinearMap.isBigOTVS_fun_comp (g : E →L[𝕜] F) : (g <| f ·) =O[𝕜; l] f :=
   g.isBigOTVS_comp
 
-set_option backward.instanceTypes.subsingletons.prop false in
 lemma _root_.LinearMap.isBigOTVS_rev_comp (g : E →ₗ[𝕜] F) (hg : comap g (𝓝 0) ≤ 𝓝 0) :
     f =O[𝕜; l] (g ∘ f) := by
   constructor

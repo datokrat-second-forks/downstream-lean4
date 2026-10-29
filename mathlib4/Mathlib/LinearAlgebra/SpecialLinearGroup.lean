@@ -235,8 +235,7 @@ theorem _root_.SpecialLinearGroup.toLinearEquiv_eq_coe (g : SpecialLinearGroup R
 
 instance : SMulCommClass (SpecialLinearGroup R V) R V where
   smul_comm g a v := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [SpecialLinearGroup.smul_def])
+    simp [SpecialLinearGroup.smul_def]
 
 section baseChange
 
@@ -375,9 +374,8 @@ theorem mem_center_iff {g : SpecialLinearGroup R V} :
     simp only [← Matrix.ext_iff, Matrix.of_apply]
     apply forall₂_congr
     intro i j
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp [Matrix.diagonal, LinearMap.toMatrix_apply,
-      Finsupp.single, Pi.single_apply, Iff.symm eq_comm])
+      Finsupp.single, Pi.single_apply, Iff.symm eq_comm]
   ext
   simp [Matrix.SpecialLinearGroup.toLin_equiv.symm_toLinearMap_eq, LinearMap.toMatrix_apply]
 

@@ -136,10 +136,9 @@ theorem IsAffineOpen.primeIdealOf_genericPoint {X : Scheme} [IsIntegral X] {U : 
           ((genericPoint_spec X).mem_open_set_iff U.isOpen).mpr (by simpa using h)⟩ =
       genericPoint (Spec Γ(X, U)) := by
   delta IsAffineOpen.primeIdealOf
-  (set_option backward.instanceTypes.subsingletons.prop false in
   convert!
     genericPoint_eq_of_isOpenImmersion
-      (U.toScheme.isoSpec.hom ≫ Spec.map (X.presheaf.map (eqToHom U.isOpenEmbedding_obj_top).op)))
+      (U.toScheme.isoSpec.hom ≫ Spec.map (X.presheaf.map (eqToHom U.isOpenEmbedding_obj_top).op))
         -- Porting note: this was `ext1`
 
   -- Porting note: this was `ext1`

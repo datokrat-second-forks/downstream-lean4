@@ -251,9 +251,7 @@ theorem one_tmul_ground_apply' {S : Type u} [CommSemiring S] [Algebra R S] (x : 
 def lground : (M →ₚₗ[R] N) →ₗ[R] (M → N) where
   toFun := ground
   map_add' x y := by ext m; simp [ground]
-  map_smul' r x := by
-    ext m
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [ground])
+  map_smul' r x := by ext m; simp [ground]
 
 theorem ground_id : (id : M →ₚₗ[R] M).ground = _root_.id := by
   ext; simp [ground_apply, id_apply']
@@ -569,8 +567,7 @@ theorem toFun_neg {R : Type u} [CommRing R]
     (-f).toFun S = (-1 : R) • (f.toFun S) := by
   ext t
   obtain ⟨⟨s, p⟩, ha⟩ := π_surjective t
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [toFun_eq_rTensor_φ_toFun' _ ha, neg_def, Pi.smul_apply, map_smul])
+  simp only [toFun_eq_rTensor_φ_toFun' _ ha, neg_def, Pi.smul_apply, map_smul]
 
 variable (S) in
 /-- Extension of `PolynomialLaw.smul_def` -/
@@ -578,8 +575,7 @@ variable (S) in
 theorem toFun_smul : (r • f).toFun S = r • (f.toFun S) := by
   ext t
   obtain ⟨⟨s, p⟩, ha⟩ := π_surjective t
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [toFun_eq_rTensor_φ_toFun' _ ha, smul_def, Pi.smul_apply, map_smul])
+  simp only [toFun_eq_rTensor_φ_toFun' _ ha, smul_def, Pi.smul_apply, map_smul]
 
 end Module
 

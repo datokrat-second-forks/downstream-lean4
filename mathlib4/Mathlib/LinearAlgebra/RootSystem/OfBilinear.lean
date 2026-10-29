@@ -53,7 +53,6 @@ lemma of_dvd_two [IsCancelMulZero R] [NeZero (2 : R)] (hx : B x x ∣ 2) :
 
 variable (hx : IsReflective B x)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The coroot attached to a reflective vector. -/
 def coroot : M →ₗ[R] R where
   toFun y := (hx.2 y).choose
@@ -84,9 +83,8 @@ lemma coroot_apply_self : coroot B hx x = 2 :=
 lemma isOrthogonal_reflection (hSB : LinearMap.IsSymm B) :
     B.IsOrthogonal (Module.reflection (coroot_apply_self B hx)) := by
   intro y z
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [reflection_apply, map_sub, map_smul, sub_apply,
-    smul_apply, smul_eq_mul])
+    smul_apply, smul_eq_mul]
   refine hx.1.1 ?_
   simp only [mul_sub, ← mul_assoc, apply_self_mul_coroot_apply]
   rw [sub_eq_iff_eq_add, ← hSB.eq x y, RingHom.id_apply, mul_assoc _ _ (B x x), mul_comm _ (B x x),
@@ -175,8 +173,7 @@ def ofBilinear [IsReflexive R M] (B : M →ₗ[R] M →ₗ[R] R) (hNB : LinearMa
       ← hSB.eq z, RingHom.id_apply, RingHom.id_apply, Module.reflection_apply, map_sub,
       mul_sub, sub_eq_sub_iff_comm, sub_left_inj]
     refine x.2.1.1 ?_
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [mem_ofPred_eq, map_smul, smul_eq_mul])
+    simp only [mem_ofPred_eq, map_smul, smul_eq_mul]
     rw [← mul_assoc _ _ (B z x), ← mul_assoc _ _ (B z x), mul_left_comm,
       apply_self_mul_coroot_apply B x.2, mul_left_comm (B x x), apply_self_mul_coroot_apply B x.2,
       ← hSB.eq x y, RingHom.id_apply, ← hSB.eq x z, RingHom.id_apply]

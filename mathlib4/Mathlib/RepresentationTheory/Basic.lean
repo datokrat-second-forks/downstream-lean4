@@ -235,8 +235,7 @@ theorem ofModule_asAlgebraHom_apply_apply (r : k[G])
   · intro f g fw gw
     simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
   · intro r f w
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul])
+    simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul]
 
 @[simp]
 theorem ofModule_asModule_act (g : G) (x : RestrictScalars k k[G] ρ.asModule) :
@@ -494,7 +493,7 @@ lemma asAlgebraHom_ofMulAction_smul_eq_mul (x y : k[G]) :
   induction x using induction_on with
   | of g => ext; simp [MonoidAlgebra.coeff_single_mul_apply]
   | add x y hx hy => simp [hx, hy, add_mul]
-  | smul r x hx => (set_option backward.instanceTypes.subsingletons.prop false in simp [← hx])
+  | smul r x hx => simp [← hx]
 
 @[deprecated (since := "2026-06-18")]
 alias ofMulAction_self_smul_eq_mul := asAlgebraHom_ofMulAction_smul_eq_mul

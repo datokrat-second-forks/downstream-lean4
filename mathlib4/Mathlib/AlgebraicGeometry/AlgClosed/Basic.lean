@@ -79,12 +79,12 @@ def pointEquivClosedPoint :
     rw [Scheme.SpecToEquivOfField_eq_iff]
     dsimp [Scheme.SpecToEquivOfField]
     simp only [Category.id_comp, exists_const]
-    (set_option backward.instanceTypes.subsingletons.prop false in generalize_proofs _ h)
+    generalize_proofs _ h
     refine (Category.comp_id _).symm.trans (((residueFieldIsoBase f _ h).eq_inv_comp).mp ?_)
     rw [← Spec.map_injective.eq_iff]
     simp only [Spec.map_id, Spec.map_comp, SpecMap_residueFieldIsoBase_inv]
     rw [reassoc_of% Scheme.descResidueField_stalkClosedPointTo_fromSpecResidueField, p.2]
-  right_inv x := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  right_inv x := by simp
 
 lemma ext_of_apply_closedPoint_eq
     {f g : Spec ↧K ⟶ X} (h : X ⟶ Spec ↧K)

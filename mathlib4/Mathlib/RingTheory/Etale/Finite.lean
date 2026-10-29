@@ -180,7 +180,7 @@ noncomputable def FiniteEtale.equivOfIsSepClosed (Ω : Type u) [Field Ω] [IsSep
       ext x i
       dsimp
       rw [FintypeCat.equivEquivIso_apply_hom, FintypeCat.homMk_apply]
-      (set_option backward.instanceTypes.subsingletons.prop false in dsimp)
+      dsimp
       rw [← Pi.coe_evalAlgHom Ω]
       simp [Algebra.FormallyEtale.equivPiOfIsSepClosed_comap,
         Algebra.FormallyEtale.equivPiOfIsSepClosed_self_apply] }

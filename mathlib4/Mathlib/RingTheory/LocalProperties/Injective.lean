@@ -51,9 +51,7 @@ theorem Module.injective_of_isLocalizedModule [Small.{v} R] [IsNoetherianRing R]
   refine ⟨IsLocalization.mk' Rₛ 1 a • mapExtendScalars S (Algebra.linearMap _ _) f _ g', ?_⟩
   apply ((Module.End.isUnit_iff _).mp ((IsLocalization.map_units Rₛ a).map
     (algebraMap _ (Module.End Rₛ _)))).1
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_rw [algebraMap_end_apply, map_smul, ← mul_smul, algebraMap_smul, IsLocalization.mk'_spec',
-    e])
+  simp_rw [algebraMap_end_apply, map_smul, ← mul_smul, algebraMap_smul, IsLocalization.mk'_spec', e]
   apply LinearMap.restrictScalars_injective R
   refine IsLocalizedModule.linearMap_ext S (I.toLocalized' Rₛ S (Algebra.linearMap R Rₛ)) f ?_
   ext
@@ -113,7 +111,6 @@ variable
   (f : ∀ (P : Ideal R) [P.IsMaximal], M →ₗ[R] Mₚ P)
   [inst : ∀ (P : Ideal R) [P.IsMaximal], IsLocalizedModule P.primeCompl (f P)]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local instance] RingHomInvPair.of_ringEquiv in
 include f in

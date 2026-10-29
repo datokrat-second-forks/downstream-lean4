@@ -126,14 +126,11 @@ def d₂₃ : twoCochain R L M →ₗ[R] L →ₗ[R] L →ₗ[R] L →ₗ[R] M w
       toFun y := {
         toFun z := ⁅x, a y z⁆ - ⁅y, a x z⁆ + ⁅z, a x y⁆ - a ⁅x, y⁆ z + a ⁅x, z⁆ y - a ⁅y, z⁆ x
         map_add' _ _ := by simp; abel
-        map_smul' _ _ := by
-          (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_sub]) }
+        map_smul' _ _ := by simp [smul_sub] }
       map_add' _ _ := by ext; simp; abel
-      map_smul' _ _ := by
-        ext; (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_sub]) }
+      map_smul' _ _ := by ext; simp [smul_sub] }
     map_add' _ _ := by ext; simp; abel
-    map_smul' _ _ := by
-      ext; (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_sub]) }
+    map_smul' _ _ := by ext; simp [smul_sub] }
   map_add' _ _ := by ext; simp; abel
   map_smul' _ _ := by ext; simp [smul_sub]
 

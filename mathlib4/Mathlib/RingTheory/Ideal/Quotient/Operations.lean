@@ -477,7 +477,6 @@ section
 
 variable [Semiring B] [Algebra R₁ B]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `Ideal.quotient.lift` as an `AlgHom`. -/
 def Quotient.liftₐ (I : Ideal A) [I.IsTwoSided] (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈ I → f a = 0) :
@@ -516,8 +515,7 @@ lemma Quotient.smul_top {R : Type*} [CommRing R] (a : R) (I : Ideal R) :
 theorem KerLift.map_smul (f : A →ₐ[R₁] B) (r : R₁) (x : A ⧸ (RingHom.ker f)) :
     f.kerLift (r • x) = r • f.kerLift x := by
   obtain ⟨a, rfl⟩ := Quotient.mkₐ_surjective R₁ _ x
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  exact _root_.map_smul f _ _)
+  exact _root_.map_smul f _ _
 
 /-- The induced algebras morphism from the quotient by the kernel to the codomain.
 

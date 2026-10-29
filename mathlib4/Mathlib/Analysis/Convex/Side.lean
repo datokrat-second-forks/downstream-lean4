@@ -928,9 +928,8 @@ lemma sSameSide_affineSpan_faceOpposite_of_sign_eq {w₁ w₂ : Fin (n + 1) → 
   have hw₃i : w₃ i = 0 := by simp [w₃, hj.symm, h0]
   refine ⟨Finset.univ.affineCombination R s.points w₃,
     (s.affineCombination_mem_affineSpan_faceOpposite_iff hw₃1).2 hw₃i, ?_⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [w₃, Finset.affineCombination_vsub, sub_sub_cancel, smul_smul, map_smul,
-    sameRay_smul_right_iff])
+    sameRay_smul_right_iff]
   left
   rcases h0.lt_or_gt with h | h
   · rw [sign_neg h, eq_comm, sign_eq_neg_one_iff] at hs

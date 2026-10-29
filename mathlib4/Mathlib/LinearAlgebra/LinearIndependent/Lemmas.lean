@@ -497,8 +497,7 @@ lemma LinearMap.injective_of_linearIndependent {N : Type*} [AddCommGroup N] [Mod
   refine (injective_iff_map_eq_zero _).mpr fun x hx ↦ ?_
   have : x ∈ Submodule.span R (.range v) := by rw [hv]; exact mem_top
   obtain ⟨c, rfl⟩ := Finsupp.mem_span_range_iff_exists_finsupp.mp this
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [map_finsuppSum, map_smul] at hx)
+  simp only [map_finsuppSum, map_smul] at hx
   obtain rfl := linearIndependent_iff.mp hli c hx
   simp
 
@@ -927,14 +926,12 @@ lemma LinearMap.BilinForm.exists_pos_and_pos_apply_sum_smul {R M ι : Type*} [Fi
   have : 0 < B x X := by
     rw [hx, map_add, LinearMap.add_apply]
     refine add_pos_of_pos_of_nonneg (hB X hX) ?_
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [X, map_sum, map_smul, LinearMap.sum_apply, smul_eq_mul, Finset.mul_sum])
+    simp only [X, map_sum, map_smul, LinearMap.sum_apply, smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_nonneg fun k _ ↦ Finset.sum_nonneg fun l _ ↦ ?_
     rcases eq_or_ne l k with rfl | hkl
     · simp [← mul_assoc]
     · specialize hv' hkl
       exact mul_nonneg (le_max_right _ _) <| mul_nonneg_of_nonpos_of_nonpos (min_le_right _ _) hv'
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [X, map_sum, map_smul] at this)
+  simp only [X, map_sum, map_smul] at this
   obtain ⟨k, -, hk⟩ := Finset.exists_lt_of_sum_lt <| Finset.sum_const_zero.trans_lt this
   exact ⟨k, by simpa using pos_and_pos_or_neg_and_neg_of_mul_pos hk⟩

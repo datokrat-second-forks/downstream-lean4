@@ -49,7 +49,6 @@ instance : (chainComplexFunctor C).Additive := by
   dsimp [chainComplexFunctor, SimplicialObject.whiskering]
   infer_instance
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp] SSet.chainComplexFunctor in
 attribute [local simp←] _root_.SSet.yonedaEquiv_symm_comp in

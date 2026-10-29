@@ -41,7 +41,7 @@ noncomputable instance : StarAddMonoid (A ⊗[R] B) where
   star_add := map_add _
 
 instance : StarModule R (A ⊗[R] B) where
-  star_smul := (set_option backward.instanceTypes.subsingletons.prop false in map_smulₛₗ _)
+  star_smul := map_smulₛₗ _
 
 theorem _root_.starLinearEquiv_tensor :
     starLinearEquiv R (A := A ⊗[R] B) = congr (starLinearEquiv R) (starLinearEquiv R) := rfl

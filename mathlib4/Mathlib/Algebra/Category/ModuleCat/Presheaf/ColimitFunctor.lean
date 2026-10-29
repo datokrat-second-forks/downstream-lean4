@@ -252,7 +252,7 @@ noncomputable def homEquiv {N : ModuleCat.{w} cR.pt} :
         refine (map_smul_homEquiv'_iff hcR hcM φ).1 (fun U r m ↦ ?_)
         rw [hφ]
         erw [toPresheaf_map_app_apply]
-        (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
+        rw [map_smul]
         rfl }
   left_inv φ := (forget₂ _ AddCommGrpCat).map_injective (by
     ext : 1

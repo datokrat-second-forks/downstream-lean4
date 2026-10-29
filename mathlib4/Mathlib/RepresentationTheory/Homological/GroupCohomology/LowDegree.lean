@@ -98,9 +98,7 @@ def d₀₁ : ModuleCat.of k A.V ⟶ ModuleCat.of k (G → A) :=
   ModuleCat.ofHom
   { toFun m g := A.ρ g m - m
     map_add' x y := funext fun g => by simp only [map_add, add_sub_add_comm]; rfl
-    map_smul' r x := funext fun g => by
-      dsimp
-      (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, smul_sub]) }
+    map_smul' r x := funext fun g => by dsimp; rw [map_smul, smul_sub] }
 
 theorem d₀₁_ker_eq_invariants : LinearMap.ker (d₀₁ A).hom = invariants A.ρ := by
   ext x
@@ -127,10 +125,7 @@ def d₁₂ : ModuleCat.of k (G → A) ⟶ ModuleCat.of k (G × G → A) :=
   ModuleCat.ofHom
   { toFun f g := A.ρ g.1 (f g.2) - f (g.1 * g.2) + f g.1
     map_add' x y := funext fun g => by dsimp; rw [map_add, add_add_add_comm, add_sub_add_comm]
-    map_smul' r x := funext fun g => by
-      dsimp
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      rw [map_smul, smul_add, smul_sub]) }
+    map_smul' r x := funext fun g => by dsimp; rw [map_smul, smul_add, smul_sub] }
 
 /-- The 2nd differential in the complex of inhomogeneous cochains of `A : Rep k G`, as a
 `k`-linear map `Fun(G × G, A) → Fun(G × G × G, A)`. It sends
@@ -145,10 +140,7 @@ def d₂₃ : ModuleCat.of k (G × G → A) ⟶ ModuleCat.of k (G × G × G → 
         dsimp
         rw [map_add, add_sub_add_comm (A.ρ _ _), add_sub_assoc, add_sub_add_comm, add_add_add_comm,
           add_sub_assoc, add_sub_assoc]
-    map_smul' r x := funext fun g => by
-      dsimp
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp only [map_smul, smul_add, smul_sub]) }
+    map_smul' r x := funext fun g => by dsimp; simp only [map_smul, smul_add, smul_sub] }
 
 /-- Let `C(G, A)` denote the complex of inhomogeneous cochains of `A : Rep k G`. This lemma
 says `d₀₁` gives a simpler expression for the 0th differential: that is, the following

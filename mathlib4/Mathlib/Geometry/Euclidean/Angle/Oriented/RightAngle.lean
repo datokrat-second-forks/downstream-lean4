@@ -473,8 +473,7 @@ theorem oangle_add_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ)
   by_cases hr : r = 0; · simp [hr]
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, ←
     neg_neg ((π / 2 : ℝ) : Real.Angle), ← rotation_neg_orientation_eq_neg, add_comm]
-  have hx : x = r⁻¹ • (-o).rotation (π / 2 : ℝ) (r • (-o).rotation (-(π / 2 : ℝ)) x) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [hr])
+  have hx : x = r⁻¹ • (-o).rotation (π / 2 : ℝ) (r • (-o).rotation (-(π / 2 : ℝ)) x) := by simp [hr]
   nth_rw 3 [hx]
   refine (-o).oangle_add_right_smul_rotation_pi_div_two ?_ _
   simp [hr, h]
@@ -499,7 +498,7 @@ theorem oangle_sub_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ
       = Real.arctan r⁻¹ := by
   by_cases hr : r = 0; · simp [hr]
   have hx : -x = r⁻¹ • o.rotation (π / 2 : ℝ) (r • o.rotation (π / 2 : ℝ) x) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [hr, ← Real.Angle.coe_add])
+    simp [hr, ← Real.Angle.coe_add]
   rw [sub_eq_add_neg, hx, o.oangle_add_right_smul_rotation_pi_div_two]
   simpa [hr] using h
 
@@ -509,7 +508,7 @@ theorem oangle_sub_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ)
     o.oangle (x - r • o.rotation (π / 2 : ℝ) x) x = Real.arctan r := by
   by_cases hr : r = 0; · simp [hr]
   have hx : x = r⁻¹ • o.rotation (π / 2 : ℝ) (-(r • o.rotation (π / 2 : ℝ) x)) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [hr, ← Real.Angle.coe_add])
+    simp [hr, ← Real.Angle.coe_add]
   rw [sub_eq_add_neg, add_comm]
   nth_rw 3 [hx]
   nth_rw 2 [hx]

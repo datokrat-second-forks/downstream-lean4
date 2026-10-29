@@ -116,7 +116,7 @@ lemma lanPresheafExt_hom {F G : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)} (S : Profi
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_hom, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
+  aesop
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -126,7 +126,7 @@ lemma lanPresheafExt_inv {F G : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)} (S : Profi
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_inv, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
+  aesop
 
 variable {S : Profinite.{u}} {F : Profinite.{u}ᵒᵖ ⥤ Type (u + 1)}
 
@@ -140,10 +140,8 @@ colimit, agrees with the left Kan extension of its restriction.
 -/
 def lanPresheafIso (hF : IsColimit <| F.mapCocone S.asLimitCone.op) :
     (lanPresheaf F).obj ⟨S⟩ ≅ F.obj ⟨S⟩ :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  (Functor.Final.colimitIso (Profinite.Extend.functorOp S.asLimitCone) _).symm) ≪≫
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    (colimit.isColimit _).coconePointUniqueUpToIso hF)
+  (Functor.Final.colimitIso (Profinite.Extend.functorOp S.asLimitCone) _).symm ≪≫
+    (colimit.isColimit _).coconePointUniqueUpToIso hF
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -254,7 +252,6 @@ lemma isoFinYonedaComponents_inv_comp {X Y : Profinite.{u}} [Finite X] [Finite Y
 
 attribute [local simp] toProfinite_obj
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /--
@@ -417,7 +414,7 @@ lemma lanPresheafExt_hom {F G : LightProfinite.{u}ᵒᵖ ⥤ Type u} (S : LightP
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_hom, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
+  aesop
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -427,7 +424,7 @@ lemma lanPresheafExt_inv {F G : LightProfinite.{u}ᵒᵖ ⥤ Type u} (S : LightP
   simp only [lanPresheaf, lanPresheafExt,
     leftKanExtensionUniqueOfIso_inv, pointwiseLeftKanExtension_desc_app]
   apply colimit.hom_ext
-  (set_option backward.instanceTypes.subsingletons.prop false in aesop)
+  aesop
 
 variable {S : LightProfinite.{u}} {F : LightProfinite.{u}ᵒᵖ ⥤ Type u}
 
@@ -441,10 +438,8 @@ colimit, agrees with the left Kan extension of its restriction.
 -/
 def lanPresheafIso (hF : IsColimit <| F.mapCocone (coconeRightOpOfCone S.asLimitCone)) :
     (lanPresheaf F).obj ⟨S⟩ ≅ F.obj ⟨S⟩ :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  (Functor.Final.colimitIso (LightProfinite.Extend.functorOp S.asLimitCone) _).symm) ≪≫
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    (colimit.isColimit _).coconePointUniqueUpToIso hF)
+  (Functor.Final.colimitIso (LightProfinite.Extend.functorOp S.asLimitCone) _).symm ≪≫
+    (colimit.isColimit _).coconePointUniqueUpToIso hF
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -550,7 +545,6 @@ lemma isoFinYonedaComponents_inv_comp {X Y : LightProfinite.{u}} [Finite X] [Fin
 
 attribute [local simp] toLightProfinite_obj
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /--

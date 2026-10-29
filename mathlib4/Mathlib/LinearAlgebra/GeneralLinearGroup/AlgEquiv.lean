@@ -51,8 +51,7 @@ public theorem AlgEquiv.eq_linearEquivConjAlgEquiv (f : End K V ≃ₐ[K] End K 
     have h_smul : smulRightₗ v x = smulRightₗ v y := by
       apply f.injective <| LinearMap.ext fun z ↦ ?_
       obtain ⟨w, rfl⟩ := surj z
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp_rw [← this, smulRightₗ_apply_apply, _root_.map_smul, hxy])
+      simp_rw [← this, smulRightₗ_apply_apply, _root_.map_smul, hxy]
     simpa [huv.isUnit.smul_left_cancel] using congr($h_smul u)
   exact ⟨.ofBijective T ⟨inj, surj⟩, fun A ↦ (LinearMap.ext <| this A).symm⟩
 

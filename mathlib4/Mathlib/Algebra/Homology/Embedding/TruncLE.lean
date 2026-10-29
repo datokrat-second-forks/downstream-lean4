@@ -100,7 +100,6 @@ variable {K L M}
 noncomputable def truncLE'Map : K.truncLE' e ⟶ L.truncLE' e :=
   (unopFunctor C c.symm).map (truncGE'Map ((opFunctor C c').map φ.op) e.op).op
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma truncLE'Map_f_eq_cyclesMap {i : ι} (hi : e.BoundaryLE i) {i' : ι'} (h : e.f i = i') :

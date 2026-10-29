@@ -376,9 +376,7 @@ def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C w
   map_zero' := by simp only [Function.prod_apply, Prod.mk_zero_zero, map_zero]
   map_add' x y := by simp only [Function.prod_apply, Prod.mk_add_mk, map_add]
   map_mul' x y := by simp only [Function.prod_apply, Prod.mk_mul_mk, map_mul]
-  map_smul' c x := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [Function.prod_apply, map_smul, MonoidHom.id_apply, Prod.smul_mk])
+  map_smul' c x := by simp only [Function.prod_apply, map_smul, MonoidHom.id_apply, Prod.smul_mk]
 
 theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.prod g) = Function.prod f g :=
   rfl
@@ -442,13 +440,12 @@ variable {A B : Type*} [Semiring A] [Semiring B] [Algebra R A]
 
 -- see Note [lower instance priority]
 instance (priority := 100) [FunLike F A B] [AlgHomClass F R A B] : NonUnitalAlgHomClass F R A B :=
-  { ‹AlgHomClass F R A B› with
-    map_smulₛₗ := (set_option backward.instanceTypes.subsingletons.prop false in map_smul) }
+  { ‹AlgHomClass F R A B› with map_smulₛₗ := map_smul }
 
 /-- A unital morphism of algebras is a `NonUnitalAlgHom`. -/
 @[coe]
 def toNonUnitalAlgHom (f : A →ₐ[R] B) : A →ₙₐ[R] B :=
-  { f with map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f) }
+  { f with map_smul' := map_smul f }
 
 instance NonUnitalAlgHom.hasCoe : CoeOut (A →ₐ[R] B) (A →ₙₐ[R] B) :=
   ⟨toNonUnitalAlgHom⟩
@@ -472,9 +469,7 @@ variable (R : Type*) {S A B : Type*} [Monoid R] [Monoid S]
 over `S` can be viewed as a non-unital algebra homomorphism over `R`. -/
 def restrictScalars (f : A →ₙₐ[S] B) : A →ₙₐ[R] B :=
   { (f : A →ₙ+* B) with
-    map_smul' := fun r x ↦ by
-      have := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f (r • 1) x)
-      simpa }
+    map_smul' := fun r x ↦ by have := map_smul f (r • 1) x; simpa }
 
 @[simp]
 lemma restrictScalars_apply (f : A →ₙₐ[S] B) (x : A) : f.restrictScalars R x = f x := rfl

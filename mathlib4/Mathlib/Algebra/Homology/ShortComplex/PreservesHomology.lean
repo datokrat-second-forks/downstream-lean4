@@ -532,9 +532,8 @@ lemma mapCyclesIso_hom_naturality [S₁.HasLeftHomology] [S₂.HasLeftHomology]
     cyclesMap (F.mapShortComplex.map φ) ≫ (S₂.mapCyclesIso F).hom =
       (S₁.mapCyclesIso F).hom ≫ F.map (cyclesMap φ) := by
   dsimp only [cyclesMap, mapCyclesIso, LeftHomologyData.cyclesIso, cyclesMapIso', Iso.refl]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [LeftHomologyData.map_cyclesMap', Functor.mapShortComplex_obj, ← cyclesMap'_comp,
-    comp_id, id_comp])
+    comp_id, id_comp]
 
 @[reassoc]
 lemma mapCyclesIso_inv_naturality [S₁.HasLeftHomology] [S₂.HasLeftHomology]
@@ -553,9 +552,8 @@ lemma mapLeftHomologyIso_hom_naturality [S₁.HasLeftHomology] [S₂.HasLeftHomo
       (S₁.mapLeftHomologyIso F).hom ≫ F.map (leftHomologyMap φ) := by
   dsimp only [leftHomologyMap, mapLeftHomologyIso, LeftHomologyData.leftHomologyIso,
     leftHomologyMapIso', Iso.refl]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [LeftHomologyData.map_leftHomologyMap', Functor.mapShortComplex_obj,
-    ← leftHomologyMap'_comp, comp_id, id_comp])
+    ← leftHomologyMap'_comp, comp_id, id_comp]
 
 @[reassoc]
 lemma mapLeftHomologyIso_inv_naturality [S₁.HasLeftHomology] [S₂.HasLeftHomology]
@@ -574,9 +572,8 @@ lemma mapOpcyclesIso_hom_naturality [S₁.HasRightHomology] [S₂.HasRightHomolo
       (S₁.mapOpcyclesIso F).hom ≫ F.map (opcyclesMap φ) := by
   dsimp only [opcyclesMap, mapOpcyclesIso, RightHomologyData.opcyclesIso,
     opcyclesMapIso', Iso.refl]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [RightHomologyData.map_opcyclesMap', Functor.mapShortComplex_obj, ← opcyclesMap'_comp,
-    comp_id, id_comp])
+    comp_id, id_comp]
 
 @[reassoc]
 lemma mapOpcyclesIso_inv_naturality [S₁.HasRightHomology] [S₂.HasRightHomology]
@@ -595,9 +592,8 @@ lemma mapRightHomologyIso_hom_naturality [S₁.HasRightHomology] [S₂.HasRightH
       (S₁.mapRightHomologyIso F).hom ≫ F.map (rightHomologyMap φ) := by
   dsimp only [rightHomologyMap, mapRightHomologyIso, RightHomologyData.rightHomologyIso,
     rightHomologyMapIso', Iso.refl]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [RightHomologyData.map_rightHomologyMap', Functor.mapShortComplex_obj,
-    ← rightHomologyMap'_comp, comp_id, id_comp])
+    ← rightHomologyMap'_comp, comp_id, id_comp]
 
 @[reassoc]
 lemma mapRightHomologyIso_inv_naturality [S₁.HasRightHomology] [S₂.HasRightHomology]

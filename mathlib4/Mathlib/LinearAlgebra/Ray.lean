@@ -181,8 +181,7 @@ theorem _root_.Function.Injective.sameRay_map_iff
     {F : Type*} [FunLike F M N] [LinearMapClass F R M N]
     {f : F} (hf : Function.Injective f) :
     SameRay R (f x) (f y) ↔ SameRay R x y := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [SameRay, map_zero, ← hf.eq_iff, map_smul])
+  simp only [SameRay, map_zero, ← hf.eq_iff, map_smul]
 
 /-- The images of two vectors under a linear equivalence are on the same ray if and only if the
 original vectors are on the same ray. -/

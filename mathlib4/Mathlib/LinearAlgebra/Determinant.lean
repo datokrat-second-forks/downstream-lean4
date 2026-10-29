@@ -253,8 +253,7 @@ theorem det_smul [Module.Free A M] (c : A) (f : M →ₗ[A] M) :
   · have : Module.Finite A M := by
       rcases H with ⟨s, ⟨hs⟩⟩
       exact Module.Finite.of_basis hs
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [← det_toMatrix (Module.finBasis A M), map_smul, Fintype.card_fin, Matrix.det_smul])
+    simp only [← det_toMatrix (Module.finBasis A M), map_smul, Fintype.card_fin, Matrix.det_smul]
   · classical
       have : Module.finrank A M = 0 := finrank_eq_zero_of_not_exists_basis H
       simp [coe_det, H, this]
@@ -346,8 +345,7 @@ theorem bot_lt_ker_of_det_eq_zero [IsDomain R] [Free R M] {f : M →ₗ[R] M} (h
   obtain ⟨v, hv_ne_zero, hv_zero⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr (det_toMatrix b f ▸ hf)
   refine ⟨b.equivFun.symm v, ?_, b.equivFun.symm.map_ne_zero_iff.mpr hv_ne_zero⟩
   rw [← b.equivFun.injective.eq_iff]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_all [funext_iff, Matrix.mulVec, dotProduct, toMatrix_apply, mul_comm])
+  simp_all [funext_iff, Matrix.mulVec, dotProduct, toMatrix_apply, mul_comm]
 
 /-- The determinant of a map vanishes iff the map is not injective. -/
 theorem det_eq_zero_iff_ker_ne_bot [IsDomain R] [Free R M] [Module.Finite R M] {f : M →ₗ[R] M} :
@@ -596,8 +594,7 @@ nonrec def det : M [⋀^ι]→ₗ[R] R where
       (fun v i x y ↦ by
         simp only [e.toMatrix_update, map_add, Finsupp.coe_add, det_updateCol_add])
       (fun u i c x ↦ by
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        simp only [e.toMatrix_update, smul_eq_mul, map_smul])
+        simp only [e.toMatrix_update, smul_eq_mul, map_smul]
         apply det_updateCol_smul)
   map_eq_zero_of_eq' := by
     intro v i j h hij

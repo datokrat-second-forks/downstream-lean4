@@ -359,7 +359,6 @@ def shiftFunctor₁₂CommIso (x y : ℤ) :
     shiftFunctor₂ C y ⋙ shiftFunctor₁ C x ≅ shiftFunctor₁ C x ⋙ shiftFunctor₂ C y :=
   Iso.refl _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The compatibility isomorphisms of the total complex with the shifts
 in both variables "commute" only up to a sign `(x * y).negOnePow`. -/

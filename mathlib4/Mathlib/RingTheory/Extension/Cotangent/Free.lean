@@ -87,9 +87,8 @@ lemma disjoint_ker_toKaehler_of_linearIndependent
   intro x ⟨hx, hxs⟩
   rw [SetLike.mem_coe, Finsupp.mem_span_range_iff_exists_finsupp] at hxs
   obtain ⟨c, rfl⟩ := hxs
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [SetLike.mem_coe, LinearMap.mem_ker, map_finsuppSum, map_smul,
-    toKaehler_cotangentSpaceBasis] at hx)
+    toKaehler_cotangentSpaceBasis] at hx
   obtain rfl := (linearIndependent_iff.mp h) c hx
   simp
 

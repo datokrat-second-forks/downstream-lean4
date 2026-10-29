@@ -51,7 +51,7 @@ lemma evaluation_preservesLimit_of_hasKernel_app [∀ j, HasKernel (f.app j)] (j
   preservesLimit_of_preserves_limit_cone
     (combinedIsLimit (F := parallelPair f 0)
       (fun j ↦ getLimitCone ((parallelPair f 0).flip.obj j)))
-    (set_option backward.instanceTypes.subsingletons.prop false in limit.isLimit _)
+    (limit.isLimit _)
 
 lemma evaluation_preservesColimit_of_hasCokernel_app [∀ j, HasCokernel (f.app j)] (j : J) :
     PreservesColimit (parallelPair f 0) ((evaluation _ _).obj j) :=
@@ -61,6 +61,6 @@ lemma evaluation_preservesColimit_of_hasCokernel_app [∀ j, HasCokernel (f.app 
   preservesColimit_of_preserves_colimit_cocone
     (combinedIsColimit (F := parallelPair f 0)
       (fun j ↦ getColimitCocone ((parallelPair f 0).flip.obj j)))
-    (set_option backward.instanceTypes.subsingletons.prop false in colimit.isColimit _)
+    (colimit.isColimit _)
 
 end CategoryTheory.Limits

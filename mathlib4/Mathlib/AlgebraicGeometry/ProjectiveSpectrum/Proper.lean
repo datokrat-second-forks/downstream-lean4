@@ -85,9 +85,8 @@ instance isSeparated : IsSeparated (toSpecZero 𝒜) := by
     (affineOpenCover 𝒜).openCover (affineOpenCover 𝒜).openCover _ _) ?_⟩
   intro ⟨i, j⟩
   dsimp [Scheme, Cover.pullbackHom]
-  refine (set_option backward.instanceTypes.subsingletons.prop false in
-    (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
-    (f := (pullbackDiagonalMapIdIso ..).inv) _).mp ?_)
+  refine (MorphismProperty.cancel_left_of_respectsIso (P := @IsClosedImmersion)
+    (f := (pullbackDiagonalMapIdIso ..).inv) _).mp ?_
   let e₁ : pullback ((affineOpenCover 𝒜).f i ≫ toSpecZero 𝒜)
         ((affineOpenCover 𝒜).f j ≫ toSpecZero 𝒜) ≅
         Spec (.of <| TensorProduct (𝒜 0) (Away 𝒜 (i.2 : A)) (Away 𝒜 (j.2 : A))) := by
@@ -111,8 +110,7 @@ instance isSeparated : IsSeparated (toSpecZero 𝒜) := by
   · simp only [Iso.trans_hom, congrHom_hom, Category.assoc, Iso.hom_inv_id, Category.comp_id,
       limit.lift_π, PullbackCone.mk_π_app, e₂, e₁,
       pullbackSpecIso_inv_fst, ← Spec.map_comp]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    erw [pullbackDiagonalMapIdIso_inv_snd_fst])
+    erw [pullbackDiagonalMapIdIso_inv_snd_fst]
     erw [pullbackAwayιIso_inv_fst]
     congr 1
     ext x : 2
@@ -121,8 +119,7 @@ instance isSeparated : IsSeparated (toSpecZero 𝒜) := by
   · simp only [Iso.trans_hom, congrHom_hom, Category.assoc, Iso.hom_inv_id, Category.comp_id,
       limit.lift_π, PullbackCone.mk_π_app, pullbackSpecIso_inv_snd,
       ← Spec.map_comp, e₂, e₁]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    erw [pullbackDiagonalMapIdIso_inv_snd_snd])
+    erw [pullbackDiagonalMapIdIso_inv_snd_snd]
     erw [pullbackAwayιIso_inv_snd]
     congr 1
     ext x : 2

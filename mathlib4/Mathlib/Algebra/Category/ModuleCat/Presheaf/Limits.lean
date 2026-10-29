@@ -74,20 +74,18 @@ noncomputable def limitPresheafOfModules : PresheafOfModules R where
     dsimp
     rw [← cancel_mono (preservesLimitIso _ _).hom, assoc, Iso.inv_hom_id, comp_id]
     apply limit.hom_ext
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp [← Functor.assoc, ← ModuleCat.restrictScalarsId'App_inv_naturality,
-      ModuleCat.restrictScalarsId'_inv_app])
+      ModuleCat.restrictScalarsId'_inv_app]
   map_comp {X Y Z} f g := by
     dsimp
     rw [← cancel_mono (preservesLimitIso _ _).hom, assoc, assoc, assoc, assoc, Iso.inv_hom_id,
       comp_id]
     apply limit.hom_ext
     intro j
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [Functor.map_comp, assoc, ← Functor.assoc, preservesLimitIso_hom_π,
-      ← ModuleCat.restrictScalarsComp'App_inv_naturality])
+      ← ModuleCat.restrictScalarsComp'App_inv_naturality]
     rw [← Functor.map_comp_assoc, ← Functor.map_comp_assoc, assoc, preservesLimitIso_inv_π]
-    (set_option backward.instanceTypes.subsingletons.prop false in simp)
+    simp
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

@@ -183,7 +183,6 @@ instance (priority := 75) SubmoduleClass.toNormedSpace : NormedSpace 𝕜 s wher
 
 end SeminormedAddCommGroup
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- A linear map from a `Module` to a `NormedSpace` induces a `NormedSpace` structure on the
 domain, using the `SeminormedAddCommGroup.induced` norm.
 
@@ -405,9 +404,7 @@ abbrev NormedAlgebra.induced {F : Type*} (𝕜 R S : Type*) [NormedField 𝕜] [
     (f : F) :
     @NormedAlgebra 𝕜 R _ (SeminormedRing.induced R S f) :=
   letI := SeminormedRing.induced R S f
-  ⟨fun a b ↦ show ‖f (a • b)‖ ≤ ‖a‖ * ‖f b‖ from
-    (set_option backward.instanceTypes.subsingletons.prop false in map_smul f a b).symm ▸
-      norm_smul_le a (f b)⟩
+  ⟨fun a b ↦ show ‖f (a • b)‖ ≤ ‖a‖ * ‖f b‖ from (map_smul f a b).symm ▸ norm_smul_le a (f b)⟩
 
 instance Subalgebra.toNormedAlgebra {𝕜 A : Type*} [SeminormedRing A] [NormedField 𝕜]
     [NormedAlgebra 𝕜 A] (S : Subalgebra 𝕜 A) : NormedAlgebra 𝕜 S :=

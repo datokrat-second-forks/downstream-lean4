@@ -589,8 +589,7 @@ def _root_.RingEquiv.toSemilinearEquiv (f : R ≃+* S) :
 
 @[simp]
 lemma _root_.RingEquiv.symm_toSemilinearEquiv_symm_apply (f : R ≃+* S) (x : R) :
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  dsimp% f.symm.toSemilinearEquiv.symm x = f x) := rfl
+  dsimp% f.symm.toSemilinearEquiv.symm x = f x := rfl
 
 variable [AddCommMonoid M]
 

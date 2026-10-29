@@ -395,10 +395,9 @@ instance instFunLike : FunLike (OrthonormalBasis ι 𝕜 E) ι E where
         have : k = k • (1 : 𝕜) := by rw [smul_eq_mul, mul_one]
         rw [this, Pi.single_smul]
         replace h := congr($h i)
-        (set_option backward.instanceTypes.subsingletons.prop false in
         simp only [LinearEquiv.comp_coe, map_smul, LinearEquiv.coe_coe, LinearEquiv.trans_apply,
           coe_symm_linearEquiv, PiLp.toLp_single,
-          LinearIsometryEquiv.coe_symm_toLinearEquiv] at h ⊢)
+          LinearIsometryEquiv.coe_symm_toLinearEquiv] at h ⊢
         rw [h]
 
 @[simp]
@@ -490,8 +489,7 @@ protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E)
   have := congr(innerSL 𝕜 x $(b.sum_repr y))
   rw [map_sum] at this
   convert! this
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [map_smul, b.repr_apply_apply, mul_comm])
+  rw [map_smul, b.repr_apply_apply, mul_comm]
   simp
 
 lemma sum_sq_norm_inner_right (b : OrthonormalBasis ι 𝕜 E) (x : E) :
@@ -838,8 +836,7 @@ lemma equiv_self_rfl : b.equiv b (.refl ι) = .refl 𝕜 E := by
 
 lemma equiv_apply (x : E) : b.equiv b' e x = ∑ i, b.repr x i • b' (e i) := by
   nth_rw 1 [← b.sum_repr x, map_sum]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_rw [map_smul, equiv_apply_basis])
+  simp_rw [map_smul, equiv_apply_basis]
 
 lemma equiv_apply_euclideanSpace (x : EuclideanSpace 𝕜 ι) :
     (EuclideanSpace.basisFun ι 𝕜).equiv b (Equiv.refl ι) x = ∑ i, x i • b i := by

@@ -319,8 +319,7 @@ lemma linearIndependent_baseSupp [IsDomain R] [CharZero R] :
     rw [hu', hv']
   | smul t u hu hv' =>
     rw [← coe_cartan_eq_span, LieSubalgebra.mem_toSubmodule] at hu
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← SetLike.mk_smul_mk _ t u hu, map_smul, smul_assoc, hv', smul_lie])
+    rw [← SetLike.mk_smul_mk _ t u hu, map_smul, smul_assoc, hv', smul_lie]
 
 @[simp] lemma baseSupp_apply_smul_f (i : ι) (x : H) :
     b.baseSupp i x • b.f i = -⁅x, b.f i⁆ := by

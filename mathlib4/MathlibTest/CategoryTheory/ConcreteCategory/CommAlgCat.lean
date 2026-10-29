@@ -51,4 +51,4 @@ example {M N : CommAlgCat.{v} R} (f : M ⟶ N) : f 0 = 0 := by
   simp
 
 example {M N : CommAlgCat.{v} R} (f : M ⟶ N) (r : R) (m : M) : f (r • m) = r • f m := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  simp

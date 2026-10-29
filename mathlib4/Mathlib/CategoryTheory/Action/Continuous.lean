@@ -188,7 +188,6 @@ def mapContAction (F : V ⥤ W) (H : ∀ X : ContAction V G, ((F.mapAction G).ob
     ContAction V G ⥤ ContAction W G :=
   ObjectProperty.lift _ (ObjectProperty.ι _ ⋙ F.mapAction G) H
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Continuous version of `Functor.mapActionComp`. -/
@@ -216,7 +215,6 @@ def mapContActionCongr
 
 end Functor
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Continuous version of `Equivalence.mapAction`. -/

@@ -58,10 +58,9 @@ theorem inner_map_polarization (T : V →ₗ[ℂ] V) (x y : V) :
             Complex.I * ⟪T (x + Complex.I • y), x + Complex.I • y⟫_ℂ -
           Complex.I * ⟪T (x - Complex.I • y), x - Complex.I • y⟫_ℂ) /
         4 := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [map_add, map_sub, inner_add_left, inner_add_right, map_smul, inner_smul_left,
     inner_smul_right, Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right,
-    mul_add, ← mul_assoc, mul_neg, neg_neg, one_mul, neg_one_mul, mul_sub, sub_sub])
+    mul_add, ← mul_assoc, mul_neg, neg_neg, one_mul, neg_one_mul, mul_sub, sub_sub]
   ring
 
 theorem inner_map_polarization' (T : V →ₗ[ℂ] V) (x y : V) :
@@ -70,10 +69,9 @@ theorem inner_map_polarization' (T : V →ₗ[ℂ] V) (x y : V) :
             Complex.I * ⟪T (x + Complex.I • y), x + Complex.I • y⟫_ℂ +
           Complex.I * ⟪T (x - Complex.I • y), x - Complex.I • y⟫_ℂ) /
         4 := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [map_add, map_sub, inner_add_left, inner_add_right, map_smul, inner_smul_left,
     inner_smul_right, Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right,
-    mul_add, ← mul_assoc, mul_neg, neg_neg, one_mul, neg_one_mul, mul_sub, sub_sub])
+    mul_add, ← mul_assoc, mul_neg, neg_neg, one_mul, neg_one_mul, mul_sub, sub_sub]
   ring
 
 end Complex_Seminormed
@@ -112,8 +110,7 @@ variable {E' : Type*} [SeminormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
 /-- A linear isometry preserves the inner product. -/
 @[simp]
 theorem LinearIsometry.inner_map_map (f : E →ₗᵢ[𝕜] E') (x y : E) : ⟪f x, f y⟫ = ⟪x, y⟫ := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [inner_eq_sum_norm_sq_div_four, ← f.norm_map])
+  simp [inner_eq_sum_norm_sq_div_four, ← f.norm_map]
 
 /-- A linear isometric equivalence preserves the inner product. -/
 @[simp]
@@ -283,10 +280,9 @@ theorem ContinuousLinearMap.reApplyInnerSelf_continuous (T : E →L[𝕜] E) :
 
 theorem ContinuousLinearMap.reApplyInnerSelf_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
     T.reApplyInnerSelf (c • x) = ‖c‖ ^ 2 * T.reApplyInnerSelf x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [map_smul, ContinuousLinearMap.reApplyInnerSelf_apply, inner_smul_left,
     inner_smul_right, ← mul_assoc, mul_conj, ← ofReal_pow, ← smul_re,
-    Algebra.smul_def (‖c‖ ^ 2) ⟪T x, x⟫, algebraMap_eq_ofReal])
+    Algebra.smul_def (‖c‖ ^ 2) ⟪T x, x⟫, algebraMap_eq_ofReal]
 
 end ReApplyInnerSelf_Seminormed
 
@@ -363,9 +359,8 @@ lemma rankOne_ne_zero {x : E} {y : F} (hx : x ≠ 0) (hy : y ≠ 0) : rankOne �
 theorem isIdempotentElem_rankOne_self_iff {x : F} (hx : x ≠ 0) :
     IsIdempotentElem (rankOne 𝕜 x x) ↔ ‖x‖ = 1 := by
   refine ⟨?_, isIdempotentElem_rankOne_self⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [IsIdempotentElem, mul_def, comp_rankOne, rankOne_apply, inner_self_eq_norm_sq_to_K,
-    map_smul, _root_.smul_apply])
+    map_smul, _root_.smul_apply]
   nth_rw 2 [← one_smul 𝕜 (rankOne 𝕜 x x)]
   rw [← sub_eq_zero, ← sub_smul]
   simp only [smul_eq_zero, rankOne_eq_zero, hx, or_self, or_false, sub_eq_zero, sq_eq_one_iff,

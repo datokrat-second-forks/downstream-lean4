@@ -75,7 +75,8 @@ instance (s : Sphere P) (p : P) : (s.orthRadius p).direction.HasOrthogonalProjec
 set_option backward.isDefEq.respectTransparency false in
 @[simp] lemma orthogonalProjection_orthRadius_center (s : Sphere P) (p : P) :
     orthogonalProjection (s.orthRadius p) s.center = p := by
-  simp_rw [orthRadius, coe_orthogonalProjection_eq_iff_mem]
+  (set_option backward.instanceTypes.subsingletons.prop true in
+  simp_rw [orthRadius, coe_orthogonalProjection_eq_iff_mem])
   rw [← Submodule.neg_mem_iff]
   simp
 

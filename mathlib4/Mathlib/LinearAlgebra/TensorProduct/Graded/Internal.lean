@@ -178,7 +178,6 @@ instance instRing : Ring (𝒜 ᵍ⊗[R] ℬ) where
   mul_zero x := by simp_rw [mul_def, map_zero]
   zero_mul x := by simp_rw [mul_def, LinearMap.map_zero₂]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The characterization of this multiplication on partially homogeneous elements. -/
 theorem tmul_coe_mul_coe_tmul {j₁ i₂ : ι} (a₁ : A) (b₁ : ℬ j₁) (a₂ : 𝒜 i₂) (b₂ : B) :
     (a₁ ᵍ⊗ₜ[R] (b₁ : B) * (a₂ : A) ᵍ⊗ₜ[R] b₂ : 𝒜 ᵍ⊗[R] ℬ) =
@@ -279,9 +278,7 @@ def includeRight : B →ₐ[R] (𝒜 ᵍ⊗[R] ℬ) :=
     (f := {
        toFun := fun b => 1 ᵍ⊗ₜ b
        map_add' := by simp [tmul, TensorProduct.tmul_add]
-       map_smul' := by
-         (set_option backward.instanceTypes.subsingletons.prop false in
-         simp [tmul, TensorProduct.tmul_smul]) })
+       map_smul' := by simp [tmul, TensorProduct.tmul_smul] })
     (map_one := rfl)
     (map_mul := by
       rw [LinearMap.map_mul_iff]
@@ -318,8 +315,7 @@ def lift (f : A →ₐ[R] C) (g : B →ₐ[R] C)
       ext a₂ b₂ : 2
       dsimp
       rw [tmul_coe_mul_coe_tmul]
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      rw [@Units.smul_def _ _ (_) (_), ← Int.cast_smul_eq_zsmul R, map_smul, map_smul, map_smul])
+      rw [@Units.smul_def _ _ (_) (_), ← Int.cast_smul_eq_zsmul R, map_smul, map_smul, map_smul]
       rw [Int.cast_smul_eq_zsmul R, ← @Units.smul_def _ _ (_) (_)]
       rw [of_symm_of, map_tmul, LinearMap.mul'_apply]
       simp_rw [AlgHom.toLinearMap_apply, map_mul]

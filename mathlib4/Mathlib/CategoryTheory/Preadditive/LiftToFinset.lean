@@ -32,7 +32,6 @@ namespace CoproductsFromFiniteFiltered
 
 variable [HasFiniteCoproducts C]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 theorem finiteSubcoproductsCocone_ι_app_eq_sum {α : Type w} [DecidableEq α] (f : α → C)
     [HasCoproduct f] (S : Finset (Discrete α)) :
@@ -58,11 +57,10 @@ theorem finiteSubproductsCocone_π_app_eq_sum {α : Type w} [DecidableEq α] (f 
     (S : (Finset (Discrete α))ᵒᵖ) :
     (finiteSubproductsCone f).π.app S =
       ∑ a ∈ S.unop.attach, Pi.π f a.1.as ≫ Pi.ι (fun a => f a.1.as) a := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   dsimp only [finiteSubproductsCone_pt, Functor.const_obj_obj, liftToFinsetObj_obj,
     Discrete.functor_obj_eq_as, finiteSubproductsCone_π_app]
   ext v
-  simp only [limit.lift_π, Fan.mk_pt, Fan.mk_π_app, Preadditive.sum_comp, Category.assoc])
+  simp only [limit.lift_π, Fan.mk_pt, Fan.mk_π_app, Preadditive.sum_comp, Category.assoc]
   rw [Finset.sum_eq_single v]
   · simp
   · intro b hb hb₁

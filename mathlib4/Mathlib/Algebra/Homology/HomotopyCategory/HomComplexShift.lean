@@ -335,7 +335,7 @@ lemma shift_units_smul (a : ℤ) (x : Rˣ) :
 lemma rightUnshift_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : ℤ) (hn : n' + a = n) (x : R) :
     (x • γ).rightUnshift n hn = x • γ.rightUnshift n hn := by
   change (rightShiftLinearEquiv R K L n a n' hn).symm (x • γ) = _
-  (set_option backward.instanceTypes.subsingletons.prop false in apply map_smul)
+  apply map_smul
 
 @[simp]
 lemma rightUnshift_units_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : ℤ)
@@ -347,7 +347,7 @@ lemma rightUnshift_units_smul {n' a : ℤ} (γ : Cochain K (L⟦a⟧) n') (n : �
 lemma leftUnshift_smul {n' a : ℤ} (γ : Cochain (K⟦a⟧) L n') (n : ℤ) (hn : n + a = n') (x : R) :
     (x • γ).leftUnshift n hn = x • γ.leftUnshift n hn := by
   change (leftShiftLinearEquiv R K L n a n' hn).symm (x • γ) = _
-  (set_option backward.instanceTypes.subsingletons.prop false in apply map_smul)
+  apply map_smul
 
 @[simp]
 lemma leftUnshift_units_smul {n' a : ℤ} (γ : Cochain (K⟦a⟧) L n') (n : ℤ)

@@ -66,21 +66,19 @@ def rotation (θ : Real.Angle) : V ≃ₗᵢ[ℝ] V :=
     (by
       ext x
       convert! congr($θ.cos_sq_add_sin_sq • x) using 1
-      · (set_option backward.instanceTypes.subsingletons.prop false in
-        simp only [o.rightAngleRotation_rightAngleRotation, o.rotationAux_apply,
+      · simp only [o.rightAngleRotation_rightAngleRotation, o.rotationAux_apply,
           Function.comp_apply, id, LinearEquiv.coe_coe, LinearIsometry.coe_toLinearMap,
           LinearIsometryEquiv.coe_toLinearEquiv, map_smul, map_sub, LinearMap.coe_comp,
-          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply])
+          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply]
         module
       · simp)
     (by
       ext x
       convert! congr($θ.cos_sq_add_sin_sq • x) using 1
-      · (set_option backward.instanceTypes.subsingletons.prop false in
-        simp only [o.rightAngleRotation_rightAngleRotation, o.rotationAux_apply,
+      · simp only [o.rightAngleRotation_rightAngleRotation, o.rotationAux_apply,
           Function.comp_apply, id, LinearEquiv.coe_coe, LinearIsometry.coe_toLinearMap,
           LinearIsometryEquiv.coe_toLinearEquiv, map_add, map_smul, LinearMap.coe_comp,
-          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply])
+          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply]
         module
       · simp)
 
@@ -146,9 +144,8 @@ theorem rotation_pi_div_two : o.rotation (π / 2 : ℝ) = J := by
 @[simp]
 theorem rotation_rotation (θ₁ θ₂ : Real.Angle) (x : V) :
     o.rotation θ₁ (o.rotation θ₂ x) = o.rotation (θ₁ + θ₂) x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [o.rotation_apply, Real.Angle.cos_add, Real.Angle.sin_add, map_add,
-    map_smul, rightAngleRotation_rightAngleRotation])
+    map_smul, rightAngleRotation_rightAngleRotation]
   module
 
 /-- Rotating twice is equivalent to rotating by the sum of the angles. -/
@@ -285,10 +282,9 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero {x y : V} (hx : 
   have hp := div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx)
   constructor
   · rintro rfl
-    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [← map_smul, ← o.oangle_smul_left_of_pos x y hp, eq_comm,
       rotation_oangle_eq_iff_norm_eq, norm_smul, Real.norm_of_nonneg hp.le,
-      div_mul_cancel₀ _ (norm_ne_zero_iff.2 hx)])
+      div_mul_cancel₀ _ (norm_ne_zero_iff.2 hx)]
   · intro hye
     rw [hye, o.oangle_smul_right_of_pos _ _ hp, o.oangle_rotation_self_right hx]
 
@@ -350,8 +346,7 @@ theorem exists_linearIsometryEquiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
 
 theorem rotation_map (θ : Real.Angle) (f : V ≃ₗᵢ[ℝ] V') (x : V') :
     (Orientation.map (Fin 2) f.toLinearEquiv o).rotation θ x = f (o.rotation θ (f.symm x)) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [rotation_apply, o.rightAngleRotation_map])
+  simp [rotation_apply, o.rightAngleRotation_map]
 
 @[simp]
 protected theorem _root_.Complex.rotation (θ : Real.Angle) (z : ℂ) :

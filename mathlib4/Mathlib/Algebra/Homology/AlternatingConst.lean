@@ -102,7 +102,6 @@ noncomputable def alternatingConstScIsoOdd
       exact False.elim <| Nat.not_even_iff_odd.2 h <| by simp_all [Nat.odd_add])
     (by simp_all [alternatingConst])
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]
@@ -116,7 +115,6 @@ lemma alternatingConst_iCycles_even_comp [CategoryWithHomology C]
     Category.id_comp (X := (alternatingConst A hOdd hEven hc).X _)]
     using (ShortComplex.mk ψ φ hEven).iCycles_g
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]

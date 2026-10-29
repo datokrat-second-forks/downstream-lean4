@@ -379,8 +379,7 @@ lemma pOpcycles_extendOpcyclesIso_inv :
   dsimp [extendOpcyclesIso, pOpcycles]
   rw [ShortComplex.RightHomologyData.pOpcycles_comp_opcyclesIso_hom_assoc]
   dsimp
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [assoc, Iso.inv_hom_id_assoc, ShortComplex.RightHomologyData.p_comp_opcyclesIso_inv])
+  rw [assoc, Iso.inv_hom_id_assoc, ShortComplex.RightHomologyData.p_comp_opcyclesIso_inv]
   rfl
 
 @[reassoc (attr := simp)]

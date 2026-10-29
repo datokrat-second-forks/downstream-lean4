@@ -61,7 +61,6 @@ lemma IsGaussian.charFunDual_eq' [IsGaussian μ] (L : StrongDual ℝ E) :
   · exact IsGaussian.integrable_id
   · exact IsGaussian.memLp_two_id
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The measure `μ` is Gaussian if and only if there
 exist `m : E` and `f : StrongDual ℝ E →L[ℝ] StrongDual ℝ E →L[ℝ] ℝ`
 satisfying `f.toBilinForm.IsPosSemidef` and `charFunDual μ L = exp (L m * I - f L L / 2)`. -/
@@ -152,21 +151,17 @@ lemma isGaussian_iff_gaussian_charFun [IsFiniteMeasure μ] :
       f.toBilinForm.IsPosSemidef ∧ ∀ t, charFun μ t = exp (⟪t, m⟫ * I - f t t / 2) := by
   rw [isGaussian_iff_gaussian_charFunDual]
   refine ⟨fun ⟨m, f, hf, h⟩ ↦ ⟨m,
-    (set_option backward.instanceTypes.subsingletons.prop false in
     f.bilinearComp (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap
-      (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap),
+      (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap,
     ⟨⟨fun x y ↦ ?_⟩, ⟨fun x ↦ ?_⟩⟩, ?_⟩,
     fun ⟨m, f, hf, h⟩ ↦ ⟨m,
-      (set_option backward.instanceTypes.subsingletons.prop false in
       f.bilinearComp (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap
-        (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap),
+        (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap,
     ⟨⟨fun x y ↦ ?_⟩, ⟨fun x ↦ ?_⟩⟩, ?_⟩⟩
-  any_goals (set_option backward.instanceTypes.subsingletons.prop false in simpa using hf.eq ..)
-  any_goals (set_option backward.instanceTypes.subsingletons.prop false in simpa using hf.nonneg _)
-  · (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [charFun_eq_charFunDual_toDualMap, h, -InnerProductSpace.toContinuousLinearMap_toDualMap])
-  · (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [← charFun_toDual_symm_eq_charFunDual, h])
+  any_goals simpa using hf.eq ..
+  any_goals simpa using hf.nonneg _
+  · simp [charFun_eq_charFunDual_toDualMap, h, -InnerProductSpace.toContinuousLinearMap_toDualMap]
+  · simp [← charFun_toDual_symm_eq_charFunDual, h]
 
 /-- If the characteristic function of `μ` takes the form of a gaussian characteristic function,
 then the parameters have to be the expectation and the covariance bilinear form. -/
@@ -174,21 +169,17 @@ lemma gaussian_charFun_congr [IsFiniteMeasure μ] (m : E) (f : E →L[ℝ] E →
     (hf : f.toBilinForm.IsPosSemidef) (h : ∀ t, charFun μ t = exp (⟪t, m⟫ * I - f t t / 2)) :
     m = ∫ x, x ∂μ ∧ f = covarianceBilin μ := by
   let g : StrongDual ℝ E →L[ℝ] StrongDual ℝ E →L[ℝ] ℝ :=
-    (set_option backward.instanceTypes.subsingletons.prop false in
     f.bilinearComp (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap
-      (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap)
+      (InnerProductSpace.toDual ℝ E).symm.toLinearIsometry.toContinuousLinearMap
   have : ∀ L : StrongDual ℝ E, charFunDual μ L = exp (L m * I - g L L / 2) := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [← charFun_toDual_symm_eq_charFunDual, h, g])
+    simp [← charFun_toDual_symm_eq_charFunDual, h, g]
   have hg : g.toBilinForm.IsPosSemidef :=
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    ⟨⟨fun x y ↦ by simpa [g] using hf.eq ..⟩, ⟨fun x ↦ by simpa [g] using hf.nonneg _⟩⟩)
+    ⟨⟨fun x y ↦ by simpa [g] using hf.eq ..⟩, ⟨fun x ↦ by simpa [g] using hf.nonneg _⟩⟩
   have := gaussian_charFunDual_congr hg this
   refine ⟨this.1, ?_⟩
   ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [covarianceBilin, ← this.2, g, ← InnerProductSpace.toDual_apply_eq_toDualMap_apply,
-    -InnerProductSpace.toContinuousLinearMap_toDualMap])
+    -InnerProductSpace.toContinuousLinearMap_toDualMap]
 
 /-- Two Gaussian measures are equal if they have same mean and same covariance. This is
 `IsGaussian.ext_covarianceBilinDual` specialized to Hilbert spaces. -/

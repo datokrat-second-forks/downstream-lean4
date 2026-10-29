@@ -444,7 +444,7 @@ nonrec lemma not_isStronglyTranscendental_of_weaklyQuasiFiniteAt [IsReduced S]
       Subalgebra.coe_val, AlgHom.coe_range, Set.range_subset_iff, Set.mem_image, Set.mem_range,
       exists_exists_eq_and, S'])
     exact fun y ↦ ⟨1 ⊗ₜ y, by
-      (set_option backward.instanceTypes.subsingletons.prop false in simp [g, S']); rfl⟩
+      simp [g, S']; rfl⟩
   exact not_isStronglyTranscendental_of_weaklyQuasiFiniteAt_of_isDomain_aux K L f hf rfl hx' P
 
 @[stacks 00Q2]
@@ -700,7 +700,6 @@ lemma ZariskisMainProperty.exists_fg_and_exists_notMem_and_awayMap_bijective
   refine ⟨y * Localization.Away.invSelf _ ^ n, ?_⟩
   simp only [map_mul, map_pow, hy]
   (set_option backward.dsimp.instanceTypes false in
-  set_option backward.instanceTypes.subsingletons.prop false in
   simp [Localization.Away.invSelf, Localization.awayMap, ← Algebra.smul_def,
     IsLocalization.Away.map, IsLocalization.map_mk', Localization.mk_eq_mk',
     ← IsLocalization.mk'_pow])

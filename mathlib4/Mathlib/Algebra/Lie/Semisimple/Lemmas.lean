@@ -87,7 +87,7 @@ lemma trace_toEnd_eq_zero {s : Set L} (hs : ∀ x ∈ s, LinearMap.trace R _ (to
   | mem u hu => simpa using hs u hu
   | zero => simp
   | add u v _ _ hu hv => simp [hu, hv]
-  | smul t u _ hu => (set_option backward.instanceTypes.subsingletons.prop false in simp [hu])
+  | smul t u _ hu => simp [hu]
   | lie u v _ _ _ _ => simp
 
 end LieAlgebra

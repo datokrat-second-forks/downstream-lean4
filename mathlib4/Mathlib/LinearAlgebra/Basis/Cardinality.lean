@@ -79,8 +79,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   -- We have some basis element `b i` which is not in the support of any of the `v k`.
   obtain ⟨i, w⟩ := h
   have repr_eq_zero (l) : b.repr (linearCombination R v l) i = 0 := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [linearCombination_apply, Finsupp.sum, w])
+    simp [linearCombination_apply, Finsupp.sum, w]
   -- Using this, we'll construct a linearly independent family strictly larger than `v`,
   -- by also using this `b i`.
   let v' (o : Option κ) : M := o.elim (b i) v
@@ -99,15 +98,13 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
     ext (_ | a)
     -- We'll first show the coefficient of `b i` is zero,
     -- by expressing the `v k` in the basis `b`, and using that the `v k` have no `b i` term.
-    · (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [repr_eq_zero] using congr(b.repr $z i))
+    · simpa [repr_eq_zero] using congr(b.repr $z i)
     -- All the other coefficients are also equal, because `v` is linear independent,
     -- by comparing the coefficients in the basis `b`.
     have l₁ : l.some = l'.some := ind <| b.repr.injective <| ext fun j ↦ by
       obtain rfl | ne := eq_or_ne i j
       · simp_rw [repr_eq_zero]
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [single_apply, ne] using congr(b.repr $z j))
+      simpa [single_apply, ne] using congr(b.repr $z j)
     congrm $l₁ a
   exact r'' (m (range v') i' r)
 

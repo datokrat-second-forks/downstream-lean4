@@ -265,10 +265,9 @@ def Hom.sub (f g : Hom P P') : P.CotangentSpace →ₗ[S] P'.Cotangent := by
     simp [Ideal.toCotangent_eq_zero]
   · intro x y
     ext
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [LinearMap.coe_comp, LinearMap.coe_restrictScalars, Function.comp_apply,
       Cotangent.val_mk, Cotangent.val_add, Cotangent.val_smul''', ← map_smul, ← map_add,
-      Ideal.toCotangent_eq])
+      Ideal.toCotangent_eq]
     exact Hom.sub_aux f g x y
 
 variable [IsScalarTower R S S']

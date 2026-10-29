@@ -100,8 +100,7 @@ theorem mongePoint_map {V₂ P₂ : Type*} [NormedAddCommGroup V₂] [InnerProdu
     (s.map f.toAffineMap f.injective).mongePoint = f s.mongePoint := by
   simp_rw [mongePoint_eq_smul_vsub_vadd_circumcenter]
   rw [← Simplex.centroid, ← Simplex.centroid]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [centroid_map, circumcenter_map])
+  simp [centroid_map, circumcenter_map]
 
 /-- **Sylvester's theorem**: The position of the Monge point relative to the circumcenter via the
 sum of vectors to the vertices. -/
@@ -154,7 +153,6 @@ theorem sum_mongePointWeightsWithCircumcenter (n : ℕ) :
   simp [field]
   ring
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- The Monge point of an (n+2)-simplex, in terms of
 `pointsWithCircumcenter`. -/
 theorem mongePoint_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ}

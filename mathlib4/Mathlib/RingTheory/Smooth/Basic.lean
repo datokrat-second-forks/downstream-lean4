@@ -473,8 +473,7 @@ instance [FormallySmooth R A] : FormallySmooth B (B ⊗[R] A) := by
     apply TensorProduct.ext'
     intro b a
     suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.ofId_apply]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one])
+    rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
 
 end BaseChange
 

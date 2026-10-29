@@ -497,12 +497,10 @@ variable {B F : Type*} [AddCommGroup B] [Module ℂ B] [StarAddMonoid B] [StarMo
     [FunLike F A B] [StarHomClass F A B] [LinearMapClass F ℂ A B]
 
 lemma map_realPart (f : F) (x : A) : f (ℜ x) = ℜ (f x) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [realPart_apply_coe, ← Complex.coe_smul, map_star])
+  simp [realPart_apply_coe, ← Complex.coe_smul, map_star]
 
 lemma map_imaginaryPart (f : F) (x : A) : f (ℑ x) = ℑ (f x) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [imaginaryPart_apply_coe, ← Complex.coe_smul, map_star])
+  simp [imaginaryPart_apply_coe, ← Complex.coe_smul, map_star]
 
 end StarHomClass
 
@@ -659,7 +657,6 @@ instance {F E A : Type*} [AddCommGroup E] [PartialOrder E]
     StarHomClass F E A where
   map_star φ x := by
     rw [← realPart_add_I_smul_imaginaryPart x]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [(ℜ x).2.map' φ, IsSelfAdjoint.star_eq, (ℑ x).2.map' φ])
+    simp [(ℜ x).2.map' φ, IsSelfAdjoint.star_eq, (ℑ x).2.map' φ]
 
 end RealImaginaryPart

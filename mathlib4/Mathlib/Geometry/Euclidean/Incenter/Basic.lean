@@ -180,8 +180,7 @@ lemma ExcenterExists.excenterWeights_ne_zero {signs : Finset (Fin (n + 1))}
 
 lemma sum_excenterWeights (signs : Finset (Fin (n + 1))) [Decidable (s.ExcenterExists signs)] :
     ∑ i, s.excenterWeights signs i = if s.ExcenterExists signs then 1 else 0 := by
-  (set_option backward.instanceTypes.subsingletons.decidable false in
-  simp_rw [ExcenterExists, excenterWeights])
+  simp_rw [ExcenterExists, excenterWeights]
   split_ifs with h
   · simp [← Finset.mul_sum, h]
   · simp only [ne_eq, not_not] at h

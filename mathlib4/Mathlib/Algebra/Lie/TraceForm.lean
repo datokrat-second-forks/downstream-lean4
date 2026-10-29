@@ -133,9 +133,8 @@ lemma trace_toEnd_mul_eq_zero_of_traceForm_eq_zero (h : traceForm R L M = 0)
       LinearMap.zero_apply]
   | zero => simp
   | add u v _ _ hu hv => simp [add_mul, hu, hv]
-  | smul t u _ hu => (set_option backward.instanceTypes.subsingletons.prop false in simp [hu])
+  | smul t u _ hu => simp [hu]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 lemma traceForm_genWeightSpace_eq [Module.Free R M]
     [IsDomain R] [IsPrincipalIdealRing R]
@@ -232,7 +231,7 @@ lemma trace_toEnd_eq_zero_of_mem_lcs
     simp [← huv]
   · simp
   · simp [hu, hv]
-  · (set_option backward.instanceTypes.subsingletons.prop false in simp [hu])
+  · simp [hu]
 
 @[simp]
 lemma traceForm_lieSubalgebra_mk_left (L' : LieSubalgebra R L) {x : L} (hx : x ∈ L') (y : L') :

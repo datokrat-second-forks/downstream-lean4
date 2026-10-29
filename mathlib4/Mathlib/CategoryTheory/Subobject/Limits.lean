@@ -293,10 +293,9 @@ def kernelOrderHom [HasKernels C] (X : C) : (Subobject (op X))ᵒᵈ →o Subobj
         · exact
             IsLimit.conePointUniqueUpToIso (limit.isLimit _)
               (isKernelCompMono (limit.isLimit (parallelPair g.unop 0)) i.unop.hom rfl)
-        · (set_option backward.instanceTypes.subsingletons.prop false in
-          dsimp
+        · dsimp
           simp only [← Iso.eq_inv_comp, limit.conePointUniqueUpToIso_inv_comp,
-            Fork.ofι_π_app]))
+            Fork.ofι_π_app])
   monotone' :=
     Subobject.ind₂ _ <| by
       intro A B f g hf hg h
@@ -488,7 +487,7 @@ theorem imageSubobjectMap_arrow {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y 
     imageSubobjectMap sq ≫ (imageSubobject g).arrow = (imageSubobject f).arrow ≫ sq.right := by
   simp only [imageSubobjectMap, Category.assoc, Arrow.mk_left, Arrow.mk_right,
     Arrow.mk_hom, imageSubobject_arrow']
-  rw [(set_option backward.instanceTypes.subsingletons.prop false in dsimp% image.map_ι sq)]
+  rw [dsimp% image.map_ι sq]
   simp
 
 theorem image_map_comp_imageSubobjectIso_inv {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z}
@@ -496,14 +495,13 @@ theorem image_map_comp_imageSubobjectIso_inv {W X Y Z : C} {f : W ⟶ X} [HasIma
     image.map sq ≫ (imageSubobjectIso _).inv =
       (imageSubobjectIso _).inv ≫ imageSubobjectMap sq := by
   ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simpa using image.map_ι sq)
+  simpa using image.map_ι sq
 
 theorem imageSubobjectIso_comp_image_map {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z}
     [HasImage g] (sq : Arrow.mk f ⟶ Arrow.mk g) [HasImageMap sq] :
     (imageSubobjectIso _).hom ≫ image.map sq =
       imageSubobjectMap sq ≫ (imageSubobjectIso _).hom := by
-  (set_option backward.instanceTypes.subsingletons.prop false in simp [imageSubobjectMap])
+  simp [imageSubobjectMap]
 
 end Image
 

@@ -144,8 +144,7 @@ theorem isCommMonObj_of_isProper_of_geometricallyIntegral
   let f := Spec.map (CommRingCat.ofHom <| algebraMap K (AlgebraicClosure K))
   let G' := (Over.pullback f).obj G
   have : IsProper G'.hom := by dsimp [G']; infer_instance
-  have : IsIntegral (G' ⊗ G').left := by
-    (set_option backward.instanceTypes.subsingletons.prop false in dsimp [G']); infer_instance
+  have : IsIntegral (G' ⊗ G').left := by dsimp [G']; infer_instance
   let : GrpObj G' := Functor.grpObjObj
   have := isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed G'
   rw [isCommMonObj_iff_commutator_eq_toUnit_η] at this ⊢

@@ -102,8 +102,7 @@ instance : LieRing (K ⋊⁅ψ⁆ L) where
   leibniz_lie _ _ _ := by simp; grind [lie_skew]
 
 instance : LieAlgebra R (K ⋊⁅ψ⁆ L) where
-  lie_smul _ _ _ := by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [smul_sub, smul_add])
+  lie_smul _ _ _ := by simp [smul_sub, smul_add]
 
 /-- The canonical inclusion of K into the semi-direct sum K ⋊⁅ψ⁆ G. -/
 def inl : K →ₗ⁅R⁆ K ⋊⁅ψ⁆ L where

@@ -152,10 +152,9 @@ private lemma coroot_eq_coreflection_of_root_eq' [CharZero R] [IsDomain R]
   obtain ⟨l, hl⟩ := hc i (mem_range_self j)
   rw [← hl]
   have hkl : (p.flip (coroot l)) (root k) = 2 := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [hl, preReflection_apply, map_sub, map_smul, hk, LinearMap.flip_apply,
       LinearMap.sub_apply, hp j, LinearMap.smul_apply, smul_eq_mul, hp i, mul_two,
-      sub_add_cancel_right, mul_neg, sub_neg_eq_add, sα, α, α', β])
+      sub_add_cancel_right, mul_neg, sub_neg_eq_add, sα, α, α', β]
     rw [mul_comm (p (root i) (coroot j))]
     abel
   suffices p.flip (coroot k) = p.flip (coroot l) from p.flip.toPerfPair.injective this

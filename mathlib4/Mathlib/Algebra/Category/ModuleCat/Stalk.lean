@@ -167,8 +167,7 @@ instance : Module (R.stalk x) ↑(TopCat.Presheaf.stalk M.presheaf x) :=
       (((OpenNhds.inclusion x).op ⋙ M.presheaf).obj i) := by
     (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
   Limits.IsColimit.module ((OpenNhds.inclusion x).op ⋙ R) ((OpenNhds.inclusion x).op ⋙ M.presheaf)
-    (fun f r m ↦ M.map_smul _ _ _) (Limits.colimit.isColimit _)
-    (set_option backward.instanceTypes.subsingletons.prop false in Limits.colimit.isColimit _)
+    (fun f r m ↦ M.map_smul _ _ _) (Limits.colimit.isColimit _) (Limits.colimit.isColimit _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -197,8 +196,7 @@ instance (x : X) : Module (R.stalk x) ↑(TopCat.Presheaf.stalk M.presheaf x) :=
   Limits.IsColimit.module ((OpenNhds.inclusion x).op ⋙ R ⋙ forget₂ _ _)
     ((OpenNhds.inclusion x).op ⋙ M.presheaf)
     (fun f r m ↦ M.map_smul _ _ _) (Limits.isColimitOfPreserves (forget₂ _ _)
-      (Limits.colimit.isColimit ((OpenNhds.inclusion x).op ⋙ R)))
-    (set_option backward.instanceTypes.subsingletons.prop false in Limits.colimit.isColimit _)
+      (Limits.colimit.isColimit ((OpenNhds.inclusion x).op ⋙ R))) (Limits.colimit.isColimit _)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

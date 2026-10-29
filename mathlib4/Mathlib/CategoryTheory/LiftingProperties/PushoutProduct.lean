@@ -56,9 +56,8 @@ lemma hasLiftingProperty_mk_iff [HasPushouts C] [HasPullbacks C]
     [MonoidalCategory C] [MonoidalClosed C]
     {A B K L X Y : C} {f : A ⟶ B} {g : K ⟶ L} {h : X ⟶ Y} :
     HasLiftingProperty (f □ g).hom h ↔ HasLiftingProperty g ((.op f) ⋔ h).hom :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
   ParametrizedAdjunction.hasLiftingProperty_iff MonoidalClosed.internalHomAdjunction₂
-    (PushoutObjObj.ofHasPushout ..) (PullbackObjObj.ofHasPullback ..))
+    (PushoutObjObj.ofHasPushout ..) (PullbackObjObj.ofHasPullback ..)
 
 /-- `f □ g` lifts against `h` if and only if `f` lifts against `g ⋔ h`. -/
 lemma hasLiftingProperty_mk_iff' [HasPushouts C] [HasPullbacks C]

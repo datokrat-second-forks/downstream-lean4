@@ -537,16 +537,14 @@ lemma root'_coweightEquiv :
 lemma weightEquiv_reflection :
     e.weightEquiv (P.reflection i x) = Q.reflection (e.indexEquiv i) (e.weightEquiv x) := by
   have : e.weightEquiv (P.root i) = Q.root (e.indexEquiv i) := by simp [Hom.root_weightMap_apply]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [reflection_apply, reflection_apply, map_sub, map_smul, this, e.coroot'_weightEquiv])
+  rw [reflection_apply, reflection_apply, map_sub, map_smul, this, e.coroot'_weightEquiv]
 
 lemma coweightEquiv_coreflection :
     e.coweightEquiv (Q.coreflection i₂ y₂) =
       P.coreflection (e.indexEquiv.symm i₂) (e.coweightEquiv y₂) := by
   have this : e.coweightEquiv (Q.coroot i₂) = P.coroot (e.indexEquiv.symm i₂) := by
     simp [Hom.coroot_coweightMap_apply]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [coreflection_apply, coreflection_apply, map_sub, map_smul, this, ← e.root'_coweightEquiv])
+  rw [coreflection_apply, coreflection_apply, map_sub, map_smul, this, ← e.root'_coweightEquiv]
   simp
 
 lemma weightEquiv_symm_conj_reflection :

@@ -113,8 +113,7 @@ lemma dualSubmodule_span_of_basis {ι} [Finite ι] [DecidableEq ι]
     simp only [map_sum]
     apply sum_mem
     rintro j -
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [← IsScalarTower.algebraMap_smul S (f j), map_smul])
+    rw [← IsScalarTower.algebraMap_smul S (f j), map_smul]
     simp_rw [apply_dualBasis_left]
     rw [smul_eq_mul, mul_ite, mul_one, mul_zero, ← (algebraMap R S).map_zero, ← apply_ite]
     exact Submodule.mem_one.mpr ⟨_, rfl⟩

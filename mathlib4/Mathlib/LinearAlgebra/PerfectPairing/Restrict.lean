@@ -101,7 +101,7 @@ private lemma restrictScalars_injective_aux
       simpa [f] using congr($hx n')
     | zero => simp
     | add => rw [map_add]; aesop
-    | smul => (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul]; aesop)
+    | smul => rw [map_smul]; aesop
   rw [← i.map_eq_zero_iff hi, ← p.map_eq_zero_iff p.toPerfPair.injective]
   ext n
   simpa using hx n

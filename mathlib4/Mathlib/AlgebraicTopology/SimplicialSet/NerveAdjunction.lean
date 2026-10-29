@@ -438,8 +438,7 @@ instance (C D : Type u) [Category.{u} C] [Category.{u} D] :
       IsIso.of_isIso_fac_left
         (prodComparison_comp nerveFunctor (hoFunctor ⋙ nerveFunctor)
           (A := ↧C) (B := ↧D)).symm
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact IsIso.of_isIso_fac_right (prodComparison_comp hoFunctor nerveFunctor).symm)
+    exact IsIso.of_isIso_fac_right (prodComparison_comp hoFunctor nerveFunctor).symm
   exact isIso_of_fully_faithful nerveFunctor _
 
 instance isIso_prodComparison_stdSimplex.{w} (n m : ℕ) :

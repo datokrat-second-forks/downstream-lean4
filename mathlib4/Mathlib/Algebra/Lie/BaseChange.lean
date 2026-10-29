@@ -105,8 +105,7 @@ instance instLieRing : LieRing (A ⊗[R] L) where
 
 instance instBaseLieAlgebra : LieAlgebra R (A ⊗[R] L) where lie_smul := by simp [bracket_def]
 
-instance instLieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul _a _x _y :=
-  (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ _ _)
+instance instLieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul _a _x _y := map_smul _ _ _
 
 set_option backward.privateInPublic true in
 set_option backward.privateInPublic.warn false in
@@ -116,10 +115,8 @@ instance instLieRingModule : LieRingModule (A ⊗[R] L) (A ⊗[R] M) where
   leibniz_lie := bracket_leibniz_lie R A L M
 
 instance instLieModule : LieModule A (A ⊗[R] L) (A ⊗[R] M) where
-  smul_lie t x m := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [bracket_def, map_smul, LinearMap.smul_apply])
-  lie_smul _ _ _ := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ _ _)
+  smul_lie t x m := by simp only [bracket_def, map_smul, LinearMap.smul_apply]
+  lie_smul _ _ _ := map_smul _ _ _
 
 /-- The Lie algebra homomorphism induced by an algebra map. -/
 def map {R A B L L' : Type*} [CommRing R] [CommRing A] [Algebra R A] [CommRing B] [Algebra R B]
@@ -195,9 +192,7 @@ def baseChange : LieSubmodule A (A ⊗[R] L) (A ⊗[R] M) :=
       obtain ⟨c, rfl⟩ := (Finsupp.mem_span_iff_linearCombination _ _ _).mp hm
       refine x.inductionOn (fun a y ↦ ?_) (fun y z hy hz ↦ ?_)
       · change toEnd A (A ⊗[R] L) (A ⊗[R] M) _ _ ∈ _
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        simp_rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum, map_smul,
-          toEnd_apply_apply])
+        simp_rw [Finsupp.linearCombination_apply, Finsupp.sum, map_sum, map_smul, toEnd_apply_apply]
         refine Submodule.sum_mem _ fun ⟨_, n, hn, h⟩ _ ↦ Submodule.smul_mem _ _ ?_
         rw [Subtype.coe_mk, ← h]
         exact Submodule.tmul_mem_baseChange_of_mem _ (N.lie_mem hn)

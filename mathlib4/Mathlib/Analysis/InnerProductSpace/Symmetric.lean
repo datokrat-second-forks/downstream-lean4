@@ -194,7 +194,6 @@ theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
 
 end Complex
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- Polarization identity for symmetric linear maps.
 See `inner_map_polarization` for the complex version without the symmetric assumption. -/
 theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (x y : E) :

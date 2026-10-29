@@ -431,8 +431,7 @@ def tildeFinsupp (ι : Type u) : tilde (ModuleCat.of R (ι →₀ R)) ≅ SheafO
          Discrete.functor fun _ ↦ SheafOfModules.unit.{u} _ :=
       Discrete.natIso (fun _ ↦ tildeSelf)
   IsColimit.coconePointUniqueUpToIso
-    ((IsColimit.precomposeHomEquiv iso.symm _).symm H)
-    (set_option backward.instanceTypes.subsingletons.prop false in coproductIsCoproduct _)
+    ((IsColimit.precomposeHomEquiv iso.symm _).symm H) (coproductIsCoproduct _)
 
 instance (ι : Type u) :
     IsIso (Scheme.Modules.fromTildeΓ (R := R) (SheafOfModules.free.{u} ι)) :=

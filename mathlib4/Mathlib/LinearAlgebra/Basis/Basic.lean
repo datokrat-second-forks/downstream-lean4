@@ -287,9 +287,7 @@ section Module.IsTorsionFree
 
 -- Can't be an instance because the basis can't be inferred.
 protected lemma isTorsionFree (b : Basis ι R M) :
-    Module.IsTorsionFree R M :=
-  b.repr.injective.moduleIsTorsionFree _
-    (by (set_option backward.instanceTypes.subsingletons.prop false in simp))
+    Module.IsTorsionFree R M := b.repr.injective.moduleIsTorsionFree _ (by simp)
 
 protected theorem smul_eq_zero [IsDomain R] (b : Basis ι R M) {c : R} {x : M} :
     c • x = 0 ↔ c = 0 ∨ x = 0 := by have := b.isTorsionFree; exact smul_eq_zero

@@ -41,8 +41,7 @@ section Translation
 lemma IsMIntegralCurveOn.comp_add (hγ : IsMIntegralCurveOn γ v s) (dt : ℝ) :
     IsMIntegralCurveOn (γ ∘ (· + dt)) v { t | t + dt ∈ s } := by
   intro t ht
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [comp_apply, ← ContinuousLinearMap.comp_id (ContinuousLinearMap.smulRight 1 (v (γ (t + dt))))])
+  rw [comp_apply, ← ContinuousLinearMap.comp_id (ContinuousLinearMap.smulRight 1 (v (γ (t + dt))))]
   apply HasMFDerivWithinAt.comp t (hγ (t + dt) ht) _ subset_rfl
   refine ⟨(continuous_add_const _).continuousWithinAt, ?_⟩
   simp only [mfld_simps]

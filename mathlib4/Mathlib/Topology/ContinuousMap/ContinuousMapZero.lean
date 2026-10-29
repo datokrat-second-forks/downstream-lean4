@@ -459,7 +459,7 @@ def nonUnitalStarAlgHom_postcomp (φ : R →⋆ₙₐ[M] S) (hφ : Continuous φ
   map_add' _ _ := ext <| by simp
   map_mul' _ _ := ext <| by simp
   map_star' _ := ext <| by simp [map_star]
-  map_smul' r f := ext <| by (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  map_smul' r f := ext <| by simp
 
 variable (R) in
 /-- Precomposition with a homeomorphism of the domains sending `0 : X` to `0 : Y` as a star

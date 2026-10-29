@@ -613,10 +613,9 @@ def inclusion {I J : IdealSheafData X} (h : I ≤ J) :
   J.subschemeCover.openCover.glueMorphisms (fun U ↦ glueDataObjHom h U ≫ I.subschemeCover.f U)
   (by
     intro U V
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [← cancel_mono I.subschemeι, AffineOpenCover.openCover_X, glueDataObjHom_ι_assoc,
       AffineOpenCover.openCover_f, Category.assoc, subschemeCover_map_subschemeι]
-    rw [← subschemeCover_map_subschemeι, pullback.condition_assoc, subschemeCover_map_subschemeι]))
+    rw [← subschemeCover_map_subschemeι, pullback.condition_assoc, subschemeCover_map_subschemeι])
 
 @[reassoc (attr := simp)]
 lemma subSchemeCover_map_inclusion {I J : IdealSheafData X} (h : I ≤ J) (U) :
@@ -693,9 +692,8 @@ def Hom.toImageAux : X ⟶ f.image :=
       (by exact ideal_ker_le_ker_ΓSpecIso_inv_comp f U) ≫ f.ker.subschemeCover.f U) (by
     intro U V
     rw [← cancel_mono f.imageι]
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc,
-      ← pullback.condition, ← pullback.condition_assoc]))
+      ← pullback.condition, ← pullback.condition_assoc])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -704,8 +702,7 @@ lemma Hom.toImageAux_spec :
   apply Cover.hom_ext ((Y.openCoverOfIsOpenCover _ (iSup_affineOpens_eq_top Y)).pullback₁ f)
   intro U
   simp only [Hom.toImageAux, Cover.ι_glueMorphisms_assoc]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc, pullback.condition])
+  simp [IdealSheafData.glueDataObjι, Scheme.Hom.liftQuotient_comp_assoc, pullback.condition]
 
 /-- The morphism from the domain to the scheme-theoretic image. -/
 noncomputable

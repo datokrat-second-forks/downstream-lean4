@@ -193,7 +193,7 @@ section cfcₙL
 noncomputable def cfcₙL {a : A} (ha : p a) : C(σₙ R a, R)₀ →L[R] A :=
   { cfcₙHom ha with
     toFun := cfcₙHom ha
-    map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _) }
+    map_smul' := map_smul _ }
 
 end cfcₙL
 
@@ -422,7 +422,7 @@ lemma cfcₙ_smul {S : Type*} [SMulZeroClass S R] [ContinuousConstSMul S R]
   by_cases ha : p a
   · rw [cfcₙ_apply f a, cfcₙ_apply _ a]
     simp_rw [← Pi.smul_def, ← smul_one_smul R s _]
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [← map_smul])
+    rw [← map_smul]
     congr
   · grind [smul_zero]
 

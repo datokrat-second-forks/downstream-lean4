@@ -275,13 +275,12 @@ lemma δAux_toAlgHom (f : Hom Q Q') (x) :
     simp only [map_add, hx₁, hx₂, tmul_add]
     rw [add_add_add_comm]
   | mul_X p n IH =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [map_mul, Hom.toAlgHom_X, δAux_mul, algebraMap_apply, Hom.algebraMap_toAlgHom,
       ← @IsScalarTower.algebraMap_smul Q'.Ring T, algebraMap_self, δAux_X,
       RingHom.id_apply, coe_eval₂Hom, IH, Hom.aeval_val, smul_add, map_aeval, tmul_add, tmul_smul,
       ← @IsScalarTower.algebraMap_smul Q.Ring T, smul_zero, aeval_X, zero_add, Derivation.leibniz,
       Basis.repr_self, map_add, one_smul, map_smul, Finsupp.linearCombination_single,
-      RingHomCompTriple.comp_eq, Function.comp_apply, ← cotangentSpaceBasis_apply])
+      RingHomCompTriple.comp_eq, Function.comp_apply, ← cotangentSpaceBasis_apply]
     rw [add_left_comm]
     rfl
 

@@ -33,8 +33,7 @@ set_option backward.defeqAttrib.useBackward true in
 instance {X Y : Ind C} (f : X ⟶ Y) : IsIso (Abelian.coimageImageComparison f) := by
   obtain ⟨I, _, _, F, G, ϕ, ⟨i⟩⟩ := Ind.exists_nonempty_arrow_mk_iso_ind_lim (f := f)
   let i' := coimageImageComparisonFunctor.mapIso i
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  dsimp only [coimageImageComparisonFunctor_obj, Arrow.mk_left, Arrow.mk_right, Arrow.mk_hom] at i')
+  dsimp only [coimageImageComparisonFunctor_obj, Arrow.mk_left, Arrow.mk_right, Arrow.mk_hom] at i'
   have := Iso.isIso_hom i'
   rw [Arrow.isIso_iff_isIso_of_isIso i'.hom,
     Arrow.isIso_iff_isIso_of_isIso (PreservesCoimageImageComparison.iso (Ind.lim I) ϕ).inv]

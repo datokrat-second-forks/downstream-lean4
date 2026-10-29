@@ -718,7 +718,7 @@ instance sheafedSpace_pullback_snd_of_left :
   have : _ = (pullback.snd f g).hom := preservesLimitIso_hom_π forget (cospan f g) right
   rw [← this]
   have := HasLimit.isoOfNatIso_hom_π (diagramIsoCospan (cospan f g ⋙ forget)) right
-  (set_option backward.instanceTypes.subsingletons.prop false in dsimp at this)
+  dsimp at this
   rw [Category.comp_id] at this
   rw [← this]
   infer_instance
@@ -731,7 +731,7 @@ instance sheafedSpace_pullback_fst_of_right :
   have : _ = (pullback.fst g f).hom := preservesLimitIso_hom_π forget (cospan g f) left
   rw [← this]
   have := HasLimit.isoOfNatIso_hom_π (diagramIsoCospan (cospan g f ⋙ forget)) left
-  (set_option backward.instanceTypes.subsingletons.prop false in dsimp at this)
+  dsimp at this
   rw [Category.comp_id] at this
   rw [← this]
   infer_instance

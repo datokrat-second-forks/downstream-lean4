@@ -399,8 +399,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type*} [EquivLike E S I] [AddEquivCl
     have : (1 : S) = 0 := EquivLike.injective e (Subsingleton.elim _ _)
     contradiction
   rw [Ideal.absNorm_apply]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  exact Submodule.natAbs_det_equiv (I.restrictScalars ℤ) e)
+  exact Submodule.natAbs_det_equiv (I.restrictScalars ℤ) e
 
 /-- Let `b` be a basis for `S` over `ℤ` and `bI` a basis for `I` over `ℤ` of the same dimension.
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `bI`

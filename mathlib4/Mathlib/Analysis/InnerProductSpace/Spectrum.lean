@@ -337,8 +337,7 @@ theorem eigenvectorBasis_apply_self_apply (hT : T.IsSymmetric) (hn : Module.finr
     simpa [OrthonormalBasis.sum_repr_symm] using
       congr((hT.eigenvectorBasis hn).repr $(this ((hT.eigenvectorBasis hn).repr v)) i)
   intro w
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp_rw [← OrthonormalBasis.sum_repr_symm, map_sum, map_smul, apply_eigenvectorBasis])
+  simp_rw [← OrthonormalBasis.sum_repr_symm, map_sum, map_smul, apply_eigenvectorBasis]
   apply Fintype.sum_congr
   intro a
   rw [smul_smul, mul_comm, ofLp_toLp]
@@ -347,8 +346,7 @@ theorem toMatrix_eigenvectorBasis (hT : T.IsSymmetric) (hn : Module.finrank 𝕜
     letI b := (hT.eigenvectorBasis hn).toBasis
     T.toMatrix b b = Matrix.diagonal (RCLike.ofReal ∘ hT.eigenvalues hn) := by
   ext i j
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [toMatrix_apply, Matrix.diagonal_apply, RCLike.real_smul_eq_coe_mul])
+  simp [toMatrix_apply, Matrix.diagonal_apply, RCLike.real_smul_eq_coe_mul]
   grind
 
 open Polynomial in

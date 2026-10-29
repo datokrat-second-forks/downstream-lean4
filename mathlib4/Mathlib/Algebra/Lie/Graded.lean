@@ -111,11 +111,11 @@ lemma decompose_symm_bracket (x : ⨁ i, ℒ i) (y : ⨁ k, ℳ k) :
 instance : LieAlgebra R (⨁ i, ℒ i) where
   add_smul _ _ _ := by simp [add_smul]
   zero_smul _ := by simp
-  lie_smul _ _ _ := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  lie_smul _ _ _ := by simp
 
 instance [LieModule R L M] : LieModule R (⨁ i, ℒ i) (⨁ k, ℳ k) where
-  smul_lie _ _ _ := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
-  lie_smul _ _ _ := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  smul_lie _ _ _ := by simp
+  lie_smul _ _ _ := by simp
 
 /-- If `L` is graded by `ι` with degree `i` component `ℒ i`, then it is isomorphic as
 a Lie algebra to a direct sum of components. -/
@@ -177,13 +177,12 @@ def ofGrading (φ : ι →+ R) :
     LieDerivation R L L where
   toFun x := (decomposeLinearEquiv ℒ).symm <| ofGradingSum ℒ φ <| decomposeLinearEquiv ℒ x
   map_add' _ _ := by simp
-  map_smul' _ _ := by (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  map_smul' _ _ := by simp
   leibniz' x y := by
     simp [decomposeLinearEquiv_apply, decomposeLinearEquiv_symm_apply,
       Equiv.symm_apply_eq (decompose ℒ)]
     simp [decompose_bracket ℒ]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 lemma ofGrading_apply_apply (φ : ι →+ R) {i : ι} {a : L} (ha : a ∈ ℒ i) :
     ofGrading ℒ φ a = φ i • a := by
   simp [ofGrading, decomposeLinearEquiv_apply, decompose_of_mem ℒ ha]

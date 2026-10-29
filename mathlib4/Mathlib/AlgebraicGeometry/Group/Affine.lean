@@ -249,10 +249,8 @@ instance isCommMonObj_spec_asOver_spec [Bialgebra R A] [IsCocomm R A] :
     congr 1
     rw [← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
     ext
-    · (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₁]); rfl
-    · (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]); rfl
+    · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₁]; rfl
+    · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]; rfl
 
 instance instGrpObjSpecAsOverSpec [HopfAlgebra R A] : GrpObj ((Spec A).asOver (Spec R)) where
   __ := instMonObjSpecAsOverSpec
@@ -285,17 +283,15 @@ def Spec.mapMulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bi
   right_inv f := by ext1; simp
   map_mul' f g := by
     ext1
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    dsimp [AlgHom.convMul_def, AlgHom.comp_toRingHom, Hom.mul_def])
+    dsimp [AlgHom.convMul_def, AlgHom.comp_toRingHom, Hom.mul_def]
     simp only [← Category.assoc, Spec.map_comp, mul_spec_asOver_spec_left]
     congr 1
     rw [← Iso.comp_inv_eq]
-    (set_option backward.instanceTypes.subsingletons.prop false in ext)
+    ext
     all_goals
-    · (set_option backward.instanceTypes.subsingletons.prop false in
-      simp only [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    · simp only [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       ← AlgHom.comp_toRingHom, Category.assoc, pullbackSpecIso_inv_fst, pullbackSpecIso_inv_snd,
-      limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app])
+      limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
       congr 3
       ext; simp
 
@@ -370,16 +366,14 @@ lemma pullbackSpecIso'_symmetry [Algebra R T] :
       Algebra.TensorProduct.includeLeftRingHom =
       RingHomClass.toRingHom Algebra.TensorProduct.includeRight := rfl
     rw [Category.assoc, pullbackSymmetry_hom_comp_fst]
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [pullbackSpecIso', specOverSpec_over, pullbackSpecIso_inv_snd, Category.assoc,
-      pullbackSpecIso_inv_fst, ← Spec.map_comp, ← CommRingCat.ofHom_comp, this])
+      pullbackSpecIso_inv_fst, ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
   have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
       (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) =
       Algebra.TensorProduct.includeLeftRingHom := rfl
   rw [Category.assoc, pullbackSymmetry_hom_comp_snd]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [pullbackSpecIso', specOverSpec_over, pullbackSpecIso_inv_fst, Category.assoc,
-    pullbackSpecIso_inv_snd, ← Spec.map_comp, ← CommRingCat.ofHom_comp, this])
+    pullbackSpecIso_inv_snd, ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
 
 set_option backward.defeqAttrib.useBackward true in
 instance [Algebra R T] :
@@ -406,25 +400,22 @@ lemma μ_pullback_left_fst [Algebra R T] :
               Algebra.TensorProduct.includeRight.toRingHom
               (by simp [← IsScalarTower.algebraMap_eq])
               (by simp [← IsScalarTower.algebraMap_eq]))) ≫ (pullbackSpecIso R T T).inv := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [Over.tensorObj_left, Over.pullback_obj_left, Over.mk_left, Over.mk_hom,
     Over.pullback_obj_hom, Over.tensorObj_hom, OverClass.asOver_left, OverClass.asOver_hom,
     canonicallyOverPullback_over, Iso.trans_hom, AlgHom.toRingHom_eq_coe]
-  ext) <;> simp only [Category.assoc, Over.μ_pullback_left_fst_fst', Over.mk_left, Over.mk_hom,
+  ext <;> simp only [Category.assoc, Over.μ_pullback_left_fst_fst', Over.mk_left, Over.mk_hom,
     Over.pullback_obj_left, Over.pullback_obj_hom, pullbackSpecIso_inv_fst, pullbackSpecIso_inv_snd]
   · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
       Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [specOverSpec_over, ofHom_comp, Spec.map_comp, pullbackSpecIso_hom_fst_assoc])
+    simp only [specOverSpec_over, ofHom_comp, Spec.map_comp, pullbackSpecIso_hom_fst_assoc]
     erw [Over.tensorHom_left_fst_assoc]
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackSpecIso'])
+    simp [pullbackSpecIso']
     rfl
   · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
       Algebra.TensorProduct.mapRingHom_comp_includeRight]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [specOverSpec_over, ofHom_comp, Spec.map_comp, pullbackSpecIso_hom_snd_assoc])
+    simp only [specOverSpec_over, ofHom_comp, Spec.map_comp, pullbackSpecIso_hom_snd_assoc]
     erw [Over.tensorHom_left_snd_assoc]
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [pullbackSpecIso'])
+    simp [pullbackSpecIso']
     rfl
 
 set_option backward.dsimp.instanceTypes false in

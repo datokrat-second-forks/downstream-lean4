@@ -224,8 +224,7 @@ theorem QuasiSeparated.of_comp (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiSeparated (f �
   refine @quasiSeparatedSpace_of_quasiSeparated _ _ ?_
     (HasAffineProperty.of_isPullback (.of_hasPullback _ (Z.affineCover.f i)) ‹_›) ?_
   · exact pullback.map _ _ _ _ (𝟙 _) _ _ (by simp) (Category.comp_id _) ≫
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      (pullbackRightPullbackFstIso g (Z.affineCover.f i) f).hom)
+      (pullbackRightPullbackFstIso g (Z.affineCover.f i) f).hom
   · exact inferInstance
 
 set_option backward.isDefEq.respectTransparency.types false in

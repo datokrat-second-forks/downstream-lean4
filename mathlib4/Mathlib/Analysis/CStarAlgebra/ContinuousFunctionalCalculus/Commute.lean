@@ -138,9 +138,7 @@ protected theorem Commute.cfcₙHom {a b : A} (ha : p a) (hb₁ : Commute a b)
   open scoped NonUnitalContinuousFunctionalCalculus in
   induction f using ContinuousMapZero.induction_on_of_compact with
   | zero => simp
-  | smul r f hf =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_smul]); exact hf.smul_left r
+  | smul r f hf => rw [map_smul]; exact hf.smul_left r
   | id => rwa [cfcₙHom_id ha]
   | star_id => rwa [map_star, cfcₙHom_id]
   | add f g hf hg => rw [map_add]; exact hf.add_left hg

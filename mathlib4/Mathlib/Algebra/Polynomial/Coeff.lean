@@ -73,8 +73,7 @@ def lsum {R A M : Type*} [Semiring R] [Semiring A] [AddCommMonoid M] [Module R A
   map_add' p q := sum_add_index p q _ (fun n => (f n).map_zero) fun n _ _ => (f n).map_add _ _
   map_smul' c p := by
     rw [sum_eq_of_subset (f · ·) (fun n => (f n).map_zero) (support_smul c p)]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [sum_def, Finset.smul_sum, coeff_smul, map_smul, RingHom.id_apply])
+    simp only [sum_def, Finset.smul_sum, coeff_smul, map_smul, RingHom.id_apply]
 
 variable (R) in
 /-- The nth coefficient, as a linear map. -/

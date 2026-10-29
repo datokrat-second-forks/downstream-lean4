@@ -118,7 +118,7 @@ def isLimitKernelFork : IsLimit (I.kernelFork) := by
   rw [← cancel_epi (singleObjHomologySelfIso (ComplexShape.up ℕ) _ _).hom,
     ← cancel_epi (isoHomologyπ₀ _).hom,
     ← cancel_epi (singleObjCyclesSelfIso (ComplexShape.up ℕ) _ _).inv]
-  (set_option backward.instanceTypes.subsingletons.prop false in simp)
+  simp
 
 set_option backward.isDefEq.respectTransparency false in
 instance (n : ℕ) : Mono (I.ι.f n) := by

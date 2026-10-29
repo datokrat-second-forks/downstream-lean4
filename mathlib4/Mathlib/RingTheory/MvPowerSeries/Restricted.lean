@@ -264,8 +264,7 @@ lemma val_pow (f : Restricted R c) (n : ℕ) : (f ^ n).1 = f.1 ^ n := rfl
 @[simp]
 lemma val_sum {ι : Type*} (s : Finset ι) (g : ι → Restricted R c) :
     (∑ i ∈ s, g i).1 = ∑ i ∈ s, (g i).1 :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  map_sum (IsRestricted.subring c).subtype g s)
+  map_sum (IsRestricted.subring c).subtype g s
 
 /-- `MvPowerSeries.monomial n a` as an element of `Restricted R c`. -/
 noncomputable

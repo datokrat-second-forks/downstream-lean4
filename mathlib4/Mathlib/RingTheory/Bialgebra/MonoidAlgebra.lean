@@ -287,8 +287,7 @@ def mapDomainOfBialgHom (f : R[G] →ₐc[R] R[H]) : G →* H where
 @[to_additive (dont_translate := R) (attr := simp)]
 lemma single_mapDomainOfBialgHom (f : R[G] →ₐc[R] R[H]) (g : G) (r : R) :
     single (mapDomainOfBialgHom f g) r = f (single g r) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← mul_one r, ← smul_eq_mul, ← smul_single, ← smul_single, map_smul])
+  rw [← mul_one r, ← smul_eq_mul, ← smul_single, ← smul_single, map_smul]
   congrm r • $(single_mapDomainOfBialgHomFun_one f g)
 
 @[to_additive (dont_translate := R) (attr := simp)]

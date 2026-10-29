@@ -344,9 +344,8 @@ theorem tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center {s : Sphere
     (dist_center_eq_dist_center_of_mem_sphere hp₁ hp₂)
   rw [← hr, ← oangle_midpoint_rev_left, oangle, vadd_vsub_assoc]
   nth_rw 1 [show p₂ -ᵥ p₁ = (2 : ℝ) • (midpoint ℝ p₁ p₂ -ᵥ p₁) by simp]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [map_smul, smul_smul, add_comm, o.tan_oangle_add_right_smul_rotation_pi_div_two,
-    mul_div_cancel_right₀ _ (two_ne_zero' ℝ)])
+    mul_div_cancel_right₀ _ (two_ne_zero' ℝ)]
   simpa using h.symm
 
 /-- Given three points on a circle, the center of that circle may be expressed explicitly as a
@@ -362,7 +361,6 @@ theorem inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center {s : Sp
   rw [add_comm,
     two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi hp₁ hp₂ hp₃ hp₁p₂.symm hp₂p₃ hp₁p₃]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- Given two points on a circle, the radius of that circle may be expressed explicitly as half
 the distance between those two points divided by the cosine of the angle between the chord and
 the radius at one of those points. -/

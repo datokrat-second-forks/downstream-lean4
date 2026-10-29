@@ -126,13 +126,12 @@ lemma mem_nhds_zero_iff {s : Set (WithIdealFilter F)} :
 
 /-- The topology is linear in the sense that `𝓝 0` has a basis of ideals. -/
 instance instIsLinearTopology : IsLinearTopology (WithIdealFilter F) (WithIdealFilter F) :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
   IsLinearTopology.mk_of_hasBasis' (R := (WithIdealFilter F))
     (M := (WithIdealFilter F))
     (ι := Ideal A) (S := Ideal A)
     (p := fun I : Ideal A ↦ I ∈ F) (s := fun I : Ideal A ↦ I)
     ⟨fun _ ↦ mem_nhds_zero_iff⟩
-    (fun I a _ hm ↦ Submodule.smul_mem I a hm))
+    (fun I a _ hm ↦ Submodule.smul_mem I a hm)
 
 /-- Under `[F.IsUniform]`, `A` is a topological ring with the induced topology. -/
 instance instIsTopologicalRing [F.IsUniform] : IsTopologicalRing (WithIdealFilter F) :=

@@ -121,8 +121,7 @@ lemma sum_mul_antipode_eq_smul (repr : Repr R a ι) :
   calc
         counit (antipode R a)
     _ = counit (∑ i ∈ (ℛ R a).index, (ℛ R a).left i * antipode R ((ℛ R a).right i)) := by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp_rw [map_sum, counit_mul, ← smul_eq_mul, ← map_smul, ← map_sum, sum_counit_smul])
+      simp_rw [map_sum, counit_mul, ← smul_eq_mul, ← map_smul, ← map_sum, sum_counit_smul]
     _ = counit a := by simpa using congr(counit (R := R) $(sum_mul_antipode_eq_smul (ℛ R a)))
 
 @[simp] lemma counit_comp_antipode : counit ∘ₗ antipode R = counit (A := A) := by

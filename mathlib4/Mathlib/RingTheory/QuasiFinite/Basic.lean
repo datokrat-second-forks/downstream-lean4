@@ -394,8 +394,9 @@ lemma QuasiFiniteAt.of_surjectiveOnStalks (p : Ideal S) [p.IsPrime] [QuasiFinite
     QuasiFiniteAt R q := by
   subst hq
   refine .of_surjective_algHom ⟨Localization.localRingHom _ q f.toRingHom rfl, ?_⟩ (hf q ‹_›)
+  (set_option backward.instanceTypes.subsingletons.prop true in
   simp [IsScalarTower.algebraMap_apply R S (Localization.AtPrime (q.comap _)),
-    IsScalarTower.algebraMap_apply R T (Localization.AtPrime _)]
+    IsScalarTower.algebraMap_apply R T (Localization.AtPrime _)])
 
 lemma QuasiFiniteAt.of_surjectiveOnStalks_of_liesOver (p : Ideal S) [p.IsPrime]
     [QuasiFiniteAt R p] (hf : (algebraMap S T).SurjectiveOnStalks) (q : Ideal T) [q.IsPrime]

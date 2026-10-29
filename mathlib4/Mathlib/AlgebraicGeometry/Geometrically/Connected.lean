@@ -64,8 +64,7 @@ instance (s : S) [GeometricallyConnected f] :
   MorphismProperty.pullback_snd _ _ inferInstance
 
 instance (s : S) [GeometricallyConnected f] : ConnectedSpace (f.fiber s) :=
-  GeometricallyConnected.geometrically_connectedSpace _ _ _
-    (set_option backward.instanceTypes.subsingletons.prop false in .of_hasPullback _ _)
+  GeometricallyConnected.geometrically_connectedSpace _ _ _ (.of_hasPullback _ _)
 
 instance (priority := low) [GeometricallyConnected f] : Surjective f :=
   ⟨fun x ↦ ⟨_, (f.range_fiberι x).le ⟨Nonempty.some inferInstance, rfl⟩⟩⟩

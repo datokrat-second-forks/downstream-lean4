@@ -246,8 +246,7 @@ def convPostcomp (h : A →ₐ[R] B) : WithConv (C →ₗ[R] A) →ₐ[R] WithCo
   map_mul' f g := WithConv.ext (algHom_comp_convMul_distrib h f g)
   map_zero' := WithConv.ext (by ext; simp)
   map_add' f g := WithConv.ext (by ext; simp)
-  commutes' r :=
-    WithConv.ext (by ext; (set_option backward.instanceTypes.subsingletons.prop false in simp))
+  commutes' r := WithConv.ext (by ext; simp)
 
 lemma convPostcomp_injective {h : A →ₐ[R] B} (hh : Function.Injective h) :
     Function.Injective (convPostcomp h (C := C)) := fun _ _ e ↦

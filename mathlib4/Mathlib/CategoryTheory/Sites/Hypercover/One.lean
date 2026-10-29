@@ -292,7 +292,6 @@ instance : Nonempty (PreOneHypercover.{w} S) := ⟨trivial S⟩
 section
 
 set_option backward.dsimp.instanceTypes false in
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Intersection of two pre-`1`-hypercovers. -/
@@ -312,7 +311,6 @@ def inter (E F : PreOneHypercover S) [∀ i j, HasPullback (E.f i) (F.f j)]
 variable {E} {F : PreOneHypercover S}
 
 set_option backward.dsimp.instanceTypes false in
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma sieve₁_inter [HasPullbacks C] {i j : E.I₀ × F.I₀} {W : C}
@@ -877,7 +875,6 @@ def interSnd : (E.inter F).Hom F where
   h₁ _ := pullback.snd _ _
 
 set_option backward.dsimp.instanceTypes false in
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {E F} in
@@ -1129,11 +1126,9 @@ lemma sieve₁'_toPreOneHypercover_eq_top {S : C} (E : PreZeroHypercover S) [E.H
     E.toPreOneHypercover.sieve₁' i j = ⊤ := by
   rw [eq_top_iff]
   intro Y f _
-  refine ⟨pullback (E.f i) (E.f j), f, 𝟙 _, ?_, by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp)⟩
+  refine ⟨pullback (E.f i) (E.f j), f, 𝟙 _, ?_, by simp⟩
   refine Presieve.ofArrows.mk' ⟨⟩ rfl ?_
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  apply pullback.hom_ext <;> simp [PreOneHypercover.toPullback])
+  apply pullback.hom_ext <;> simp [PreOneHypercover.toPullback]
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- If the pairwise pullbacks exist, this is the pre-`1`-hypercover where the covers
@@ -1171,8 +1166,7 @@ lemma PreZeroHypercover.sieve₁'_refineOneHypercover (i j : E.I₀) :
     (E.refineOneHypercover F).sieve₁' i j = (F i j).sieve₀ := by
   rw [PreOneHypercover.sieve₁']
   congr
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  ext <;> simp [PreOneHypercover.toPullback])
+  ext <;> simp [PreOneHypercover.toPullback]
 
 end
 

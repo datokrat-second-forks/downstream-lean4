@@ -172,8 +172,7 @@ theorem Module.Dual.eval_naturality (f : M₁ →ₗ[R] M₂) :
 lemma Dual.apply_one_mul_eq (f : Dual R R) (r : R) :
     f 1 * r = f r := by
   conv_rhs => rw [← mul_one r, ← smul_eq_mul]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [map_smul, smul_eq_mul, mul_comm])
+  rw [map_smul, smul_eq_mul, mul_comm]
 
 @[simp]
 lemma LinearMap.range_dualMap_dual_eq_span_singleton (f : Dual R M₁) :

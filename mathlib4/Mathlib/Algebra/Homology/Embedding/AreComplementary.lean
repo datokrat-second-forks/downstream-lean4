@@ -312,7 +312,7 @@ noncomputable def shortComplexTruncLEX₃ToTruncGE :
 @[reassoc (attr := simp)]
 lemma g_shortComplexTruncLEX₃ToTruncGE :
     (K.shortComplexTruncLE e₁).g ≫ K.shortComplexTruncLEX₃ToTruncGE ac = K.πTruncGE e₂ :=
-  (set_option backward.instanceTypes.subsingletons.prop false in cokernel.π_desc _ _ _)
+  cokernel.π_desc _ _ _
 
 set_option backward.defeqAttrib.useBackward true in
 instance : QuasiIso (K.shortComplexTruncLEX₃ToTruncGE ac) where
@@ -324,7 +324,7 @@ instance : QuasiIso (K.shortComplexTruncLEX₃ToTruncGE ac) where
     · have := quasiIsoAt_shortComplexTruncLE_g K e₁ (e₂.f i₂) (fun _ => ac.disjoint _ _)
       rw [← quasiIsoAt_iff_comp_left (K.shortComplexTruncLE e₁).g
         (K.shortComplexTruncLEX₃ToTruncGE ac), g_shortComplexTruncLEX₃ToTruncGE]
-      (set_option backward.instanceTypes.subsingletons.prop false in dsimp)
+      dsimp
       infer_instance
 
 end

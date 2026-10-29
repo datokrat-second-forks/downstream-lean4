@@ -159,8 +159,7 @@ theorem continuousSMul [ContinuousSMul 𝕜 𝕜] : ContinuousSMul 𝕜 E where
     let t₁ : TopologicalSpace E := .induced (B · ·) Pi.topologicalSpace
     have : B.IsWeak := ⟨rfl⟩
     rw [hB.eq_induced, continuous_induced_rng]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [Function.comp_def, map_smul, smul_apply])
+    simp only [Function.comp_def, map_smul, smul_apply]
     fun_prop
 
 /-- `E` is a `IsTopologicalAddGroup` when `E` is equipped with a `LinearMap.IsWeak` topology. -/

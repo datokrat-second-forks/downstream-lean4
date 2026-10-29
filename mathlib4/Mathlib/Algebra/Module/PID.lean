@@ -271,9 +271,8 @@ theorem exists_ker_toSpanSingleton_eq_annihilator [Module.Finite R M] :
   have ⟨m, ι, _, p, irr, n, ⟨e⟩⟩ := equiv_free_prod_directSum (R := R) (M := M)
   refine ⟨e.symm (Finsupp.equivFunOnFinite.symm fun _ ↦ 1, DFinsupp.equivFunOnFintype.symm
     fun _ ↦ mkQ _ 1), le_antisymm (fun x h ↦ ?_) fun x h ↦ mem_annihilator.mp h _⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [mem_ker, toSpanSingleton_apply, ← map_smul,
-    e.symm.map_eq_zero_iff, Prod.ext_iff, Finsupp.ext_iff, DFinsupp.ext_iff] at h)
+    e.symm.map_eq_zero_iff, Prod.ext_iff, Finsupp.ext_iff, DFinsupp.ext_iff] at h
   obtain _ | m := m
   · rw [← mul_one x, ← smul_eq_mul, e.annihilator_eq, annihilator_prod]
     (set_option backward.dsimp.instanceTypes false in

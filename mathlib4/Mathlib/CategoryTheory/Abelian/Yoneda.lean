@@ -56,7 +56,6 @@ theorem preadditiveCoyonedaObj_map_surjective {G : C} [Projective G] (hG : IsSep
       convert! (f.hom.map_smul (.op (.of x)) (𝟙 G)).symm
       exact (Category.comp_id _).symm⟩
   · (set_option backward.dsimp.instanceTypes false in
-    set_option backward.instanceTypes.subsingletons.prop false in
     simp [AddCommGrpCat.mono_iff_injective, Functor.coe_mapAddHom, Functor.map_injective])
 
 end

@@ -340,8 +340,7 @@ protected theorem continuous_iff_continuous_comp [Algebra ℝ 𝕜] [IsScalarTow
   rw [continuous_iff_le_induced]
   have : @IsTopologicalAddGroup _ (induced (f.restrictScalars ℝ) t) _ :=
     isTopologicalAddGroup_induced _
-  have : @ContinuousSMul ℝ _ _ _ (induced (f.restrictScalars ℝ) t) :=
-    (set_option backward.instanceTypes.subsingletons.prop false in continuousSMul_induced _)
+  have : @ContinuousSMul ℝ _ _ _ (induced (f.restrictScalars ℝ) t) := continuousSMul_induced _
   have : @LocallyConvexSpace ℝ _ _ _ _ _ (induced (f.restrictScalars ℝ) t) := .induced _
   simp_rw [topologicalSpace_le_iff, originalTop, iSup₂_le_iff, ← continuous_iff_le_induced,
     continuous_coinduced_dom]
@@ -627,8 +626,7 @@ noncomputable instance : LineDerivAdd E 𝓓(Ω, F) 𝓓(Ω, F) where
   lineDerivOp_left_add _ _ f := congr($lineDerivCLM_add f)
 
 noncomputable instance : LineDerivSMul 𝕜 E 𝓓(Ω, F) 𝓓(Ω, F) where
-  lineDerivOp_smul v :=
-    (set_option backward.instanceTypes.subsingletons.prop false in map_smul (lineDerivCLM 𝕜 v))
+  lineDerivOp_smul v := map_smul (lineDerivCLM 𝕜 v)
 
 noncomputable instance : LineDerivLeftSMul ℝ E 𝓓(Ω, F) 𝓓(Ω, F) where
   lineDerivOp_left_smul _ _ f := congr($lineDerivCLM_smul f)

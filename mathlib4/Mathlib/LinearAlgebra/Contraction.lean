@@ -122,8 +122,7 @@ theorem comp_dualTensorHom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (
     dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) =
       g n • dualTensorHom R M P (f ⊗ₜ p) := by
   ext m
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [coe_comp, Function.comp_apply, dualTensorHom_apply, map_smul, LinearMap.smul_apply])
+  simp only [coe_comp, Function.comp_apply, dualTensorHom_apply, map_smul, LinearMap.smul_apply]
   rw [smul_comm]
 
 /-- As a matrix, `dualTensorHom` evaluated on a basis element of `M* ⊗ N` is a matrix with a
@@ -135,9 +134,7 @@ theorem toMatrix_dualTensorHom {m : Type*} {n : Type*} [Fintype m] [Finite n] [D
   by_cases hij : i = i' ∧ j = j'
   · simp [LinearMap.toMatrix_apply, hij]
   · rw [and_iff_not_or_not, Classical.not_not] at hij
-    rcases hij with hij | hij <;>
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [LinearMap.toMatrix_apply, Finsupp.single_eq_pi_single, hij])
+    rcases hij with hij | hij <;> simp [LinearMap.toMatrix_apply, Finsupp.single_eq_pi_single, hij]
 
 section
 
@@ -448,12 +445,11 @@ lemma dualDistrib_dualDistribInvOfBasis_left_inverse (b : Basis ι R M) (c : Bas
   rintro ⟨i, j⟩
   apply (b.tensorProduct c).ext
   rintro ⟨i', j'⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [dualDistrib, Basis.coe_dualBasis, coe_comp, Function.comp_apply,
     dualDistribInvOfBasis_apply, Basis.coord_apply, Basis.tensorProduct_repr_tmul_apply,
     Basis.repr_self, _root_.map_sum, map_smul, homTensorHomMap_apply, compRight_apply,
     Basis.tensorProduct_apply, LinearMap.coe_sum, Finset.sum_apply, LinearMap.smul_apply,
-    LinearEquiv.coe_coe, map_tmul, lid_tmul, smul_eq_mul, id_coe, id_eq])
+    LinearEquiv.coe_coe, map_tmul, lid_tmul, smul_eq_mul, id_coe, id_eq]
   rw [Finset.sum_eq_single i, Finset.sum_eq_single j]
   · simpa using mul_comm _ _
   all_goals { intros; simp [*] at * }

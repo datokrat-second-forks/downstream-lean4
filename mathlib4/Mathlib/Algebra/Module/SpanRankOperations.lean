@@ -128,8 +128,7 @@ lemma IsLocalRing.spanFinrank_maximalIdeal_add_finrank_eq_of_surjective
   have (r : ResidueField R) (m : Q) : e (r • m) = (ResidueField.map (algebraMap R S)) r • e m := by
     obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective _ m
     obtain ⟨r, rfl⟩ := residue_surjective r
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    exact (map_smul f r m).trans (algebraMap_smul S r _).symm)
+    exact (map_smul f r m).trans (algebraMap_smul S r _).symm
   have bij' : Function.Bijective (ResidueField.map (algebraMap R S)) :=
     ⟨RingHom.injective _, Ideal.Quotient.lift_surjective_of_surjective _ _
       (Ideal.Quotient.mk_surjective.comp surj)⟩

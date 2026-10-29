@@ -105,7 +105,6 @@ theorem map_zero : map I (0 : M →ₗ[R] N) = 0 :=
 
 end AdicCauchySequence
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- A linear map induces a map on adic completions. -/
 def map : (M →ₗ[R] N) →ₗ[R] (AdicCompletion I M →ₗ[AdicCompletion I R] AdicCompletion I N) where
   toFun f :=
@@ -378,8 +377,7 @@ theorem exists_smodEq_pow_add_one_smul {f : M →ₗ[R] N}
   | smul r hr y _ =>
     obtain ⟨x, hx⟩ := h (mkQ _ y)
     use r • x, smul_mem_smul hr mem_top
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp only [coe_comp, Function.comp_apply, mkQ_apply, ← SModEq.def, map_smul] at ⊢ hx)
+    simp only [coe_comp, Function.comp_apply, mkQ_apply, ← SModEq.def, map_smul] at ⊢ hx
     rw [pow_succ, ← smul_smul]
     exact SModEq.smul' hx hr
   | add y1 hy1 y2 hy2 ih1 ih2 =>

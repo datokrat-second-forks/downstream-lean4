@@ -106,7 +106,6 @@ noncomputable def Over.pullback (f : X ⟶ Y) [P.HasPullbacksAlong f]
 
 variable {P} {Q}
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- `Over.pullback` commutes with composition. -/
@@ -129,8 +128,7 @@ lemma Over.pullbackComp_left_fst_fst (f : X ⟶ Y) (g : Y ⟶ Z) [P.IsStableUnde
     [Q.RespectsIso] [Q.IsStableUnderBaseChange] (A : P.Over Q Z) :
     ((Over.pullbackComp f g).hom.app A).left ≫ pullback.fst (pullback.snd A.hom g) f ≫
     pullback.fst A.hom g = pullback.fst A.hom (f ≫ g) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp)
+  simp
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
@@ -291,7 +289,6 @@ noncomputable def Under.pushout (f : X ⟶ Y) [P.HasPushoutsAlong f]
 
 variable {P} {Q}
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- `Under.pushout` commutes with composition. -/
@@ -347,7 +344,6 @@ section Adjunction
 
 variable [P.IsStableUnderComposition] [Q.IsStableUnderCobaseChange]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local instance] hasPushouts_symmetry_of_hasPushoutsAlong in

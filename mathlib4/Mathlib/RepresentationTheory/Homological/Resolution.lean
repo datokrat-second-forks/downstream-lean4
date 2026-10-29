@@ -192,8 +192,7 @@ theorem d_of {n : ℕ} (c : Fin (n + 1) → G) :
 lemma d_single {n : ℕ} (c : Fin (n + 1) → G) (r : k) :
     d k G n (.single c r) =
       ∑ p : Fin (n + 1), .single (c ∘ p.succAbove) (r * (-1 : k) ^ p.val) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← mul_one r, ← smul_eq_mul, ← MonoidAlgebra.smul_single, map_smul, d_of])
+  rw [← mul_one r, ← smul_eq_mul, ← MonoidAlgebra.smul_single, map_smul, d_of]
   simp [Finset.smul_sum]
 
 variable (k G) [Monoid G]

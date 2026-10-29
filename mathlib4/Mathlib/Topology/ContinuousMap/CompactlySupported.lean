@@ -812,10 +812,9 @@ noncomputable def toRealPositiveLinear (Λ : C_c(α, ℝ≥0) →ₗ[ℝ≥0] �
         · rw [RingHom.id_apply, smul_eq_mul, ← (smul_neg a f), nnrealPart_smul_pos f ha,
             nnrealPart_smul_pos (-f) ha]
           simp [sup_of_le_left ha, mul_sub]
-        · (set_option backward.instanceTypes.subsingletons.prop false in
-          simp only [RingHom.id_apply, smul_eq_mul, ← (smul_neg a f),
+        · simp only [RingHom.id_apply, smul_eq_mul, ← (smul_neg a f),
             nnrealPart_smul_neg f ha, nnrealPart_smul_neg (-f) ha, map_smul,
-            NNReal.coe_mul, Real.coe_toNNReal', neg_neg, sup_of_le_left (neg_nonneg.mpr ha)])
+            NNReal.coe_mul, Real.coe_toNNReal', neg_neg, sup_of_le_left (neg_nonneg.mpr ha)]
           ring }
     (fun g hg ↦ by simp [nnrealPart_neg_eq_zero_of_nonneg hg])
 

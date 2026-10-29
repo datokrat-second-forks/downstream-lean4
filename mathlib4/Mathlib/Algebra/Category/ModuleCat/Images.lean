@@ -66,7 +66,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.I :=
     map_smul' := fun c x => by
       apply (mono_iff_injective F'.m).1
       · infer_instance
-      (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
+      rw [map_smul]
       change (F'.e ≫ F'.m) _ = _ • (F'.e ≫ F'.m) _
       simp_rw [F'.fac, (Classical.indefiniteDescription (fun z => f z = _) _).2]
       rfl }

@@ -195,13 +195,11 @@ theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     apply Concrete.limit_ext
     rintro ⟨⟨⟩⟩
     · rw [← ConcreteCategory.comp_apply]
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      erw [Limits.prod.map_fst])
+      erw [Limits.prod.map_fst]
       rw [ConcreteCategory.comp_apply, TopCat.prodIsoProd_inv_fst_apply]
       exact hx₁
     · rw [← ConcreteCategory.comp_apply]
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      erw [Limits.prod.map_snd])
+      erw [Limits.prod.map_snd]
       rw [ConcreteCategory.comp_apply, TopCat.prodIsoProd_inv_snd_apply]
       exact hx₂
 

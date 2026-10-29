@@ -638,9 +638,8 @@ lemma spectralSequence_iso (hn₁ : n₀ + 1 = n₁ := by lia) (hn₂ : n₁ + 1
   obtain rfl : n₂ = n₁ + 1 := by lia
   subst hpq hpq' hn₁' hi₀ hi₁ hi₂ hi₃ hi₀' hi₃'
   ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [spectralSequencePageXIso, spectralSequence, spectralSequenceHomologyData,
-    SpectralSequence.homologyIso, SpectralSequence.homologyIso'])
+    SpectralSequence.homologyIso, SpectralSequence.homologyIso']
 
 end
 

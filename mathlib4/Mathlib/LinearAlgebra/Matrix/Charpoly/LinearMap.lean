@@ -125,7 +125,7 @@ theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by
 theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.End R M} (h : A.Represents b f)
     (r : R) : (r • A).Represents b (r • f) := by
   delta Matrix.Represents at h ⊢
-  (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul, map_smul, h])
+  rw [map_smul, map_smul, h]
 
 theorem Matrix.Represents.algebraMap (r : R) :
     (algebraMap _ (Matrix ι ι R) r).Represents b (algebraMap _ (Module.End R M) r) := by

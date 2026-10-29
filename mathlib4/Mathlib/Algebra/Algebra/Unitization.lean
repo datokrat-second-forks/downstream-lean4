@@ -744,8 +744,7 @@ def _root_.NonUnitalAlgHom.toAlgHom (φ : A →ₙₐ[R] C) : Unitization R A �
       induction y with
       | inl_add_inr =>
         simp only [fst_mul, fst_add, fst_inl, fst_inr, snd_mul, snd_add, snd_inl, snd_inr, add_zero,
-          map_mul, zero_add, map_add,
-          (set_option backward.instanceTypes.subsingletons.prop false in map_smul φ)]
+          map_mul, zero_add, map_add, map_smul φ]
         rw [add_mul, mul_add, mul_add]
         rw [← Algebra.commutes _ (φ x_a)]
         simp only [Algebra.algebraMap_eq_smul_one, smul_one_mul, add_assoc]

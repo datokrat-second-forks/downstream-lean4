@@ -25,6 +25,5 @@ lemma Algebra.norm_one_add_smul {A B} [CommRing A] [CommRing B] [Algebra A B]
   have : Fintype ι := inferInstance
   clear_value ι b
   simp_rw [Algebra.norm_eq_matrix_det b, Algebra.trace_eq_matrix_trace b]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp only [map_add, map_one, map_smul, Matrix.det_one_add_smul a])
+  simp only [map_add, map_one, map_smul, Matrix.det_one_add_smul a]
   exact ⟨_, rfl⟩

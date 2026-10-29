@@ -307,7 +307,6 @@ theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / �
   rw [← cos_arg h₀, ← Real.cos_neg, Real.arccos_cos, neg_neg]
   exacts [neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
 
-set_option backward.instanceTypes.subsingletons.decidable false in
 theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x := by
   simp_rw [arg_eq_pi_iff, arg, neg_im, conj_im, conj_re, norm_conj, neg_div, neg_neg,
     Real.arcsin_neg]

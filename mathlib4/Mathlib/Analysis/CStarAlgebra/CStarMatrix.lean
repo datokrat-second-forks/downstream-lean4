@@ -588,9 +588,7 @@ lemma norm_def' {M : CStarMatrix n n A} : ‖M‖ = ‖toCLMNonUnitalAlgHom (A :
 
 lemma normedSpaceCore : NormedSpace.Core ℂ (CStarMatrix m n A) where
   norm_nonneg M := (toCLM M).opNorm_nonneg
-  norm_smul c M := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [norm_def, norm_def, map_smul, norm_smul _ (toCLM M)])
+  norm_smul c M := by rw [norm_def, norm_def, map_smul, norm_smul _ (toCLM M)]
   norm_triangle M₁ M₂ := by simpa [← map_add] using! norm_add_le (toCLM M₁) (toCLM M₂)
   norm_eq_zero_iff := by
     simpa only [norm_def, norm_eq_zero, ← injective_iff_map_eq_zero'] using! toCLM_injective
@@ -821,9 +819,7 @@ noncomputable instance instNormedRing : NormedRing (CStarMatrix n n A) where
   norm_mul_le := norm_mul_le
 
 noncomputable instance instNormedAlgebra : NormedAlgebra ℂ (CStarMatrix n n A) where
-  norm_smul_le r M := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa only [norm_def, map_smul] using (toCLM M).opNorm_smul_le r)
+  norm_smul_le r M := by simpa only [norm_def, map_smul] using (toCLM M).opNorm_smul_le r
 
 /-- Matrices with entries in a unital C⋆-algebra form a unital C⋆-algebra. -/
 noncomputable instance instCStarAlgebra : CStarAlgebra (CStarMatrix n n A) where

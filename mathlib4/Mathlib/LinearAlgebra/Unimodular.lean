@@ -67,9 +67,8 @@ theorem span_repr_eq_range_applyₗ {ι : Type*} (b : Basis ι R M) (v : M) :
   · rintro _ ⟨i, rfl⟩
     exact ⟨b.coord i, rfl⟩
   · rintro _ ⟨f, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [LinearMap.applyₗ_apply_apply, ← congr_arg f (b.linearCombination_repr v),
-      Finsupp.linearCombination_apply, map_finsuppSum, map_smul, smul_eq_mul])
+      Finsupp.linearCombination_apply, map_finsuppSum, map_smul, smul_eq_mul]
     exact Submodule.finsuppSum_mem R _ _ _ fun i _ ↦
       Ideal.mul_mem_right _ _ Ideal.mem_span_range_self
 
@@ -110,8 +109,7 @@ theorem exists_basis_zero_eq (hM : Module.finrank R M = 2) {v : M} (hv : IsUnimo
   have hdet : N.det = 1 := by
     rw [Matrix.det_fin_two_of, neg_mul, sub_neg_eq_add, mul_comm (f (b 1)) (b.repr v 1), ← hf]
     conv_rhs => rw [← b.sum_repr v]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_sum, Fin.sum_univ_two, map_smul, map_smul, smul_eq_mul, smul_eq_mul])
+    rw [map_sum, Fin.sum_univ_two, map_smul, map_smul, smul_eq_mul, smul_eq_mul]
   refine ⟨b.map (Matrix.toLinearEquiv b N (hdet ▸ isUnit_one)), ?_⟩
   simpa [N] using (Fin.sum_univ_two fun i ↦ b.repr v i • b i).symm.trans (b.sum_repr v)
 

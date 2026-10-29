@@ -66,8 +66,7 @@ theorem projectSubobject_factors [HasFiniteLimits C] [PreservesFiniteLimits T]
     {A : StructuredArrow S T} :
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.hom :=
   Subobject.ind _ fun P f hf =>
-    ⟨P.hom ≫ T.map (Subobject.underlyingIso _).inv, by
-      (set_option backward.instanceTypes.subsingletons.prop false in simp [← T.map_comp])⟩
+    ⟨P.hom ≫ T.map (Subobject.underlyingIso _).inv, by simp [← T.map_comp]⟩
 
 /-- A subobject of the underlying object of a structured arrow can be lifted to a subobject of
     the structured arrow, provided that there is a morphism making the subobject into a structured
@@ -77,7 +76,6 @@ def liftSubobject {A : StructuredArrow S T} (P : Subobject A.right) {q}
     (hq : q ≫ T.map P.arrow = A.hom) : Subobject A :=
   Subobject.mk (homMk P.arrow hq : mk q ⟶ A)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Projecting and then lifting a subobject recovers the original subobject, because there is at
     most one morphism making the projected subobject into a structured arrow. -/
@@ -154,8 +152,7 @@ theorem projectQuotient_factors [HasFiniteColimits C] [PreservesFiniteColimits S
     ⟨S.map (Subobject.underlyingIso _).unop.inv ≫ P.unop.hom, by
       dsimp
       rw [← Category.assoc, ← S.map_comp, ← unop_comp]
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp)⟩
+      simp⟩
 
 /-- A quotient of the underlying object of a costructured arrow can be lifted to a quotient of
     the costructured arrow, provided that there is a morphism making the quotient into a
@@ -205,7 +202,6 @@ theorem unop_left_comp_ofMkLEMk_unop {A : CostructuredArrow S T} {P Q : (Costruc
   rw [← unop_comp]
   simp only [Subobject.ofMkLEMk_comp, Quiver.Hom.unop_op]
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- If `A : S.obj B ⟶ T` is a costructured arrow for `S : C ⥤ D` and `T : D`, then we can
     explicitly describe the quotients of `A` as the quotients `P` of `B` in `C` for which `A.hom`

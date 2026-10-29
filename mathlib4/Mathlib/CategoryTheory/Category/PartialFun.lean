@@ -119,13 +119,10 @@ noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
     { obj := fun X => ⟨(Option X), none⟩
       map := fun f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩
       map_id := fun X => Pointed.Hom.ext <| funext fun o => Option.recOn o rfl fun a => (by
-        (set_option backward.instanceTypes.subsingletons.decidable false in
-        dsimp [CategoryStruct.id])
-        (set_option backward.instanceTypes.subsingletons.decidable false in
-        convert Part.some_toOption a))
+        dsimp [CategoryStruct.id]
+        convert Part.some_toOption a)
       map_comp := fun f g => Pointed.Hom.ext <| funext fun o => Option.recOn o rfl fun a => by
-        (set_option backward.instanceTypes.subsingletons.decidable false in
-        dsimp [CategoryStruct.comp])
+        dsimp [CategoryStruct.comp]
         rw [Part.bind_toOption g (f a), Option.elim'_eq_elim] }
 
 set_option backward.isDefEq.respectTransparency false in

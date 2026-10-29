@@ -87,7 +87,6 @@ variable {R : Type*} [CommRing R] [Algebra R S] [Algebra R K] [IsScalarTower R K
 variable {A : Type*} [CommRing A] [Algebra R A] [Algebra S A]
 variable [IsScalarTower R S A] {B : PowerBasis S A}
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- If `B : PowerBasis S A` is such that `IsIntegral R B.gen`, then
 `IsIntegral R (B.basis.repr (B.gen ^ n) i)` for all `i` if
 `minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)`. This is the case if `R` is a GCD domain
@@ -175,9 +174,8 @@ theorem toMatrix_isIntegral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen 
   refine repr_pow_isIntegral hB (fun i => ?_) hmin _ _
   rw [← h, aeval_eq_sum_range, map_sum, Finset.sum_apply']
   refine IsIntegral.sum _ fun n _ => ?_
-  (set_option backward.instanceTypes.subsingletons.prop false in
   rw [Algebra.smul_def, IsScalarTower.algebraMap_apply R K S, ← Algebra.smul_def, map_smul,
-    algebraMap_smul])
+    algebraMap_smul]
   exact (repr_gen_pow_isIntegral hB hmin _ _).smul _
 
 end PowerBasis

@@ -41,8 +41,7 @@ lemma linearMap_subsingleton_of_mem_annihilator {r : R} (reg : IsSMulRegular M r
     (mem_ann : r ∈ Module.annihilator R N) : Subsingleton (N →ₗ[R] M) := by
   apply subsingleton_of_forall_eq 0 (fun f ↦ ext fun x ↦ ?_)
   have : r • (f x) = r • 0 := by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [smul_zero, ← map_smul, Module.mem_annihilator.mp mem_ann x, map_zero])
+    rw [smul_zero, ← map_smul, Module.mem_annihilator.mp mem_ann x, map_zero]
   simpa using reg this
 
 lemma subsingleton_linearMap_iff [IsNoetherianRing R] [Module.Finite R M] [Module.Finite R N] :

@@ -436,7 +436,6 @@ def openCoverOfMapIrrelevantEqTop : X.OpenCover :=
     rw [← Scheme.zeroLocus_span, Set.range_comp', ← Ideal.map_span, H, hf]
     simp)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a graded ring `A` and a map `f : A →+* Γ(X, ⊤)` such that the image of the

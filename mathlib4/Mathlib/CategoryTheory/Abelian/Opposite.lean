@@ -106,14 +106,12 @@ def kernelUnopUnop : kernel g.unop ≅ (cokernel g).unop :=
 
 theorem kernel.ι_unop :
     (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) ≫ cokernel.π g ≫ (kernelUnopOp g).inv := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp)
+  simp
 
 theorem cokernel.π_unop :
     (cokernel.π g.unop).op =
       (cokernelUnopOp g).hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp)
+  simp
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps!]

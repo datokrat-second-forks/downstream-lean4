@@ -61,8 +61,7 @@ noncomputable def chainsMap :
   comm' i j (hij : _ = _) := by
     subst hij
     ext
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [Fin.comp_contractNth, map_add, inhomogeneousChains.d, Rep.hom_comm_apply φ])
+    simp [Fin.comp_contractNth, map_add, inhomogeneousChains.d, Rep.hom_comm_apply φ]
     rfl
 
 lemma chainsMap_congr {f g : G →* H} {φ : A ⟶ res f B} {ψ : A ⟶ res g B} (hfg : f = g)

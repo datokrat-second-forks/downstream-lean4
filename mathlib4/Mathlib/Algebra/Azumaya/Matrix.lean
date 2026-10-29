@@ -53,10 +53,9 @@ lemma AlgHom.mulLeftRightMatrix.comp_inv :
   ext f : 1
   apply (Matrix.stdBasis _ _ _).ext
   intro ⟨i, j⟩
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply, map_sum,
     map_smul, stdBasis_eq_single, LinearMap.coe_sum, Finset.sum_apply,
-    LinearMap.smul_apply, LinearMap.id_coe, id_eq])
+    LinearMap.smul_apply, LinearMap.id_coe, id_eq]
   ext k l
   simp [sum_apply, Matrix.mul_apply, single, Fintype.sum_prod_type, ite_and]
 

@@ -649,7 +649,7 @@ instance applySMulCommClass : SMulCommClass R₁ (M₁ →L[R₁] M₁) M₁ whe
   smul_comm r e m := (e.map_smul r m).symm
 
 instance applySMulCommClass' : SMulCommClass (M₁ →L[R₁] M₁) R₁ M₁ where
-  smul_comm := (set_option backward.instanceTypes.subsingletons.prop false in map_smul)
+  smul_comm := map_smul
 
 instance continuousConstSMul_apply : ContinuousConstSMul (M₁ →L[R₁] M₁) M₁ :=
   ⟨ContinuousLinearMap.continuous⟩

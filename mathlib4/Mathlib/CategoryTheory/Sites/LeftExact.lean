@@ -103,8 +103,7 @@ instance preservesLimit_diagramFunctor
         uniq := by
           intro E m hm
           refine Multiequalizer.hom_ext _ _ _ (fun a => limit_obj_ext (fun j => ?_))
-          (set_option backward.instanceTypes.subsingletons.prop false in
-          dsimp [liftToDiagramLimitObj])
+          dsimp [liftToDiagramLimitObj]
           rw [Multiequalizer.lift_ι, Category.assoc, liftToDiagramLimitObjAux_fac, ← hm,
             Category.assoc]
           dsimp

@@ -130,7 +130,7 @@ theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
 to fix definitional equalities. -/
 protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆ₙₐ[R] B where
   toFun := f'
-  map_smul' := h.symm ▸ (set_option backward.instanceTypes.subsingletons.prop false in map_smul f)
+  map_smul' := h.symm ▸ map_smul f
   map_zero' := h.symm ▸ map_zero f
   map_add' := h.symm ▸ map_add f
   map_mul' := h.symm ▸ map_mul f
@@ -451,8 +451,7 @@ instance : Monoid (A →⋆ₐ[R] A) where
 
 /-- A unital morphism of ⋆-algebras is a `NonUnitalStarAlgHom`. -/
 def toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : A →⋆ₙₐ[R] B :=
-  { f with
-    map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f) }
+  { f with map_smul' := map_smul f }
 
 @[simp]
 theorem coe_toNonUnitalStarAlgHom (f : A →⋆ₐ[R] B) : (f.toNonUnitalStarAlgHom : A → B) = f :=
@@ -658,9 +657,7 @@ instance (priority := 100) {F R A B : Type*} [Monoid R] [NonUnitalNonAssocSemiri
 instance (priority := 100) (F R A B : Type*) [CommSemiring R] [Semiring A]
     [Algebra R A] [Semiring B] [Algebra R B] [EquivLike F A B] [NonUnitalAlgEquivClass F R A B] :
     AlgEquivClass F R A B :=
-  { commutes := fun f r => by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one]) }
+  { commutes := fun f r => by simp only [Algebra.algebraMap_eq_smul_one, map_smul, map_one] }
 
 /-- Turn an element of a type `F` satisfying `AlgEquivClass F R A B` and `StarHomClass F A B` into
 an actual `StarAlgEquiv`. -/
@@ -1046,7 +1043,7 @@ def ofStarAlgHom {R A B : Type*} [CommSemiring R]
     invFun := g
     left_inv x := congr($h₁ x)
     right_inv x := congr($h₂ x)
-    map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f) }
+    map_smul' := map_smul f }
 
 @[simp]
 lemma toStarAlgHom_ofStarAlgHom (f : A₁ →⋆ₐ[R] A₂) (g : A₂ →⋆ₐ[R] A₁)
@@ -1081,7 +1078,7 @@ noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[
       (hf : Function.Bijective (f : A → B)) with
     toFun := f
     map_star' := map_star f
-    map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul f) }
+    map_smul' := map_smul f }
 
 @[simp]
 theorem coe_ofBijective {f : F} (hf : Function.Bijective f) :

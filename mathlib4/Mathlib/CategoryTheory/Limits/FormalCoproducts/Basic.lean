@@ -373,7 +373,6 @@ of formal coproducts. -/
       map_comp _ _ := Sigma.hom_ext _ _ (fun _ ↦ by simp [Sigma.ι_comp_desc]) }
   map α := { app f := Sigma.map fun i ↦ α.app (f.obj i) }
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `eval(F)` restricted to the original category (via `incl`) is the original copresheaf `F`. -/
@@ -389,12 +388,8 @@ set_option backward.isDefEq.respectTransparency false in
 /-- `eval(F)` preserves arbitrary coproducts. -/
 def isColimitEvalMapCoconeCofan : IsColimit (((eval.{w} C A).obj F).mapCocone (cofan.{w} J f)) where
   desc s := Sigma.desc fun i ↦ Sigma.ι (F.obj ∘ (f i.1).obj) i.2 ≫ s.ι.app ⟨i.1⟩
-  fac s i := Sigma.hom_ext _ _ fun i ↦ by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [cofan, Function.comp_def])
-  uniq s m h := Sigma.hom_ext _ _ fun ⟨i₁, i₂⟩ ↦ by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [← h, cofan, Function.comp_def])
+  fac s i := Sigma.hom_ext _ _ fun i ↦ by simp [cofan, Function.comp_def]
+  uniq s m h := Sigma.hom_ext _ _ fun ⟨i₁, i₂⟩ ↦ by simp [← h, cofan, Function.comp_def]
 
 instance : PreservesColimit (Discrete.functor f) ((eval.{w} C A).obj F) :=
   ⟨fun hc ↦ ⟨IsColimit.ofIsoColimit (isColimitEvalMapCoconeCofan J f F)
@@ -434,7 +429,6 @@ formal coproducts. -/
       map f := Pi.lift fun i ↦ Pi.π _ (f.unop.f i) ≫ F.map (f.unop.φ i).op }
   map α := { app f := Pi.map fun i ↦ α.app (op (f.unop.obj i)) }
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `evalOp(F)` restricted to the original category (via `incl`) is the original presheaf `F`. -/
@@ -450,10 +444,8 @@ set_option backward.isDefEq.respectTransparency false in
 /-- `evalOp(F)` preserves arbitrary products. -/
 def isLimitEvalMapConeCofanOp : IsLimit (((evalOp.{w} C A).obj F).mapCone (cofan.{w} J f).op) where
   lift s := Pi.lift fun i ↦ s.π.app ⟨i.1⟩ ≫ Pi.π _ i.2
-  fac s i := Pi.hom_ext _ _ fun i ↦ by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [cofan])
-  uniq s m h := Pi.hom_ext _ _ fun ⟨i₁, i₂⟩ ↦ by
-    (set_option backward.instanceTypes.subsingletons.prop false in simp [← h, cofan])
+  fac s i := Pi.hom_ext _ _ fun i ↦ by simp [cofan]
+  uniq s m h := Pi.hom_ext _ _ fun ⟨i₁, i₂⟩ ↦ by simp [← h, cofan]
 
 instance : PreservesLimit (Discrete.functor (op ∘ f)) ((evalOp.{w} C A).obj F) :=
   ⟨fun hc ↦ ⟨IsLimit.ofIsoLimit (isLimitEvalMapConeCofanOp J f F) ((Cone.functoriality _ _).mapIso

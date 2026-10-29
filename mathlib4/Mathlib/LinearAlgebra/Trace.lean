@@ -272,7 +272,7 @@ theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
 lemma trace_smulRight (f : M →ₗ[R] R) (x : M) :
     trace R M (f.smulRight x) = f x := by
   rw [trace_eq_matrix_trace _ (Free.chooseBasis R M), ← (Free.chooseBasis R M).sum_repr x]
-  (set_option backward.instanceTypes.subsingletons.prop false in simp [-Basis.sum_repr, dotProduct])
+  simp [-Basis.sum_repr, dotProduct]
 
 end
 
@@ -370,8 +370,7 @@ lemma trace_comp_eq_mul_of_commute_of_isNilpotent [IsReduced R] {f g : Module.En
     exact h_comm.sub_right (Algebra.commute_algebraMap_right μ f)
   have hμ : g = algebraMap R _ μ + n := eq_add_of_sub_eq' rfl
   have : f ∘ₗ algebraMap R _ μ = μ • f := by ext; simp -- TODO Surely exists?
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [hμ, comp_add, map_add, hg, add_zero, this, map_smul, smul_eq_mul])
+  rw [hμ, comp_add, map_add, hg, add_zero, this, map_smul, smul_eq_mul]
 
 -- This result requires `Mathlib/RingTheory/TensorProduct/Free.lean`.
 -- Maybe it should move elsewhere?

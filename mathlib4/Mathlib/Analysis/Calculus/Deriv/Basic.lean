@@ -456,8 +456,7 @@ theorem fderiv_apply_one_eq_deriv : (fderiv 𝕜 f x : 𝕜 → F) 1 = deriv f x
 
 @[simp]
 theorem fderiv_eq_smul_deriv (y : 𝕜) : (fderiv 𝕜 f x : 𝕜 → F) y = y • deriv f x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← fderiv_apply_one_eq_deriv, ← map_smul])
+  rw [← fderiv_apply_one_eq_deriv, ← map_smul]
   simp only [smul_eq_mul, mul_one]
 
 theorem toSpanSingleton_deriv : toSpanSingleton 𝕜 (deriv f x) = fderiv 𝕜 f x := by

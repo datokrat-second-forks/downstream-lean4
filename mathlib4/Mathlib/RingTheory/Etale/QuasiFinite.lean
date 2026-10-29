@@ -201,8 +201,7 @@ lemma Algebra.exists_notMem_and_isIntegral_forall_mem_of_ne_of_liesOver
     rw [IsLocalization.map_mk', ← e.symm.commutes, ← map_mul,
       IsScalarTower.algebraMap_eq _ S _] at this)
     replace this : e.symm ((algebraMap _ (Localization.Away s₂.1)) s₃) ∈ q's := by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [-map_mul, -map_pow, -AlgEquiv.commutes] using! this)
+      simpa [-map_mul, -map_pow, -AlgEquiv.commutes] using! this
     replace this : s₃ ∈ q' := by simpa [← Ideal.mem_comap, ← q's.over_def q'] using! this
     exact H (Ideal.mul_mem_left _ (s₂ ^ m) this)
   · rw [map_pow]; exact Ideal.notMem_of_isUnit _ (.pow _ (IsLocalization.Away.algebraMap_isUnit _))

@@ -70,9 +70,7 @@ instance (q : Ideal (p.Fiber S)) [q.IsPrime] : q.LiesOver p :=
 lemma Fiber.exists_smul_eq_one_tmul (x : p.Fiber S) : ∃ r ∉ p, ∃ s, r • x = 1 ⊗ₜ[R] s := by
   obtain ⟨r, hr, s, e⟩ := Ideal.ResidueField.exists_smul_eq_tmul_one _
     (Algebra.TensorProduct.comm _ _ _ x)
-  refine ⟨r, hr, s, by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa using congr((Algebra.TensorProduct.comm _ _ _).symm $e))⟩
+  refine ⟨r, hr, s, by simpa using congr((Algebra.TensorProduct.comm _ _ _).symm $e)⟩
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 /-- `p.Fiber S` is isomorphic to the quotient `Sₚ ⧸ pSₚ`. -/
@@ -166,8 +164,9 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p : PrimeSpectrum R) :
     · rw [← Ideal.mem_comap, ← PrimeSpectrum.comap_asIdeal]
       convert hr
       exact (residueField_comap _).le ⟨q.comap (algebraMap _ _), rfl⟩
-    · simpa [-Algebra.algebraMap_self, -AlgHom.commutes, -AlgHom.map_algebraMap,
-        -Ideal.ResidueField.map_algebraMap]
+    · (set_option backward.instanceTypes.subsingletons.prop true in
+      simpa [-Algebra.algebraMap_self, -AlgHom.commutes, -AlgHom.map_algebraMap,
+        -Ideal.ResidueField.map_algebraMap])
 
 variable (R S) in
 /-- The `OrderIso` between the fiber of `PrimeSpectrum S → PrimeSpectrum R` at a prime

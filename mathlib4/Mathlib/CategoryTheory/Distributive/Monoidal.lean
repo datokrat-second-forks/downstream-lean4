@@ -209,8 +209,7 @@ the right distributivity up to braiding isomorphisms. -/
 lemma coprodComparison_tensorLeft_braiding_hom [BraidedCategory C] {X Y Z : C} :
     (coprodComparison (tensorLeft X) Y Z) ≫ (β_ X (Y ⨿ Z)).hom =
     (coprod.map (β_ X Y).hom (β_ X Z).hom) ≫ (coprodComparison (tensorRight X) Y Z) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [coprodComparison])
+  simp [coprodComparison]
 
 set_option backward.defeqAttrib.useBackward true in
 /-- In a symmetric monoidal category, the right distributivity is equal to
@@ -219,8 +218,7 @@ the left distributivity up to braiding isomorphisms. -/
 lemma coprodComparison_tensorRight_braiding_hom [SymmetricCategory C] {X Y Z : C} :
     (coprodComparison (tensorRight X) Y Z) ≫ (β_ (Y ⨿ Z) X).hom =
     (coprod.map (β_ Y X).hom (β_ Z X).hom) ≫ (coprodComparison (tensorLeft X) Y Z) := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [coprodComparison])
+  simp [coprodComparison]
 
 /-- A left distributive symmetric monoidal category is distributive. -/
 lemma SymmetricCategory.isMonoidalDistrib_of_isMonoidalLeftDistrib

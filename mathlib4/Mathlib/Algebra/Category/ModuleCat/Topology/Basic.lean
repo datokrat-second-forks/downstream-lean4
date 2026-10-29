@@ -281,8 +281,7 @@ coarsest topology that makes every map continuous. -/
 def induced : TopModuleCat R :=
   letI : TopologicalSpace M := ⨅ i, (X i).topologicalSpace.induced (f i)
   have : ContinuousAdd M := continuousAdd_iInf fun _ ↦ continuousAdd_induced _
-  have : ContinuousSMul R M := continuousSMul_iInf fun _ ↦
-    (set_option backward.instanceTypes.subsingletons.prop false in continuousSMul_induced _)
+  have : ContinuousSMul R M := continuousSMul_iInf fun _ ↦ continuousSMul_induced _
   ↧M
 
 set_option backward.isDefEq.respectTransparency false in

@@ -69,10 +69,9 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N) where
 instance lieModule : LieModule R L (M ⊗[R] N) where
   smul_lie c x t := by
     change hasBracketAux (c • x) _ = c • hasBracketAux _ _
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simp only [hasBracketAux, smul_add, LinearMap.rTensor_smul, LinearMap.smul_apply,
-      LinearMap.lTensor_smul, map_smul, LinearMap.add_apply])
-  lie_smul c _ := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _ c)
+      LinearMap.lTensor_smul, map_smul, LinearMap.add_apply]
+  lie_smul c _ := map_smul _ c
 
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=

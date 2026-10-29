@@ -156,8 +156,7 @@ lemma crossProduct_ne_zero_iff_linearIndependent {F : Type*} [Field F] {v w : Fi
   constructor
   · rw [LinearIndependent.pair_iff' hv, not_forall_not]
     rintro ⟨a, rfl⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [map_smul, cross_self, smul_zero])
+    rw [map_smul, cross_self, smul_zero]
   have hv' : v = ![v 0, v 1, v 2] := by simp [← List.ofFn_inj]
   have hw' : w = ![w 0, w 1, w 2] := by simp [← List.ofFn_inj]
   intro h1 h2

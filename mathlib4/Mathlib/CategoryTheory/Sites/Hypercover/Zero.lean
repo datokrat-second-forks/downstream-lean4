@@ -452,7 +452,6 @@ lemma sieve₀_map : (E.map F).sieve₀ = E.sieve₀.functorPushforward F := by
 
 end Functoriality
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Pullback symmetry isomorphism. -/
 @[simps]

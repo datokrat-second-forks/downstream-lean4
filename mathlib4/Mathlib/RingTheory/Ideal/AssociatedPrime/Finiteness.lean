@@ -147,10 +147,9 @@ theorem IsNoetherianRing.induction_on_isQuotientEquivQuotientPrime
   | succ n ih =>
     specialize ih (n.lt_add_one.trans h)
     obtain ⟨hle, p, ⟨f⟩⟩ := s.step ⟨n, (add_lt_add_iff_right _).1 h⟩
-    (set_option backward.instanceTypes.subsingletons.prop false in
     replace ih := equiv _ _ (Submodule.submoduleOfEquivOfLe hle).symm ih
     exact exact _ _ _ _ _ (Submodule.injective_subtype _) (Submodule.mkQ_surjective _)
-      (LinearMap.exact_subtype_mkQ _) ih (quotient _ p f))
+      (LinearMap.exact_subtype_mkQ _) ih (quotient _ p f)
 
 /-- There are only finitely many associated primes of a finitely generated module
 over a Noetherian ring. -/

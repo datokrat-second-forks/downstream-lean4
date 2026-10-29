@@ -145,9 +145,8 @@ noncomputable def attachCellsOfSuccStructProp
   haveI := hasColimitsOfShape_discrete I κ
   haveI := hasPushouts I κ
   AttachCells.ofArrowIso (attachCellsιFunctorObjOfSmall _ _)
-    (set_option backward.instanceTypes.subsingletons.prop false in
     ((Functor.mapArrow ((evaluation _ _).obj f ⋙
-      Arrow.leftFunc)).mapIso h.arrowIso.symm))
+      Arrow.leftFunc)).mapIso h.arrowIso.symm)
 
 /-- The class of morphisms in `Arrow C` which on the left side are
 pushouts of coproducts of morphisms in `I`, and which are
@@ -267,8 +266,7 @@ set_option backward.defeqAttrib.useBackward true in
 lemma iterationFunctorObjObjRightIso_ιIteration_app_right (f : Arrow C) (j : κ.ord.ToType) :
     (iterationFunctorObjObjRightIso I κ f j).hom ≫ ((ιIteration I κ).app f).right =
       (transfiniteCompositionOfShapeιIterationAppRight I κ f).incl.app j := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [iterationFunctorObjObjRightIso, iterationObjRightIso])
+  simp [iterationFunctorObjObjRightIso, iterationObjRightIso]
 
 lemma prop_iterationFunctor_map_succ (j : κ.ord.ToType) :
     (succStruct I κ).prop ((iterationFunctor I κ).map (homOfLE (Order.le_succ j))) := by
@@ -295,7 +293,7 @@ noncomputable def iterationFunctorMapSuccAppArrowIso (f : Arrow C) (j : κ.ord.T
     dsimp at this
     dsimp [iterationFunctor]
     rw [id_comp, this, assoc, Iso.inv_hom_id_app, comp_id]
-    (set_option backward.instanceTypes.subsingletons.prop false in dsimp [succStruct]))
+    dsimp [succStruct])
 
 @[simp]
 lemma iterationFunctorMapSuccAppArrowIso_hom_left (f : Arrow C) (j : κ.ord.ToType) :

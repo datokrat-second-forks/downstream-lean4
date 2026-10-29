@@ -308,7 +308,6 @@ def baseIso : ψ.base ≅ ψ'.base where
   inv_hom_id := by simp [← category_comp_base]
 
 omit [IsIso f] in
-set_option backward.instanceTypes.subsingletons.decidable false in
 lemma isIso_iff : IsIso f ↔ IsIso f.left ∧ IsIso f.base ∧ IsIso f.right where
   mp h := ⟨inferInstance, inferInstance, inferInstance⟩
   mpr h := by

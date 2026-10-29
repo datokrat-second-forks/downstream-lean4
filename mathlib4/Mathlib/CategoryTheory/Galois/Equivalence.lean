@@ -42,13 +42,11 @@ def functorToContAction : C ⥤ ContAction FintypeCat (Aut F) :=
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : (functorToContAction F).Faithful :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  inferInstanceAs <| (ObjectProperty.lift _ _ _).Faithful)
+  inferInstanceAs <| (ObjectProperty.lift _ _ _).Faithful
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance : (functorToContAction F).Full :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  inferInstanceAs <| (ObjectProperty.lift _ _ _).Full)
+  inferInstanceAs <| (ObjectProperty.lift _ _ _).Full
 
 instance {F : C ⥤ FintypeCat.{u₁}} [FiberFunctor F] : (functorToContAction F).EssSurj where
   mem_essImage X := by

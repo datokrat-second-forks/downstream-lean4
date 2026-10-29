@@ -808,7 +808,6 @@ noncomputable def isColimitCoconeπOpCompShrinkYonedaFlip :
     IsColimit (coconeπOpCompShrinkYonedaFlip F) :=
   evaluationJointlyReflectsColimits _ (isColimitCoconeπOpCompShrinkYonedaObj F)
 
-set_option backward.instanceTypes.subsingletons.prop false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- If `F : C ⥤ Type w` and `C` is locally `w`-small, then `F` identifies to the composition
@@ -832,8 +831,7 @@ lemma shrinkYonedaCompWhiskeringLeftObjπCompColimIso_inv_app_apply
       (coconeπOpCompShrinkYonedaObj F u.obj).ι.app (op u) ≫
         (shrinkYonedaCompWhiskeringLeftObjπCompColimIso F).inv.app u.obj =
       colimit.ι ((Functor.Elements.π F).op ⋙ shrinkYoneda.{w}.obj u.obj) (op u) :=
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    IsColimit.comp_coconePointUniqueUpToIso_inv (colimit.isColimit _) _ (op u))
+    IsColimit.comp_coconePointUniqueUpToIso_inv (colimit.isColimit _) _ (op u)
   simpa using congr($this (shrinkYonedaObjObjEquiv.symm (𝟙 _)))
 
 set_option backward.defeqAttrib.useBackward true in

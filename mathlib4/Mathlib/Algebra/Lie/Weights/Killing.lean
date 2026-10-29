@@ -244,8 +244,7 @@ lemma traceForm_coroot (α : Weight K H L) (x : H) :
     traceForm K H L (coroot α) x = 2 • (α <| (cartanEquivDual H).symm α)⁻¹ • α x := by
   have : cartanEquivDual H ((cartanEquivDual H).symm α) x = α x := by
     rw [LinearEquiv.apply_symm_apply, Weight.toLinear_apply]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [coroot, map_nsmul, map_smul, LinearMap.smul_apply, LinearMap.smul_apply])
+  rw [coroot, map_nsmul, map_smul, LinearMap.smul_apply, LinearMap.smul_apply]
   congr 2
 
 @[simp] lemma coroot_neg [IsTriangularizable K H L] (α : Weight K H L) :
@@ -482,8 +481,7 @@ lemma eq_coroot_of_mem_corootSpace_of_two (α : Weight K H L) {x : H}
   replace h_mem : x ∈ K ∙ coroot α := by rwa [← coe_corootSpace_eq_span_singleton]
   obtain ⟨t, rfl⟩ := Submodule.mem_span_singleton.mp h_mem
   suffices t = 1 by simp [this]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simpa [root_apply_coroot h₀] using h_two)
+  simpa [root_apply_coroot h₀] using h_two
 
 @[simp]
 lemma corootSpace_eq_bot_iff {α : Weight K H L} :
@@ -567,8 +565,7 @@ lemma exists_isSl2Triple_of_weight_isNonZero {α : Weight K H L} (hα : α.IsNon
     have : h = killingForm K L e f' • (cartanEquivDual H).symm α := by
       simp only [h, Subtype.ext_iff, hef]
       rw [Submodule.coe_smul_of_tower]
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    rw [this, map_smul, smul_eq_mul, ne_eq, mul_eq_zero, not_or])
+    rw [this, map_smul, smul_eq_mul, ne_eq, mul_eq_zero, not_or]
     exact ⟨hf, root_apply_cartanEquivDual_symm_ne_zero hα⟩
   let f := (2 * (α h)⁻¹) • f'
   replace hef : ⁅⁅e, f⁆, e⁆ = 2 • e := by
@@ -596,9 +593,7 @@ lemma _root_.IsSl2Triple.h_eq_coroot {α : Weight K H L} (hα : α.IsNonZero)
     exact smul_left_injective K ht.e_ne_zero this.symm
   suffices ∃ s : K, s • h = coroot α by
     obtain ⟨s, hs⟩ := this
-    replace this : s = 1 := by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simpa [root_apply_coroot hα, key] using congr(α $hs))
+    replace this : s = 1 := by simpa [root_apply_coroot hα, key] using congr(α $hs)
     rwa [this, one_smul] at hs
   set α' := (cartanEquivDual H).symm α with hα'
   have h_eq : h = killingForm K L e f • α' := by
@@ -727,8 +722,7 @@ lemma sl2SubmoduleOfRoot_eq_sup (α : Weight K H L) (hα : α.IsNonZero) :
     · suffices ∃ y ∈ corootSpace α, H.subtype y = c₃ • h' from
         mem_sup_right <| by simpa [ht.lie_e_f, -Subtype.exists]
       refine ⟨c₃ • coroot α, smul_mem _ _ <| by simp, ?_⟩
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      rw [IsSl2Triple.h_eq_coroot hα ht heα hfα, map_smul, subtype_apply])
+      rw [IsSl2Triple.h_eq_coroot hα ht heα hfα, map_smul, subtype_apply]
   · have aux {β : Weight K H L} (hβ : β.IsNonZero) {y g : L}
         (hy : y ∈ genWeightSpace L β) (hg : g ∈ rootSpace H β) (hg_ne_zero : g ≠ 0) :
         ∃ c : K, y = c • g := by

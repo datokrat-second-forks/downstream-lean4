@@ -160,7 +160,7 @@ noncomputable def integrate : CompactlySupportedContinuousMap B E →ₗ[ℝ] E 
     rw [map_add]
     exact integral_add (pushforward H μA f).integrable (pushforward H μA g).integrable
   map_smul' x f := by
-    (set_option backward.instanceTypes.subsingletons.prop false in rw [map_smul])
+    rw [map_smul]
     exact integral_smul x (H.pushforward μA f)
 
 @[to_additive]

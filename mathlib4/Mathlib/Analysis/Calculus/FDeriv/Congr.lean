@@ -221,8 +221,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem Filter.EventuallyEq.fderivWithin_eq (hs : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
     fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x := by
   classical
-  (set_option backward.instanceTypes.subsingletons.decidable false in
-  simp only [fderivWithin, DifferentiableWithinAt, hs.hasFDerivWithinAt_iff hx])
+  simp only [fderivWithin, DifferentiableWithinAt, hs.hasFDerivWithinAt_iff hx]
 
 theorem Filter.EventuallyEq.fderivWithin_eq_of_mem (hs : f₁ =ᶠ[𝓝[s] x] f) (hx : x ∈ s) :
     fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x :=

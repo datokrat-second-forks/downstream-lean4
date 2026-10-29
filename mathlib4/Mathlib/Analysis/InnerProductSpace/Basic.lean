@@ -897,9 +897,7 @@ abbrev InnerProductSpace.induced {F : Type*} [FunLike F G E] [LinearMapClass F �
   letI := NormedSpace.induced 𝕜 G E f
   { inner x y := inner 𝕜 (f x) (f y)
     add_left x y z := by rw [map_add, inner_add_left]
-    smul_left x y r := by
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      rw [map_smul, inner_smul_left])
+    smul_left x y r := by rw [map_smul, inner_smul_left]
     norm_sq_eq_re_inner x := norm_sq_eq_re_inner (f x)
     conj_inner_symm x y := inner_conj_symm (f x) (f y) }
 

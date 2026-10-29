@@ -208,8 +208,7 @@ variable {R S : Type*} [CommRing R] [Ring S] [Algebra R S] {ι : Type*} (B : Bas
   `B.repr ((algebra_map R S r) * s) i = r * (B.repr s i) `. -/
 theorem Module.Basis.repr_smul' (i : ι) (r : R) (s : S) :
     B.repr (algebraMap R S r * s) i = r * B.repr s i := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [← smul_eq_mul, ← smul_eq_mul, algebraMap_smul, map_smul, Finsupp.smul_apply])
+  rw [← smul_eq_mul, ← smul_eq_mul, algebraMap_smul, map_smul, Finsupp.smul_apply]
 
 end Algebra
 

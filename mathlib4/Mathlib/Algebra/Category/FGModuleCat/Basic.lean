@@ -116,8 +116,7 @@ instance (V : FGModuleCat.{v} R) : Module.Finite R V :=
   V.property
 
 instance : (forget₂ (FGModuleCat.{v} R) (ModuleCat.{v} R)).Full where
-  map_surjective f :=
-    ⟨(set_option backward.instanceTypes.subsingletons.prop false in ofHom f.hom), rfl⟩
+  map_surjective f := ⟨ofHom f.hom, rfl⟩
 
 variable {R} in
 /-- Converts an isomorphism in the category `FGModuleCat R` to

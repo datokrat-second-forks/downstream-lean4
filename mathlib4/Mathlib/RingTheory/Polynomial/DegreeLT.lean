@@ -106,15 +106,13 @@ lemma addLinearEquiv_symm_apply_inr_basis (j : Fin n) :
 lemma addLinearEquiv_symm_apply_inl (P : R[X]_m) :
     ((addLinearEquiv R m n).symm (LinearMap.inl R _ _ P) : R[X]) = (P : R[X]) := by
   rw [← (basis ..).sum_repr P]
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [-LinearMap.coe_inl, addLinearEquiv_symm_apply_inl_basis])
+  simp [-LinearMap.coe_inl, addLinearEquiv_symm_apply_inl_basis]
 
 lemma addLinearEquiv_symm_apply_inr (Q : R[X]_n) :
     ((addLinearEquiv R m n).symm (LinearMap.inr R _ _ Q) : R[X]) = (Q : R[X]) * X ^ (m : ℕ) := by
   rw [← (basis ..).sum_repr Q]
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [-LinearMap.coe_inr, Finset.sum_mul, addLinearEquiv_symm_apply_inr_basis,
-    smul_eq_C_mul, mul_assoc, ← pow_add, add_comm])
+    smul_eq_C_mul, mul_assoc, ← pow_add, add_comm]
 
 lemma addLinearEquiv_symm_apply (PQ) :
     ((addLinearEquiv R m n).symm PQ : R[X]) = (PQ.1 : R[X]) + (PQ.2 : R[X]) * X ^ (m : ℕ) := calc

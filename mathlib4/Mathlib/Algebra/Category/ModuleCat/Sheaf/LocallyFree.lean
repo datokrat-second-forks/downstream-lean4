@@ -98,7 +98,7 @@ instance (I : Type u) :
     (free.generatingSections (R := R) I).localGeneratorsData.IsLocallyFreeData where
   isIso i := by
     dsimp
-    (set_option backward.instanceTypes.subsingletons.prop false in infer_instance)
+    infer_instance
 
 instance (I : Type u) : (free (R := R) I).IsLocallyFree where
   exists_isLocallyFreeData := ⟨(free.generatingSections I).localGeneratorsData, inferInstance⟩

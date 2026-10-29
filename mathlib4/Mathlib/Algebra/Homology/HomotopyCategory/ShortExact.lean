@@ -187,10 +187,9 @@ lemma mapHomologicalComplexIso_hom_descShortComplex (F : C ⥤ D) [F.Additive]
     (F.mapHomologicalComplex (.up ℤ)).map (descShortComplex S) := by
   symm
   ext n
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp [mapHomologicalComplexIso, descShortComplex, mapHomologicalComplexXIso,
     mapHomologicalComplexXIso'_hom, Functor.mapHomologicalComplex_map_f,
-    desc_f _ _ _ _ n (n + 1) rfl])
+    desc_f _ _ _ _ n (n + 1) rfl]
 
 end mappingCone
 

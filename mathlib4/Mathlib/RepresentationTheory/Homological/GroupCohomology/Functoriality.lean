@@ -56,9 +56,8 @@ noncomputable def cochainsMap :
   comm' i j (hij : _ = _) := by
     subst hij
     ext
-    (set_option backward.instanceTypes.subsingletons.prop false in
     simpa [inhomogeneousCochains.d_hom_apply, Fin.comp_contractNth, CochainComplex.of.d]
-      using! (hom_comm_apply φ _ _).symm)
+      using! (hom_comm_apply φ _ _).symm
 
 @[simp]
 lemma cochainsMap_id :

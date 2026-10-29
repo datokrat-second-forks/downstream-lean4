@@ -594,7 +594,6 @@ lemma affineCombination_apply_eq_lineMap_sum [DecidableEq ι] (w : ι → k) (p 
     simp [hp₁ i hi]
   · exact (hp₂ i hi).symm
 
-set_option backward.instanceTypes.subsingletons.prop false in
 /-- Applying `AffineMap.lineMap` on two `Finset.affineCombination` over the same set of points
 is equivalent to applying `AffineMap.lineMap` to the weights. -/
 theorem lineMap_affineCombination (w₁ : ι → k) (w₂ : ι → k) (r : k) (p : ι → P) :

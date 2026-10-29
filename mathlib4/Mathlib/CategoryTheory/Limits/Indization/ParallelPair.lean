@@ -158,7 +158,6 @@ as the colimit of `(P.φ, P.ψ)` in `Cᵒᵖ ⥤ Type v`. -/
 noncomputable def parallelPairIsoParallelPairCompYoneda {A B : Cᵒᵖ ⥤ Type v₁} {f g : A ⟶ B}
     (P : IndParallelPairPresentation f g) :
     parallelPair f g ≅ parallelPair P.φ P.ψ ⋙ (whiskeringRight _ _ _).obj yoneda ⋙ colim :=
-  (set_option backward.instanceTypes.subsingletons.prop false in
   parallelPair.ext
     (P.isColimit₁.coconePointUniqueUpToIso (colimit.isColimit _))
     (P.isColimit₂.coconePointUniqueUpToIso (colimit.isColimit _))
@@ -167,7 +166,7 @@ noncomputable def parallelPairIsoParallelPairCompYoneda {A B : Cᵒᵖ ⥤ Type 
         P.isColimit₂.comp_coconePointUniqueUpToIso_hom]))
     (P.isColimit₁.hom_ext (fun j => by
       simp [P.hg, P.isColimit₁.ι_map_assoc, P.isColimit₁.comp_coconePointUniqueUpToIso_hom_assoc,
-        P.isColimit₂.comp_coconePointUniqueUpToIso_hom])))
+        P.isColimit₂.comp_coconePointUniqueUpToIso_hom]))
 
 end IndParallelPairPresentation
 

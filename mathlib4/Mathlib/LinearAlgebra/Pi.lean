@@ -361,8 +361,7 @@ theorem pi_apply_eq_sum_univ [Fintype ι] (f : (ι → R) →ₗ[R] M₂) (x : �
     f x = ∑ i, x i • f fun j => if i = j then 1 else 0 := by
   conv_lhs => rw [pi_eq_sum_univ x, map_sum]
   refine Finset.sum_congr rfl (fun _ _ => ?_)
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [map_smul])
+  rw [map_smul]
 
 end LinearMap
 
@@ -470,9 +469,7 @@ def piCongrRight (e : (i : ι) → φ i ≃ₗ[R] ψ i) : ((i : ι) → φ i) �
   { AddEquiv.piCongrRight fun j => (e j).toAddEquiv with
     toFun := fun f i => e i (f i)
     invFun := fun f i => (e i).symm (f i)
-    map_smul' := fun c f => by
-      ext
-      (set_option backward.instanceTypes.subsingletons.prop false in simp) }
+    map_smul' := fun c f => by ext; simp }
 
 @[simp]
 theorem piCongrRight_apply (e : (i : ι) → φ i ≃ₗ[R] ψ i) (f i) :

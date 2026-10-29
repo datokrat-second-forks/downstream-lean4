@@ -288,8 +288,7 @@ theorem inv_natCast_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 
   inv_intCast_num_of_pos (mod_cast ha0 : 0 < (a : ℤ))
 
 theorem inv_intCast_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : ℤ) = a := by
-  (set_option backward.instanceTypes.subsingletons.decidable false in
-  simp only [den_inv, num_intCast])
+  simp only [den_inv, num_intCast]
   grind
 
 theorem inv_natCast_den_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.den = a := by

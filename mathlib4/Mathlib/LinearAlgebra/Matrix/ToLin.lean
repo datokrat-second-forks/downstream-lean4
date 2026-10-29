@@ -481,8 +481,7 @@ theorem LinearMap.toMatrix'_mul [Fintype m] [DecidableEq m] (f g : (m → R) →
 @[simp]
 theorem LinearMap.toMatrix'_algebraMap (x : R) :
     LinearMap.toMatrix' (algebraMap R (Module.End R (n → R)) x) = scalar n x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [Module.algebraMap_end_eq_smul_id, smul_eq_diagonal_mul])
+  simp [Module.algebraMap_end_eq_smul_id, smul_eq_diagonal_mul]
 
 theorem Matrix.ker_toLin'_eq_bot_iff {M : Matrix n n R} :
     LinearMap.ker (Matrix.toLin' M) = ⊥ ↔ ∀ v, M *ᵥ v = 0 → v = 0 :=
@@ -653,9 +652,7 @@ theorem Matrix.toLin_one : Matrix.toLin v₁ v₁ 1 = LinearMap.id := by
   rw [← LinearMap.toMatrix_id v₁, Matrix.toLin_toMatrix]
 
 theorem Matrix.toLin_scalar (r : R) : Matrix.toLin v₁ v₁ (scalar n r) = r • LinearMap.id :=
-  (LinearMap.toMatrix v₁ v₁).injective (by
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [toMatrix_id, smul_one_eq_diagonal]))
+  (LinearMap.toMatrix v₁ v₁).injective (by simp [toMatrix_id, smul_one_eq_diagonal])
 
 theorem LinearMap.toMatrix_reindexRange [DecidableEq M₁] (f : M₁ →ₗ[R] M₂) (k : m) (i : n) :
     LinearMap.toMatrix v₁.reindexRange v₂.reindexRange f ⟨v₂ k, Set.mem_range_self k⟩
@@ -666,8 +663,7 @@ theorem LinearMap.toMatrix_reindexRange [DecidableEq M₁] (f : M₁ →ₗ[R] M
 @[simp]
 theorem LinearMap.toMatrix_algebraMap (x : R) :
     LinearMap.toMatrix v₁ v₁ (algebraMap R (Module.End R M₁) x) = scalar n x := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [Module.algebraMap_end_eq_smul_id, LinearMap.toMatrix_id, smul_eq_diagonal_mul])
+  simp [Module.algebraMap_end_eq_smul_id, LinearMap.toMatrix_id, smul_eq_diagonal_mul]
 
 theorem LinearMap.toMatrix_mulVec_repr (f : M₁ →ₗ[R] M₂) (x : M₁) :
     LinearMap.toMatrix v₁ v₂ f *ᵥ v₁.repr x = v₂.repr (f x) := by
@@ -722,16 +718,13 @@ variable (v₁ : Basis n R M₁) (v₂ : Basis m R M₂)
 then this is the column matrix of `v₂.repr x`. -/
 theorem LinearMap.toMatrix_toSpanSingleton [Finite m] (v₁ : Basis n R R) (v₂ : Basis m R M₂)
     (x : M₂) : (toSpanSingleton R M₂ x).toMatrix v₁ v₂ = vecMulVec (v₂.repr x) v₁ := by
-  ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [toMatrix_apply, vecMulVec_apply, mul_comm])
+  ext; simp [toMatrix_apply, vecMulVec_apply, mul_comm]
 
 @[simp]
 lemma LinearMap.toMatrix_smulRight [Finite m] (f : M₁ →ₗ[R] R) (x : M₂) :
     toMatrix v₁ v₂ (f.smulRight x) = vecMulVec (v₂.repr x) (f ∘ v₁) := by
   ext i j
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simpa [toMatrix_apply, vecMulVec_apply] using mul_comm _ _)
+  simpa [toMatrix_apply, vecMulVec_apply] using mul_comm _ _
 
 theorem Matrix.toLin_apply [Fintype m] (M : Matrix m n R) (v : M₁) :
     Matrix.toLin v₁ v₂ M v = ∑ j, (M *ᵥ v₁.repr v) j • v₂ j :=
@@ -913,7 +906,6 @@ theorem Matrix.toLin_finTwoProd (a b c d : R) :
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _
 
-set_option backward.instanceTypes.subsingletons.prop false in
 @[simp]
 theorem toMatrix_distrib_mul_action_toLinearMap (x : R) :
     LinearMap.toMatrix v₁ v₁ (DistribSMul.toLinearMap R M₁ x) =
@@ -1008,10 +1000,8 @@ variable {A M n : Type*} [Fintype n] [DecidableEq n]
 lemma _root_.LinearMap.restrictScalars_toMatrix (f : M →ₗ[A] M) :
     (f.restrictScalars R).toMatrix (bA.smulTower' bM) (bA.smulTower' bM) =
       ((f.toMatrix bM bM).map (leftMulMatrix bA)).comp _ _ _ _ _ := by
-  ext
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  simp [toMatrix, Algebra.leftMulMatrix_apply, Basis.smulTower'_repr, Basis.smulTower'_apply,
-    mul_comm])
+  ext; simp [toMatrix, Algebra.leftMulMatrix_apply,
+    Basis.smulTower'_repr, Basis.smulTower'_apply, mul_comm]
 
 end Lmul
 
@@ -1025,10 +1015,9 @@ variable (b : Basis m R S) (c : Basis n S T)
 theorem smulTower_leftMulMatrix (x) (ik jk) :
     leftMulMatrix (b.smulTower c) x ik jk =
       leftMulMatrix b (leftMulMatrix c x ik.2 jk.2) ik.1 jk.1 := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
   simp only [leftMulMatrix_apply, LinearMap.toMatrix_apply, mul_comm, Basis.smulTower_apply,
     Basis.smulTower_repr, Finsupp.smul_apply, smul_eq_mul, map_smul, mul_smul_comm,
-    coe_lmul_eq_mul, LinearMap.mul_apply'])
+    coe_lmul_eq_mul, LinearMap.mul_apply']
 
 theorem smulTower_leftMulMatrix_algebraMap (x : S) :
     leftMulMatrix (b.smulTower c) (algebraMap _ _ x) = blockDiagonal fun _ ↦ leftMulMatrix b x := by

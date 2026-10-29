@@ -55,10 +55,8 @@ def liftAlternating : (∀ i, M [⋀^Fin i]→ₗ[R] N) →ₗ[R] ExteriorAlgebr
         (fun m f₁ f₂ => ?_) fun c m f => ?_
     all_goals
       ext i : 1
-      (set_option backward.instanceTypes.subsingletons.prop false in
       simp only [map_smul, map_add, Pi.add_apply, Pi.smul_apply, AlternatingMap.curryLeft_add,
-        AlternatingMap.curryLeft_smul, map_add, map_smul, LinearMap.add_apply,
-        LinearMap.smul_apply])
+        AlternatingMap.curryLeft_smul, map_add, map_smul, LinearMap.add_apply, LinearMap.smul_apply]
   · -- when applied twice with the same `m`, this recursive step produces 0
     intro m x
     ext
@@ -91,8 +89,7 @@ theorem liftAlternating_one (f : ∀ i, M [⋀^Fin i]→ₗ[R] N) :
 theorem liftAlternating_algebraMap (f : ∀ i, M [⋀^Fin i]→ₗ[R] N) (r : R) :
     liftAlternating (R := R) (M := M) (N := N) f (algebraMap _ (ExteriorAlgebra R M) r) =
     r • f 0 0 := by
-  (set_option backward.instanceTypes.subsingletons.prop false in
-  rw [Algebra.algebraMap_eq_smul_one, map_smul, liftAlternating_one])
+  rw [Algebra.algebraMap_eq_smul_one, map_smul, liftAlternating_one]
 
 @[simp]
 theorem liftAlternating_apply_ιMulti {n : ℕ} (f : ∀ i, M [⋀^Fin i]→ₗ[R] N)
@@ -119,9 +116,8 @@ theorem liftAlternating_comp (g : N →ₗ[R] N') (f : ∀ i, M [⋀^Fin i]→�
   rw [LinearMap.comp_apply]
   induction v using CliffordAlgebra.left_induction generalizing f with
   | algebraMap =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [liftAlternating_algebraMap, liftAlternating_algebraMap, map_smul,
-      LinearMap.compAlternatingMap_apply])
+      LinearMap.compAlternatingMap_apply]
   | add _ _ hx hy => rw [map_add, map_add, map_add, hx, hy]
   | ι_mul _ _ hx =>
     rw [liftAlternating_ι_mul, liftAlternating_ι_mul, ← hx]
@@ -144,7 +140,7 @@ theorem liftAlternating_ιMulti :
 def liftAlternatingEquiv : (∀ i, M [⋀^Fin i]→ₗ[R] N) ≃ₗ[R] ExteriorAlgebra R M →ₗ[R] N where
   toFun := liftAlternating (R := R)
   map_add' := map_add _
-  map_smul' := (set_option backward.instanceTypes.subsingletons.prop false in map_smul _)
+  map_smul' := map_smul _
   invFun F i := F.compAlternatingMap (ιMulti R i)
   left_inv _ := funext fun _ => liftAlternating_comp_ιMulti _
   right_inv F :=

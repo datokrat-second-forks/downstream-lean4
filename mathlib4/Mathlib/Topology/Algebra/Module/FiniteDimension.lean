@@ -182,8 +182,7 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜)
     -- Hence, we know that it is equal to the topology induced by the norm.
     have : induced φ.toEquiv.symm inferInstance = hnorm.toUniformSpace.toTopologicalSpace := by
       refine unique_topology_of_t2 (isTopologicalAddGroup_induced φ.symm.toLinearMap)
-        (set_option backward.instanceTypes.subsingletons.prop false in
-        continuousSMul_induced φ.symm.toMulActionHom) ?_
+        (continuousSMul_induced φ.symm.toMulActionHom) ?_
       rw [t2Space_iff]
       exact fun x y hxy =>
         @separated_by_continuous _ _ (induced _ _) _ _ _ continuous_induced_dom _ _

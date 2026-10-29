@@ -748,9 +748,7 @@ theorem continuous_cfcₙHomSuperset_left
   | star_id => simp only [map_star, cfcₙHomSuperset_id]; fun_prop
   | add f g hf hg => simpa only [map_add] using! hf.add hg
   | mul f g hf hg => simpa only [map_mul] using! hf.mul hg
-  | smul r f hf =>
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simpa only [map_smul] using! hf.const_smul r)
+  | smul r f hf => simpa only [map_smul] using! hf.const_smul r
   | frequently f hf =>
     apply continuous_of_uniform_approx_of_continuous
     rw [Metric.uniformity_basis_dist_le.forall_iff (by aesop)]

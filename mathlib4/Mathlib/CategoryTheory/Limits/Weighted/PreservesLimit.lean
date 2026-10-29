@@ -42,10 +42,7 @@ noncomputable def π (j : J) : c.pt.obj.obj j → (s.pt ⟶ F.obj j) :=
   ((Types.isColimit_iff_coconeTypesIsColimit _).1
     ⟨isColimitOfPreserves ((evaluation _ _).obj j) hc⟩).desc
       (CoconeTypes.mk _ (fun k x ↦ s.π.app (op k) ≫ weightedLimObjObjπ _ _ x)
-    (fun {k₁ k₂} f ↦ by
-      ext
-      (set_option backward.instanceTypes.subsingletons.prop false in
-      simp [← s.w_assoc f.op])))
+    (fun {k₁ k₂} f ↦ by ext; simp [← s.w_assoc f.op]))
 
 -- With the instance type check, `dsimp%` keeps `((const K).obj c.pt).obj k` in the type arguments
 -- of the coercion (as in `chosenCoend.map_apply`), and the statement no longer matches its uses.
@@ -74,9 +71,8 @@ noncomputable def preservesLimit'
     obtain ⟨k, y, rfl⟩ := Types.jointly_surjective_of_isColimit
       (isColimitOfPreserves ((evaluation _ _).obj j₁) hc) x
     dsimp
-    (set_option backward.instanceTypes.subsingletons.prop false in
     rw [π_ι_app_hom_app_apply, Category.assoc, weightedLimObjObj_w,
-      ← π_ι_app_hom_app_apply hc, NatTrans.naturality_apply]))
+      ← π_ι_app_hom_app_apply hc, NatTrans.naturality_apply])
   uniq s m hm := by
     dsimp
     ext j x

@@ -292,10 +292,7 @@ def _root_.LinearMap.compDer : Derivation R A M →ₗ[A] Derivation R A N where
         simp only [coeFn_coe, LinearMap.comp_apply, map_add, leibniz,
           LinearMap.coe_restrictScalars, LinearMap.map_smul] }
   map_add' D₁ D₂ := by ext; exact LinearMap.map_add _ _ _
-  map_smul' r D := by
-    ext
-    dsimp
-    (set_option backward.instanceTypes.subsingletons.prop false in simp only [_root_.map_smul])
+  map_smul' r D := by ext; dsimp; simp only [_root_.map_smul]
 
 @[simp]
 theorem coe_to_linearMap_comp : (f.compDer D : A →ₗ[R] N) = (f : M →ₗ[R] N).comp (D : A →ₗ[R] M) :=
@@ -394,11 +391,9 @@ def liftOfRightInverse {f : F} {f_inv : M → A} (hf : Function.RightInverse f_i
     apply hd
     simp [hf _]
   map_smul' x y := by
-    suffices f (d (f_inv (x • y) - x • f_inv y)) = 0 by
-      (set_option backward.instanceTypes.subsingletons.prop false in simpa [sub_eq_zero])
+    suffices f (d (f_inv (x • y) - x • f_inv y)) = 0 by simpa [sub_eq_zero]
     apply hd
-    (set_option backward.instanceTypes.subsingletons.prop false in
-    simp [hf _])
+    simp [hf _]
   map_one_eq_zero' := by
     suffices f (d (f_inv 1 - 1)) = 0 by simpa [sub_eq_zero]
     apply hd
