@@ -28,6 +28,54 @@ are finitely generated, then so is `⨂[R] i, M i`.
 
 @[expose] public section
 
+namespace FamCongr
+open scoped TensorProduct
+universe uR uι uκ uM
+variable {R : Type uR} [CommSemiring R]
+
+universe u1 u2 uκ'
+/-- A family of `R`-modules over a fixed index type. -/
+structure ModFamOn (R : Type uR) [CommSemiring R] (ι : Type uι) where
+  s : ι → Type uM
+  [acm : ∀ i, AddCommMonoid (s i)]
+  [mod : ∀ i, Module R (s i)]
+
+/-- Lens: a family over a fixed index type reindexed along `g`. -/
+@[dsimp_congr] theorem ModFamOn.comp_congr {κ : Type uκ} (M : κ → Type uM) [iA : ∀ k, AddCommMonoid (M k)]
+    [iM : ∀ k, Module R (M k)] {ι : Type uι} (g g' : ι → κ) (hg : g = g') :
+    @ModFamOn.mk R _ ι (fun i => M (g i)) (fun i => iA (g i)) (fun i => iM (g i)) =
+      @ModFamOn.mk R _ ι (fun i => M (g' i)) (fun i => iA (g' i)) (fun i => iM (g' i)) := by
+  cases hg; rfl
+
+/-- Pack: a module over `R` with its instances. -/
+structure SModPack.{u, v} (R : Type u) [CommSemiring R] where
+  X : Type v
+  [acm : AddCommMonoid X]
+  [mod : Module R X]
+
+universe ux uy
+/-- Lens: the module pack of `⨂[R] i, s i` moves with the family pack. -/
+@[dsimp_congr] theorem piTensor_smodPack_congr {ι : Type uι} {s s' : ι → Type uM}
+    [iA : ∀ i, AddCommMonoid (s i)] [iM : ∀ i, Module R (s i)]
+    [iA' : ∀ i, AddCommMonoid (s' i)] [iM' : ∀ i, Module R (s' i)]
+    (h : @ModFamOn.mk R _ ι s iA iM = @ModFamOn.mk R _ ι s' iA' iM') :
+    SModPack.mk (R := R) (⨂[R] i, s i) = SModPack.mk (⨂[R] i, s' i) := by
+  cases h; rfl
+
+universe uz
+/-- `e₁₂.trans e₂₃`: the three hidden module types move as packs. -/
+@[dsimp_congr] theorem linearEquiv_trans_congr {X X' : Type ux} {Y Y' : Type uy} {Z Z' : Type uz}
+    [AddCommMonoid X] [Module R X] [AddCommMonoid X'] [Module R X']
+    [AddCommMonoid Y] [Module R Y] [AddCommMonoid Y'] [Module R Y']
+    [AddCommMonoid Z] [Module R Z] [AddCommMonoid Z'] [Module R Z']
+    (hX : SModPack.mk (R := R) X = SModPack.mk X') (hY : SModPack.mk (R := R) Y = SModPack.mk Y')
+    (hZ : SModPack.mk (R := R) Z = SModPack.mk Z')
+    (f : X ≃ₗ[R] Y) (f' : X' ≃ₗ[R] Y') (hf : HEq f f') (g : Y ≃ₗ[R] Z) (g' : Y' ≃ₗ[R] Z')
+    (hg : HEq g g') : HEq (f.trans g) (f'.trans g') := by
+  cases hX; cases hY; cases hZ; cases hf; cases hg; rfl
+
+end FamCongr
+
 open TensorProduct
 
 namespace PiTensorProduct
@@ -38,6 +86,9 @@ section equivPiTensorComplSingletonTensor
 
 variable {ι : Type*} [DecidableEq ι] (M : ι → Type*)
   [CommSemiring R] [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)]
+
+attribute [local implicit_reducible] Equiv.trans Equiv.optionSubtype Equiv.optionEquivSumPUnit Equiv.refl
+  Set.singleton Option.casesOn' Equiv.optionSubtypeNe Sum.elim
 
 /-- The linear equivalence between `⨂[R] i, M i` and the tensor product of
 the pi tensor product indexed by the complement of `{i₀}` and `M i₀`. -/
@@ -89,9 +140,6 @@ Validated, but perhaps too invasive, fix: Make all of the following definitions 
 Then both backward compatibility options can go: first `respectTransparency false`, then
 `instanceSearchTypes false`.
 -/
-set_option backward.dsimp.instanceTypes false in
-set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in
-set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma equivPiTensorComplSingletonTensor_tprod (i₀ : ι) (m : ∀ i, M i) :
     equivPiTensorComplSingletonTensor R M i₀ (⨂ₜ[R] i, m i) =
@@ -117,7 +165,6 @@ lemma equivPiTensorComplSingletonTensor_symm_tmul (i₀ : ι)
   congr
   ext ⟨i, hi⟩
   rw [Function.subtypeNeLift_of_neq _ _ _ _ hi]
-  rfl
 
 end equivPiTensorComplSingletonTensor
 
