@@ -72,6 +72,13 @@ instance : CommRing (AdjoinRoot f) where
   zsmul := letI := instSMulAdjoinRoot (S := ℤ) (R := R); (· • ·)
   __ : CommRing (AdjoinRoot f) := inferInstanceAs <| CommRing (_ ⧸ _)
 
+/-- Lens: the commutative ring pack of `AdjoinRoot f` follows `f`. -/
+@[dsimp_congr] theorem instCommRing.packLens.{ur} {R : Type ur} [CommRing R] {f f' : R[X]}
+    (h : f = f') :
+    @ClassPack.mk CommRing (AdjoinRoot f) (instCommRing f) =
+      @ClassPack.mk CommRing (AdjoinRoot f') (instCommRing f') := by
+  cases h; rfl
+
 instance [DistribSMul S R] [IsScalarTower S R R] : DistribSMul S (AdjoinRoot f) :=
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   inferInstanceAs <| DistribSMul S (_ ⧸ _))

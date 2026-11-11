@@ -371,6 +371,13 @@ instance Quotient.algebra {I : Ideal A} [I.IsTwoSided] : Algebra R₁ (A ⧸ I) 
 
 instance {A} [CommRing A] [Algebra R₁ A] (I : Ideal A) : Algebra R₁ (A ⧸ I) := inferInstance
 
+/-- Lens: the algebra pack of `A ⧸ I` follows the ideal `I`. -/
+@[dsimp_congr] theorem instAlgebraQuotient.packLens.{ua, va} {R : Type ua} [CommSemiring R]
+    {A : Type va} [CommRing A] [Algebra R A] {I I' : Ideal A} (h : I = I') :
+    @AlgPack.mk R (A ⧸ I) _ (Quotient.semiring I) (instAlgebraQuotient R I) =
+      @AlgPack.mk R (A ⧸ I') _ (Quotient.semiring I') (instAlgebraQuotient R I') := by
+  cases h; rfl
+
 -- This instance can be inferred, but is kept around as a useful shortcut.
 instance Quotient.isScalarTower [SMul R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) :
     IsScalarTower R₁ R₂ (A ⧸ I) := inferInstance

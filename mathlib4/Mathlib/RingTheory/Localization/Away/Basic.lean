@@ -32,6 +32,14 @@ commutative ring, field of fractions
 
 @[expose] public section
 
+/-- Lens: the algebra pack of `Localization.Away x` over its base follows the base and `x`. -/
+@[dsimp_congr] theorem Localization.Away.algPackLens.{u} {R R' : Type u} [i : CommRing R]
+    [i' : CommRing R'] {x : R} {x' : R'}
+    (h : @ClassPack.mk CommRing R i = @ClassPack.mk CommRing R' i') (hx : HEq x x') :
+    @AlgPack.mk R (Localization.Away x) _ OreLocalization.instSemiring OreLocalization.instAlgebra =
+      @AlgPack.mk R' (Localization.Away x') _ OreLocalization.instSemiring
+        OreLocalization.instAlgebra := by
+  cases h; cases hx; rfl
 
 section CommSemiring
 
