@@ -1021,7 +1021,7 @@ lemma H1ToTensorOfIsTrivial_H1π_single (g : G) (a : A) :
   simp only [H1ToTensorOfIsTrivial, H1π, AddMonoidHom.coe_toIntLinearMap, AddMonoidHom.coe_comp]
   -- todo: change this proof so that we don't need `change` that abuses defeq.
   change QuotientAddGroup.lift _ _ _ ((H1Iso A).hom _) = _
-  (set_option backward.dsimp.instanceTypes false in
+  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [π_comp_H1Iso_hom_apply, ← Submodule.Quotient.quotientAddGroupMk_eq_mk, Submodule.mkQ,
     AddSubgroup.subtype, cycles₁IsoOfIsTrivial])

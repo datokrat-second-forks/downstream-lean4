@@ -9,6 +9,7 @@ public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 public import Mathlib.Algebra.Order.Module.Field
 public import Mathlib.Analysis.Normed.Group.Seminorm
 public import Mathlib.Tactic.Group
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.MetricSpace.Defs
 public import Mathlib.Topology.Order.Real
 
@@ -458,3 +459,5 @@ instance on `E`). -/]
 abbrev GroupNorm.toNormedCommGroup [CommGroup E] (f : GroupNorm E) : NormedCommGroup E :=
   { f.toNormedGroup with
     mul_comm := mul_comm }
+
+derive_pack_edges

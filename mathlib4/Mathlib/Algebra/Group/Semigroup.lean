@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Regular.Defs
 public import Mathlib.Tactic.MkIffOfInductiveProp
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Simps
 
 /-!
@@ -354,3 +355,5 @@ initialize_simps_projections LeftCancelSemigroup
 initialize_simps_projections AddLeftCancelSemigroup
 initialize_simps_projections RightCancelSemigroup
 initialize_simps_projections AddRightCancelSemigroup
+
+derive_pack_edges

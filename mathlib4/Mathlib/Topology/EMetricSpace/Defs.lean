@@ -7,6 +7,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébas
 module
 
 public import Mathlib.Basic.ENNReal.Inv
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.UniformSpace.Basic
 public import Mathlib.Topology.UniformSpace.OfFun
 
@@ -986,3 +987,5 @@ instance [PseudoEMetricSpace X] : PseudoEMetricSpace Xᵒᵈ :=
   ‹PseudoEMetricSpace X›
 instance [EMetricSpace X] : EMetricSpace Xᵒᵈ :=
   ‹EMetricSpace X›
+
+derive_pack_edges

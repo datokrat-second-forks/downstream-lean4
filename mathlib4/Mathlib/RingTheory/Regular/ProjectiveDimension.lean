@@ -129,7 +129,7 @@ lemma projectiveDimension_quotSMulTop_eq_succ_of_isSMulRegular (M : ModuleCat.{v
       rw [eq_comm, eq_top_iff]
       intro y hy
       rcases epi y with ⟨z, hz⟩
-      (set_option backward.dsimp.instanceTypes false in
+      (
       simp only [ModuleCat.smulShortComplex, Ext.mk₀_smul,
         Ext.bilinearComp_apply_apply, Ext.smul_comp, Ext.mk₀_id_comp] at hz)
       simpa [← hz] using Submodule.smul_mem_pointwise_smul _ _ ⊤ trivial

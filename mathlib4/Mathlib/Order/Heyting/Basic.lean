@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Order.GaloisConnection.Defs
 public import Mathlib.Order.PropInstances
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Heyting algebras
@@ -971,3 +972,5 @@ theorem himp_eq : a ⇨ b = unit :=
   rfl
 
 end PUnit
+
+derive_pack_edges

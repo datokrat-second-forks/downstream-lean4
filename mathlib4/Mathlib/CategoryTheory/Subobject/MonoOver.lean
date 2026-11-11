@@ -437,7 +437,6 @@ def image : Over X ⥤ MonoOver X where
             e := k.left ≫ factorThruImage g.hom }
     · apply image.lift_fac
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- `MonoOver.image : Over X ⥤ MonoOver X` is left adjoint to
 `MonoOver.forget : MonoOver X ⥤ Over X`

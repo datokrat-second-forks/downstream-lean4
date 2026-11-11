@@ -318,8 +318,7 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpace.{_, _, v}
     simp only [Functor.op_obj, op_inj_iff, Opens.map_coe, SetLike.ext'_iff,
       Set.preimage_preimage]
     congrm Set.preimage $(funext fun x => ?_) U.1
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [colimitCocone, colimit, ← TopCat.comp_app])
+    (simp only [colimitCocone, colimit, ← TopCat.comp_app])
     congr
     exact ι_preservesColimitIso_inv (forget C) F (unop X)
   · intro X Y f

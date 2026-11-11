@@ -18,6 +18,7 @@ public import Mathlib.Algebra.Order.Monoid.OrderDual
 public import Mathlib.Algebra.Order.Monoid.TypeTags
 public import Mathlib.Data.Int.Basic
 public import Mathlib.Data.Set.Function
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Linearly ordered commutative groups and monoids with a zero element adjoined
@@ -654,3 +655,5 @@ lemma le_unzeroD (hy : b ≤ y) : b ≤ y.unzeroD a := by
 end PartialOrder
 
 end WithZero
+
+derive_pack_edges

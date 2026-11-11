@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.GroupWithZero.Hom
 public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Homomorphisms of semirings and rings
@@ -379,6 +380,24 @@ instance instFunLike : FunLike (α →+* β) α β where
     congr
     apply DFunLike.coe_injective
     exact h
+
+
+/-- Pack congruence for the type `α →+* β` of ring homomorphisms. -/
+@[dsimp_congr] theorem _root_.RingHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : NonAssocSemiring α] [i' : NonAssocSemiring α'] [j : NonAssocSemiring β] [j' : NonAssocSemiring β']
+    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
+    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j') :
+    (α →+* β) = (α' →+* β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α →+* β` follows the packs of `α` and `β`. -/
+@[dsimp_congr] theorem _root_.RingHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : NonAssocSemiring α] [i' : NonAssocSemiring α'] [j : NonAssocSemiring β] [j' : NonAssocSemiring β']
+    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
+    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j') :
+    FunLikePack.mk (α →+* β) α (fun _ => β) =
+      FunLikePack.mk (α' →+* β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
 
 instance instRingHomClass : RingHomClass (α →+* β) α β where
   map_add := RingHom.map_add'

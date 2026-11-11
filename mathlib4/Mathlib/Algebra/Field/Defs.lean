@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Ring.Defs
 public import Mathlib.Data.Rat.Init
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Division (semi)rings and (semi)fields
@@ -218,3 +219,5 @@ end Rat
 @[simp]
 theorem Rat.ofScientific_eq_ofScientific (m : ℕ) (s : Bool) (e : ℕ) :
     Rat.ofScientific (OfNat.ofNat m) s (OfNat.ofNat e) = OfScientific.ofScientific m s e := rfl
+
+derive_pack_edges

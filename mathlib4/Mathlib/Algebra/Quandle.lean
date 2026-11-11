@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Group.End
 public import Mathlib.Data.ZMod.Defs
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Ring
 
 /-!
@@ -716,3 +717,5 @@ theorem envelAction_prop {R : Type*} [Rack R] (x y : R) :
 end EnvelGroup
 
 end Rack
+
+derive_pack_edges

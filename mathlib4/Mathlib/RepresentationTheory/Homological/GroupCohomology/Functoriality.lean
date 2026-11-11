@@ -295,13 +295,11 @@ noncomputable def mapShortComplexH1 :
   comm₁₂ := by
     ext x
     funext g
-    (set_option backward.dsimp.instanceTypes false in
-    simpa [shortComplexH1, d₀₁, cochainsMap₁] using (hom_comm_apply φ g x).symm)
+    (simpa [shortComplexH1, d₀₁, cochainsMap₁] using (hom_comm_apply φ g x).symm)
   comm₂₃ := by
     ext x
     funext g
-    (set_option backward.dsimp.instanceTypes false in
-    simpa [shortComplexH1, d₁₂, cochainsMap₁, cochainsMap₂] using (hom_comm_apply φ _ _).symm)
+    (simpa [shortComplexH1, d₁₂, cochainsMap₁, cochainsMap₂] using (hom_comm_apply φ _ _).symm)
 
 @[simp]
 theorem mapShortComplexH1_zero :
@@ -356,8 +354,7 @@ theorem mapCocycles₁_one (φ : res 1 A ⟶ B) :
     mapCocycles₁ 1 φ = 0 := by
   rw [← cancel_mono (moduleCatLeftHomologyData (shortComplexH1 B)).i, cyclesMap'_i]
   refine ModuleCat.hom_ext (LinearMap.ext fun _ ↦ funext fun y => ?_)
-  (set_option backward.dsimp.instanceTypes false in
-  simp [mapShortComplexH1, shortComplexH1, Pi.zero_apply y])
+  (simp [mapShortComplexH1, shortComplexH1, Pi.zero_apply y])
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]
@@ -460,11 +457,11 @@ noncomputable def mapShortComplexH2 :
   comm₁₂ := by
     ext x
     funext g
-    (set_option backward.dsimp.instanceTypes false in simp [shortComplexH2, ← hom_comm_apply φ])
+    (simp [shortComplexH2, ← hom_comm_apply φ])
   comm₂₃ := by
     ext x
     funext g
-    (set_option backward.dsimp.instanceTypes false in simp [shortComplexH2, ← hom_comm_apply φ])
+    (simp [shortComplexH2, ← hom_comm_apply φ])
 
 @[simp]
 theorem mapShortComplexH2_zero :

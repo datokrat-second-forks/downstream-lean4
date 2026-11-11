@@ -302,8 +302,7 @@ lemma toSheafify_plusPlusIsoSheafify_hom (P : Cᵒᵖ ⥤ D) :
     Adjunction.unit_leftAdjointUniq_hom_app (plusPlusAdjunction J D) (sheafificationAdjunction J D)
       P
   ext1 P
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [GrothendieckTopology.toSheafify, plusPlusAdjunction])
+  (dsimp [GrothendieckTopology.toSheafify, plusPlusAdjunction])
   rw [Category.comp_id]
 
 instance [PreservesLimits (forget D)] [HasFiniteLimits D]

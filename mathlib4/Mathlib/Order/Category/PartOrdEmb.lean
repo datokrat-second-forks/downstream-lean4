@@ -301,7 +301,7 @@ def CoconePt.desc (s : Cocone F) : CoconePt hc ↪o s.pt where
       Types.FilteredColimit.jointly_surjective_of_isColimit₂ hc x y
     have hx := congr($(hc.fac ((forget _).mapCocone s) j) x')
     have hy := congr($(hc.fac ((forget _).mapCocone s) j) y')
-    (set_option backward.dsimp.instanceTypes false in
+    (
     simp only [Functor.mapCocone_pt, Functor.comp_obj, Functor.const_obj_obj,
       CategoryTheory.comp_apply, Functor.mapCocone_ι_app, ConcreteCategory.hom_ofHom,
       TypeCat.Fun.coe_mk, Function.Embedding.coeFn_mk] at hx hy ⊢)
@@ -310,8 +310,7 @@ def CoconePt.desc (s : Cocone F) : CoconePt hc ↪o s.pt where
     obtain ⟨l, f, g, hl⟩ := (Types.FilteredColimit.isColimit_eq_iff _ hc).1 hx'
     obtain ⟨l', f', g', hl'⟩ := (Types.FilteredColimit.isColimit_eq_iff _ hc).1 hy'
     obtain ⟨m, a, b, h₁, h₂⟩ := bowtie f f' g g'
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp at hl hl')
+    (dsimp at hl hl')
     rw [← (F.map (f ≫ a)).le_iff_le] at h
     rw [← (F.map (g ≫ a)).le_iff_le]
     exact le_of_eq_of_le (by simp [hl]) (le_of_le_of_eq h (by simp [h₁, h₂, hl']))

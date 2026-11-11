@@ -9,6 +9,7 @@ public import Mathlib.Algebra.Group.Idempotent
 public import Mathlib.Algebra.Ring.Equiv
 public import Mathlib.Algebra.Ring.PUnit
 public import Mathlib.Order.Hom.BoundedLattice
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Ring
 
 import Mathlib.Tactic.Abel
@@ -577,3 +578,5 @@ theorem Bool.neg_eq_id (b : Bool) : -b = b := rfl
 theorem Bool.sub_eq_xor (b c : Bool) : b - c = (b ^^ c) := rfl
 
 theorem Bool.mul_eq_and (b c : Bool) : b * c = (b && c) := rfl
+
+derive_pack_edges

@@ -189,7 +189,7 @@ theorem Scheme.quasiSeparatedSpace_of_isOpenCover
     ((X.openCoverOfIsOpenCover U hU).f j) ≫
     (X.openCoverOfIsOpenCover U hU).f i).isOpenEmbedding.isCompact_iff, Set.image_univ,
     IsOpenImmersion.range_pullback_to_base_of_left]
-  (set_option backward.dsimp.instanceTypes false in simpa using hU₂ i j)
+  (simpa using hU₂ i j)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma quasiSeparatedSpace_iff_quasiCompact_prod_lift :

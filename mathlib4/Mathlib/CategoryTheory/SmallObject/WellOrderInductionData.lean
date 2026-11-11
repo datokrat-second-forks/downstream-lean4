@@ -96,8 +96,7 @@ structure Extension (val₀ : F.obj (op ⊥)) (j : J) where
     F.map (homOfLE hij).op val = d.lift i hi
       { val := fun ⟨⟨k, hk⟩⟩ ↦ F.map (homOfLE (hk.le.trans hij)).op val
         property := fun f ↦ by
-          (set_option backward.dsimp.instanceTypes false in
-          dsimp)
+          (dsimp)
           rw [← comp_apply, ← map_comp]
           rfl }
 

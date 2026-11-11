@@ -78,8 +78,7 @@ noncomputable def preservesLimit'
     ext j x
     obtain ⟨k, y, rfl⟩ := Types.jointly_surjective_of_isColimit
       (isColimitOfPreserves ((evaluation _ _).obj j) hc) x
-    (set_option backward.dsimp.instanceTypes false in
-    simp [← hm])
+    (simp [← hm])
 
 public lemma preservesLimit
     [HasColimitsOfShape Kᵒᵖ (Type w)]

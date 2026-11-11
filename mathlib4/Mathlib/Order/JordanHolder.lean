@@ -299,11 +299,9 @@ protected theorem smash {s₁ s₂ t₁ t₂ : CompositionSeries X}
     intro i
     refine Fin.addCases ?_ ?_ i
     · intro i
-      (set_option backward.dsimp.instanceTypes false in
-      simpa [e, smash_castAdd, smash_succ_castAdd] using h₁.choose_spec i)
+      (simpa [e, smash_castAdd, smash_succ_castAdd] using h₁.choose_spec i)
     · intro i
-      (set_option backward.dsimp.instanceTypes false in
-      simpa [e, -Fin.castSucc_natAdd, smash_natAdd, smash_succ_natAdd] using h₂.choose_spec i)⟩
+      (simpa [e, -Fin.castSucc_natAdd, smash_natAdd, smash_succ_natAdd] using h₂.choose_spec i)⟩
 
 #adaptation_note /-- Proof repaired after leanprover/lean4#13492.
 The proof body used to be a single term

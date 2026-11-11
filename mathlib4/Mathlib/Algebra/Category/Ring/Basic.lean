@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Category.Grp.Basic
 public import Mathlib.Algebra.Ring.Equiv
 public import Mathlib.Algebra.Ring.PUnit
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Category instances for `Semiring`, `Ring`, `CommSemiring`, and `CommRing`.
@@ -691,6 +692,50 @@ instance forgetReflectIsos : (forget CommRingCat).ReflectsIsomorphisms where
     exact e.toCommRingCatIso.isIso_hom
 
 end CommRingCat
+
+/-- Lens: the `Semiring` pack of the carrier of `X : SemiRingCat` follows `X`. -/
+@[dsimp_congr] theorem SemiRingCat.pack_congr.{ua} {X X' : SemiRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk Semiring X X.semiring = @ClassPack.mk Semiring X' X'.semiring := by
+  cases h; rfl
+
+/-- Lens: the `Ring` pack of the carrier of `X : RingCat` follows `X`. -/
+@[dsimp_congr] theorem RingCat.pack_congr.{ua} {X X' : RingCat.{ua}} (h : X = X') :
+    @ClassPack.mk Ring X X.ring = @ClassPack.mk Ring X' X'.ring := by
+  cases h; rfl
+
+/-- Lens: the `CommSemiring` pack of the carrier of `X : CommSemiRingCat` follows `X`. -/
+@[dsimp_congr] theorem CommSemiRingCat.pack_congr.{ua} {X X' : CommSemiRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommSemiring X X.commSemiring = @ClassPack.mk CommSemiring X' X'.commSemiring := by
+  cases h; rfl
+
+/-- Lens: the `CommRing` pack of the carrier of `X : CommRingCat` follows `X`. -/
+@[dsimp_congr] theorem CommRingCat.pack_congr.{ua} {X X' : CommRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommRing X X.commRing = @ClassPack.mk CommRing X' X'.commRing := by
+  cases h; rfl
+
+/-- Lens: the `Semiring` pack of `(forget SemiRingCat).obj X` follows `X`. -/
+@[dsimp_congr] theorem SemiRingCat.forget_pack_congr.{ua} {X X' : SemiRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk Semiring X (inferInstanceAs (Semiring ((CategoryTheory.forget SemiRingCat).obj X))) =
+      @ClassPack.mk Semiring X' (inferInstanceAs (Semiring ((CategoryTheory.forget SemiRingCat).obj X'))) := by
+  cases h; rfl
+
+/-- Lens: the `Ring` pack of `(forget RingCat).obj X` follows `X`. -/
+@[dsimp_congr] theorem RingCat.forget_pack_congr.{ua} {X X' : RingCat.{ua}} (h : X = X') :
+    @ClassPack.mk Ring X (inferInstanceAs (Ring ((CategoryTheory.forget RingCat).obj X))) =
+      @ClassPack.mk Ring X' (inferInstanceAs (Ring ((CategoryTheory.forget RingCat).obj X'))) := by
+  cases h; rfl
+
+/-- Lens: the `CommSemiring` pack of `(forget CommSemiRingCat).obj X` follows `X`. -/
+@[dsimp_congr] theorem CommSemiRingCat.forget_pack_congr.{ua} {X X' : CommSemiRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommSemiring X (inferInstanceAs (CommSemiring ((CategoryTheory.forget CommSemiRingCat).obj X))) =
+      @ClassPack.mk CommSemiring X' (inferInstanceAs (CommSemiring ((CategoryTheory.forget CommSemiRingCat).obj X'))) := by
+  cases h; rfl
+
+/-- Lens: the `CommRing` pack of `(forget CommRingCat).obj X` follows `X`. -/
+@[dsimp_congr] theorem CommRingCat.forget_pack_congr.{ua} {X X' : CommRingCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommRing X (inferInstanceAs (CommRing ((CategoryTheory.forget CommRingCat).obj X))) =
+      @ClassPack.mk CommRing X' (inferInstanceAs (CommRing ((CategoryTheory.forget CommRingCat).obj X'))) := by
+  cases h; rfl
 
 namespace CategoryTheory.Iso
 

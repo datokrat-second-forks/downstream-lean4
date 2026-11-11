@@ -99,8 +99,7 @@ lemma functorEnrichedHomCoyonedaObjEquiv_naturality
       (functorEnrichedHomCoyonedaObjEquiv M F G Y y) := by
   dsimp
   ext ⟨j⟩
-  (set_option backward.dsimp.instanceTypes false in
-  simp [functorEnrichedHomCoyonedaObjEquiv, presheafHom])
+  (simp [functorEnrichedHomCoyonedaObjEquiv, presheafHom])
   rfl
 
 lemma isSheaf_functorEnrichedHom (F G : Cᵒᵖ ⥤ A) (hG : Presheaf.IsSheaf J G)

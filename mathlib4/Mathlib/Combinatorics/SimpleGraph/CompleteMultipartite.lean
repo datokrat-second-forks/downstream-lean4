@@ -231,7 +231,7 @@ The difference is that the former vertices are a product type whereas the latter
 def completeEquipartiteGraph.completeMultipartiteGraph :
     completeEquipartiteGraph r t ≃g completeMultipartiteGraph (const (Fin r) (Fin t)) :=
   { (Equiv.sigmaEquivProd (Fin r) (Fin t)).symm with
-    map_rel_iff' := by (set_option backward.dsimp.instanceTypes false in simp) }
+    map_rel_iff' := by (simp) }
 
 /-- A `completeEquipartiteGraph` is isomorphic to a corresponding `turanGraph`.
 

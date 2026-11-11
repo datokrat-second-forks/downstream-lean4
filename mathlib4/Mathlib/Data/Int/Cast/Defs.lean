@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Data.Nat.Cast.Defs
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Cast of integers
@@ -50,3 +51,5 @@ class AddGroupWithOne (R : Type u) extends IntCast R, AddMonoidWithOne R, AddGro
 /-- An `AddCommGroupWithOne` is an `AddGroupWithOne` satisfying `a + b = b + a`. -/
 class AddCommGroupWithOne (R : Type u)
   extends AddCommGroup R, AddGroupWithOne R, AddCommMonoidWithOne R
+
+derive_pack_edges

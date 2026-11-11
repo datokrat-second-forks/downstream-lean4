@@ -10,6 +10,7 @@ public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Notation.Pi.Defs
 public import Mathlib.Basic.FunLike.Basic
 public import Mathlib.Logic.Function.Iterate
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Monoid and group homomorphisms
@@ -388,6 +389,41 @@ instance MonoidHom.instFunLike : FunLike (M →* N) M N where
     congr
     apply DFunLike.coe_injective
     exact h
+
+
+/-- Pack congruence for the type `α →* β` of monoid homomorphisms. -/
+@[dsimp_congr] theorem MonoidHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : MulOne α] [i' : MulOne α'] [j : MulOne β] [j' : MulOne β']
+    (hα : @ClassPack.mk MulOne α i = @ClassPack.mk MulOne α' i')
+    (hβ : @ClassPack.mk MulOne β j = @ClassPack.mk MulOne β' j') :
+    (α →* β) = (α' →* β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α →* β` follows the packs of `α` and `β`. -/
+@[dsimp_congr] theorem MonoidHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : MulOne α] [i' : MulOne α'] [j : MulOne β] [j' : MulOne β']
+    (hα : @ClassPack.mk MulOne α i = @ClassPack.mk MulOne α' i')
+    (hβ : @ClassPack.mk MulOne β j = @ClassPack.mk MulOne β' j') :
+    FunLikePack.mk (α →* β) α (fun _ => β) =
+      FunLikePack.mk (α' →* β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
+
+/-- Pack congruence for the type `α →+ β` of additive monoid homomorphisms. -/
+@[dsimp_congr] theorem AddMonoidHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : AddZero α] [i' : AddZero α'] [j : AddZero β] [j' : AddZero β']
+    (hα : @ClassPack.mk AddZero α i = @ClassPack.mk AddZero α' i')
+    (hβ : @ClassPack.mk AddZero β j = @ClassPack.mk AddZero β' j') :
+    (α →+ β) = (α' →+ β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α →+ β` follows the packs of `α` and `β`. -/
+@[dsimp_congr] theorem AddMonoidHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : AddZero α] [i' : AddZero α'] [j : AddZero β] [j' : AddZero β']
+    (hα : @ClassPack.mk AddZero α i = @ClassPack.mk AddZero α' i')
+    (hβ : @ClassPack.mk AddZero β j = @ClassPack.mk AddZero β' j') :
+    FunLikePack.mk (α →+ β) α (fun _ => β) =
+      FunLikePack.mk (α' →+ β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
 
 @[to_additive]
 instance MonoidHom.instMonoidHomClass : MonoidHomClass (M →* N) M N where
@@ -821,6 +857,42 @@ theorem MulHom.comp_apply [Mul M] [Mul N] [Mul P] (g : N →ₙ* P) (f : M →�
 @[to_additive]
 theorem MonoidHom.comp_apply [MulOne M] [MulOne N] [MulOne P]
     (g : N →* P) (f : M →* N) (x : M) : g.comp f x = g (f x) := rfl
+
+/-- Pack congruence for `MonoidHom.comp`. -/
+@[dsimp_congr] theorem MonoidHom.comp_pack_congr.{ua, va, wa} {M M' : Type ua} {N N' : Type va}
+    {P P' : Type wa} [iM : MulOne M] [iM' : MulOne M'] [iN : MulOne N] [iN' : MulOne N']
+    [iP : MulOne P] [iP' : MulOne P']
+    (hM : @ClassPack.mk MulOne M iM = @ClassPack.mk MulOne M' iM')
+    (hN : @ClassPack.mk MulOne N iN = @ClassPack.mk MulOne N' iN')
+    (hP : @ClassPack.mk MulOne P iP = @ClassPack.mk MulOne P' iP')
+    (f : N →* P) (f' : N' →* P') (hf : HEq f f') (g : M →* N) (g' : M' →* N')
+    (hg : HEq g g') :
+    HEq (f.comp g) (f'.comp g') := by
+  cases hM; cases hN; cases hP; cases hf; cases hg; rfl
+
+/-- Pack congruence for `MonoidHom.id`. -/
+@[dsimp_congr] theorem MonoidHom.id_pack_congr.{ua} {M M' : Type ua} [iM : MulOne M]
+    [iM' : MulOne M'] (hM : @ClassPack.mk MulOne M iM = @ClassPack.mk MulOne M' iM') :
+    HEq (MonoidHom.id M) (MonoidHom.id M') := by
+  cases hM; rfl
+
+/-- Pack congruence for `AddMonoidHom.comp`. -/
+@[dsimp_congr] theorem AddMonoidHom.comp_pack_congr.{ua, va, wa} {M M' : Type ua} {N N' : Type va}
+    {P P' : Type wa} [iM : AddZero M] [iM' : AddZero M'] [iN : AddZero N] [iN' : AddZero N']
+    [iP : AddZero P] [iP' : AddZero P']
+    (hM : @ClassPack.mk AddZero M iM = @ClassPack.mk AddZero M' iM')
+    (hN : @ClassPack.mk AddZero N iN = @ClassPack.mk AddZero N' iN')
+    (hP : @ClassPack.mk AddZero P iP = @ClassPack.mk AddZero P' iP')
+    (f : N →+ P) (f' : N' →+ P') (hf : HEq f f') (g : M →+ N) (g' : M' →+ N')
+    (hg : HEq g g') :
+    HEq (f.comp g) (f'.comp g') := by
+  cases hM; cases hN; cases hP; cases hf; cases hg; rfl
+
+/-- Pack congruence for `AddMonoidHom.id`. -/
+@[dsimp_congr] theorem AddMonoidHom.id_pack_congr.{ua} {M M' : Type ua} [iM : AddZero M]
+    [iM' : AddZero M'] (hM : @ClassPack.mk AddZero M iM = @ClassPack.mk AddZero M' iM') :
+    HEq (AddMonoidHom.id M) (AddMonoidHom.id M') := by
+  cases hM; rfl
 
 /-- Composition of monoid homomorphisms is associative. -/
 @[to_additive /-- Composition of additive monoid homomorphisms is associative. -/]

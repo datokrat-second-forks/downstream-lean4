@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Module.Opposite
 public import Mathlib.Algebra.Ring.Associator
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Pre-Lie rings and algebras
@@ -121,3 +122,5 @@ variable [RightPreLieRing L] [RightPreLieAlgebra R L]
 instance : LeftPreLieAlgebra R Lᵐᵒᵖ where
 
 end RightPreLieAlgebra
+
+derive_pack_edges

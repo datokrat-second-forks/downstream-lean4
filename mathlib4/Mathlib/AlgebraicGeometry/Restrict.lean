@@ -230,7 +230,7 @@ lemma Scheme.Opens.ι_image_basicOpen (r : Γ(U, ⊤)) :
 set_option backward.isDefEq.respectTransparency false in
 lemma Scheme.Opens.ι_image_basicOpen_topIso_inv (r : Γ(X, U)) :
     U.ι ''ᵁ U.toScheme.basicOpen (U.topIso.inv r) = X.basicOpen r := by
-  (set_option backward.dsimp.instanceTypes false in simp only [Scheme.Opens.toScheme_presheaf_obj])
+  (simp only [Scheme.Opens.toScheme_presheaf_obj])
   rw [ι_image_basicOpen', basicOpen_res_eq, topIso_inv, basicOpen_res_eq X]
 
 @[simp]
@@ -899,14 +899,13 @@ def Scheme.OpenCover.restrict {X : Scheme.{u}} (𝒰 : Scheme.OpenCover.{v} X) (
     U.toScheme.OpenCover := by
   refine Cover.copy (𝒰.pullback₁ U.ι) 𝒰.I₀ _ (𝒰.f · ∣_ U) (Equiv.refl _)
     (fun i ↦ IsOpenImmersion.isoOfRangeEq (Opens.ι _) (pullback.snd _ _) ?_) ?_
-  · (set_option backward.dsimp.instanceTypes false in
+  · (
     dsimp only [Precoverage.ZeroHypercover.pullback₁_toPreZeroHypercover,
       PreZeroHypercover.pullback₁_I₀, Equiv.refl_apply, PreZeroHypercover.pullback₁_X])
     rw [IsOpenImmersion.range_pullbackSnd U.ι (𝒰.f i), Opens.opensRange_ι]
     exact Subtype.range_val
   · intro i
     rw [← cancel_mono U.ι]
-    (set_option backward.dsimp.instanceTypes false in
-    simp [morphismRestrict_ι, Equiv.refl_apply, Category.assoc, pullback.condition])
+    (simp [morphismRestrict_ι, Equiv.refl_apply, Category.assoc, pullback.condition])
 
 end AlgebraicGeometry

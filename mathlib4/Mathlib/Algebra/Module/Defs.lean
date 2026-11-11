@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.GroupWithZero.Action.Defs
 public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Modules over a ring
@@ -57,6 +58,14 @@ class Module (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] extends
   protected add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
   /-- Scalar multiplication by zero gives zero. -/
   protected zero_smul : ∀ x : M, (0 : R) • x = 0
+
+/-- Pack congruence for the class `Module`. -/
+@[dsimp_congr] theorem Module.pack_congr.{ua, va} {R R' : Type ua} {M M' : Type va}
+    [iR : Semiring R] [iR' : Semiring R'] [iM : AddCommMonoid M] [iM' : AddCommMonoid M']
+    (hR : @ClassPack.mk Semiring R iR = @ClassPack.mk Semiring R' iR')
+    (hM : @ClassPack.mk AddCommMonoid M iM = @ClassPack.mk AddCommMonoid M' iM') :
+    Module R M = Module R' M' := by
+  cases hR; cases hM; rfl
 
 section AddCommMonoid
 

@@ -278,8 +278,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma uSwitchEquiv_naturality {X Y : FintypeCat.{u}} (f : X ⟶ Y)
     (x : uSwitch.{u, v}.obj X) :
     f (X.uSwitchEquiv x) = Y.uSwitchEquiv (uSwitch.map f x) := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [uSwitch, uSwitchEquiv, Equiv.trans_apply, Equiv.ulift_apply])
+  (simp only [uSwitch, uSwitchEquiv, Equiv.trans_apply, Equiv.ulift_apply])
   rw [homMk_apply]
   aesop
 

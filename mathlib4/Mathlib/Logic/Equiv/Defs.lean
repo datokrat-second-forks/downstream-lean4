@@ -104,6 +104,12 @@ instance : EquivLike (α ≃ β) α β where
   right_inv := Equiv.right_inv
   coe_injective' e₁ e₂ h₁ h₂ := by cases e₁; cases e₂; congr
 
+/-- Lens: the coercion pack of `α ≃ β` follows `α` and `β`. -/
+@[dsimp_congr] theorem funLikePack_congr {α α' : Sort u} {β β' : Sort v} (hα : α = α')
+    (hβ : β = β') :
+    FunLikePack.mk (α ≃ β) α (fun _ => β) = FunLikePack.mk (α' ≃ β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
+
 @[simp, norm_cast]
 lemma _root_.EquivLike.coe_coe {F} [EquivLike F α β] (e : F) :
     ((e : α ≃ β) : α → β) = e := rfl

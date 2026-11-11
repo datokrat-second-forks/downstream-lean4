@@ -164,10 +164,9 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
     have : X.basicOpen (f.appLE ⊤ U (by simp) r) = U := by
       simp only [Scheme.Hom.appLE, Opens.map_top, CommRingCat.comp_apply]
       rw [Scheme.basicOpen_res]
-      (set_option backward.dsimp.instanceTypes false in simpa using hU)
+      (simpa using hU)
     rw [← f.appLE_congr (by
-      (set_option backward.dsimp.instanceTypes false in
-      simp [Scheme.Hom.appLE])) rfl this (fun f => P f.hom),
+      (simp [Scheme.Hom.appLE])) rfl this (fun f => P f.hom),
       IsAffineOpen.appLE_eq_away_map f (isAffineOpen_top Y) U.2 _ r]
     simp only [CommRingCat.hom_ofHom]
     apply +allowSynthFailures h₂
@@ -177,7 +176,7 @@ theorem sourceAffineLocally_isLocal (h₁ : RingHom.RespectsIso P)
     intro r
     simp_rw [sourceAffineLocally_morphismRestrict] at hs'
     have := hs' r ⟨X.basicOpen (f.appLE ⊤ U le_top r.1), U.2.basicOpen (f.appLE ⊤ U le_top r.1)⟩
-      (by (set_option backward.dsimp.instanceTypes false in simp [Scheme.Hom.appLE]))
+      (by (simp [Scheme.Hom.appLE]))
     rwa [IsAffineOpen.appLE_eq_away_map f (isAffineOpen_top Y) U.2, CommRingCat.hom_ofHom,
       ← h₁.isLocalization_away_iff] at this
 

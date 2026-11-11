@@ -88,7 +88,6 @@ lemma map_comp_uliftYonedaEquiv_down (E : ℰ) {X Y : C} (f : X ⟶ Y)
   dsimp [uliftYonedaEquiv, uliftYoneda] at this ⊢
   cat_disch
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Auxiliary definition for `restrictedULiftYonedaHomEquiv`. -/
@@ -276,8 +275,7 @@ theorem coconeOfRepresentable_naturality
     (coconeOfRepresentable P₁).ι.app j ≫ α =
       (coconeOfRepresentable P₂).ι.app (α.mapElements.op.obj j) := by
   ext T f
-  (set_option backward.dsimp.instanceTypes false in
-  simp [uliftYonedaEquiv])
+  (simp [uliftYonedaEquiv])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -306,13 +304,12 @@ def colimitOfRepresentable (P : Cᵒᵖ ⥤ Type max w v₁) :
     let φ : j.unop ⟶ (Functor.elementsMk P _
       ((uliftYonedaEquiv.symm (unop j).val).app X x)) := ⟨x.down.op, rfl⟩
     have := s.w φ.op
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp [φ] at this x ⊢)
+    (dsimp [φ] at this x ⊢)
     rw [← this, uliftYonedaEquiv_apply]
     simp [uliftYoneda]
   uniq s m hm := by
     ext X x
-    (set_option backward.dsimp.instanceTypes false in
+    (
     simp only [functorToRepresentables_obj, coconeOfRepresentable_pt, Functor.const_obj_obj,
       coconeOfRepresentable_ι_app, Functor.leftOp_obj, Functor.Elements.π_obj, op_unop,
       TypeCat.Fun.toFun_apply, hom_ofHom, TypeCat.Fun.coe_mk] at hm ⊢)
@@ -426,7 +423,6 @@ section
 
 variable {D : Type u₂} [Category.{v₂} D] (F : C ⥤ D)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance (X : C) (Y : F.op.LeftExtension (uliftYoneda.{max w v₂}.obj X)) :
@@ -450,7 +446,6 @@ instance (X : C) : (uliftYoneda.{max w v₁}.obj (F.obj X)).IsLeftKanExtension
 section
 variable [∀ (P : Cᵒᵖ ⥤ Type max w v₁ v₂), F.op.HasLeftKanExtension P]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -501,7 +496,6 @@ def coconeApp {P : Cᵒᵖ ⥤ Type max w v₁ v₂} (x : P.Elements) :
     ((G.map (uliftYonedaEquiv.{max w v₂}.symm x.2)).app _
       ((φ.app x.1.unop).app _ (ULift.up (𝟙 _))))
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -620,8 +614,7 @@ lemma hom_ext {Φ : uliftYoneda.{max w v₂}.LeftExtension (F ⋙ uliftYoneda.{m
     (F.op.obj x.unop.1)) (ULift.up (𝟙 _))
   have eq₂ := congr_hom (CC := fun X ↦ X) (congr_app (congr_app (StructuredArrow.w g) x.unop.1.unop)
     (F.op.obj x.unop.1)) (ULift.up (𝟙 _))
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp at eq₁ eq₂ eq ⊢)
+  (dsimp at eq₁ eq₂ eq ⊢)
   simp only [reassoc_of% eq, ← Functor.whiskerLeft_comp]
   congr 2
   simp only [← cancel_epi ((compULiftYonedaIsoULiftYonedaCompLan F).hom.app x.unop.1.unop),
@@ -760,17 +753,15 @@ noncomputable def isColimitCoconeπOpCompShrinkYonedaObj (X : C) :
           (shrinkYonedaObjObjEquiv.symm (𝟙 X)) = u := by
       obtain ⟨⟨u⟩, v, rfl⟩ := Functor.ιColimitType_jointly_surjective _ u
       obtain ⟨v, rfl⟩ := shrinkYonedaObjObjEquiv.symm.surjective v
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp [c] at v h)
+      (dsimp [c] at v h)
       simp only [Equiv.apply_symm_apply] at h
       rw [← G.ιColimitType_map (show u ⟶ F.elementsMk _ x from ⟨v, h⟩).op]
-      (set_option backward.dsimp.instanceTypes false in
-      simp [G, shrinkYoneda_obj_map_shrinkYonedaObjObjEquiv_symm.{w}])
+      (simp [G, shrinkYoneda_obj_map_shrinkYonedaObjObjEquiv_symm.{w}])
     intro u₁ u₂ hu
     generalize hx₁ : G.descColimitType c u₁ = x
     have hx₂ : G.descColimitType c u₂ = x := by rw [← hx₁]; exact hu.symm
     rw [← this _ _ hx₁, ← this _ _ hx₂]
-  · (set_option backward.dsimp.instanceTypes false in
+  · (
     exact ⟨Functor.ιColimitType _ (op (elementsMk _ _ x))
       (shrinkYonedaObjObjEquiv.symm (𝟙 X)), by simp⟩)
 

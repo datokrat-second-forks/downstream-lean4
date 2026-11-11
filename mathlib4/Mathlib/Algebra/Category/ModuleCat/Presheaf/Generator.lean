@@ -64,7 +64,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma freeYonedaEquiv_symm_app (M : PresheafOfModules.{v} R) (X : C)
     (x : M.obj (Opposite.op X)) :
     (freeYonedaEquiv.symm x).app (Opposite.op X) (ModuleCat.freeMk (𝟙 _)) = x := by
-  (set_option backward.dsimp.instanceTypes false in
+  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [freeYonedaEquiv, freeHomEquiv, yonedaEquiv])
 

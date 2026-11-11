@@ -115,12 +115,10 @@ def whiskerLeft : P.comp Q ⟶ P.comp R where
         simp [← comp_apply, -types_comp_apply] } }
     naturality _ _ _ := by
       ext ⟨_, _, _⟩
-      (set_option backward.dsimp.instanceTypes false in
-      simp [chosenCoend_def, chosenCoend.map_apply]) }
+      (simp [chosenCoend_def, chosenCoend.map_apply]) }
   naturality _ _ _ := by
     ext _ ⟨_, _, _⟩
-    (set_option backward.dsimp.instanceTypes false in
-    simp [chosenCoend_def, chosenCoend.map_apply])
+    (simp [chosenCoend_def, chosenCoend.map_apply])
 
 variable (Q) in
 @[simp]
@@ -192,23 +190,21 @@ def leftUnitor (P : Profunctor.{u} C D) : Profunctor.id.comp P ≅ P :=
   NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ {
     hom := ↾Quot.lift (fun ⟨d, f, x⟩ ↦ (P.map f).app _ x) fun _ _ ↦ by
       rintro ⟨f, x⟩
-      (set_option backward.dsimp.instanceTypes false in simp)
+      (simp)
     inv := ↾fun x ↦ Quot.mk _ ⟨X, 𝟙 X, x⟩
     hom_inv_id := by
       ext ⟨_, f, x⟩
       symm
       apply Quot.sound
       rw [Types.coendRel_iff]
-      exact ⟨f, ⟨𝟙 X, x⟩, by (set_option backward.dsimp.instanceTypes false in cat_disch)⟩ })
+      exact ⟨f, ⟨𝟙 X, x⟩, by (cat_disch)⟩ })
     (fun f ↦ by
       dsimp
       ext
-      (set_option backward.dsimp.instanceTypes false in
-      simp [compDiagram, chosenCoend.ι_apply _])))
+      (simp [compDiagram, chosenCoend.ι_apply _])))
     (fun f ↦ by
       ext _ ⟨_, _⟩
-      (set_option backward.dsimp.instanceTypes false in
-      simp [Types.chosenCoend_def, chosenCoend.map_apply]))
+      (simp [Types.chosenCoend_def, chosenCoend.map_apply]))
 
 attribute [local simp] Types.chosenCoend_def in
 @[simp]
@@ -225,8 +221,7 @@ lemma id_whiskerLeft {P Q : Profunctor.{u} C D} (f : P ⟶ Q) :
       (P.leftUnitor).hom ≫ f ≫ (Q.leftUnitor).inv := by
   rw [← cancel_epi (P.leftUnitor).inv]
   ext
-  (set_option backward.dsimp.instanceTypes false in
-  simp [chosenCoend.map_apply])
+  (simp [chosenCoend.map_apply])
 
 end LeftUnitor
 
@@ -244,23 +239,21 @@ def rightUnitor (P : Profunctor.{u} C D) : P.comp .id ≅ P :=
   NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ {
     hom := ↾Quot.lift (fun ⟨d, x, f⟩ ↦ (P.obj X).map f.op x) fun _ _ h ↦ by
       cases h
-      (set_option backward.dsimp.instanceTypes false in simp)
+      (simp)
     inv := ↾fun x ↦ Quot.mk _ ⟨Y.unop, x, 𝟙 Y.unop⟩
     hom_inv_id := by
       ext ⟨_, x, f⟩
       apply Quot.sound
       rw [Types.coendRel_iff]
       exact ⟨f, ⟨x, 𝟙 (unop Y)⟩,
-        by (set_option backward.dsimp.instanceTypes false in cat_disch)⟩ })
+        by (cat_disch)⟩ })
     (fun f ↦ by
       dsimp
       ext
-      (set_option backward.dsimp.instanceTypes false in
-      simp [compDiagram, chosenCoend.ι_apply _])))
+      (simp [compDiagram, chosenCoend.ι_apply _])))
     (fun f ↦ by
       ext _ ⟨_, _⟩
-      (set_option backward.dsimp.instanceTypes false in
-      simp [Types.chosenCoend_def, chosenCoend.map_apply]))
+      (simp [Types.chosenCoend_def, chosenCoend.map_apply]))
 
 -- Same issue as in `chosenCoend.map_apply`; without the option, `whiskerRight_id` breaks.
 set_option backward.dsimp.instanceTypes false in
@@ -280,8 +273,7 @@ lemma whiskerRight_id {P Q : Profunctor.{u} C D} (f : P ⟶ Q) :
       (P.rightUnitor).hom ≫ f ≫ (Q.rightUnitor).inv := by
   rw [← cancel_mono (Q.rightUnitor).hom]
   ext _ _ ⟨_, _, g⟩
-  (set_option backward.dsimp.instanceTypes false in
-  simp [chosenCoend.map_apply])
+  (simp [chosenCoend.map_apply])
 
 end RightUnitor
 
@@ -309,7 +301,7 @@ lemma associatorHomFun_rel (X : C) (Y : Fᵒᵖ) (e : E) (r : (R.obj e).obj (op 
           (associatorHomFun P Q R X Y e r a) (associatorHomFun P Q R X Y e r b) := by
   rintro ⟨d, p, q⟩ ⟨d', p', q'⟩ ⟨f, x⟩
   rw [coendRel_iff]
-  exact ⟨f, by (set_option backward.dsimp.instanceTypes false in simp [associatorHomFun])⟩
+  exact ⟨f, by (simp [associatorHomFun])⟩
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -322,8 +314,7 @@ def associatorHom (X : C) (Y : Fᵒᵖ) :
   rintro ⟨e, _, _⟩ ⟨e', _, _⟩ ⟨f, ⟨x, r⟩⟩
   refine Quot.inductionOn x ?_
   rintro ⟨d, p, q⟩
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [Quot.map, associatorHomFun])
+  (dsimp [Quot.map, associatorHomFun])
   simp only [Functor.map_id, NatTrans.id_app, types_id_apply]
   -- First use the inner coend condition, then apply the outer quotient constructor.
   let outer (x : ((Q.comp R).obj d).obj Y) :=
@@ -349,8 +340,7 @@ lemma associatorInvFun_rel (X : C) (Y : Fᵒᵖ) (d : D) (p : (P.obj X).obj (op 
   rintro ⟨e, q, r⟩ ⟨e', q', r'⟩ ⟨f, x⟩
   rw [coendRel_iff]
   use f
-  (set_option backward.dsimp.instanceTypes false in
-  simp [associatorInvFun])
+  (simp [associatorInvFun])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -363,8 +353,7 @@ def associatorInv (X : C) (Y : Fᵒᵖ) :
   rintro ⟨d, _, _⟩ ⟨d', _, _⟩ ⟨f, ⟨p, x⟩⟩
   refine Quot.inductionOn x ?_
   rintro ⟨e, q, r⟩
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [Quot.map, associatorInvFun])
+  (dsimp [Quot.map, associatorInvFun])
   simp only [Functor.map_id, types_id_apply]
   -- First use the inner coend condition, then apply the outer quotient constructor.
   let outer (x : ((P.comp Q).obj X).obj (op e)) :=
@@ -395,12 +384,12 @@ def associator : (P.comp Q).comp R ≅ P.comp (Q.comp R) :=
   NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ associatorComponents P Q R X Y)
     fun _ ↦ by
       ext ⟨_, ⟨_, _, _⟩, _⟩
-      (set_option backward.dsimp.instanceTypes false in
+      (
       simp [associatorComponents, associatorHom, associatorHomFun, chosenCoend_def,
         chosenCoend.map_apply, Quot.map]))
     fun _ ↦ by
       ext _ ⟨_, ⟨_, _, _⟩, _⟩
-      (set_option backward.dsimp.instanceTypes false in
+      (
       simp [associatorComponents, associatorHom, associatorHomFun, chosenCoend_def,
         chosenCoend.map_apply, Quot.map])
 

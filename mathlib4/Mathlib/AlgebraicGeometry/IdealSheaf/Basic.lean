@@ -302,8 +302,7 @@ lemma zeroLocus_inter_subset_supportSet (I : IdealSheafData X) (U : X.affineOpen
   apply_fun (x ∈ X.basicOpen ·) at hs'
   refine hx s' s'.2 ?_
   cases n <;>
-    (set_option backward.dsimp.instanceTypes false in
-    simpa [RingHom.algebraMap_toAlgebra, ← hfg, hxf, hxs, Scheme.basicOpen_pow] using hs')
+    (simpa [RingHom.algebraMap_toAlgebra, ← hfg, hxf, hxs, Scheme.basicOpen_pow] using hs')
 
 lemma mem_supportSet_iff_of_mem {I : IdealSheafData X} {x} {U : X.affineOpens} (hxU : x ∈ U.1) :
     x ∈ I.supportSet ↔ x ∈ X.zeroLocus (U := U.1) (I.ideal U) :=

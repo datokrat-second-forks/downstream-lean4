@@ -62,7 +62,7 @@ lemma CoconeTypes.isColimit_iff (c : CoconeTypes.{u} F) :
         uniq s m hm := by
           ext x
           congrm $(hc.funext fun j ↦ funext fun y ↦ by
-            (set_option backward.dsimp.instanceTypes false in simp [← hm j])) x }⟩
+            (simp [← hm j])) x }⟩
   · rintro ⟨hc⟩
     classical
     refine ⟨⟨fun x y h ↦ ?_, fun x ↦ ?_⟩⟩

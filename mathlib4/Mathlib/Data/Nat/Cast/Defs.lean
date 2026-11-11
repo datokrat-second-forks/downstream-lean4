@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Group.Monoid
 public import Mathlib.Data.Nat.Init
 public import Mathlib.Tactic.OfNat
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.SplitIfs
 
 /-!
@@ -188,3 +189,5 @@ section nsmul
   | n + 1 => by simp [succ_nsmul, nsmul_one n]
 
 end nsmul
+
+derive_pack_edges

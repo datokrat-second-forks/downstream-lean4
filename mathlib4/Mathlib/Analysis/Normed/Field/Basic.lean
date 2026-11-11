@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Field.Subfield.Defs
 public import Mathlib.Analysis.Normed.Ring.Basic
+public import Mathlib.Tactic.PackLens
 
 import Mathlib.Algebra.Order.Group.Pointwise.Interval
 
@@ -369,3 +370,5 @@ noncomputable def toNormedField {K : Type*} [Field K] (v : AbsoluteValue K ℝ) 
   norm_mul := v.map_mul
 
 end AbsoluteValue
+
+derive_pack_edges

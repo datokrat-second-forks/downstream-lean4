@@ -317,7 +317,7 @@ theorem mapShortComplexH1_zero :
 
 @[simp]
 theorem mapShortComplexH1_id : mapShortComplexH1 (MonoidHom.id G) (𝟙 A) = 𝟙 _ := by
-  ext <;> (set_option backward.dsimp.instanceTypes false in simp [shortComplexH1])
+  ext <;> (simp [shortComplexH1])
 
 set_option backward.isDefEq.respectTransparency.types false in
 theorem mapShortComplexH1_comp {G H K : Type u} [Group G] [Group H] [Group K]
@@ -343,7 +343,6 @@ noncomputable abbrev mapCycles₁ :
   ShortComplex.cyclesMap' (mapShortComplexH1 f φ) (shortComplexH1 A).moduleCatLeftHomologyData
     (shortComplexH1 B).moduleCatLeftHomologyData
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma mapCycles₁_hom :
     (mapCycles₁ f φ).hom = (chainsMap₁ f φ).hom.restrict (fun x _ => by
@@ -601,8 +600,7 @@ instance : Epi (H1CoresCoinf A S).g := by
   have : d₁₀ _ Y ∈ Coinvariants.ker (A.ρ.comp S.subtype) := by
     have h' := congr($((mapShortComplexH1 (B := toCoinvariants A S)
       (MonoidHom.id G) (toCoinvariantsMkQ A S)).comm₂₃) Y)
-    (set_option backward.dsimp.instanceTypes false in
-    simp_all [shortComplexH1, ← Coinvariants.mk_eq_zero])
+    (simp_all [shortComplexH1, ← Coinvariants.mk_eq_zero])
   /- Thus we can pick a representation of `d(Y)` as a sum `∑ ρ(sᵢ⁻¹)(aᵢ) - aᵢ`, `sᵢ ∈ S, aᵢ ∈ A`,
 and `Y - ∑ aᵢ·sᵢ` is a cycle. -/
   rcases chains₁ToCoinvariantsKer_surjective
@@ -611,7 +609,7 @@ and `Y - ∑ aᵢ·sᵢ` is a cycle. -/
     simpa [map_sub, sub_eq_zero, chains₁ToCoinvariantsKer, -LinearMap.sub_apply, d₁₀,
       sum_mapDomain_index_inj] using! Subtype.ext_iff.1 hZ.symm
   use H1π A ⟨Y - mapDomain S.subtype Z, H⟩
-  (set_option backward.dsimp.instanceTypes false in
+  (
   simp only [H1CoresCoinf_X₃, H1CoresCoinf_X₂, H1CoresCoinf_g,
     Subgroup.coe_subtype, H1π_comp_map_apply])
 /- Moreover, the image of `Y - ∑ aᵢ·sᵢ` in `Z₁(G ⧸ S, A_S)` is `x - ∑ aᵢ·1`, and hence differs from
@@ -776,7 +774,6 @@ noncomputable abbrev mapCycles₂ :
   ShortComplex.cyclesMap' (mapShortComplexH2 f φ) (shortComplexH2 A).moduleCatLeftHomologyData
     (shortComplexH2 B).moduleCatLeftHomologyData
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma mapCycles₂_hom :
     (mapCycles₂ f φ).hom = (chainsMap₂ f φ).hom.restrict (fun x _ => by

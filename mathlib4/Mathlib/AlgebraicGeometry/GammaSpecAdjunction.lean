@@ -72,7 +72,7 @@ def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
 set_option backward.isDefEq.respectTransparency false in
 theorem notMem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
     r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.presheaf.Γgerm x r) := by
-  (set_option backward.dsimp.instanceTypes false in
+  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [toΓSpecFun, IsLocalRing.closedPoint])
 
@@ -322,7 +322,7 @@ theorem right_triangle (R : CommRingCat) :
       𝟙 _ := by
   apply LocallyRingedSpace.comp_ring_hom_ext
   · ext (p : PrimeSpectrum R)
-    (set_option backward.dsimp.instanceTypes false in
+    (
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
     dsimp)
     refine PrimeSpectrum.ext (Ideal.ext fun x => ?_)

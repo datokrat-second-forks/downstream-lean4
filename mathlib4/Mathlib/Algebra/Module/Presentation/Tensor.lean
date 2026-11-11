@@ -86,8 +86,7 @@ noncomputable def isPresentationCoreTensor :
         erw [Finsupp.linearCombination_embDomain] at this
         convert this
         ext g₁
-        (set_option backward.dsimp.instanceTypes false in
-        simp)) })
+        (simp)) })
   postcomp_desc _ := by aesop
   postcomp_injective h := curry_injective (h₁.postcomp_injective (by
     ext g₁ : 2

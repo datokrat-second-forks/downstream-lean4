@@ -158,6 +158,41 @@ abbrev FunLike F α β := DFunLike F α fun _ => β
 
 initialize_simps_projections DFunLike
 
+/-- Pack: the hidden arguments of `DFunLike.coe`, which `simp` rewrites together. -/
+structure FunLikePack.{uF, uα, uβ} where
+  /-- The function type. -/
+  F : Sort uF
+  /-- The domain. -/
+  α : Sort uα
+  /-- The codomain. -/
+  β : α → Sort uβ
+  /-- The coercion instance. -/
+  [inst : DFunLike F α β]
+
+/-- Pack congruence for `DFunLike.coe`: the function type, the domain, the codomain and the
+`DFunLike` instance form one pack. -/
+@[dsimp_congr] theorem DFunLike.coe_pack_congr.{uF, uα, uβ} {F F' : Sort uF} {α α' : Sort uα}
+    {β : α → Sort uβ} {β' : α' → Sort uβ} [i : DFunLike F α β] [i' : DFunLike F' α' β']
+    (h : FunLikePack.mk F α β = FunLikePack.mk F' α' β')
+    (f : F) (f' : F') (hf : HEq f f') (a : α) (a' : α') (ha : HEq a a') :
+    HEq (DFunLike.coe f a) (DFunLike.coe f' a') := by
+  cases h; cases hf; cases ha; rfl
+
+/-- Pack congruence for the coercion that is not applied to an argument, as in `⇑e ∘ g`. -/
+@[dsimp_congr] theorem DFunLike.coe_pack_congr_fn.{uF, uα, uβ} {F F' : Sort uF} {α α' : Sort uα}
+    {β : α → Sort uβ} {β' : α' → Sort uβ} [i : DFunLike F α β] [i' : DFunLike F' α' β']
+    (h : FunLikePack.mk F α β = FunLikePack.mk F' α' β') (f : F) (f' : F') (hf : HEq f f') :
+    HEq (DFunLike.coe f) (DFunLike.coe f') := by
+  cases h; cases hf; rfl
+
+/-- Lens: the coercion pack of a family of hom types `FD X Y` follows the objects `X` and `Y`. -/
+@[dsimp_congr] theorem FunLikePack.family_congr.{uD, uFD, uCD} {D : Type uD}
+    {FD : D → D → Type uFD} {CD : D → Type uCD} [i : ∀ X Y, FunLike (FD X Y) (CD X) (CD Y)]
+    {X X' Y Y' : D} (hX : X = X') (hY : Y = Y') :
+    FunLikePack.mk (FD X Y) (CD X) (fun _ => CD Y) =
+      FunLikePack.mk (FD X' Y') (CD X') (fun _ => CD Y') := by
+  cases hX; cases hY; rfl
+
 section Dependent
 
 /-! ### `DFunLike F α β` where `β` depends on `a : α` -/

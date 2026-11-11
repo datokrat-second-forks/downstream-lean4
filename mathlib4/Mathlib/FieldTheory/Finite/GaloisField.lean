@@ -105,7 +105,7 @@ theorem finrank {n} (h : n ≠ 0) : Module.finrank (ZMod p) (GaloisField p n) = 
     <;> simp_rw [mem_rootSet_of_ne aux]
   · rintro x (⟨r, rfl⟩ | hx)
     · rw [map_sub, map_pow, aeval_X, ← map_pow, ZMod.pow_card_pow, sub_self]
-    · (set_option backward.dsimp.instanceTypes false in dsimp only [GaloisField] at hx)
+    · (dsimp only [GaloisField] at hx)
       rwa [mem_rootSet_of_ne aux] at hx
   · rw [← coeff_zero_eq_aeval_zero']
     simp [eq_comm, hp.ne_zero]

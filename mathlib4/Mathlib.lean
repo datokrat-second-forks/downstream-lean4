@@ -7816,6 +7816,7 @@ public import Mathlib.Tactic.Order.Preprocessing
 public import Mathlib.Tactic.Order.ToInt
 public import Mathlib.Tactic.PNatToNat
 public import Mathlib.Tactic.PPWithUniv
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Peel
 public import Mathlib.Tactic.Polynomial.Basic
 public import Mathlib.Tactic.Polynomial.Core

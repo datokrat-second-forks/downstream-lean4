@@ -211,7 +211,7 @@ def mapContActionCongr
     (H' : ∀ X : ContAction V G, ((F'.mapAction G).obj X.obj).IsContinuous) :
     Functor.mapContAction G F H ≅ Functor.mapContAction G F' H' :=
   NatIso.ofComponents (fun X ↦ ObjectProperty.isoMk _ (Action.mkIso (e.app X.obj.V)
-    (by (set_option backward.dsimp.instanceTypes false in simp))))
+    (by (simp))))
 
 end Functor
 

@@ -630,7 +630,7 @@ set_option backward.defeqAttrib.useBackward true in
 def representableBy (hc : IsLimit t) : F.cones.RepresentableBy t.pt where
   homEquiv := hc.homEquiv
   homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by
-    (set_option backward.dsimp.instanceTypes false in simp)
+    (simp)
 
 end
 
@@ -726,7 +726,7 @@ set_option backward.defeqAttrib.useBackward true in
 def corepresentableBy (hc : IsColimit t) : F.cocones.CorepresentableBy t.pt where
   homEquiv := hc.homEquiv
   homEquiv_comp {X X'} f g := NatTrans.ext <| funext fun j ↦ by
-    (set_option backward.dsimp.instanceTypes false in simp)
+    (simp)
 
 end
 

@@ -76,6 +76,15 @@ def _root_.AlgHom.ofClass {F : Type*} [FunLike F A B] [AlgHomClass F R A B] (f :
 
 end AlgHomClass
 
+/-- Pack: an algebra over a fixed commutative semiring. -/
+structure SAlgPack.{ua, va} (R : Type ua) [CommSemiring R] where
+  /-- The carrier. -/
+  A : Type va
+  /-- The ring structure. -/
+  [sr : Semiring A]
+  /-- The algebra structure. -/
+  [alg : Algebra R A]
+
 namespace AlgHom
 
 variable {R : Type u} {A : Type v} {B : Type w} {C : Type u₁} {D : Type v₁}
@@ -92,6 +101,23 @@ instance funLike : FunLike (A →ₐ[R] B) A B where
     rcases f with ⟨⟨⟨⟨_, _⟩, _⟩, _, _⟩, _⟩
     rcases g with ⟨⟨⟨⟨_, _⟩, _⟩, _, _⟩, _⟩
     congr
+
+/-- Pack congruence for the type `A →ₐ[R] B` of algebra homomorphisms. -/
+@[dsimp_congr] theorem pack_congr.{ua, va, wa} {R : Type ua} [CommSemiring R] {A A' : Type va} {B B' : Type wa}
+    [Semiring A] [Semiring A'] [Semiring B] [Semiring B'] [Algebra R A] [Algebra R A']
+    [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B') :
+    (A →ₐ[R] B) = (A' →ₐ[R] B') := by
+  cases hA; cases hB; rfl
+
+/-- Lens: the coercion pack of `A →ₐ[R] B` follows the algebra packs of `A` and `B`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ua, va, wa} {R : Type ua} [CommSemiring R] {A A' : Type va} {B B' : Type wa}
+    [Semiring A] [Semiring A'] [Semiring B] [Semiring B'] [Algebra R A] [Algebra R A']
+    [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B') :
+    FunLikePack.mk (A →ₐ[R] B) A (fun _ => B) =
+      FunLikePack.mk (A' →ₐ[R] B') A' (fun _ => B') := by
+  cases hA; cases hB; rfl
 
 instance algHomClass : AlgHomClass (A →ₐ[R] B) R A B where
   map_add f := f.map_add'

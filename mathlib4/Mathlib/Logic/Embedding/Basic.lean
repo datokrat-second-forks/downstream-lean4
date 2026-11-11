@@ -40,6 +40,12 @@ instance {α : Sort u} {β : Sort v} : FunLike (α ↪ β) α β where
 instance {α : Sort u} {β : Sort v} : EmbeddingLike (α ↪ β) α β where
   injective' := Embedding.inj'
 
+/-- Lens: the coercion pack of `α ↪ β` follows `α` and `β`. -/
+@[dsimp_congr] theorem Embedding.funLikePack_congr {α α' : Sort u} {β β' : Sort v}
+    (hα : α = α') (hβ : β = β') :
+    FunLikePack.mk (α ↪ β) α (fun _ => β) = FunLikePack.mk (α' ↪ β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
+
 initialize_simps_projections Embedding (toFun → apply)
 
 instance {α β : Sort*} : CanLift (α → β) (α ↪ β) (↑) Injective where prf f hf := ⟨⟨f, hf⟩, rfl⟩

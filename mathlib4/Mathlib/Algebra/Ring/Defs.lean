@@ -9,6 +9,7 @@ public import Mathlib.Algebra.Group.IsCommutative
 public import Mathlib.Algebra.GroupWithZero.Defs
 public import Mathlib.Algebra.Notation.Defs
 public import Mathlib.Data.Int.Cast.Defs
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Spread
 
 /-!
@@ -586,3 +587,5 @@ abbrev toCommRing [NonUnitalCommRing A] [IsUnital A] : CommRing A where
 
 end IsUnital
 end
+
+derive_pack_edges

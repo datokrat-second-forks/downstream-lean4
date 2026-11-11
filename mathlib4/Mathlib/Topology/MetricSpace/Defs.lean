@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébas
 -/
 module
 
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 
 /-!
@@ -261,3 +262,5 @@ instance : Dist Xᵒᵈ := ‹Dist X›
 end
 
 instance [MetricSpace X] : MetricSpace Xᵒᵈ := ‹MetricSpace X›
+
+derive_pack_edges

@@ -175,7 +175,7 @@ lemma sheafComposeNatTrans_fac (P : Cᵒᵖ ⥤ A) :
     adj₂.unit.app (P ⋙ F) ≫
       (sheafToPresheaf J B).map ((sheafComposeNatTrans J F adj₁ adj₂).app P) =
         whiskerRight (adj₁.unit.app P) F := by
-  (set_option backward.dsimp.instanceTypes false in
+  (
   simp [sheafComposeNatTrans, -ObjectProperty.ι_obj, -ObjectProperty.ι_map,
     Adjunction.homEquiv_counit])
 
@@ -279,7 +279,7 @@ lemma sheafToPresheaf_map_sheafComposeNatTrans_eq_sheafifyCompIso_inv (P : Cᵒ�
   apply ((plusPlusAdjunction J E).homEquiv _ _).injective
   convert! sheafComposeNatTrans_fac J F (plusPlusAdjunction J D) (plusPlusAdjunction J E) P
   dsimp [plusPlusAdjunction]
-  (set_option backward.dsimp.instanceTypes false in simp)
+  (simp)
 
 set_option backward.isDefEq.respectTransparency.types false in
 instance (P : Cᵒᵖ ⥤ D) :

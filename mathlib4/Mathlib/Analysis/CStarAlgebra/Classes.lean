@@ -6,6 +6,7 @@ Authors: Jireh Loreaux
 module
 
 public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.Algebra.NonUnitalStarAlgebra
 public import Mathlib.Topology.Algebra.StarSubalgebra
 
@@ -188,3 +189,5 @@ This constructor is primarily intended to be used within proofs since it creates
 equalities. -/
 noncomputable abbrev IsUnital.toCommCStarAlgebra {A : Type*} [NonUnitalCommCStarAlgebra A]
     [IsUnital A] : CommCStarAlgebra A where
+
+derive_pack_edges

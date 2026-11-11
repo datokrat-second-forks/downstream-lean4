@@ -165,7 +165,7 @@ lemma CommRingCat.preservesLimit_parallelPair_tensorProd_iff_tensorEqualizer_bij
     refine Fork.IsLimit.hom_ext (Under.equalizerForkIsLimit _ _) ?_
     rw [Fork.IsLimit.lift_ι]
     ext : 2
-    (set_option backward.dsimp.instanceTypes false in dsimp)
+    (dsimp)
     ext x <;> rfl
   rw [heq, ← isIso_iff_of_reflects_iso _ (CategoryTheory.Under.forget S),
     ConcreteCategory.isIso_iff_bijective]

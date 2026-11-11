@@ -480,7 +480,9 @@ theorem realize_constantsVarsEquiv [L[[α]].Structure M] [(lhomWithConstants L �
       (Equiv.sumEmpty (L.Relations n) ((constantsOn α).Relations n) R) xs]
   rcongr
   obtain - | R := R
-  · (set_option backward.instanceTypes.subsingletons.prop true in simp)
+  -- pack-regime workaround (C)
+  · simp only [Equiv.sumEmpty_apply_inl]
+    (set_option backward.instanceTypes.subsingletons.prop true in simp)
   · exact isEmptyElim R
 
 @[simp]

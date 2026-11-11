@@ -70,7 +70,7 @@ lemma ofArrows_mem_smallEtaleTopology_iff
     obtain ⟨_, b, _, ⟨j⟩, fac⟩ := hU _ _ ⟨i⟩
     replace fac : b.left ≫ (f j).left = U.f i :=
       (Etale.forget _ ⋙ CategoryTheory.Over.forget _).congr_map fac
-    exact ⟨j, b.left u, by (set_option backward.dsimp.instanceTypes false in simp [← fac])⟩
+    exact ⟨j, b.left u, by (simp [← fac])⟩
   · have (w : W.left) : ∃ (i : ι), w ∈ Set.range (f i).left := by
       have := Set.mem_univ w
       simpa [← hf]

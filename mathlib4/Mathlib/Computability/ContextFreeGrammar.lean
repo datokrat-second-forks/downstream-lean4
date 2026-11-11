@@ -303,8 +303,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma produces_reverse : g.reverse.Produces u.reverse v.reverse ↔ g.Produces u v :=
   (Equiv.ofBijective _ ContextFreeRule.reverse_bijective).exists_congr
     (by
-      (set_option backward.dsimp.instanceTypes false in
-      simp [ContextFreeRule.reverse_involutive.eq_iff]))
+      (simp [ContextFreeRule.reverse_involutive.eq_iff]))
 
 alias ⟨_, Produces.reverse⟩ := produces_reverse
 
@@ -313,8 +312,7 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp] lemma produces_reverse_comm : g.reverse.Produces u v ↔ g.Produces u.reverse v.reverse :=
   (Equiv.ofBijective _ ContextFreeRule.reverse_bijective).exists_congr
     (by
-      (set_option backward.dsimp.instanceTypes false in
-      simp [ContextFreeRule.reverse_involutive.eq_iff]))
+      (simp [ContextFreeRule.reverse_involutive.eq_iff]))
 
 protected lemma Derives.reverse (hg : g.Derives u v) : g.reverse.Derives u.reverse v.reverse := by
   induction hg with

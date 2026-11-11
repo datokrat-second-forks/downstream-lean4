@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 module
 
 public import Mathlib.Algebra.Group.DivInvMonoid
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Groups
@@ -19,6 +20,31 @@ defined in `Mathlib.Algebra.Group.DivInvMonoid`.
 assert_not_exists MonoidWithZero DenselyOrdered Function.const_injective
 
 open Function
+
+/-- Pack: the hidden arguments of `HMul.hMul`. -/
+structure HMulPack.{ua, va, wa} where
+  /-- The type of the left factor. -/
+  α : Type ua
+  /-- The type of the right factor. -/
+  β : Type va
+  /-- The type of the product. -/
+  γ : Type wa
+  /-- The multiplication instance. -/
+  [inst : HMul α β γ]
+
+/-- Pack congruence for `HMul.hMul`. -/
+@[dsimp_congr] theorem HMul.hMul_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
+    {γ γ' : Type wa} [i : HMul α β γ] [i' : HMul α' β' γ']
+    (h : HMulPack.mk α β γ = HMulPack.mk α' β' γ')
+    (a : α) (a' : α') (ha : HEq a a') (b : β) (b' : β') (hb : HEq b b') :
+    HEq (a * b) (a' * b') := by
+  cases h; cases ha; cases hb; rfl
+
+/-- Lens: the multiplication pack of `instHMul` follows the `Mul` pack. -/
+@[dsimp_congr] theorem instHMul.hMulPack_congr.{ua} {α α' : Type ua} [i : Mul α] [i' : Mul α']
+    (h : @ClassPack.mk Mul α i = @ClassPack.mk Mul α' i') :
+    @HMulPack.mk α α α (@instHMul α i) = @HMulPack.mk α' α' α' (@instHMul α' i') := by
+  cases h; rfl
 
 variable {G : Type*}
 
@@ -153,3 +179,5 @@ initialize_simps_projections Group
 initialize_simps_projections AddGroup
 initialize_simps_projections CommGroup
 initialize_simps_projections AddCommGroup
+
+derive_pack_edges

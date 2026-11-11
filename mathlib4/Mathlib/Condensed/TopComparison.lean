@@ -68,7 +68,7 @@ theorem equalizerCondition_yonedaPresheaf
   apply EqualizerCondition.mk
   intro Z B π _ _
   refine ⟨fun a b h ↦ ?_, fun ⟨a, ha⟩ ↦ ?_⟩
-  · (set_option backward.dsimp.instanceTypes false in
+  · (
     simp only [yonedaPresheaf, comp, Quiver.Hom.unop_op, TypeCat.Fun.coe_mk,
       Set.coe_ofPred, mapToEqualizer, Set.mem_ofPred_eq, ConcreteCategory.hom_ofHom,
       Subtype.mk.injEq, mk.injEq] at h)
@@ -77,10 +77,10 @@ theorem equalizerCondition_yonedaPresheaf
     obtain ⟨y, hy⟩ := (hq Z B π).surjective x
     rw [← hy]
     congrm $h y
-  · (set_option backward.dsimp.instanceTypes false in
+  · (
     simp only [yonedaPresheaf, comp, Quiver.Hom.unop_op, ConcreteCategory.hom_ofHom,
       TypeCat.Fun.coe_mk, mk.injEq, Set.mem_ofPred_eq] at ha)
-    (set_option backward.dsimp.instanceTypes false in
+    (
     simp only [yonedaPresheaf, comp, Quiver.Hom.unop_op, TypeCat.Fun.coe_mk,
       Set.coe_ofPred, mapToEqualizer, Set.mem_ofPred_eq, ConcreteCategory.hom_ofHom,
       Subtype.mk.injEq])

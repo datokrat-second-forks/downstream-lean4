@@ -157,7 +157,6 @@ universe u
 
 variable (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The canonical ring map from `R` to the explicit equalizer of

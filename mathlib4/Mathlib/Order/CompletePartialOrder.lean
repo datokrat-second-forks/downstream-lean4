@@ -8,6 +8,7 @@ module
 public import Mathlib.Order.CompleteLattice.Defs
 public import Mathlib.Order.ConditionallyCompletePartialOrder.Defs
 public import Mathlib.Order.OmegaCompletePartialOrder
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Complete Partial Orders
@@ -108,3 +109,5 @@ instance (priority := 100) CompleteLattice.toCompletePartialOrder [CompleteLatti
     CompletePartialOrder α where
   sSup := sSup
   lubOfDirected _ _ := isLUB_sSup _
+
+derive_pack_edges

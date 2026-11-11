@@ -172,7 +172,7 @@ lemma pairing_p_symm_equivI (x : h.ι) :
 
 lemma type₁_pairing (x : h.ι) :
     h.type₁ x = h.pairing.p (h.equivII x) := by
-  (set_option backward.dsimp.instanceTypes false in simp)
+  (simp)
 
 /-- The condition that `h : A.PairingCore` is proper, i.e. for each `s : h.ι`,
 the type (II) simplex `h.type₂ s` is uniquely a `1`-codimensional
@@ -195,13 +195,12 @@ instance [X.Nonsingular] : h.IsProper where
 instance [h.IsProper] : h.pairing.IsProper where
   isUniquelyCodimOneFace x := by
     obtain ⟨s, rfl⟩ := h.equivII.surjective x
-    (set_option backward.dsimp.instanceTypes false in simpa using h.isUniquelyCodimOneFace s)
+    (simpa using h.isUniquelyCodimOneFace s)
 
 lemma isProper_pairing_iff :
     h.pairing.IsProper ↔ h.IsProper := by
   refine ⟨fun _ ↦ ⟨fun s ↦ ?_⟩, fun _ ↦ inferInstance⟩
-  (set_option backward.dsimp.instanceTypes false in
-  simpa using h.pairing.isUniquelyCodimOneFace (h.equivII s))
+  (simpa using h.pairing.isUniquelyCodimOneFace (h.equivII s))
 
 @[simp]
 lemma isUniquelyCodimOneFace_index [h.IsProper] (s : h.ι) :
@@ -226,11 +225,11 @@ instance [h.IsInner] [h.IsProper] : h.pairing.IsInner where
   ne_zero x := by
     obtain ⟨s, rfl⟩ := h.equivII.surjective x
     rintro _ rfl
-    (set_option backward.dsimp.instanceTypes false in simpa using IsInner.ne_zero s)
+    (simpa using IsInner.ne_zero s)
   ne_last x := by
     obtain ⟨s, rfl⟩ := h.equivII.surjective x
     rintro _ rfl
-    (set_option backward.dsimp.instanceTypes false in simpa using IsInner.ne_last s)
+    (simpa using IsInner.ne_last s)
 
 /-- The ancestrality relation on the index type of `h : A.PairingCore`. -/
 def AncestralRel (s t : h.ι) : Prop :=
@@ -238,7 +237,7 @@ def AncestralRel (s t : h.ι) : Prop :=
 
 lemma ancestralRel_iff (s t : h.ι) :
     h.AncestralRel s t ↔ h.pairing.AncestralRel (h.equivII s) (h.equivII t) := by
-  (set_option backward.dsimp.instanceTypes false in simp [AncestralRel, Pairing.AncestralRel])
+  (simp [AncestralRel, Pairing.AncestralRel])
 
 /-- When the ancestrality relation is well founded, we say that `h : A.PairingCore`
 is regular. -/

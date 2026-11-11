@@ -145,7 +145,6 @@ noncomputable section
 def mk {X : C} {P : Cᵒᵖ ⥤ D} {S : J.Cover X} (x : Meq P S) : ToType ((J.plusObj P).obj (op X)) :=
   colimit.ι (J.diagram P X) (op S) ((Meq.equiv P S).symm x)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -173,14 +172,13 @@ theorem toPlus_mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.Cover X) (x : ToType (P.obj
   delta Cover.toMultiequalizer
   rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply]
   apply congr_arg
-  (set_option backward.dsimp.instanceTypes false in dsimp [diagram])
+  (dsimp [diagram])
   apply Concrete.multiequalizer_ext (C := D)
   intro i
   simp only [← ConcreteCategory.comp_apply, Category.assoc, Multiequalizer.lift_ι,
     Meq.equiv_symm_eq_apply]
   rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -228,7 +226,7 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.Cover X} (x : Meq 
     apply_fun Multiequalizer.ι (W.unop.index P) I at hh
     convert! hh
     all_goals
-      (set_option backward.dsimp.instanceTypes false in dsimp [diagram])
+      (dsimp [diagram])
       rw [← ConcreteCategory.comp_apply, Multiequalizer.lift_ι]
       erw [Meq.equiv_symm_eq_apply]
       cases I; rfl
@@ -240,7 +238,7 @@ theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.Cover X} (x : Meq 
     apply_fun fun ee => ee i at e
     convert! e using 1
     all_goals
-      (set_option backward.dsimp.instanceTypes false in dsimp [diagram])
+      (dsimp [diagram])
       rw [← ConcreteCategory.comp_apply, Multiequalizer.lift_ι]
       erw [Meq.equiv_symm_eq_apply]
       cases i; rfl
@@ -602,7 +600,7 @@ noncomputable def plusPlusAdjunction : plusPlusSheaf J D ⊣ sheafToPresheaf J D
         intro P Q R η γ; ext1; dsimp; symm
         apply J.sheafifyMap_sheafifyLift
       homEquiv_naturality_right := fun η γ => by
-        (set_option backward.dsimp.instanceTypes false in dsimp)
+        (dsimp)
         rw [Category.assoc] }
 
 -- Priority lowered due to performance reasons, see #41462

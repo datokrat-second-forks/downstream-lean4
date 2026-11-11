@@ -309,7 +309,7 @@ noncomputable def baseChangeToBaseChange :
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
 lemma baseChangeToBaseChange_apply (x : (baseChange T P).toExtension.Ring) :
-    (set_option backward.dsimp.instanceTypes false in
+    (
     dsimp% (P.baseChangeToBaseChange T).toRingHom x =
       (MvPolynomial.algebraTensorAlgEquiv R T).symm x) :=
   rfl

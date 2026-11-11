@@ -65,10 +65,31 @@ attribute [to_dual_dont_translate] Set
 
 @[deprecated (since := "2026-07-09")] alias setOf := Set.ofPred
 
+/-- Pack: the hidden arguments of `Membership.mem`. -/
+structure MemPack.{ua, va} where
+  /-- The element type. -/
+  α : Type ua
+  /-- The collection type. -/
+  γ : Type va
+  /-- The membership instance. -/
+  [inst : Membership α γ]
+
+/-- Pack congruence for `Membership.mem`. -/
+@[dsimp_congr] theorem Membership.mem_pack_congr.{ua, va} {α α' : Type ua} {γ γ' : Type va}
+    [i : Membership α γ] [i' : Membership α' γ'] (h : MemPack.mk α γ = MemPack.mk α' γ')
+    (s : γ) (s' : γ') (hs : HEq s s') (a : α) (a' : α') (ha : HEq a a') :
+    Membership.mem s a = Membership.mem s' a' := by
+  cases h; cases hs; cases ha; rfl
+
 namespace Set
 
 instance : Membership α (Set α) :=
   ⟨Set.Mem⟩
+
+/-- Lens: the membership pack of `Set α` follows `α`. -/
+@[dsimp_congr] theorem memPack_congr.{ua} {α α' : Type ua} (h : α = α') :
+    MemPack.mk α (Set α) = MemPack.mk α' (Set α') := by
+  cases h; rfl
 
 /-- One should always prefer the `∈` notation over `Set.Mem`. This simp lemma ensures that the
 latter is removed from the goal as early as possible if accidentally exposed. We use `=` instead of

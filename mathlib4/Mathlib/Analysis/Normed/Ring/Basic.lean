@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Normed.Group.Constructions
 public import Mathlib.Analysis.Normed.Group.Real
 public import Mathlib.Analysis.Normed.Group.Subgroup
 public import Mathlib.Analysis.Normed.Group.Submodule
+public import Mathlib.Tactic.PackLens
 
 import Mathlib.Data.Fintype.Order
 
@@ -1104,3 +1105,5 @@ noncomputable abbrev IsUnital.toNormedCommRing {A : Type*} [NonUnitalNormedCommR
     [IsUnital A] : NormedCommRing A where
 
 end IsUnital
+
+derive_pack_edges

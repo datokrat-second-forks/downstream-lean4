@@ -9,6 +9,7 @@ public import Mathlib.Algebra.Category.MonCat.Basic
 public import Mathlib.Algebra.Group.End
 public import Mathlib.CategoryTheory.Endomorphism
 public import Mathlib.Data.Int.Cast.Lemmas
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Category instances for Group, AddGroup, CommGroup, and AddCommGroup.
@@ -525,6 +526,26 @@ theorem injective_of_mono {G H : AddCommGrpCat.{0}} (f : G ⟶ H) [Mono f] : Fun
   apply asHom_injective t1
 
 end AddCommGrpCat
+
+/-- Lens: the `Group` pack of the carrier of `X : GrpCat` follows `X`. -/
+@[dsimp_congr] theorem GrpCat.pack_congr.{ua} {X X' : GrpCat.{ua}} (h : X = X') :
+    @ClassPack.mk Group X X.str = @ClassPack.mk Group X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `AddGroup` pack of the carrier of `X : AddGrpCat` follows `X`. -/
+@[dsimp_congr] theorem AddGrpCat.pack_congr.{ua} {X X' : AddGrpCat.{ua}} (h : X = X') :
+    @ClassPack.mk AddGroup X X.str = @ClassPack.mk AddGroup X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `CommGroup` pack of the carrier of `X : CommGrpCat` follows `X`. -/
+@[dsimp_congr] theorem CommGrpCat.pack_congr.{ua} {X X' : CommGrpCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommGroup X X.str = @ClassPack.mk CommGroup X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `AddCommGroup` pack of the carrier of `X : AddCommGrpCat` follows `X`. -/
+@[dsimp_congr] theorem AddCommGrpCat.pack_congr.{ua} {X X' : AddCommGrpCat.{ua}} (h : X = X') :
+    @ClassPack.mk AddCommGroup X X.str = @ClassPack.mk AddCommGroup X' X'.str := by
+  cases h; rfl
 
 /-- Build an isomorphism in the category `GrpCat` from a `MulEquiv` between `Group`s. -/
 @[to_additive (attr := simps)]

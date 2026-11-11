@@ -856,7 +856,6 @@ lemma Counit.map_apply_one_tmul {Y : ModuleCat S} (y : Y) :
   change (1 : S) • y = y
   simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -967,7 +966,6 @@ noncomputable def extendScalarsId : extendScalars (RingHom.id R) ≅ 𝟭 _ :=
 lemma extendScalarsId_inv_app_apply (M : ModuleCat R) (m : M) :
     (extendScalarsId R).inv.app M m = (1 : R) ⊗ₜ m := rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma homEquiv_extendScalarsId (M : ModuleCat R) :
     (extendRestrictScalarsAdj (RingHom.id R)).homEquiv _ _ ((extendScalarsId R).hom.app M) =
@@ -1032,7 +1030,7 @@ lemma extendScalars_assoc :
   have h₂ := extendScalarsComp_hom_app_one_tmul f₁₂ (f₃₄.comp f₂₃) M m
   have h₃ := extendScalarsComp_hom_app_one_tmul f₂₃ f₃₄
   have h₄ := extendScalarsComp_hom_app_one_tmul f₁₂ f₂₃ M m
-  (set_option backward.dsimp.instanceTypes false in dsimp at h₁ h₂ h₃ h₄ ⊢)
+  (dsimp at h₁ h₂ h₃ h₄ ⊢)
   rw [h₁]
   erw [h₂]
   rw [h₃, ExtendScalars.map_tmul, h₄]

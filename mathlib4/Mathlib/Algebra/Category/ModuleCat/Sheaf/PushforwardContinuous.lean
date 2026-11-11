@@ -284,7 +284,7 @@ def pushforwardPushforwardAdj : pushforward.{v} φ ⊣ pushforward.{v} ψ where
       X.val.presheaf.map (F.map (adj.unit.app U.unop)).op) _ = _
     dsimp only [id_obj]
     rw [← Functor.map_comp, ← op_comp, adj.left_triangle_components]
-    (set_option backward.dsimp.instanceTypes false in
+    (
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp)
   right_triangle_components X := by
@@ -292,7 +292,7 @@ def pushforwardPushforwardAdj : pushforward.{v} φ ⊣ pushforward.{v} ψ where
     change (X.val.presheaf.map (G.map (adj.counit.app U.unop)).op ≫
       X.val.presheaf.map (adj.unit.app (G.obj U.unop)).op) _ = _
     rw [← Functor.map_comp, ← op_comp, adj.right_triangle_components]
-    (set_option backward.dsimp.instanceTypes false in
+    (
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp)
 

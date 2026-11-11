@@ -552,8 +552,7 @@ lemma exists_of_pullback_V_V {i j k : J} (x : pullback (C := Scheme) (V F i j).�
   obtain ⟨l, hli, hlk, z, rfl, rfl⟩ :=
     (F ⋙ forget).exists_map_eq_of_isLocallyDirected k₁.2.1 k₂.2.1 y₁ y₂
       (by
-        (set_option backward.dsimp.instanceTypes false in
-        simpa [hy₁, hy₂] using congr($(pullback.condition (f := (V F i j).ι)) x)))
+        (simpa [hy₁, hy₂] using congr($(pullback.condition (f := (V F i j).ι)) x)))
   let α : F.obj l ⟶ pullback (V F i j).ι (V F i k).ι :=
     pullback.lift
       ((F.map (hli ≫ k₁.2.1)).isoOpensRange.hom ≫ Scheme.homOfLE _
@@ -570,7 +569,7 @@ lemma exists_of_pullback_V_V {i j k : J} (x : pullback (C := Scheme) (V F i j).�
     apply (pullback.fst (C := Scheme) _ _).isOpenEmbedding.injective
     apply (V F i j).ι.isOpenEmbedding.injective
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, pullback.lift_fst_assoc]
-    (set_option backward.dsimp.instanceTypes false in simpa using hy₁)
+    (simpa using hy₁)
   exact ⟨l, hli ≫ k₁.2.1, hli ≫ k₁.2.2, hlk ≫ k₂.2.2, α, z, ‹_›, by simp [α], by simp [α], ‹_›⟩
 
 variable [Quiver.IsThin J]
@@ -637,8 +636,7 @@ def t (i j : J) : (V F i j).toScheme ⟶ (V F j i).toScheme :=
   IsOpenImmersion.lift (V F j i).ι (tAux F i j) (by
     rintro _ ⟨x, rfl⟩
     obtain ⟨l, x, rfl⟩ := (Scheme.Opens.iSupOpenCover _).exists_eq x
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [V, tAux, ← Scheme.Hom.comp_apply, Cover.ι_glueMorphisms])
+    (simp only [V, tAux, ← Scheme.Hom.comp_apply, Cover.ι_glueMorphisms])
     simp only [Opens.range_ι, iSup_mk, carrier_eq_coe, Hom.coe_opensRange, coe_mk, Hom.comp_base,
       TopCat.hom_comp, ContinuousMap.comp_apply]
     exact Set.mem_iUnion.mpr ⟨⟨l.1, l.2.2, l.2.1⟩, ⟨_, rfl⟩⟩)
@@ -818,8 +816,7 @@ def openCover : (colimit F).OpenCover :=
     fun i ↦ (glueData F).openCover) J F.obj (colimit.ι F)
     ((equivShrink J).trans (Equiv.uniqueSigma fun (_ : Unit) ↦ Shrink J).symm)
     (fun _ ↦ F.mapIso (eqToIso (by
-      (set_option backward.dsimp.instanceTypes false in
-      simp [GlueData.openCover, glueData])))) fun i ↦ by
+      (simp [GlueData.openCover, glueData])))) fun i ↦ by
   change colimit.ι F i = _ ≫ (glueData F).ι (equivShrink J i) ≫ _
   simp [← Category.assoc, ← Iso.comp_inv_eq, cocone]
 
@@ -837,7 +834,7 @@ lemma ι_eq_ι_iff {i j : J} {xi : F.obj i} {xj : F.obj j} :
   obtain ⟨j, rfl⟩ := (equivShrink J).symm.surjective j
   rw [← ((isColimit F).coconePointUniqueUpToIso
     (colimit.isColimit F)).inv.isOpenEmbedding.injective.eq_iff]
-  (set_option backward.dsimp.instanceTypes false in
+  (
   simp only [Limits.colimit, ← Scheme.Hom.comp_apply,
     colimit.comp_coconePointUniqueUpToIso_inv, cocone, glueDataι_naturality])
   refine ?_ ∘ ((glueData F).ι_eq_iff _ _ _ _).mp
@@ -860,8 +857,7 @@ lemma ι_jointly_surjective (x : ↑(colimit F)) :
       (((IsLocallyDirected.isColimit F).coconePointUniqueUpToIso (colimit.isColimit _)).inv x)
   use (equivShrink J).symm i, xi
   apply ((isColimit F).coconePointUniqueUpToIso (colimit.isColimit F)).inv.isOpenEmbedding.injective
-  (set_option backward.dsimp.instanceTypes false in
-  simp_rw [← h, colimit.cocone_x, ← Scheme.Hom.comp_apply])
+  (simp_rw [← h, colimit.cocone_x, ← Scheme.Hom.comp_apply])
   congr 5
   have := eqToHom_naturality (fun j ↦ (glueData F).ι j)
     (show i = ((equivShrink J) ((equivShrink J).symm i)) by simp)

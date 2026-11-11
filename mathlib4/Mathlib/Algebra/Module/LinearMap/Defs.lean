@@ -172,6 +172,15 @@ end SemilinearMapClass
   LinearMap.ofClass
 @[deprecated (since := "2026-09-03")] alias LinearMapClass.linearMap := LinearMap.ofClass
 
+/-- Pack: a module over a fixed semiring. -/
+structure SModPack.{ua, va} (R : Type ua) [Semiring R] where
+  /-- The carrier. -/
+  M : Type va
+  /-- The additive structure. -/
+  [acm : AddCommMonoid M]
+  /-- The module structure. -/
+  [mod : Module R M]
+
 namespace LinearMap
 
 section AddCommMonoid
@@ -193,6 +202,23 @@ instance instFunLike : FunLike (M →ₛₗ[σ] M₃) M M₃ where
     congr
     apply DFunLike.coe_injective
     exact h
+
+/-- Pack congruence for the type `M →ₛₗ[σ] N` of semilinear maps. -/
+@[dsimp_congr] theorem pack_congr.{ua, va, wa, xa} {R : Type ua} {S : Type va} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type wa} {N N' : Type xa} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module S N] [Module S N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M') (hN : SModPack.mk (R := S) N = SModPack.mk N') :
+    (M →ₛₗ[σ] N) = (M' →ₛₗ[σ] N') := by
+  cases hM; cases hN; rfl
+
+/-- Lens: the coercion pack of `M →ₛₗ[σ] N` follows the module packs of `M` and `N`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ua, va, wa, xa} {R : Type ua} {S : Type va} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type wa} {N N' : Type xa} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module S N] [Module S N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M') (hN : SModPack.mk (R := S) N = SModPack.mk N') :
+    FunLikePack.mk (M →ₛₗ[σ] N) M (fun _ => N) =
+      FunLikePack.mk (M' →ₛₗ[σ] N') M' (fun _ => N') := by
+  cases hM; cases hN; rfl
 
 instance semilinearMapClass : SemilinearMapClass (M →ₛₗ[σ] M₃) σ M M₃ where
   map_add f := f.map_add'
@@ -494,6 +520,19 @@ notation3:80 (name := compNotation) f:81 " ∘ₗ " g:80 =>
 
 theorem comp_apply (x : M₁) : f.comp g x = f (g x) :=
   rfl
+
+/-- Pack congruence for `LinearMap.comp` of linear maps over a fixed semiring. -/
+@[dsimp_congr] theorem comp_pack_congr.{ur, ua, va, wa} {R : Type ur} [Semiring R]
+    {A A' : Type ua} {B B' : Type va} {C C' : Type wa}
+    [AddCommMonoid A] [AddCommMonoid A'] [AddCommMonoid B] [AddCommMonoid B'] [AddCommMonoid C]
+    [AddCommMonoid C'] [Module R A] [Module R A'] [Module R B] [Module R B'] [Module R C]
+    [Module R C']
+    (hA : SModPack.mk (R := R) A = SModPack.mk A') (hB : SModPack.mk (R := R) B = SModPack.mk B')
+    (hC : SModPack.mk (R := R) C = SModPack.mk C')
+    (f : B →ₗ[R] C) (f' : B' →ₗ[R] C') (hf : HEq f f') (g : A →ₗ[R] B) (g' : A' →ₗ[R] B')
+    (hg : HEq g g') :
+    HEq (f.comp g) (f'.comp g') := by
+  cases hA; cases hB; cases hC; cases hf; cases hg; rfl
 
 @[simp, norm_cast]
 theorem coe_comp : (f.comp g : M₁ → M₃) = f ∘ g :=

@@ -7,6 +7,7 @@ module
 
 public meta import Aesop
 public import Mathlib.Order.Heyting.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # (Generalized) Boolean algebras
@@ -168,3 +169,5 @@ def booleanAlgebraOfComplemented [BoundedOrder α] [ComplementedLattice α] : Bo
   top_le_sup_compl a := (Classical.choose_spec (exists_isCompl a)).codisjoint.top_le
 
 end DistribLattice
+
+derive_pack_edges

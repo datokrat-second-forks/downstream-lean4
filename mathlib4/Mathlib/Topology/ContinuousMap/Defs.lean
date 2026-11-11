@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Basic.FunLike.Basic
 public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.Defs.Basic
 
 /-!
@@ -78,6 +79,24 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 instance instFunLike : FunLike C(X, Y) X Y where
   coe := ContinuousMap.toFun
   coe_injective f g h := by cases f; cases g; congr
+
+/-- Pack congruence for the type `C(α, β)` of continuous maps. -/
+@[dsimp_congr] theorem pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
+    [j' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
+    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
+    C(α, β) = C(α', β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `C(α, β)` follows the topology packs of `α` and `β`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
+    [j' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
+    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
+    FunLikePack.mk C(α, β) α (fun _ => β) = FunLikePack.mk C(α', β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
 
 instance instContinuousMapClass : ContinuousMapClass C(X, Y) X Y where
   map_continuous := ContinuousMap.continuous_toFun

@@ -7,6 +7,7 @@ module
 
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
 public import Mathlib.MeasureTheory.Measure.Typeclasses.ZeroOne
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.MetricSpace.Perfect
 public import Mathlib.Topology.Separation.CountableSeparatingOn
 
@@ -1215,3 +1216,5 @@ noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β := by
   rwa [e.countable_iff] at h
 
 end PolishSpace
+
+derive_pack_edges

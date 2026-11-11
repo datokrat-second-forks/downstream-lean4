@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Order.CompleteLattice.Lemmas
 public import Mathlib.Order.GaloisConnection.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Frames, completely distributive lattices and complete Boolean algebras
@@ -878,3 +879,5 @@ theorem sSup_eq : sSup s = unit :=
   rfl
 
 end PUnit
+
+derive_pack_edges

@@ -222,7 +222,7 @@ theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).
       rw [mem_preimage, ← comp_apply, ← map_comp, h₄, ← Category.assoc, map_comp, comp_apply, h₃,
         ← comp_apply, ← map_comp]
       apply mem_iInter.1 hx
-    · (set_option backward.dsimp.instanceTypes false in
+    · (
       simp only [toPreimages_obj, toPreimages_map, ConcreteCategory.hom_ofHom,
         TypeCat.Fun.coe_mk, MapsTo.val_restrict_apply])
       rw [← Category.assoc, map_comp, comp_apply, h₃, map_comp, comp_apply]

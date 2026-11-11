@@ -100,6 +100,26 @@ class Algebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends SM
 
 export Algebra (algebraMap)
 
+/-- Pack: an algebra over a varying base. -/
+structure AlgPack.{ua, va} where
+  /-- The base. -/
+  R : Type ua
+  /-- The carrier. -/
+  A : Type va
+  /-- The base ring structure. -/
+  [cr : CommSemiring R]
+  /-- The ring structure. -/
+  [sr : Semiring A]
+  /-- The algebra structure. -/
+  [alg : Algebra R A]
+
+/-- Pack congruence for `algebraMap`. -/
+@[dsimp_congr] theorem algebraMap_pack_congr.{ua, va} {R R' : Type ua} {A A' : Type va}
+    [CommSemiring R] [CommSemiring R'] [Semiring A] [Semiring A'] [i : Algebra R A]
+    [i' : Algebra R' A'] (h : AlgPack.mk R A = AlgPack.mk R' A') :
+    HEq (algebraMap R A) (algebraMap R' A') := by
+  cases h; rfl
+
 theorem Algebra.subsingleton (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] [Algebra R A]
     [Subsingleton R] : Subsingleton A :=
   (algebraMap R A).codomain_trivial

@@ -175,8 +175,7 @@ lemma unit_app_ev_app_app (x y : C) :
   have := Functor.descOfIsLeftKanExtension_fac_app (F ⊛ H)
     (DayConvolution.unit F H) G
   dsimp at this
-  (set_option backward.dsimp.instanceTypes false in
-  simp [this, ev_app])
+  (simp [this, ev_app])
 
 set_option backward.defeqAttrib.useBackward true in
 lemma ev_naturality_app {G' H' : C ⥤ V} (ℌ' : DayConvolutionInternalHom F G' H')
@@ -185,8 +184,7 @@ lemma ev_naturality_app {G' H' : C ⥤ V} (ℌ' : DayConvolutionInternalHom F G'
   apply DayConvolution.corepresentableBy F H |>.homEquiv.injective
   dsimp
   ext ⟨x, y⟩
-  (set_option backward.dsimp.instanceTypes false in
-  simp [MonoidalClosed.uncurry_eq, ← whiskerLeft_comp_assoc])
+  (simp [MonoidalClosed.uncurry_eq, ← whiskerLeft_comp_assoc])
 
 end ev
 
@@ -279,8 +277,7 @@ theorem left_triangle_components (G : C ⥤ V) [DayConvolution F G]
   dsimp
   ext ⟨x, y⟩
   apply MonoidalClosed.curry_injective
-  (set_option backward.dsimp.instanceTypes false in
-  simp [MonoidalClosed.curry_natural_left])
+  (simp [MonoidalClosed.curry_natural_left])
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

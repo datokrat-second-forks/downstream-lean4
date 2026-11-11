@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Ring.Defs
 public import Mathlib.Order.RelClasses
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Euclidean domains
@@ -258,3 +259,5 @@ def lcm (x y : R) : R :=
 end LCM
 
 end EuclideanDomain
+
+derive_pack_edges

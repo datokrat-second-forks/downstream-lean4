@@ -69,8 +69,10 @@ variable (k G) in
 def equivHom : G →* Aut (forget k G) where
   toFun g :=
     .of (LaxMonoidalFunctor.isoOfComponents (equivApp g) (fun f ↦ (f.comm g).symm))
-  map_one' := by ext; simp; rfl
-  map_mul' _ _ := by ext; simp; rfl
+  -- pack-regime workaround (B)
+  map_one' := by ext; simp
+  -- pack-regime workaround (B)
+  map_mul' _ _ := by ext; simp
 
 /-- The representation on `G → k` induced by multiplication on the right in `G`. -/
 def rightRegular : Representation k G (G → k) where
@@ -176,7 +178,7 @@ def ofRightFDRep [Fintype G] (X : FDRep k G) (v : X) : rightFDRep ⟶ X where
     ext f
     let φ_term (X : FDRep k G) (f : G → k) v s := (f s) • (X.ρ s⁻¹ v)
     have := sum_map univ (mulRightEmbedding t⁻¹) (φ_term X (rightRegular t f) v)
-    (set_option backward.dsimp.instanceTypes false in simpa [φ_term] using! this)
+    (simpa [φ_term] using! this)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma toRightFDRepComp_injective {η₁ η₂ : Aut (forget k G)}
@@ -187,7 +189,7 @@ lemma toRightFDRepComp_injective {η₁ η₂ : Aut (forget k G)}
   have h1 := η₁.asIso.hom.hom.naturality (ofRightFDRep X v)
   have h2 := η₂.asIso.hom.hom.naturality (ofRightFDRep X v)
   rw [h, ← h2] at h1
-  (set_option backward.dsimp.instanceTypes false in simpa using congr(($h1).hom (single 1 1)))
+  (simpa using congr(($h1).hom (single 1 1)))
 
 /-- `leftRegular` as a morphism `rightFDRep k G ⟶ rightFDRep k G` in `FDRep k G`. -/
 def leftRegularFDRepHom (s : G) : End (rightFDRep : FDRep k G) :=
@@ -210,12 +212,12 @@ lemma toRightFDRepComp_in_rightRegular [IsDomain k] (η : Aut (forget k G)) :
   have nat := η.asIso.hom.hom.naturality (leftRegularFDRepHom t⁻¹).asHom
   calc
     _ = leftRegular t⁻¹ ((η.asIso.hom.hom.app rightFDRep).hom (single u 1)) 1 := by
-      (set_option backward.dsimp.instanceTypes false in simp)
+      (simp)
     _ = (η.asIso.hom.hom.app rightFDRep).hom (leftRegular t⁻¹ (single u 1)) 1 :=
       congr(($nat.symm).hom (single u 1) 1)
     _ = evalAlgHom _ _ s (leftRegular t⁻¹ (single u 1)) :=
       congr($hs (leftRegular t⁻¹ (single u 1)))
-    _ = _ := by by_cases u = t * s <;> (set_option backward.dsimp.instanceTypes false in simp_all)
+    _ = _ := by by_cases u = t * s <;> (simp_all)
 
 lemma equivHom_surjective [IsDomain k] : Function.Surjective (equivHom k G) := by
   intro η

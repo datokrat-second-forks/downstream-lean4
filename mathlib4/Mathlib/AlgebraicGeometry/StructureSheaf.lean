@@ -245,7 +245,7 @@ def moduleStructurePresheaf : PresheafOfModules (structurePresheafInCommRingCat 
   letI (X : (Opens ↑(PrimeSpectrum.Top R))ᵒᵖ) :
     Module ↑((structurePresheafInCommRingCat R ⋙ forget₂ CommRingCat RingCat).obj X)
       ↑((structurePresheafInModuleCat R M ⋙ forget₂ (ModuleCat R) Ab).obj X) := by
-    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
+    (dsimp); infer_instance
   .ofPresheaf (structurePresheafInModuleCat R M ⋙ forget₂ _ _) fun X Y f r m ↦ rfl
 
 variable (R) in
@@ -1165,7 +1165,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.Top
     Subtype.ext <|
       funext fun p => by
         rw [comap_apply, Localization.localRingHom_comp _ (PrimeSpectrum.comap g p.1).asIdeal] <;>
-        (set_option backward.dsimp.instanceTypes false in
+        (
         set_option backward.isDefEq.respectTransparency.instanceTypes false in
         simp)
 

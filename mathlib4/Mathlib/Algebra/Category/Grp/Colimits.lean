@@ -128,7 +128,6 @@ lemma quotToQuotUlift_ι [DecidableEq J] (j : J) (x : F.obj j) :
   simp only [DFinsupp.singleAddHom_apply, DFinsupp.sumAddHom_single]
   rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -179,7 +178,7 @@ lemma Quot.desc_quotQuotUliftAddEquiv [DecidableEq J] (c : Cocone F) :
     (quotQuotUliftAddEquiv F).toAddMonoidHom =
     AddEquiv.ulift.symm.toAddMonoidHom.comp (Quot.desc F c) := by
   refine Quot.addMonoidHom_ext _ (fun j a ↦ ?_)
-  (set_option backward.dsimp.instanceTypes false in
+  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp)
   simp only [quotToQuotUlift_ι, Functor.comp_obj, uliftFunctor_obj, ι_desc, Functor.const_obj_obj,
@@ -195,7 +194,6 @@ def toCocone [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A) :
   pt := ↧A
   ι.app j := ofHom <| f.comp (Quot.ι F j)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma Quot.desc_toCocone_desc [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A)
@@ -211,7 +209,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma Quot.desc_toCocone_desc_app [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A)
     (hc : IsColimit c) (x : Quot F) : hc.desc (toCocone F f) (Quot.desc F c x) = f x := by
   conv_rhs => rw [← Quot.desc_toCocone_desc F c f hc]
-  (set_option backward.dsimp.instanceTypes false in
+  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp)
 

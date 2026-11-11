@@ -91,6 +91,13 @@ structure Hom (X Y : Type u) where
 
 end TypeCat
 
+/-- Lens: the coercion pack of `TypeCat.Fun X Y` follows `X` and `Y`. -/
+@[dsimp_congr] theorem CategoryTheory.TypeCat.Fun.funLikePack_congr {X X' : Type u}
+    {Y Y' : Type v} (hX : X = X') (hY : Y = Y') :
+    FunLikePack.mk (_root_.TypeCat.Fun X Y) X (fun _ => Y) =
+      FunLikePack.mk (_root_.TypeCat.Fun X' Y') X' (fun _ => Y') := by
+  cases hX; cases hY; rfl
+
 open TypeCat CategoryTheory
 
 instance CategoryTheory.types : Category.{u} (Type u) where

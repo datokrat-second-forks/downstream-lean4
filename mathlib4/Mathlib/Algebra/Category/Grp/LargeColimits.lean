@@ -55,7 +55,7 @@ lemma isColimit_iff_bijective_desc [DecidableEq J] :
                        (Quot.ι F j))
             naturality {j j'} u := by
               ext
-              (set_option backward.dsimp.instanceTypes false in
+              (
               set_option backward.isDefEq.respectTransparency.instanceTypes false in
               dsimp)
               rw [Quot.map_ι F (f := u)] } }

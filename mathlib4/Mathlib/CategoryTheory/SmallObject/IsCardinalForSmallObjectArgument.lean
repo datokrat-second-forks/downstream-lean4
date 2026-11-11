@@ -417,7 +417,7 @@ lemma hasRightLiftingProperty_πObj {A B : C} (i : A ⟶ B) (hi : I i) (f : X �
   obtain ⟨j, t, ht⟩ := Types.jointly_surjective _
     (isColimitOfPreserves (coyoneda.obj (Opposite.op A))
       (relativeCellComplexιObj I κ f).isColimit) g
-  (set_option backward.dsimp.instanceTypes false in dsimp at g b sq t ht)
+  (dsimp at g b sq t ht)
   obtain ⟨l, hl₁, hl₂⟩ := ιFunctorObj_extension' I.homFamily
     ((relativeCellComplexιObj I κ f).incl.app j ≫ πObj I κ f)
     ((relativeCellComplexιObj I κ f).F.map (homOfLE (Order.le_succ j)))

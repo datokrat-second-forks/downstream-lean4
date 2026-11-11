@@ -463,7 +463,6 @@ def CorepresentableBy.equivOfIsoObj {F : C ⥤ Type w} {X Y : C} (e : Y ≅ X) :
   left_inv _ := by ext; simp
   right_inv _ := by ext; simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Representing `F` composed with universe lifting is the same as representing `F`. -/
@@ -477,7 +476,6 @@ def representableByUliftFunctorEquiv {F : Cᵒᵖ ⥤ Type v} {X : C} :
     { homEquiv {Y} := R.homEquiv.trans Equiv.ulift.symm
       homEquiv_comp f g := by simp [R.homEquiv_comp] }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Corepresenting `F` composed with universe lifting is the same as corepresenting `F`. -/
@@ -841,8 +839,7 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C :=
     (by intro (X, F) (Y, G) f
         ext (a : yoneda.obj X.unop ⟶ F)
         apply ULift.ext
-        (set_option backward.dsimp.instanceTypes false in
-        dsimp [yonedaEvaluation, yonedaEquiv])
+        (dsimp [yonedaEvaluation, yonedaEquiv])
         simp [← NatTrans.naturality_apply])
 
 variable {C}
@@ -1082,8 +1079,7 @@ def coyonedaLemma : coyonedaPairing C ≅ coyonedaEvaluation C :=
     (by intro (X, F) (Y, G) f
         ext (a : coyoneda.obj (op X) ⟶ F)
         apply ULift.ext
-        (set_option backward.dsimp.instanceTypes false in
-        dsimp [coyonedaEquiv, coyonedaEvaluation])
+        (dsimp [coyonedaEquiv, coyonedaEvaluation])
         simp [← NatTrans.naturality_apply])
 
 variable {C}

@@ -6,6 +6,7 @@ Authors: Johannes Hölzl
 module
 
 public import Mathlib.Order.Bounds.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Definition of complete lattices
@@ -364,3 +365,5 @@ lemma infSet_def [InfSet β] (s : Set α) :
     sInf s = e.symm (⨅ a ∈ s, e a) := rfl
 
 end Equiv
+
+derive_pack_edges

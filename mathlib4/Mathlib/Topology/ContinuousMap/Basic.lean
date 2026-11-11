@@ -6,6 +6,7 @@ Authors: Nicolò Cavalleri
 module
 
 public import Mathlib.Data.Set.UnionLift
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
@@ -119,6 +120,26 @@ theorem coe_comp (f : C(β, γ)) (g : C(α, β)) : ⇑(comp f g) = f ∘ g :=
 @[simp]
 theorem comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g a) :=
   rfl
+
+/-- Pack congruence for `ContinuousMap.comp`. -/
+@[dsimp_congr] theorem comp_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
+    {γ γ' : Type wa} [iα : TopologicalSpace α] [iα' : TopologicalSpace α']
+    [iβ : TopologicalSpace β] [iβ' : TopologicalSpace β'] [iγ : TopologicalSpace γ]
+    [iγ' : TopologicalSpace γ']
+    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
+    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ')
+    (hγ : @ClassPack.mk TopologicalSpace γ iγ = @ClassPack.mk TopologicalSpace γ' iγ')
+    (f : C(β, γ)) (f' : C(β', γ')) (hf : HEq f f') (g : C(α, β)) (g' : C(α', β'))
+    (hg : HEq g g') :
+    HEq (f.comp g) (f'.comp g') := by
+  cases hα; cases hβ; cases hγ; cases hf; cases hg; rfl
+
+/-- Pack congruence for `ContinuousMap.id`. -/
+@[dsimp_congr] theorem id_pack_congr.{ua} {α α' : Type ua} [iα : TopologicalSpace α]
+    [iα' : TopologicalSpace α']
+    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα') :
+    HEq (ContinuousMap.id α) (ContinuousMap.id α') := by
+  cases hα; rfl
 
 @[simp]
 theorem comp_assoc (f : C(γ, δ)) (g : C(β, γ)) (h : C(α, β)) :

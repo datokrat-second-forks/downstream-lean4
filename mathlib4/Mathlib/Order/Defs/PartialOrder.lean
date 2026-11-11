@@ -5,6 +5,7 @@ Authors: Leonardo de Moura
 -/
 module
 
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.ToDual
 
 /-!
@@ -226,3 +227,5 @@ lemma lt_or_eq_of_le : a ≤ b → a < b ∨ a = b := open scoped Classical in D
 lemma le_iff_lt_or_eq : a ≤ b ↔ a < b ∨ a = b := open scoped Classical in Decidable.le_iff_lt_or_eq
 
 end PartialOrder
+
+derive_pack_edges

@@ -292,7 +292,7 @@ protected noncomputable def extraDegeneracy (Δ : SimplexCategory) :
     apply objEquiv.injective
     apply SimplexCategory.Hom.ext
     ext i : 2
-    (set_option backward.dsimp.instanceTypes false in
+    (
     dsimp [SimplicialObject.δ, SimplexCategory.δ, SSet.stdSimplex,
       objEquiv, Equiv.ulift, uliftFunctor])
   s_comp_δ n i := by
@@ -300,7 +300,7 @@ protected noncomputable def extraDegeneracy (Δ : SimplexCategory) :
     apply objEquiv.injective
     apply SimplexCategory.Hom.ext
     ext j : 2
-    (set_option backward.dsimp.instanceTypes false in
+    (
     dsimp [SimplicialObject.δ, SimplexCategory.δ, SSet.stdSimplex,
       objEquiv, Equiv.ulift, uliftFunctor])
     cases j using Fin.cases <;> simp
@@ -309,7 +309,7 @@ protected noncomputable def extraDegeneracy (Δ : SimplexCategory) :
     apply objEquiv.injective
     apply SimplexCategory.Hom.ext
     ext j : 2
-    (set_option backward.dsimp.instanceTypes false in
+    (
     dsimp [SimplicialObject.σ, SimplexCategory.σ, SSet.stdSimplex, objEquiv, Equiv.ulift,
       uliftFunctor, Function.comp_def])
     cases j using Fin.cases <;> simp

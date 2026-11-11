@@ -170,7 +170,6 @@ private def coconeQuotientDiag :
     apply (QuotientGroup.leftRel_apply).mpr
     simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simps]

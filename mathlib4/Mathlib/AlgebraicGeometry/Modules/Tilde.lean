@@ -328,7 +328,7 @@ noncomputable def Scheme.Modules.fromTildeΓNatTrans :
       change Submonoid.powers _ ≤ (IsUnit.submonoid _).comap _
       simp only [Submonoid.powers_le, Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
       exact N.isUnit_algebraMap_end_of_le_basicOpen r.unop le_rfl
-    (set_option backward.dsimp.instanceTypes false in
+    (
     dsimp [TopCat.Sheaf.restrictHomEquivHom, Functor.IsCoverDense.restrictHomEquivHom,
       moduleSpecΓFunctor, Sheaf.forget])
     simp only [← ModuleCat.hom_comp, Functor.map_comp]
@@ -366,7 +366,7 @@ def tilde.adjunction : tilde.functor R ⊣ moduleSpecΓFunctor where
     simp only [← ModuleCat.hom_comp, Functor.map_comp]
     congr 1
     rw [ObjectProperty.FullSubcategory.comp_hom]
-    (set_option backward.dsimp.instanceTypes false in dsimp)
+    (dsimp)
     rw [toOpen_map_app_assoc, toOpen_fromTildeΓ_app]
     rfl
   right_triangle_components M := by

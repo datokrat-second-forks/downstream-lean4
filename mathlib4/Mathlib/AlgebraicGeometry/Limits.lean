@@ -187,7 +187,7 @@ lemma sigmaι_eq_iff [Small.{u} σ] (i j : σ) (x y) :
   · simp only [Discrete.functor_obj_eq_as, Sigma.mk.injEq]
     rintro ⟨rfl, e⟩
     obtain rfl := (heq_eq_eq x y).mp e
-    exact ⟨⟨i⟩, 𝟙 _, 𝟙 _, x, by (set_option backward.dsimp.instanceTypes false in simp)⟩
+    exact ⟨⟨i⟩, 𝟙 _, 𝟙 _, x, by (simp)⟩
 
 /-- The images of each component in the coproduct is disjoint. -/
 lemma disjoint_opensRange_sigmaι [Small.{u} σ] (i j : σ) (h : i ≠ j) :
@@ -277,9 +277,8 @@ private lemma isOpenImmersion_sigmaDesc_aux
     refine IsIso.of_isIso_fac_right
       (f := ((Scheme.IsLocallyDirected.openCover (Discrete.functor f)).f _).stalkMap y)
       (h := (X.presheaf.stalkCongr (.of_eq ?_)).hom ≫ (α _).stalkMap _) ?_
-    · (set_option backward.dsimp.instanceTypes false in simp [← Scheme.Hom.comp_apply])
-    · (set_option backward.dsimp.instanceTypes false in
-      simp [← Scheme.Hom.stalkMap_comp, Scheme.Hom.stalkMap_congr_hom _ _ (colimit.ι_desc _ _)])
+    · (simp [← Scheme.Hom.comp_apply])
+    · (simp [← Scheme.Hom.stalkMap_comp, Scheme.Hom.stalkMap_congr_hom _ _ (colimit.ι_desc _ _)])
 
 open scoped Function in
 lemma isOpenImmersion_sigmaDesc [Small.{u} σ]
@@ -395,10 +394,8 @@ def coprodOpenCover.{w} : (X ⨿ Y).OpenCover where
     simp only [Sum.elim_inl, Sum.elim_inr, Set.mem_range]
     rw [Homeomorph.symm_apply_apply]
     obtain (x | x) := x
-    · (set_option backward.dsimp.instanceTypes false in
-      simp only [Sum.elim_inl, coprodMk_inl, exists_apply_eq_apply])
-    · (set_option backward.dsimp.instanceTypes false in
-      simp only [Sum.elim_inr, coprodMk_inr, exists_apply_eq_apply])
+    · (simp only [Sum.elim_inl, coprodMk_inl, exists_apply_eq_apply])
+    · (simp only [Sum.elim_inr, coprodMk_inr, exists_apply_eq_apply])
 
 /-- If `X` and `Y` are open disjoint and covering open subschemes of `S`,
 `S` is the disjoint union of `X` and `Y`. -/

@@ -315,7 +315,6 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       ext ⟨a, ha⟩
       simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The augmented Čech conerve construction is left adjoint to the `toArrow` functor. -/

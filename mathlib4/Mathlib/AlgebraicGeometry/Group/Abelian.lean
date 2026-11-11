@@ -75,8 +75,7 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
     have H₁ : c = fc.left ≫ (η[G] ▷ G).left := by dsimp; ext <;> simp [fc, S, this]
     have H₂ : fc ≫ η ▷ G ≫ γ = lift η η := by ext1 <;> simp [fc, γ, S]
     exact hc₂ <| by
-      (set_option backward.dsimp.instanceTypes false in
-      simp [H₁, H₂, ← Scheme.Hom.comp_apply, Category.assoc, ← Over.comp_left])
+      (simp [H₁, H₂, ← Scheme.Hom.comp_apply, Category.assoc, ← Over.comp_left])
   -- Since the image of `y ↦ γ(e, y)` is finite, by Zariski Main, there exists an open
   -- `1 ∈ U ⊆ G` such that `γ ∣_ U` factors through a finite scheme over `U`.
   obtain ⟨U, hηU, H⟩ := exists_finite_imageι_comp_morphismRestrict_of_finite_image_preimage
@@ -92,7 +91,7 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
     rw [← this, ← Set.preimage_comp, ← TopCat.coe_comp, ← Scheme.Hom.comp_base,
       morphismRestrict_ι, ← Category.assoc, Scheme.Hom.comp_base (_ ≫ _) (fst G G).left,
       TopCat.coe_comp, Set.preimage_comp, Set.image_preimage_eq_inter_range]
-    (set_option backward.dsimp.instanceTypes false in
+    (
     simp only [Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp, Scheme.Opens.range_ι]
     dsimp)
     rw [Set.image_preimage_eq_inter_range, Scheme.IdealSheafData.range_subschemeι,
@@ -114,25 +113,21 @@ theorem isCommMonObj_of_isProper_of_isIntegral_tensorObj_of_isAlgClosed [IsAlgCl
       refine subsingleton_image_closure_of_finite_of_isPreirreducible
         (hx.preimage (fst G G).left.continuous).isLocallyClosed ?_ γ.left.continuous
         γ.left.isClosedMap ((H ⟨_, hyU⟩).subset (Set.image_subset_iff.mpr fun _ ↦ by
-          (set_option backward.dsimp.instanceTypes false in
-          simp [← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base, γ]))) ?_ ?_
+          (simp [← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base, γ]))) ?_ ?_
       · let α : G ⊗ G ⟶ G ⊗ G := toUnit _ ≫ x ⊗ₘ 𝟙 _
         convert
           ((IrreducibleSpace.isIrreducible_univ _).image α.left
               α.left.continuous.continuousOn).isPreirreducible
         rw [Over.tensorHom_left]
-        (set_option backward.dsimp.instanceTypes false in
-        simp [Set.range_comp, Scheme.Pullback.range_map, x])
+        (simp [Set.range_comp, Scheme.Pullback.range_map, x])
       · exact ⟨y, subset_closure (by simp), rfl⟩
       · refine ⟨xe, subset_closure ?_, ?_⟩
-        · (set_option backward.dsimp.instanceTypes false in
-          simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
+        · (simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
         · simp only [xe, γ, ← Scheme.Hom.comp_apply, ← Over.comp_left]
           congr 6; ext <;> simp
     convert congr((snd G G).left $this) using 1
-    · (set_option backward.dsimp.instanceTypes false in simp [γ, ← Scheme.Hom.comp_apply])
-    · (set_option backward.dsimp.instanceTypes false in
-      simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
+    · (simp [γ, ← Scheme.Hom.comp_apply])
+    · (simp [xe, ← Scheme.Hom.comp_apply, -Scheme.Hom.comp_base])
   · simp
 
 set_option backward.defeqAttrib.useBackward true in

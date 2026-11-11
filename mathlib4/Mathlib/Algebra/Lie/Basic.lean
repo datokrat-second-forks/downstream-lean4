@@ -10,6 +10,7 @@ public import Mathlib.Algebra.Module.FunLike
 public import Mathlib.Algebra.Module.Rat
 public import Mathlib.Algebra.Module.Submodule.Equiv
 public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Lie algebras
@@ -1019,3 +1020,5 @@ theorem symm_trans_self (e : M ≃ₗ⁅R,L⁆ N) : e.symm.trans e = refl :=
 end LieModuleEquiv
 
 end LieModuleMorphisms
+
+derive_pack_edges

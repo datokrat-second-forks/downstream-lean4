@@ -9,6 +9,7 @@ public import Mathlib.Data.Fintype.EquivFin
 public import Mathlib.Data.List.MinMax
 public import Mathlib.Data.Nat.Order.Lemmas
 public import Mathlib.Logic.Encodable.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Denumerable types
@@ -331,3 +332,5 @@ instance nonempty_equiv_of_countable [Countable α] [Infinite α] [Countable β]
   cases nonempty_denumerable α
   cases nonempty_denumerable β
   exact ⟨(Denumerable.eqv _).trans (Denumerable.eqv _).symm⟩
+
+derive_pack_edges

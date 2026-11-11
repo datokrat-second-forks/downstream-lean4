@@ -177,7 +177,7 @@ instance : AddCommGroup (V n) := by induction n <;> · dsimp only [V]; infer_ins
 set_option backward.isDefEq.respectTransparency false in
 instance : Module ℝ (V n) := by
   induction n <;>
-    · (set_option backward.dsimp.instanceTypes false in dsimp only [V]); infer_instance
+    · (dsimp only [V]); infer_instance
 
 end V
 

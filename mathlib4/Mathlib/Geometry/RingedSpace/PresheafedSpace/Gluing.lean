@@ -137,8 +137,7 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).carrier) :
   have eq₂ : _ = (π₂ i, j, k).base := PreservesPullback.iso_hom_snd (forget C) _ _
   rw [← eq₁, ← eq₂, TopCat.coe_comp, Set.image_comp, TopCat.coe_comp, Set.preimage_comp,
     Set.image_preimage_eq]
-  · (set_option backward.dsimp.instanceTypes false in
-    simp only [forget_obj, forget_map, TopCat.pullback_snd_image_fst_preimage])
+  · (simp only [forget_obj, forget_map, TopCat.pullback_snd_image_fst_preimage])
   rw [← TopCat.epi_iff_surjective]
   infer_instance
 
@@ -248,7 +247,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
     show _ = (𝖣.ι j).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) j]
   rw [TopCat.coe_comp, TopCat.coe_comp, Set.image_comp, Set.preimage_comp, Set.preimage_image_eq]
   · refine Eq.trans (D.toTopGlueData.preimage_image_eq_image' _ _ _) ?_
-    (set_option backward.dsimp.instanceTypes false in dsimp)
+    (dsimp)
     rw [Set.image_comp]
     congrm _ '' ?_
     rw [Set.eq_preimage_iff_image_eq, ← Set.image_comp]
@@ -516,7 +515,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
         rw [comp_base, comp_base] at this
         replace this := reassoc_of% this
         exact this _
-      (set_option backward.dsimp.instanceTypes false in simp only [mapGlueData_U, forget_obj])
+      (simp only [mapGlueData_U, forget_obj])
       rw [← Set.image_subset_iff, ← Set.image_univ, ← Set.image_comp, Set.image_univ,
         ← TopCat.coe_comp, this, TopCat.coe_comp, ← Set.image_univ, Set.image_comp]
       exact Set.image_subset_range _ _

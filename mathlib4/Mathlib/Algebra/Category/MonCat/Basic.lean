@@ -10,6 +10,7 @@ public import Mathlib.Algebra.Group.TypeTags.Hom
 public import Mathlib.Algebra.Group.ULift
 public import Mathlib.CategoryTheory.ConcreteCategory.Forget
 public import Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Category instances for `Monoid`, `AddMonoid`, `CommMonoid`, and `AddCommMonoid`.
@@ -431,6 +432,26 @@ def uliftFunctor : CommMonCat.{v} ⥤ CommMonCat.{max v u} where
   map_comp {X Y Z} f g := by rfl
 
 end CommMonCat
+
+/-- Lens: the `Monoid` pack of the carrier of `X : MonCat` follows `X`. -/
+@[dsimp_congr] theorem MonCat.pack_congr.{ua} {X X' : MonCat.{ua}} (h : X = X') :
+    @ClassPack.mk Monoid X X.str = @ClassPack.mk Monoid X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `AddMonoid` pack of the carrier of `X : AddMonCat` follows `X`. -/
+@[dsimp_congr] theorem AddMonCat.pack_congr.{ua} {X X' : AddMonCat.{ua}} (h : X = X') :
+    @ClassPack.mk AddMonoid X X.str = @ClassPack.mk AddMonoid X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `CommMonoid` pack of the carrier of `X : CommMonCat` follows `X`. -/
+@[dsimp_congr] theorem CommMonCat.pack_congr.{ua} {X X' : CommMonCat.{ua}} (h : X = X') :
+    @ClassPack.mk CommMonoid X X.str = @ClassPack.mk CommMonoid X' X'.str := by
+  cases h; rfl
+
+/-- Lens: the `AddCommMonoid` pack of the carrier of `X : AddCommMonCat` follows `X`. -/
+@[dsimp_congr] theorem AddCommMonCat.pack_congr.{ua} {X X' : AddCommMonCat.{ua}} (h : X = X') :
+    @ClassPack.mk AddCommMonoid X X.str = @ClassPack.mk AddCommMonoid X' X'.str := by
+  cases h; rfl
 
 variable {X Y : Type u}
 

@@ -44,8 +44,7 @@ def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan �
     intro S m h
     ext x
     funext i
-    (set_option backward.dsimp.instanceTypes false in
-    simp [ContinuousMap.coe_mk, ← h ⟨i⟩])
+    (simp [ContinuousMap.coe_mk, ← h ⟨i⟩])
   fac _ _ := rfl
 
 /-- The product is homeomorphic to the product of the underlying spaces,

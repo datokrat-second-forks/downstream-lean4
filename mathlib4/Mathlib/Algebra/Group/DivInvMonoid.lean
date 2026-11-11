@@ -9,6 +9,7 @@ public import Mathlib.Algebra.Group.Monoid
 public import Mathlib.Data.Int.Notation
 public import Mathlib.Tactic.CrossRefAttribute
 public import Mathlib.Tactic.OfNat
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Division monoids
@@ -363,3 +364,5 @@ initialize_simps_projections DivisionMonoid
 initialize_simps_projections SubtractionMonoid
 initialize_simps_projections DivisionCommMonoid
 initialize_simps_projections SubtractionCommMonoid
+
+derive_pack_edges

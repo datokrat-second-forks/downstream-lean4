@@ -168,7 +168,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact p
         ext i
         simp only [map_neg, map_one, Function.comp_apply, Fin.val_eq_zero, _root_.pow_zero]
         suffices (e.symm i : ℕ) = 0 by
-          (set_option backward.dsimp.instanceTypes false in simp [this])
+          (simp [this])
         rw [← Nat.lt_one_iff]
         convert (e.symm i).2
         rw [this]

@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Group.DivInvMonoid
 public import Mathlib.Basic.Logic.Basic
 public import Mathlib.Basic.Nontrivial.Defs
+public import Mathlib.Tactic.PackLens
 
 import Batteries.Tactic.SeqFocus
 
@@ -329,3 +330,5 @@ theorem mul_ne_zero_iff_left (ha : a ≠ 0) : a * b ≠ 0 ↔ b ≠ 0 := by simp
 theorem mul_ne_zero_iff_right (hb : b ≠ 0) : a * b ≠ 0 ↔ a ≠ 0 := by simp [hb]
 
 end MulZeroClass
+
+derive_pack_edges

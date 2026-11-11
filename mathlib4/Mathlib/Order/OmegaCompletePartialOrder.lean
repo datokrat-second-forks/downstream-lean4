@@ -11,6 +11,7 @@ public import Mathlib.Order.Iterate
 public import Mathlib.Order.Part
 public import Mathlib.Order.Preorder.Chain
 public import Mathlib.Order.ScottContinuity
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Omega Complete Partial Orders
@@ -800,3 +801,5 @@ theorem ωSup_iterate_le_fixedPoint (h : x ≤ f x) {a : α}
 end fixedPoints
 
 end OmegaCompletePartialOrder
+
+derive_pack_edges

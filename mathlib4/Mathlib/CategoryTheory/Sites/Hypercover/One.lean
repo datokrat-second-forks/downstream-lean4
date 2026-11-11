@@ -291,7 +291,6 @@ instance : Nonempty (PreOneHypercover.{w} S) := ⟨trivial S⟩
 
 section
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Intersection of two pre-`1`-hypercovers. -/
@@ -310,7 +309,6 @@ def inter (E F : PreOneHypercover S) [∀ i j, HasPullback (E.f i) (F.f j)]
 
 variable {E} {F : PreOneHypercover S}
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma sieve₁_inter [HasPullbacks C] {i j : E.I₀ × F.I₀} {W : C}
@@ -646,7 +644,6 @@ lemma isoMk_aux (h₁ : ∀ ⦃i j : E.I₀⦄ (k : E.I₁ i j), E.Y k ≅ F.Y (
 
 end
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Construct an isomorphism of `1`-hypercovers by giving the compatibility conditions only
@@ -874,7 +871,6 @@ def interSnd : (E.inter F).Hom F where
   s₁ {i j} k := k.2
   h₁ _ := pullback.snd _ _
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {E F} in

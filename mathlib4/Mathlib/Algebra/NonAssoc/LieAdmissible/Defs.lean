@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Algebra.Defs
 public import Mathlib.Algebra.Lie.Basic
 public import Mathlib.Algebra.NonAssoc.PreLie.Basic
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Lie admissible rings and algebras
@@ -158,3 +159,5 @@ abbrev instLieAdmissibleAlgebra : LieAdmissibleAlgebra R L where
 end Algebra
 
 end instances
+
+derive_pack_edges

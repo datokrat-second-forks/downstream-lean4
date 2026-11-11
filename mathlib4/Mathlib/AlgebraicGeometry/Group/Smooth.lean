@@ -55,8 +55,7 @@ private lemma smooth_of_grpObj_of_isAlgClosed [IsReduced G] [IsAlgClosed K] : Sm
     rw [← Category.assoc, ← Iso.eq_comp_inv]
     simp [comp_lift_assoc]
   have hα' : α.hom.left x = y := by
-    (set_option backward.dsimp.instanceTypes false in
-    simpa [x', y', pointEquivClosedPoint] using congr(($hα).left (IsLocalRing.closedPoint K)))
+    (simpa [x', y', pointEquivClosedPoint] using congr(($hα).left (IsLocalRing.closedPoint K)))
   rw! [← hα', ← α.hom.left.mem_preimage, Scheme.Hom.preimage_smoothLocus_eq,
     show α.hom.left ≫ f = f from α.hom.w] at hy
   exact hx hy

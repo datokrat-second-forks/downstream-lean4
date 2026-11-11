@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Category.ModuleCat.Basic
 public import Mathlib.Algebra.Category.Ring.Basic
 public import Mathlib.Algebra.FreeAlgebra
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Category instance for algebras over a commutative ring
@@ -191,7 +192,6 @@ def free : Type u ⥤ AlgCat.{u} R where
   obj S := of R (FreeAlgebra R S)
   map f := ofHom <| FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The free/forget adjunction for `R`-algebras. -/
@@ -206,6 +206,24 @@ def adj : free.{u} R ⊣ forget (AlgCat.{u} R) :=
 instance : (forget (AlgCat.{u} R)).IsRightAdjoint := (adj R).isRightAdjoint
 
 end AlgCat
+
+/-- Lens: the `Ring` pack of the carrier of `X : AlgCat R` follows `X`. -/
+@[dsimp_congr] theorem AlgCat.pack_congr.{ua, va} {R : Type ua} [CommRing R] {X X' : AlgCat.{va} R}
+    (h : X = X') :
+    @ClassPack.mk Ring X X.isRing = @ClassPack.mk Ring X' X'.isRing := by
+  cases h; rfl
+
+/-- Lens: the algebra pack of the carrier of `X : AlgCat R` follows `X`. -/
+@[dsimp_congr] theorem AlgCat.salgPack_congr.{ua, va} {R : Type ua} [CommRing R]
+    {X X' : AlgCat.{va} R} (h : X = X') :
+    SAlgPack.mk (R := R) X = SAlgPack.mk X' := by
+  cases h; rfl
+
+/-- Lens: the module pack of the carrier of `X : AlgCat R` follows `X`. -/
+@[dsimp_congr] theorem AlgCat.smodPack_congr.{ua, va} {R : Type ua} [CommRing R]
+    {X X' : AlgCat.{va} R} (h : X = X') :
+    SModPack.mk (R := R) X = SModPack.mk X' := by
+  cases h; rfl
 
 variable {R}
 variable {X₁ X₂ : Type v}

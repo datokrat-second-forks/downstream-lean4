@@ -515,7 +515,7 @@ def openCoverOfLeft (𝒰 : OpenCover.{v} X) (f : X ⟶ Z) (g : Y ⟶ Z) :
           𝒰.ulift.I₀ (fun i => pullback (𝒰.ulift.f i ≫ f) g)
           (fun i => pullback.map _ _ _ _ (𝒰.ulift.f i) (𝟙 _) (𝟙 _) (Category.comp_id _) (by simp))
           (Equiv.refl 𝒰.ulift.I₀) (fun _ => Iso.refl _) fun i ↦ by
-        (set_option backward.dsimp.instanceTypes false in
+        (
         simp_rw [Cover.pushforwardIso_I₀, Cover.pushforwardIso_f, GlueData.openCover_f,
           GlueData.openCover_I₀, gluing_J])
         exact pullback.hom_ext (by simp [p1]) (by simp [p2])
@@ -541,7 +541,7 @@ def openCoverOfRight (𝒰 : OpenCover.{v} Y) (f : X ⟶ Z) (g : Y ⟶ Z) :
       (Equiv.refl _) fun i => pullbackSymmetry _ _
   intro i
   dsimp
-  apply pullback.hom_ext <;> (set_option backward.dsimp.instanceTypes false in simp)
+  apply pullback.hom_ext <;> (simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -558,7 +558,7 @@ def openCoverOfLeftRight (𝒰X : OpenCover.{v} X) (𝒰Y : OpenCover.{w} Y) (f 
           (Category.comp_id _))
       (Equiv.sigmaEquivProd _ _).symm fun _ => Iso.refl _
   rintro ⟨i, j⟩
-  apply pullback.hom_ext <;> (set_option backward.dsimp.instanceTypes false in simp)
+  apply pullback.hom_ext <;> (simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

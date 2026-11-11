@@ -10,6 +10,7 @@ public import Mathlib.Algebra.Category.ModuleCat.Semi
 public import Mathlib.CategoryTheory.Linear.Basic
 public import Mathlib.CategoryTheory.Preadditive.AdditiveFunctor
 public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.Tactic.PackLens
 
 /-!
 # The category of `R`-modules
@@ -253,6 +254,19 @@ instance : HasZeroObject (ModuleCat.{v} R) :=
   ⟨⟨of R PUnit, isZero_of_subsingleton _⟩⟩
 
 end ModuleCat
+
+/-- Lens: the `AddCommGroup` pack of the carrier of `X : ModuleCat R` follows `X`. -/
+@[dsimp_congr] theorem ModuleCat.pack_congr.{ua, va} {R : Type ua} [Ring R] {X X' : ModuleCat.{va} R}
+    (h : X = X') :
+    @ClassPack.mk AddCommGroup X X.isAddCommGroup =
+      @ClassPack.mk AddCommGroup X' X'.isAddCommGroup := by
+  cases h; rfl
+
+/-- Lens: the module pack of the carrier of `X : ModuleCat R` follows `X`. -/
+@[dsimp_congr] theorem ModuleCat.smodPack_congr.{ua, va} {R : Type ua} [Ring R]
+    {X X' : ModuleCat.{va} R} (h : X = X') :
+    SModPack.mk (R := R) X = SModPack.mk X' := by
+  cases h; rfl
 
 variable {R}
 variable {X₁ X₂ : Type v}

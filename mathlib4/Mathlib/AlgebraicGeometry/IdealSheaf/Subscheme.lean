@@ -378,8 +378,7 @@ private lemma gluedTo_injective :
     rwa [← this, ← hfg]
   obtain ⟨a, rfl⟩ := (I.opensRange_glueDataObjMap f).ge H
   obtain ⟨b, rfl⟩ := hmem (X.affineBasicOpen f) (Subtype.ext hfg)
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [glueData_U, ← Scheme.Hom.comp_apply, glueDataObjMap_glueDataObjι] at this ⊢)
+  (simp only [glueData_U, ← Scheme.Hom.comp_apply, glueDataObjMap_glueDataObjι] at this ⊢)
   simp only [Scheme.affineBasicOpen_coe, Scheme.Hom.comp_base, TopCat.comp_app,
     Scheme.homOfLE_apply, SetLike.coe_eq_coe] at this
   obtain rfl := (I.glueDataObjι (X.affineBasicOpen f)).isEmbedding.injective this

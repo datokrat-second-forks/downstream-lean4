@@ -119,7 +119,7 @@ noncomputable def tensorHom (f : M₁ ⟶ M₂) (g : M₃ ⟶ M₄) :
     tensorObj M₁ M₃ ⟶ tensorObj M₂ M₄ :=
   homMk (fun X ↦ f.app' X ⊗ₘ g.app' X)
     (fun φ ↦ ModuleCat.MonoidalCategory.tensor_ext (fun m₁ m₃ ↦ by
-      (set_option backward.dsimp.instanceTypes false in dsimp)
+      (dsimp)
       rw [tensorObj_map_tmul, ModuleCat.MonoidalCategory.tensorHom_tmul, tensorObj_map_tmul,
         naturality_apply, naturality_apply]))
 
@@ -138,13 +138,15 @@ noncomputable instance monoidalCategoryStruct :
     (fun _ _ _ ↦ ModuleCat.MonoidalCategory.tensor_ext₃' (by intros; rfl))
   leftUnitor M := Iso.symm (isoMk (fun _ ↦ (λ_ _).symm) (fun X Y f ↦ by
     ext m
-    dsimp [CommRingCat.forgetToRingCat_obj]
+    -- pack-regime workaround (B)
+    dsimp [CommRingCat.forgetToRingCat_obj, -Iso.symm_hom]
     erw [ModuleCat.MonoidalCategory.leftUnitor_inv_apply,
       ModuleCat.MonoidalCategory.leftUnitor_inv_apply, tensorObj_map_tmul, (R.map f).hom.map_one]
     rfl))
   rightUnitor M := Iso.symm (isoMk (fun _ ↦ (ρ_ _).symm) (fun X Y f ↦ by
     ext m
-    dsimp [CommRingCat.forgetToRingCat_obj]
+    -- pack-regime workaround (B)
+    dsimp [CommRingCat.forgetToRingCat_obj, -Iso.symm_hom]
     erw [ModuleCat.MonoidalCategory.rightUnitor_inv_apply,
       ModuleCat.MonoidalCategory.rightUnitor_inv_apply, tensorObj_map_tmul, (R.map f).hom.map_one]
     rfl))

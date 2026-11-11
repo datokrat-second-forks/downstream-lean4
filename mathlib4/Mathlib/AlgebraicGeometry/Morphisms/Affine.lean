@@ -142,8 +142,7 @@ lemma isAffineOpen_of_isAffineOpen_basicOpen (U) (s : Set Γ(X, U))
   · rw [← Ideal.map_span U.topIso.inv.hom, hs, Ideal.map_top]
   · rintro _ ⟨j, hj, rfl⟩
     rw [← (Scheme.Opens.ι _).isAffineOpen_iff_of_isOpenImmersion, Scheme.image_basicOpen]
-    (set_option backward.dsimp.instanceTypes false in
-    simpa [Scheme.Opens.toScheme_presheaf_obj] using hs₂ j hj)
+    (simpa [Scheme.Opens.toScheme_presheaf_obj] using hs₂ j hj)
 
 instance : HasAffineProperty @IsAffineHom fun X _ _ _ ↦ IsAffine X where
   isLocal_affineProperty := by

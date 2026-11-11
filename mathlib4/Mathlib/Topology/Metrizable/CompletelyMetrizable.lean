@@ -5,6 +5,7 @@ Authors: Etienne Marion
 -/
 module
 
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.MetricSpace.Gluing
 
 import Mathlib.Topology.Metrizable.Uniformity
@@ -308,3 +309,5 @@ instance univ [TopologicalSpace X] [IsCompletelyMetrizableSpace X] :
 end IsCompletelyMetrizableSpace
 
 end TopologicalSpace
+
+derive_pack_edges

@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Data.Set.Lattice.Bounded
 public import Mathlib.Order.OmegaCompletePartialOrder
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Bourbaki-Witt Theorem
@@ -294,3 +295,5 @@ lemma ωScottContinuous.inf (hf : ωScottContinuous f) (hg : ωScottContinuous g
       (le_trans <| hg.monotone <| c.mono <| le_max_right _ _)⟩
 
 end CompleteLattice
+
+derive_pack_edges

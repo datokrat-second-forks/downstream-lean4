@@ -86,7 +86,7 @@ noncomputable def adjunction :
               ((fullyFaithfulForget S).homEquiv (Y := (pushforward φ).obj G)).symm)
       homEquiv_naturality_left_symm := by
         intros
-        (set_option backward.dsimp.instanceTypes false in dsimp [Functor.FullyFaithful.homEquiv])
+        (dsimp [Functor.FullyFaithful.homEquiv])
         -- these erw seem difficult to remove
         erw [Adjunction.homEquiv_naturality_left_symm,
           Adjunction.homEquiv_naturality_left_symm]

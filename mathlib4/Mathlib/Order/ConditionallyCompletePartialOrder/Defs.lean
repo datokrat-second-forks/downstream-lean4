@@ -8,6 +8,7 @@ module
 public import Mathlib.Order.Bounds.Defs
 public import Mathlib.Order.Directed
 public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.PackLens
 
 /-! # Conditionally complete partial orders
 
@@ -99,3 +100,5 @@ protected lemma Directed.le_ciSup (hf : Directed (· ≤ ·) f)
 protected lemma Directed.ciSup_le [Nonempty ι] (hf : Directed (· ≤ ·) f)
     (ha : ∀ i, f i ≤ a) : ⨆ i, f i ≤ a :=
   hf.directedOn_range.csSup_le (Set.range_nonempty _) <| Set.forall_mem_range.2 ha
+
+derive_pack_edges

@@ -7,6 +7,7 @@ module
 
 public import Mathlib.MeasureTheory.OuterMeasure.AE
 public import Mathlib.MeasureTheory.OuterMeasure.Induced
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Measure spaces
@@ -496,3 +497,5 @@ theorem AEMeasurable.of_eval {f : α → Π a, X a} (hf : ∀ a, AEMeasurable (f
 @[deprecated (since := "2026-08-20")] alias aemeasurable_pi_lambda := AEMeasurable.of_eval
 
 end
+
+derive_pack_edges

@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 module
 
 public import Mathlib.Basic.Rel.Cover
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Topology.Order
 
 /-!
@@ -714,3 +715,5 @@ lemma IsUniformEmbedding.isUniformInducing {f : α → β} (hf : IsUniformEmbedd
   hf.toIsUniformInducing
 
 end UniformSpace
+
+derive_pack_edges

@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Order.Defs.PartialOrder
 public import Mathlib.Order.Notation
+public import Mathlib.Tactic.PackLens
 
 import Mathlib.Tactic.GRewrite
 
@@ -352,3 +353,5 @@ theorem eq_of_inf_eq_sup_eq {a b c : α} (h₁ : b ⊓ a = c ⊓ a) (h₂ : b �
     (le_of_inf_le_sup_le (le_of_eq h₁.symm) (le_of_eq h₂.symm))
 
 end DistribLattice
+
+derive_pack_edges

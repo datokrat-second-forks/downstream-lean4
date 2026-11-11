@@ -293,8 +293,7 @@ def functorEquiv :
       dsimp
       simp only [Category.comp_id, Category.id_comp, descOfTruncation_map_homMk,
         homToNerveMk_app_zero]
-      (set_option backward.dsimp.instanceTypes false in
-      exact nerve.homEquiv.symm.injective (Edge.ext (by cat_disch))))
+      (exact nerve.homEquiv.symm.injective (Edge.ext (by cat_disch))))
   right_inv φ :=
     IsStrictSegal.hom_ext (fun s ↦ by
       obtain ⟨x₀, x₁, f, rfl⟩ := Edge.exists_of_simplex s

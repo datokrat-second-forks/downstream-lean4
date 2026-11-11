@@ -13,6 +13,7 @@ public import Mathlib.Algebra.Ring.CompTypeclasses
 public import Mathlib.Algebra.Ring.Opposite
 public import Mathlib.Basic.SetLike.Basic
 public import Mathlib.Data.Int.Cast.Lemmas
+public import Mathlib.Tactic.PackLens
 
 import Mathlib.Algebra.GroupWithZero.Units.Lemmas
 
@@ -656,3 +657,5 @@ instance {ι : Type*} {S : ι → Type*} [Π i, MulZeroClass (S i)] [Π i, Star 
 
 instance [NonUnitalNonAssocSemiring R] [StarAddMonoid R] [IsProperStar R] : IsProperStar Rᵐᵒᵖ where
   eq_zero_of_star_mul_self_eq_zero := by simp [← MulOpposite.op_star, ← MulOpposite.op_mul]
+
+derive_pack_edges

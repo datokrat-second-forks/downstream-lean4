@@ -343,11 +343,11 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   · choose W s hW e using Q
     exact e.1.trans e.2.symm
   -- Then use induction to pick particular representatives of `tU tV : stalk x`
-  (set_option backward.dsimp.instanceTypes false in dsimp at tU tV h)
+  (dsimp at tU tV h)
   obtain ⟨U, ⟨fU, hU⟩, rfl⟩ := jointly_surjective' tU
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective' tV
   -- Decompose everything into its constituent parts:
-  (set_option backward.dsimp.instanceTypes false in
+  (
   simp only [Functor.whiskeringLeft_obj_obj, Functor.comp_obj, Functor.op_obj,
     subpresheafToTypes_obj, stalkToFiber_ι] at h)
   specialize w (unop U) (unop V) fU hU fV hV h

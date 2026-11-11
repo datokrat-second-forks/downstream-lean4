@@ -178,7 +178,7 @@ def corepresentableBy :
     (Functor.whiskeringLeft _ _ _).obj (tensor C) ⋙ coyoneda.obj (.op <| F ⊠ G) |>.CorepresentableBy
       (F ⊛ G) where
   homEquiv := Functor.homEquivOfIsLeftKanExtension _ (unit F G) _
-  homEquiv_comp := by (set_option backward.dsimp.instanceTypes false in aesop)
+  homEquiv_comp := by (aesop)
 
 set_option backward.defeqAttrib.useBackward true in
 /-- Use the fact that `(F ⊛ G).obj c` is a colimit to characterize morphisms out of it at a
@@ -297,7 +297,7 @@ lemma associator_hom_unit_unit (x y z : C) :
       (corepresentableBy₂' F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂ F G H |>.ofIso
           (associatorCorepresentingIso F G H).symm |>.homEquiv (𝟙 _))
-  (set_option backward.dsimp.instanceTypes false in
+  (
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
     Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
@@ -323,7 +323,7 @@ lemma associator_inv_unit_unit (x y z : C) :
       (corepresentableBy₂ F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂' F G H |>.ofIso
           (associatorCorepresentingIso F G H) |>.homEquiv (𝟙 _))
-  (set_option backward.dsimp.instanceTypes false in
+  (
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
     Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
@@ -845,8 +845,7 @@ lemma ι_map_tensorHom_hom_eq_tensorHom
     DayConvolution.map (ι C V D |>.map f) (ι C V D |>.map f') := by
   apply DayConvolution.corepresentableBy
     (ι C V D |>.obj d₁) (ι C V D |>.obj d₁') |>.homEquiv.injective
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp)
+  (dsimp)
   ext ⟨x, y⟩
   simp only [externalProductBifunctor_obj_obj, Functor.comp_obj, tensor_obj,
     DayConvolution.corepresentableBy_homEquiv_apply_app,
@@ -949,8 +948,7 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       simp only [ι_map_tensorHom_hom_eq_tensorHom, Functor.map_id]
       apply (DayConvolution.corepresentableBy
         (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp)
+      (dsimp)
       ext ⟨_, _⟩
       simp only [externalProductBifunctor_obj_obj, Functor.comp_obj, tensor_obj,
         corepresentableBy_homEquiv_apply_app, unit_app_map_app, NatTrans.id_app,
@@ -963,16 +961,14 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨_, _⟩
-      (set_option backward.dsimp.instanceTypes false in
-      simp))
+      (simp))
     (id_tensorHom := fun x {y₁ y₂} f => by
       apply Functor.Faithful.map_injective (F := ι C V D)
       simp only [ι_map_tensorHom_hom_eq_tensorHom]
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨x, y⟩
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp)
+      (dsimp)
       simp only [Functor.map_id, unit_app_map_app, Functor.comp_obj, tensor_obj,
         NatTrans.id_app, id_tensorHom]
       dsimp [unit]
@@ -983,8 +979,7 @@ def monoidalOfLawfulDayConvolutionMonoidalCategoryStruct
       apply (corepresentableBy (ι C V D |>.obj _) (ι C V D |>.obj _)).homEquiv.injective
       dsimp
       ext ⟨x, y⟩
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp)
+      (dsimp)
       simp only [Functor.map_id, DayConvolution.unit_app_map_app, Functor.comp_obj,
         tensor_obj, NatTrans.id_app, tensorHom_id]
       dsimp [DayConvolution.unit]
@@ -1209,8 +1204,7 @@ lemma ι_map_tensorHom_eq {d₁ d₁' d₂ d₂' : D} (f : d₁ ⟶ d₂) (f' : 
   apply (convolutions C V d₁ d₁').corepresentableBy.homEquiv.injective
   dsimp
   ext ⟨u₁, u₂⟩
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp)
+  (dsimp)
   simp only [DayConvolution.unit_app_map_app, Functor.comp_obj, tensor_obj]
   simp +instances [convolutions, convolutionUnitApp_eq]
 

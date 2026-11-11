@@ -268,7 +268,6 @@ theorem diagonalSuccIsoTensorTrivial_hom_hom_apply {n : ℕ} (f : Fin (n + 1) �
 -- With the instance type check, `dsimp%` keeps `(leftRegular G ⊗ trivial G (Fin n → G)).V` in the
 -- type arguments of the coercion, and `simp` no longer uses the lemma in
 -- `barComplex.d_comp_diagonalSuccIsoFree_inv_eq`.
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]

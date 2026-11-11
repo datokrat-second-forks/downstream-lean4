@@ -9,6 +9,7 @@ public import Batteries.Logic
 public import Mathlib.Algebra.Group.Semigroup
 public import Mathlib.Data.Nat.BinaryRec
 public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Push.Attr
 
 /-!
@@ -695,3 +696,5 @@ initialize_simps_projections CancelMonoid
 initialize_simps_projections AddCancelMonoid
 initialize_simps_projections CancelCommMonoid
 initialize_simps_projections AddCancelCommMonoid
+
+derive_pack_edges

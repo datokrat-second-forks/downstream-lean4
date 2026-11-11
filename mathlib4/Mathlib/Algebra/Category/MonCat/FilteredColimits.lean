@@ -309,8 +309,7 @@ noncomputable instance colimitCommMonoid : CommMonoid.{max v u} (M.{v, u} F) :=
       let g := IsFiltered.rightToMax i j
       rw [colimit_mul_mk_eq.{v, u} (F ⋙ forget₂ CommMonCat MonCat) ⟨i, x⟩ ⟨j, y⟩ k f g,
         colimit_mul_mk_eq.{v, u} (F ⋙ forget₂ CommMonCat MonCat) ⟨j, y⟩ ⟨i, x⟩ k g f]
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp)
+      (dsimp)
       rw [mul_comm] }
 
 /-- The bundled commutative monoid giving the filtered colimit of a diagram. -/

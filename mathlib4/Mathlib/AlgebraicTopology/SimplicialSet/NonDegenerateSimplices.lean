@@ -101,7 +101,7 @@ lemma dim_lt_of_lt {x y : X.N} (h : x < y) : x.dim < y.dim := by
     obtain ⟨d', ⟨y, hy⟩, rfl⟩ := y.mk_surjective
     obtain rfl : d = d' := h'
     obtain rfl := SimplexCategory.eq_id_of_mono f
-    obtain rfl : y = x := by (set_option backward.dsimp.instanceTypes false in simpa using hf)
+    obtain rfl : y = x := by (simpa using hf)
     simp at h
 
 set_option backward.defeqAttrib.useBackward true in
@@ -114,8 +114,7 @@ instance : PartialOrder X.N where
     rw [le_iff_exists_mono] at h
     obtain ⟨f, hf, h⟩ := h
     obtain rfl := SimplexCategory.eq_id_of_mono f
-    (set_option backward.dsimp.instanceTypes false in
-    aesop)
+    (aesop)
 
 lemma subcomplex_injective {x y : X.N} (h : x.subcomplex = y.subcomplex) :
     x = y := by
@@ -168,7 +167,6 @@ lemma subcomplex_le_iff {A B : X.Subcomplex} :
       exact h _ _ hx
   · simpa using! h (N.mk _ x.prop) (by simpa)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The bijection `X.op.N ≃ X.N`. -/
@@ -197,14 +195,13 @@ def orderIsoOfIso {Y : SSet.{u}} (e : X ≅ Y) : X.N ≃o Y.N where
     ((nonDegenerate_iff_of_isIso e.hom x.simplex).mpr x.nonDegenerate)
   invFun y := N.mk (e.inv.app _ y.simplex)
     ((nonDegenerate_iff_of_isIso e.inv y.simplex).mpr y.nonDegenerate)
-  left_inv x := by (set_option backward.dsimp.instanceTypes false in simp [N.ext_iff, S.ext_iff'])
-  right_inv _ := by (set_option backward.dsimp.instanceTypes false in simp [N.ext_iff, S.ext_iff'])
+  left_inv x := by (simp [N.ext_iff, S.ext_iff'])
+  right_inv _ := by (simp [N.ext_iff, S.ext_iff'])
   map_rel_iff' {x y} := by
     dsimp
     simp only [le_iff, Subcomplex.ofSimplex_le_iff, Subcomplex.mem_ofSimplex_obj_iff]
     refine exists_congr (fun f ↦ ?_)
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp at f ⊢)
+    (dsimp at f ⊢)
     rw [← NatTrans.naturality_apply e.hom f.op]
     exact (e.app _).toEquiv.apply_eq_iff_eq
 
@@ -259,8 +256,7 @@ lemma existsUnique_n (x : X.S) : ∃! (y : X.N), y.subcomplex = x.subcomplex :=
         rw [← mono_iff_injective]
         infer_instance
       refine ⟨(section_ f).op, this ?_⟩
-      (set_option backward.dsimp.instanceTypes false in
-      dsimp)
+      (dsimp)
       rw [← comp_apply, ← Functor.map_comp, ← comp_apply, ← Functor.map_comp,
         ← op_comp, ← op_comp, Category.assoc, IsSplitEpi.id, Category.comp_id]
     · simp only [Subcomplex.ofSimplex_le_iff]

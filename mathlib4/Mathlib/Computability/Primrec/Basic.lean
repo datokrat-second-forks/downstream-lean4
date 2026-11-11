@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Algebra.Order.Ring.Nat
 public import Mathlib.Basic.Denumerable
+public import Mathlib.Tactic.PackLens
 
 /-!
 # The primitive recursive functions
@@ -897,3 +898,5 @@ theorem fin_succ {n} : Primrec (@Fin.succ n) :=
   fin_val_iff.1 <| by simp [succ.comp fin_val]
 
 end Primrec
+
+derive_pack_edges

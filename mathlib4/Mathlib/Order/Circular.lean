@@ -6,6 +6,7 @@ Authors: Yaël Dillies
 module
 
 public import Mathlib.Tactic.Order
+public import Mathlib.Tactic.PackLens
 
 import Mathlib.Order.Lattice
 
@@ -440,3 +441,5 @@ instance (α : Type*) [CircularOrder α] : CircularOrder αᵒᵈ where
   btw_total := fun {a b c} => @btw_total α _ c b a
 
 end OrderDual
+
+derive_pack_edges
