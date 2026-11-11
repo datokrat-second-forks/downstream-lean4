@@ -155,8 +155,6 @@ with values in the modules `M.obj X` for all `X`. -/
 def mk (d_map : ∀ ⦃X Y : Dᵒᵖ⦄ (f : X ⟶ Y) (x : R.obj X),
     (d Y).d ((R.map f) x) = (M.map f) ((d X).d x)) : M.Derivation' φ' where
   d {X} := AddMonoidHom.mk' (d X).d (by simp)
-  -- pack-regime workaround (C)
-  d_app {X} a := (d X).d_map a
 
 variable (d_map : ∀ ⦃X Y : Dᵒᵖ⦄ (f : X ⟶ Y) (x : R.obj X),
       (d Y).d ((R.map f) x) = (M.map f) ((d X).d x))

@@ -645,6 +645,26 @@ def mk' (f : M → G) (map_mul : ∀ a b : M, f (a * b) = f a * f b) : M →* G 
 
 end MonoidHom
 
+/-- Pack congruence for `MonoidHom.mk'`: the function follows the packs of the two types. -/
+@[dsimp_congr] theorem MonoidHom.mk'_pack_congr.{ua, va} {M M' : Type ua} {G G' : Type va}
+    [i : MulOneClass M] [i' : MulOneClass M'] [j : Group G] [j' : Group G']
+    (hM : @ClassPack.mk MulOneClass M i = @ClassPack.mk MulOneClass M' i')
+    (hG : @ClassPack.mk Group G j = @ClassPack.mk Group G' j')
+    (f : M → G) (f' : M' → G') (hf : HEq f f') (h : ∀ a b : M, f (a * b) = f a * f b)
+    {h' : ∀ a b : M', f' (a * b) = f' a * f' b} (hh : HEq h h') :
+    HEq (MonoidHom.mk' f h) (MonoidHom.mk' f' h') := by
+  cases hM; cases hG; cases hf; rfl
+
+/-- Pack congruence for `AddMonoidHom.mk'`: the function follows the packs of the two types. -/
+@[dsimp_congr] theorem AddMonoidHom.mk'_pack_congr.{ua, va} {M M' : Type ua} {G G' : Type va}
+    [i : AddZeroClass M] [i' : AddZeroClass M'] [j : AddGroup G] [j' : AddGroup G']
+    (hM : @ClassPack.mk AddZeroClass M i = @ClassPack.mk AddZeroClass M' i')
+    (hG : @ClassPack.mk AddGroup G j = @ClassPack.mk AddGroup G' j')
+    (f : M → G) (f' : M' → G') (hf : HEq f f') (h : ∀ a b : M, f (a + b) = f a + f b)
+    {h' : ∀ a b : M', f' (a + b) = f' a + f' b} (hh : HEq h h') :
+    HEq (AddMonoidHom.mk' f h) (AddMonoidHom.mk' f' h') := by
+  cases hM; cases hG; cases hf; rfl
+
 @[to_additive (attr := simp)]
 theorem OneHom.mk_coe [One M] [One N] (f : OneHom M N) (h1) : OneHom.mk f h1 = f :=
   OneHom.ext fun _ => rfl

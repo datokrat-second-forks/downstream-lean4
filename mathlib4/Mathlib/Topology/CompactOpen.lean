@@ -51,6 +51,16 @@ variable {K : Set X} {U : Set Y}
 instance compactOpen : TopologicalSpace C(X, Y) :=
   .generateFrom <| image2 (fun K U ↦ {f | MapsTo f K U}) {K | IsCompact K} {U | IsOpen U}
 
+/-- Lens: the topology pack of `C(α, β)` follows the topology packs of `α` and `β`. -/
+@[dsimp_congr] theorem compactOpen.packLens.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
+    [j' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
+    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
+    @ClassPack.mk TopologicalSpace C(α, β) compactOpen =
+      @ClassPack.mk TopologicalSpace C(α', β') compactOpen := by
+  cases hα; cases hβ; rfl
+
 /-- Definition of `ContinuousMap.compactOpen`. -/
 theorem compactOpen_eq : @compactOpen X Y _ _ =
     .generateFrom (image2 (fun K U ↦ {f | MapsTo f K U}) {K | IsCompact K} {t | IsOpen t}) :=

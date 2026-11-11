@@ -98,6 +98,16 @@ instance instFunLike : FunLike C(X, Y) X Y where
     FunLikePack.mk C(α, β) α (fun _ => β) = FunLikePack.mk C(α', β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
 
+/-- Pack congruence for the constructor of `C(α, β)`: the function follows the topology packs. -/
+@[dsimp_congr] theorem mk_pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
+    [j' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
+    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j')
+    (f : α → β) (f' : α' → β') (hf : HEq f f') (hc : Continuous f) (hc' : Continuous f')
+    (hh : HEq hc hc') : HEq (ContinuousMap.mk f hc) (ContinuousMap.mk f' hc') := by
+  cases hα; cases hβ; cases hf; rfl
+
 instance instContinuousMapClass : ContinuousMapClass C(X, Y) X Y where
   map_continuous := ContinuousMap.continuous_toFun
 

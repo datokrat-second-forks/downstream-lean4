@@ -209,6 +209,11 @@ def sumEmpty (α β) [IsEmpty β] : α ⊕ β ≃ α where
 theorem sumEmpty_apply_inl {α β} [IsEmpty β] (a : α) : sumEmpty α β (Sum.inl a) = a :=
   rfl
 
+/-- Congruence for `Equiv.sumEmpty`: the equivalence follows its two types. -/
+@[dsimp_congr] theorem sumEmpty_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub} [IsEmpty β]
+    [IsEmpty β'] (hα : α = α') (hβ : β = β') : HEq (sumEmpty α β) (sumEmpty α' β') := by
+  cases hα; cases hβ; rfl
+
 /-- The sum of `IsEmpty` with any type is equivalent to that type. -/
 @[simps! symm_apply]
 def emptySum (α β) [IsEmpty α] : α ⊕ β ≃ β :=

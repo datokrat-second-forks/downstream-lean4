@@ -70,6 +70,13 @@ attribute [inherit_doc Preadditive] Preadditive.homGroup Preadditive.add_comp Pr
 
 attribute [instance_reducible, instance] Preadditive.homGroup
 
+/-- Lens: the group pack of `P ⟶ Q` follows `P` and `Q`. -/
+@[dsimp_congr] theorem Preadditive.homGroup.packLens [Preadditive C] {P P' Q Q' : C}
+    (hP : P = P') (hQ : Q = Q') :
+    @ClassPack.mk AddCommGroup (P ⟶ Q) (Preadditive.homGroup P Q) =
+      @ClassPack.mk AddCommGroup (P' ⟶ Q') (Preadditive.homGroup P' Q') := by
+  cases hP; cases hQ; rfl
+
 -- simp can already prove reassoc version
 attribute [reassoc, simp] Preadditive.add_comp
 
