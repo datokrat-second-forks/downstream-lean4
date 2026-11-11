@@ -183,6 +183,12 @@ class Field (K : Type u) extends CommRing K, DivisionRing K
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toSemifield [Field K] : Semifield K := { ‹Field K› with }
 
+/-- Lens: the semifield pack of a field follows its field pack. -/
+@[dsimp_congr] theorem Field.toSemifield.packLens.{uk} {K K' : Type uk} [i : Field K]
+    [i' : Field K'] (h : @ClassPack.mk Field K i = @ClassPack.mk Field K' i') :
+    @ClassPack.mk Semifield K Field.toSemifield = @ClassPack.mk Semifield K' Field.toSemifield := by
+  cases h; rfl
+
 namespace NNRat
 variable [DivisionSemiring K]
 

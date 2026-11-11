@@ -33,6 +33,31 @@ We also provide an `IsFractionRing (R ⧸ I) I.ResidueField` instance.
 abbrev Ideal.ResidueField : Type _ :=
   IsLocalRing.ResidueField (Localization.AtPrime I)
 
+/-- Lens: the field pack of `I.ResidueField` follows `I`. -/
+@[dsimp_congr] theorem Ideal.ResidueField.field_packLens.{ua} {A : Type ua} [CommRing A]
+    {I I' : Ideal A} [I.IsPrime] [I'.IsPrime] (h : I = I') :
+    @ClassPack.mk Field I.ResidueField (IsLocalRing.ResidueField.field _) =
+      @ClassPack.mk Field I'.ResidueField (IsLocalRing.ResidueField.field _) := by
+  cases h; rfl
+
+/-- Lens: the algebra pack of `I.ResidueField` over a fixed base follows `I`. -/
+@[dsimp_congr] theorem Ideal.ResidueField.algebra_packLens.{ua, ur} {R₀ : Type ur} [CommRing R₀]
+    {A : Type ua} [CommRing A] [Algebra R₀ A] {I I' : Ideal A} [I.IsPrime] [I'.IsPrime]
+    (h : I = I') :
+    @SAlgPack.mk R₀ _ I.ResidueField _ (IsLocalRing.ResidueField.algebra _) =
+      @SAlgPack.mk R₀ _ I'.ResidueField _ (IsLocalRing.ResidueField.algebra _) := by
+  cases h; rfl
+
+/-- Lens: the tower pack of `I.ResidueField` over `R₀ → S₀` follows `I`. -/
+@[dsimp_congr] theorem Ideal.ResidueField.towerPackLens.{ua, ur, us} {R₀ : Type ur} {S₀ : Type us}
+    [CommRing R₀] [CommRing S₀] [Algebra R₀ S₀] {A : Type ua} [CommRing A] [Algebra R₀ A]
+    [Algebra S₀ A] {I I' : Ideal A} [I.IsPrime] [I'.IsPrime] (h : I = I') :
+    @STowerPack.mk R₀ S₀ _ _ _ I.ResidueField _ (IsLocalRing.ResidueField.algebra _)
+        (IsLocalRing.ResidueField.algebra _) =
+      @STowerPack.mk R₀ S₀ _ _ _ I'.ResidueField _ (IsLocalRing.ResidueField.algebra _)
+        (IsLocalRing.ResidueField.algebra _) := by
+  cases h; rfl
+
 /-- If `I = f⁻¹(J)`, then there is a canonical embedding `κ(I) ↪ κ(J)`. -/
 noncomputable
 abbrev Ideal.ResidueField.map (I : Ideal R) [I.IsPrime] (J : Ideal S) [J.IsPrime]
@@ -68,6 +93,15 @@ def Ideal.ResidueField.mapₐ (I : Ideal A) [I.IsPrime] (J : Ideal B) [J.IsPrime
 @[simp] lemma Ideal.ResidueField.mapₐ_apply (I : Ideal A) [I.IsPrime] (J : Ideal B) [J.IsPrime]
     (f : A →ₐ[R] B) (hf : I = J.comap f.toRingHom) (x) :
     Ideal.ResidueField.mapₐ I J f hf x = Ideal.ResidueField.map I J _ hf x := rfl
+
+/-- Pack congruence for `Ideal.ResidueField.mapₐ`: the map follows the target ideal. -/
+@[dsimp_congr] theorem Ideal.ResidueField.mapₐ_pack_congr.{ur, ua, ub} {R : Type ur}
+    {A : Type ua} {B : Type ub} [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
+    (I : Ideal A) [I.IsPrime] {J J' : Ideal B} [J.IsPrime] [J'.IsPrime] (hJ : J = J')
+    (f : A →ₐ[R] B) (hf : I = J.comap f.toRingHom) {hf' : I = J'.comap f.toRingHom}
+    (hh : HEq hf hf') :
+    HEq (Ideal.ResidueField.mapₐ I J f hf) (Ideal.ResidueField.mapₐ I J' f hf') := by
+  cases hJ; rfl
 
 variable {I} in
 @[simp high] -- marked `high` to override the more general `FaithfulSMul.algebraMap_eq_zero_iff`

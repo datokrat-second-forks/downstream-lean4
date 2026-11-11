@@ -120,6 +120,18 @@ structure AlgPack.{ua, va} where
     HEq (algebraMap R A) (algebraMap R' A') := by
   cases h; rfl
 
+/-- Pack: an algebra over both rings of a scalar tower `R → S`. -/
+structure STowerPack.{ur, us, ua} (R : Type ur) (S : Type us) [CommSemiring R] [CommSemiring S]
+    [Algebra R S] where
+  /-- The carrier. -/
+  A : Type ua
+  /-- The ring structure. -/
+  [sr : Semiring A]
+  /-- The algebra structure over `S`. -/
+  [algS : Algebra S A]
+  /-- The algebra structure over `R`. -/
+  [algR : Algebra R A]
+
 theorem Algebra.subsingleton (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] [Algebra R A]
     [Subsingleton R] : Subsingleton A :=
   (algebraMap R A).codomain_trivial

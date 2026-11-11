@@ -162,6 +162,20 @@ def lift (f : A →ₐ[S] C) (g : B →ₐ[R] C) (hfg : ∀ x y, Commute (f x) (
       rw [map_mul, map_mul, (hfg a₂ b₁).mul_mul_mul_comm])
     (show f 1 * g 1 = 1 by rw [map_one, map_one, one_mul])
 
+/-- Pack congruence for `Algebra.TensorProduct.lift`: the map follows the tower pack of the
+target. -/
+@[dsimp_congr] theorem lift_pack_congr.{ur, us, ua, ub, uc}
+    {R : Type ur} {S : Type us} {A : Type ua} {B : Type ub} {C C' : Type uc}
+    [CommSemiring R] [CommSemiring S] [Algebra R S] [Semiring A] [Algebra R A] [Algebra S A]
+    [IsScalarTower R S A] [Semiring B] [Algebra R B] [Semiring C] [Semiring C'] [Algebra S C]
+    [Algebra S C'] [Algebra R C] [Algebra R C'] [IsScalarTower R S C] [IsScalarTower R S C']
+    (h : STowerPack.mk (R := R) (S := S) C = STowerPack.mk C')
+    (f : A →ₐ[S] C) (f' : A →ₐ[S] C') (hf : HEq f f') (g : B →ₐ[R] C) (g' : B →ₐ[R] C')
+    (hg : HEq g g') (hfg : ∀ x y, Commute (f x) (g y)) {hfg' : ∀ x y, Commute (f' x) (g' y)}
+    (hh : HEq hfg hfg') :
+    HEq (lift f g hfg) (lift f' g' hfg') := by
+  cases h; cases hf; cases hg; rfl
+
 @[simp]
 theorem lift_tmul (f : A →ₐ[S] C) (g : B →ₐ[R] C) (hfg : ∀ x y, Commute (f x) (g y))
     (a : A) (b : B) :

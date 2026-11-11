@@ -160,8 +160,7 @@ noncomputable def PrimeSpectrum.preimageEquivFiber (p : PrimeSpectrum R) :
     have := @PrimeSpectrum.isPrime -- times out if removed
     rw [← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ r), iff_comm,
       ← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ r), ← Algebra.smul_def, e]
-    -- pack-regime workaround (C)
-    · set_option backward.dsimp.instanceTypes false in simp
+    · simp
     · rw [← Ideal.mem_comap, ← PrimeSpectrum.comap_asIdeal]
       convert hr
       exact (residueField_comap _).le ⟨q.comap (algebraMap _ _), rfl⟩

@@ -126,6 +126,15 @@ instance algHomClass : AlgHomClass (A →ₐ[R] B) R A B where
   map_one f := f.map_one'
   commutes f := f.commutes'
 
+/-- Pack congruence for the coercion of `A →ₐ[R] B` to `A →+* B`. -/
+@[dsimp_congr] theorem toRingHom_coe_pack_congr.{ur, ua, ub} {R : Type ur} [CommSemiring R]
+    {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B] [Semiring B']
+    [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (f : A →ₐ[R] B) (f' : A' →ₐ[R] B') (hf : HEq f f') :
+    HEq (f : A →+* B) (f' : A' →+* B') := by
+  cases hA; cases hB; cases hf; rfl
+
 @[simp] lemma _root_.AlgHomClass.linearMapOfClass_ofClass {R A B F : Type*} [CommSemiring R]
     [Semiring A] [Semiring B] [Algebra R A] [Algebra R B] [FunLike F A B] [AlgHomClass F R A B]
     (f : F) : (ofClass f : A →ₗ[R] B) = f := rfl
@@ -434,6 +443,14 @@ theorem coe_toAlgHom : ↑(toAlgHom R S A) = algebraMap S A :=
 
 @[simp]
 theorem coe_toAlgHom' : (toAlgHom R S A : S → A) = algebraMap S A := rfl
+
+/-- Pack congruence for `IsScalarTower.toAlgHom`: the map follows the tower pack of the top ring. -/
+@[dsimp_congr] theorem toAlgHom_pack_congr.{ur, us, ua} (R : Type ur) (S : Type us)
+    {A A' : Type ua} [CommSemiring R] [CommSemiring S] [Algebra R S] [Semiring A] [Semiring A']
+    [Algebra S A] [Algebra S A'] [Algebra R A] [Algebra R A'] [IsScalarTower R S A]
+    [IsScalarTower R S A'] (h : STowerPack.mk (R := R) (S := S) A = STowerPack.mk A') :
+    HEq (toAlgHom R S A) (toAlgHom R S A') := by
+  cases h; rfl
 
 end IsScalarTower
 
