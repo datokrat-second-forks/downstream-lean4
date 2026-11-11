@@ -64,6 +64,28 @@ instance mulOneClass [∀ i, MulOneClass (f i)] : MulOneClass (∀ i, f i) where
   one_mul := by intros; ext; exact one_mul _
   mul_one := by intros; ext; exact mul_one _
 
+/-- Lens: the `MulOneClass` pack of `∀ a, f a` follows the packs of the family. -/
+@[dsimp_congr] theorem mulOneClass.packLens {I : Type u} {f f' : I → Type v₁}
+    [i : ∀ a, MulOneClass (f a)] [i' : ∀ a, MulOneClass (f' a)]
+    (h : ∀ a, @ClassPack.mk MulOneClass (f a) (i a) = @ClassPack.mk MulOneClass (f' a) (i' a)) :
+    @ClassPack.mk MulOneClass (∀ a, f a) Pi.mulOneClass =
+      @ClassPack.mk MulOneClass (∀ a, f' a) Pi.mulOneClass := by
+  have hf : f = f' := funext fun a => congrArg ClassPack.α (h a)
+  subst hf
+  have hi : i = i' := funext fun a => by injection h a
+  subst hi; rfl
+
+/-- Lens: the `AddZeroClass` pack of `∀ a, f a` follows the packs of the family. -/
+@[dsimp_congr] theorem addZeroClass.packLens {I : Type u} {f f' : I → Type v₁}
+    [i : ∀ a, AddZeroClass (f a)] [i' : ∀ a, AddZeroClass (f' a)]
+    (h : ∀ a, @ClassPack.mk AddZeroClass (f a) (i a) = @ClassPack.mk AddZeroClass (f' a) (i' a)) :
+    @ClassPack.mk AddZeroClass (∀ a, f a) Pi.addZeroClass =
+      @ClassPack.mk AddZeroClass (∀ a, f' a) Pi.addZeroClass := by
+  have hf : f = f' := funext fun a => congrArg ClassPack.α (h a)
+  subst hf
+  have hi : i = i' := funext fun a => by injection h a
+  subst hi; rfl
+
 @[to_additive]
 instance [∀ i, MulOneClass (f i)] [∀ i, IsDedekindFiniteMonoid (f i)] :
     IsDedekindFiniteMonoid (∀ i, f i) where

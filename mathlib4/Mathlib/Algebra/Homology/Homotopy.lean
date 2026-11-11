@@ -321,8 +321,7 @@ theorem map_nullHomotopicMap {W : Type*} [Category* W] [Preadditive W] (G : V �
     (G.mapHomologicalComplex c).map (nullHomotopicMap hom) =
       nullHomotopicMap (fun i j => by exact G.map (hom i j)) := by
   ext i
-  -- pack-regime workaround (C)
-  dsimp [nullHomotopicMap, dNext, prevD, -Functor.mapHomologicalComplex_obj_X]
+  dsimp [nullHomotopicMap, dNext, prevD]
   simp only [G.map_comp, Functor.map_add]
 
 /-- Compatibility of `nullHomotopicMap'` with the application of additive functors -/
@@ -864,8 +863,7 @@ def Functor.mapHomotopy (F : V ⥤ W) [F.Additive] {f g : C ⟶ D} (h : Homotopy
   zero i j w := by dsimp; rw [h.zero i j w, F.map_zero]
   comm i := by
     have H := h.comm i
-    -- pack-regime workaround (C)
-    dsimp [dNext, prevD, -Functor.mapHomologicalComplex_obj_X] at H ⊢
+    dsimp [dNext, prevD] at H ⊢
     simp [H]
 
 /-- An additive functor preserves homotopy equivalences. -/
