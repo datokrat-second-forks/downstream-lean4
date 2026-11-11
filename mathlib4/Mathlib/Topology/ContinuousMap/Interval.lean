@@ -44,10 +44,14 @@ def IccExtendCM : C(C(Icc a b, E), C(α, E)) where
   toFun f := f.comp projIccCM
   continuous_toFun := continuous_precomp projIccCM
 
+theorem projIccCM_apply (x : α) : (projIccCM : C(α, Icc a b)) x = projIcc a b Fact.out x := rfl
+
+theorem IccExtendCM_apply (f : C(Icc a b, E)) (x : α) : IccExtendCM f x = f (projIccCM x) := rfl
+
 @[simp]
 theorem IccExtendCM_of_mem {f : C(Icc a b, E)} {x : α} (hx : x ∈ Icc a b) :
     IccExtendCM f x = f ⟨x, hx⟩ := by
-  simp [IccExtendCM, projIccCM, projIcc, hx.1, hx.2]
+  simp [IccExtendCM_apply, projIccCM_apply, projIcc, hx.1, hx.2]
 
 /-- The concatenation of two continuous maps defined on adjacent intervals. If the values of the
 functions on the common bound do not agree, this is defined as an arbitrarily chosen constant
@@ -59,7 +63,7 @@ noncomputable def concat (f : C(Icc a b, E)) (g : C(Icc b c, E)) :
     suffices Continuous h from ⟨fun t => h t, by fun_prop⟩
     apply Continuous.if_le (by fun_prop) (by fun_prop) continuous_id continuous_const
     rintro x rfl
-    simpa [IccExtendCM, projIccCM]
+    simpa [IccExtendCM_apply, projIccCM_apply]
   · exact .const _ (f ⊥) -- junk value
 
 variable {f : C(Icc a b, E)} {g : C(Icc b c, E)}
@@ -67,15 +71,16 @@ variable {f : C(Icc a b, E)} {g : C(Icc b c, E)}
 theorem concat_comp_IccInclusionLeft (hb : f ⊤ = g ⊥) :
     (concat f g).comp IccInclusionLeft = f := by
   ext x
-  simp [concat, IccExtendCM, hb, IccInclusionLeft, projIccCM, inclusion, x.2.2]
+  simp [concat, IccExtendCM_apply, hb, IccInclusionLeft, projIccCM_apply, inclusion, x.2.2]
 
 theorem concat_comp_IccInclusionRight (hb : f ⊤ = g ⊥) :
     (concat f g).comp IccInclusionRight = g := by
   ext ⟨x, hx⟩
   obtain rfl | hxb := eq_or_ne x b
-  · simpa [concat, IccInclusionRight, IccExtendCM, projIccCM, inclusion, hb]
+  · simpa [concat, IccInclusionRight, IccExtendCM_apply, projIccCM_apply, inclusion, hb]
   · have h : ¬ x ≤ b := lt_of_le_of_ne hx.1 (Ne.symm hxb) |>.not_ge
-    simp [concat, hb, IccInclusionRight, h, IccExtendCM, projIccCM, projIcc, inclusion, hx.2, hx.1]
+    simp [concat, hb, IccInclusionRight, h, IccExtendCM_apply, projIccCM_apply, projIcc, inclusion,
+      hx.2, hx.1]
 
 @[simp]
 theorem concat_left (hb : f ⊤ = g ⊥) {t : Icc a c} (ht : t ≤ b) :
@@ -106,21 +111,21 @@ theorem tendsto_concat {ι : Type*} {p : Filter ι} {F : ι → C(Icc a b, E)} {
     rw [← concat_comp_IccInclusionLeft hfg']
     apply hfgU.comp
     rintro x ⟨y, ⟨⟨z, hz⟩, ⟨h1, (h2 : z ≤ b)⟩, rfl⟩, rfl⟩
-    simpa [projIccCM, projIcc, h2, hz.1] using! h1
+    simpa [projIccCM_apply, projIcc, h2, hz.1] using! h1
   have hgU : MapsTo g K₂ U := by
     rw [← concat_comp_IccInclusionRight hfg']
     apply hfgU.comp
     rintro x ⟨y, ⟨⟨z, hz⟩, ⟨h1, (h2 : b ≤ z)⟩, rfl⟩, rfl⟩
-    simpa [projIccCM, projIcc, h2, hz.2] using! h1
+    simpa [projIccCM_apply, projIcc, h2, hz.2] using! h1
   filter_upwards [hf K₁ hK₁ U hU hfU, hg K₂ hK₂ U hU hgU, hfg] with i hf hg hfg x hx
   by_cases! hxb : x ≤ b
   · rw [concat_left hfg hxb]
     refine hf ⟨x, ⟨x, ⟨hx, hxb⟩, rfl⟩, ?_⟩
-    simp [projIccCM, projIcc, hxb, x.2.1]
+    simp [projIccCM_apply, projIcc, hxb, x.2.1]
   · replace hxb : b ≤ x := hxb.le
     rw [concat_right hfg hxb]
     refine hg ⟨x, ⟨x, ⟨hx, hxb⟩, rfl⟩, ?_⟩
-    simp [projIccCM, projIcc, hxb, x.2.2]
+    simp [projIccCM_apply, projIcc, hxb, x.2.2]
 
 /-- The concatenation of compatible pairs of continuous maps on adjacent intervals, defined as a
 `ContinuousMap` on a subtype of the product. -/
