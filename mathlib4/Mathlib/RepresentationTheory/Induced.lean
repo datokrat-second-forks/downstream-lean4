@@ -174,7 +174,6 @@ variable {G H : Type u} [Group G] [Group H] (φ : G →* H) (A : Rep k G) (B : R
 
 open Representation
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a group hom `φ : G →* H`, `A : Rep k G` and `B : Rep k H`, this is the `k`-linear map
@@ -202,7 +201,6 @@ lemma coinvariantsTensorIndHom_mk_tmul_indVMk (h : H) (x : A) (y : B) :
       coinvariantsTensorMk _ _ x (B.ρ h y) := by
   simp [coinvariantsTensorIndHom, coinvariantsTensorMk]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a group hom `φ : G →* H`, `A : Rep k G` and `B : Rep k H`, this is the `k`-linear map
