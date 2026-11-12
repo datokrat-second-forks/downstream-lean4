@@ -93,6 +93,12 @@ instance instLattice : Lattice (Fin n) := inferInstance
 instance instHeytingAlgebra [NeZero n] : HeytingAlgebra (Fin n) := inferInstance
 instance instCoheytingAlgebra [NeZero n] : CoheytingAlgebra (Fin n) := inferInstance
 
+/-- Lens: the `PartialOrder` pack of `Fin n` follows `n`. -/
+@[dsimp_congr] theorem _root_.Fin.instPartialOrder.packLens {n n' : ℕ} (h : n = n') :
+    @ClassPack.mk PartialOrder (Fin n) Fin.instPartialOrder =
+      @ClassPack.mk PartialOrder (Fin n') Fin.instPartialOrder := by
+  cases h; rfl
+
 /-! ### Miscellaneous lemmas -/
 
 instance [NeZero n] : IsBotZeroClass (Fin n) where

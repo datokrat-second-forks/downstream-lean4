@@ -160,11 +160,11 @@ theorem tprod_tprod (l : List δ) (μ : ∀ i, Measure (X i)) [∀ i, SigmaFinit
     (s : ∀ i, Set (X i)) :
     Measure.tprod l μ (Set.tprod l s) = (l.map fun i => (μ i) (s i)).prod := by
   induction l with
-  | nil => (set_option backward.dsimp.instanceTypes false in simp)
+  | nil => simp
   | cons a l ih =>
     rw [tprod_cons, Set.tprod]
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [foldr_cons, prod_cons, map_cons])
+    -- pack-regime: adapted proof (R43)
+    simp only [foldr_cons, prod_cons, map_cons, MeasurableSpace.TProd.classPack_cons]
     rw [prod_prod, ih]
 
 end Tprod

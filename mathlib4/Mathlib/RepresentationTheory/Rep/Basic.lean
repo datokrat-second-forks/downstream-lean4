@@ -62,6 +62,12 @@ attribute [coe] V
     SModPack.mk (R := k) X = SModPack.mk X' := by
   cases h; rfl
 
+/-- Lens: the additive group pack of the carrier of `X : Rep k G` follows `X`. -/
+@[dsimp_congr] theorem _root_.Rep.pack_congr.{wa, uk, uG} {k : Type uk} {G : Type uG} [Semiring k]
+    [Monoid G] {X X' : Rep.{wa} k G} (h : X = X') :
+    @ClassPack.mk AddCommGroup X X.hV1 = @ClassPack.mk AddCommGroup X' X'.hV1 := by
+  cases h; rfl
+
 /-- Lens: the coercion pack of the intertwining maps `X.ρ.IntertwiningMap Y.ρ` between objects
 of `Rep k G` follows `X` and `Y`. -/
 @[dsimp_congr] theorem _root_.Rep.intertwiningMap_funLikePack_congr.{wa, uk, uG} {k : Type uk}
@@ -806,6 +812,12 @@ protected noncomputable def ihom : Rep k G ⥤ Rep k G where
     (A B : Rep.{ua} k G) :
     (Rep.ihom A).obj B = Rep.of (Representation.linHom A.ρ B.ρ) := rfl
 
+/-- Pack root lemma: the module pack of `(Rep.ihom A).obj B` is the pack of `A →ₗ[k] B`. -/
+@[simp] theorem _root_.Rep.ihom_obj_smodPack.{uk, uG, ua} {k : Type uk} {G : Type uG} [CommRing k]
+    [Group G] (A B : Rep.{ua} k G) :
+    SModPack.mk (R := k) ((Rep.ihom A).obj B) = SModPack.mk (R := k) (A →ₗ[k] B) :=
+  rfl
+
 @[simp] theorem ihom_obj_ρ_apply {A B : Rep k G} (g : G) (x : A →ₗ[k] B) :
     -- Hint to put this lemma into `simp`-normal form.
     DFunLike.coe (F := (Representation k G (↑A.V →ₗ[k] ↑B.V)))
@@ -828,8 +840,7 @@ def tensorHomEquiv (A B C : Rep.{u} k G) : (A ⊗ B ⟶ C) ≃ (B ⟶ (Rep.ihom 
     simp [this]⟩
   invFun f := Rep.ofHom ⟨TensorProduct.uncurry (.id k) _ _ _
     f.hom.toLinearMap.flip, fun g ↦ TensorProduct.ext' fun x y => by
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa using LinearMap.ext_iff.1 (hom_comm_apply f g y) (A.ρ g x))⟩
   left_inv _ := Rep.Hom.ext <| Representation.IntertwiningMap.ext <|
     TensorProduct.ext' fun _ _ => rfl

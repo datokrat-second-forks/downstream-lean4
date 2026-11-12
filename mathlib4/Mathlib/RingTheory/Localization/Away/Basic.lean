@@ -58,6 +58,28 @@ commutative ring, field of fractions
         OreLocalization.instAlgebra := by
   cases hx; rfl
 
+/-- Lens: the `Semiring` pack of `Localization.Away x` follows `x`. -/
+@[dsimp_congr] theorem Localization.Away.semiringPackLens.{ua} {S : Type ua} [CommSemiring S]
+    {x x' : S} (hx : x = x') :
+    @ClassPack.mk Semiring (Localization.Away x) OreLocalization.instSemiring =
+      @ClassPack.mk Semiring (Localization.Away x') OreLocalization.instSemiring := by
+  cases hx; rfl
+
+/-- Lens: the algebra pack of `Localization.Away x` over a base of `S` follows `x : S`. -/
+@[dsimp_congr] theorem Localization.Away.algPackLens_of_algebra.{ur, ua} {R : Type ur}
+    [CommSemiring R] {S : Type ua} [CommSemiring S] [Algebra R S] {x x' : S} (hx : x = x') :
+    @AlgPack.mk R (Localization.Away x) _ OreLocalization.instSemiring OreLocalization.instAlgebra =
+      @AlgPack.mk R (Localization.Away x') _ OreLocalization.instSemiring
+        OreLocalization.instAlgebra := by
+  cases hx; rfl
+
+/-- Lens: the `CommSemiring` pack of `Localization.Away x` follows `x`. -/
+@[dsimp_congr] theorem Localization.Away.commSemiringPackLens.{ua} {S : Type ua} [CommSemiring S]
+    {x x' : S} (hx : x = x') :
+    @ClassPack.mk CommSemiring (Localization.Away x) OreLocalization.instCommSemiring =
+      @ClassPack.mk CommSemiring (Localization.Away x') OreLocalization.instCommSemiring := by
+  cases hx; rfl
+
 section CommSemiring
 
 variable {R : Type*} [CommSemiring R] (M : Submonoid R) {S : Type*} [CommSemiring S]

@@ -397,9 +397,8 @@ lemma Cotangent.map_toInfinitesimal_bijective (P : Extension.{u} R S) :
       simp only [map_mk, Hom.toAlgHom_apply, val_mk, val_zero, Ideal.toCotangent_eq_zero,
         Extension.ker_infinitesimal] at hx
       rw [Ideal.cotangentIdeal_square] at hx
-      (set_option backward.dsimp.instanceTypes false in
-      simpa only [toInfinitesimal, Ideal.mem_bot, infinitesimal,
-        Ideal.Quotient.eq_zero_iff_mem] using hx)
+      -- pack-regime: adapted proof (R43)
+      exact Ideal.Quotient.eq_zero_iff_mem.mp (Ideal.mem_bot.mp hx)
     ext
     simpa [Ideal.toCotangent_eq_zero]
   · intro x

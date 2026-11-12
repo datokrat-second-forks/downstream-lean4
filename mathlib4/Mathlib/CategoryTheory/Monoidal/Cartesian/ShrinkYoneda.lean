@@ -81,7 +81,6 @@ lemma shrinkYonedaMon_map_app_shrinkYonedaObjObjEquiv_symm
       shrinkYonedaMonObjObjEquiv.symm (f ≫ g.hom) := by
   simp [shrinkYonedaMon, shrinkYonedaMonObjObjEquiv]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -98,7 +97,6 @@ noncomputable def shrinkYonedaGrpObjObjEquiv {M : Grp C} {Y : Cᵒᵖ} :
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   Shrink.mulEquiv)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -113,7 +111,6 @@ lemma shrinkYonedaGrpObjObjEquiv_symm_comp {M : Grp C} {Y Y' : C} (g : Y' ⟶ Y)
     (shrinkYonedaGrp.obj _).map g.op (shrinkYonedaGrpObjObjEquiv.symm f) :=
   (shrinkYonedaGrp_obj_map_shrinkYonedaGrpObjObjEquiv_symm g.op f).symm
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

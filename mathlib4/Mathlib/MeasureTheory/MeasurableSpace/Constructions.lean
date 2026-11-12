@@ -769,6 +769,21 @@ instance TProd.instMeasurableSpace (X : δ → Type*) [∀ i, MeasurableSpace (X
   | [] => PUnit.instMeasurableSpace
   | _::is => @Prod.instMeasurableSpace _ _ _ (TProd.instMeasurableSpace X is)
 
+/-- Pack root lemma: the measurable space of `TProd X []` is the one of `PUnit`. -/
+@[simp] theorem _root_.MeasurableSpace.TProd.classPack_nil.{ud, ux} {δ : Type ud}
+    (X : δ → Type ux) [∀ i, MeasurableSpace (X i)] :
+    @ClassPack.mk MeasurableSpace (List.TProd X []) (TProd.instMeasurableSpace X []) =
+      @ClassPack.mk MeasurableSpace PUnit PUnit.instMeasurableSpace :=
+  rfl
+
+/-- Pack root lemma: the measurable space of `TProd X (a :: l)` is the product one. -/
+@[simp] theorem _root_.MeasurableSpace.TProd.classPack_cons.{ud, ux} {δ : Type ud}
+    (X : δ → Type ux) [∀ i, MeasurableSpace (X i)] (a : δ) (l : List δ) :
+    @ClassPack.mk MeasurableSpace (List.TProd X (a :: l)) (TProd.instMeasurableSpace X (a :: l)) =
+      @ClassPack.mk MeasurableSpace (X a × List.TProd X l)
+        (@Prod.instMeasurableSpace _ _ _ (TProd.instMeasurableSpace X l)) :=
+  rfl
+
 section TProd
 
 open List

@@ -293,6 +293,14 @@ variable (p)
 
 instance addCommMonoid : AddCommMonoid p := AddSubmonoidClass.toAddCommMonoid p
 
+/-- Lens: the additive monoid pack of a submodule follows the submodule. -/
+@[dsimp_congr] theorem _root_.Submodule.addCommMonoid.packLens.{ur, um} {R : Type ur}
+    {M : Type um} [Semiring R] [AddCommMonoid M] [Module R M] {p p' : Submodule R M}
+    (h : p = p') :
+    @ClassPack.mk AddCommMonoid p p.addCommMonoid =
+      @ClassPack.mk AddCommMonoid p' p'.addCommMonoid := by
+  cases h; rfl
+
 instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] :
     Module S p := fast_instance%
   { (show MulAction S p from p.toSubMulAction.mulAction') with

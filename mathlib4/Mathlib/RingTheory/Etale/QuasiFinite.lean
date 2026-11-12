@@ -134,8 +134,7 @@ lemma Localization.exists_finite_awayMapₐ_of_surjective_awayMapₐ
     (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     convert! h₁.trans _ _ (RingHom.IsIntegral.of_finite (.of_surjective _ h₂)) using 1)
     refine IsLocalization.ringHom_ext (.powers r) (RingHom.ext fun x ↦ ?_)
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simp [Localization.awayMap, IsLocalization.Away.map, ← IsScalarTower.algebraMap_apply R T])
   · algebraize [(Localization.awayMapₐ (Algebra.ofId R T) r).toRingHom]
     have := IsScalarTower.of_algebraMap_eq'
@@ -161,8 +160,7 @@ lemma Algebra.exists_notMem_and_isIntegral_forall_mem_of_ne_of_liesOver
   obtain ⟨s₃, hs₃⟩ := hs₂.2 (algebraMap _ _ s₁)
   obtain ⟨s₃, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.exists_mk'_eq (.powers s₂) s₃
   obtain ⟨m, hm⟩ : ∃ m, ↑s₂ ^ m * ↑s₃ = ↑s₂ ^ m * (s₁ * ↑s₂ ^ n) := by
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     simpa [IsLocalization.Away.map, IsLocalization.map_mk', IsLocalization.mk'_eq_iff_eq_mul,
       ← map_mul, ← map_pow, IsLocalization.eq_iff_exists (.powers s₂.1),
       Submonoid.mem_powers_iff] using! hs₃)
@@ -195,8 +193,7 @@ lemma Algebra.exists_notMem_and_isIntegral_forall_mem_of_ne_of_liesOver
       ((integralClosure R S).val.toRingHom s₂)) s₁) ∈ q's := by
     simpa using! this
   rw [← hs₃, ← Ideal.IsPrime.mul_mem_left_iff (x := algebraMap _ _ (s₂ ^ n))] at this
-  · (set_option backward.dsimp.instanceTypes false in
-    dsimp [Localization.awayMap, IsLocalization.Away.map] at this)
+  · dsimp [Localization.awayMap, IsLocalization.Away.map] at this
     (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     rw [IsLocalization.map_mk', ← e.symm.commutes, ← map_mul,
       IsScalarTower.algebraMap_eq _ S _] at this)

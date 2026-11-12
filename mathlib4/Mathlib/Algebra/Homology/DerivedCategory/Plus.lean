@@ -72,9 +72,9 @@ noncomputable def Qh : HomotopyCategory.Plus C ⥤ Plus C :=
 noncomputable instance : (Qh : _ ⥤ Plus C).CommShift ℤ :=
   ObjectProperty.commShiftLift ..
 
-instance : (Qh : _ ⥤ Plus C).IsTriangulated := by
-  (set_option backward.dsimp.instanceTypes false in dsimp only [Qh])
-  infer_instance
+instance : (Qh : _ ⥤ Plus C).IsTriangulated :=
+  -- pack-regime: adapted proof (R43)
+  inferInstanceAs (t.plus.lift (HomotopyCategory.Plus.ι _ ⋙ DerivedCategory.Qh) _).IsTriangulated
 
 set_option backward.isDefEq.respectTransparency false in
 lemma Qh_map_bijective_of_isKInjective (K L : HomotopyCategory.Plus C)

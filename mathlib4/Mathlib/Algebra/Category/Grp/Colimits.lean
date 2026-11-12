@@ -192,7 +192,13 @@ def toCocone [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A) :
   pt := ↧A
   ι.app j := ofHom <| f.comp (Quot.ι F j)
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the additive group on the point of `toCocone F f` is the one of `A`. -/
+@[simp] theorem toCocone_pt_classPack [DecidableEq J] {A : Type w} [i : AddCommGroup A]
+    (f : Quot F →+ A) :
+    @ClassPack.mk AddCommGroup (toCocone F f).pt (toCocone F f).pt.str =
+      @ClassPack.mk AddCommGroup A i :=
+  rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma Quot.desc_toCocone_desc [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A)
@@ -208,8 +214,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma Quot.desc_toCocone_desc_app [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A)
     (hc : IsColimit c) (x : Quot F) : hc.desc (toCocone F f) (Quot.desc F c x) = f x := by
   conv_rhs => rw [← Quot.desc_toCocone_desc F c f hc]
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp)
 
 /--

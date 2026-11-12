@@ -159,9 +159,9 @@ theorem monomial_def [DecidableEq σ] (n : σ →₀ ℕ) :
 set_option backward.isDefEq.respectTransparency false in
 theorem coeff_monomial [DecidableEq σ] (m n : σ →₀ ℕ) (a : R) :
     coeff m (monomial n a) = if m = n then a else 0 := by
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp only [coeff, MvPowerSeries])
-  rw [monomial_def, LinearMap.proj_apply (i := m), LinearMap.single_apply, Pi.single_apply]
+  -- pack-regime: adapted proof (R43)
+  dsimp only [coeff]
+  rw [monomial_def]; exact Pi.single_apply n a m
 
 @[simp]
 theorem coeff_monomial_same (n : σ →₀ ℕ) (a : R) : coeff n (monomial n a) = a := by

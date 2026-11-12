@@ -116,6 +116,30 @@ instance [Group α] : Group (Shrink.{v} α) :=
     HEq (Shrink.mulEquiv.{va} (α := α)) (Shrink.mulEquiv.{va} (α := α')) := by
   cases h; rfl
 
+/-- Lens: the `Mul` pack of `Shrink α` follows the `Mul` pack of `α`. -/
+@[dsimp_congr] theorem _root_.Shrink.instMul.packLens.{va, ua} {α α' : Type ua}
+    [s : Small.{va} α] [s' : Small.{va} α'] [i : Mul α] [i' : Mul α']
+    (h : @ClassPack.mk Mul α i = @ClassPack.mk Mul α' i') :
+    @ClassPack.mk Mul (Shrink.{va} α) Shrink.instMul =
+      @ClassPack.mk Mul (Shrink.{va} α') Shrink.instMul := by
+  cases h; rfl
+
+/-- Lens: the `MulOneClass` pack of `Shrink α` follows the `MulOneClass` pack of `α`. -/
+@[dsimp_congr] theorem _root_.Shrink.instMulOneClass.packLens.{va, ua} {α α' : Type ua}
+    [s : Small.{va} α] [s' : Small.{va} α'] [i : MulOneClass α] [i' : MulOneClass α']
+    (h : @ClassPack.mk MulOneClass α i = @ClassPack.mk MulOneClass α' i') :
+    @ClassPack.mk MulOneClass (Shrink.{va} α) Shrink.instMulOneClass =
+      @ClassPack.mk MulOneClass (Shrink.{va} α') Shrink.instMulOneClass := by
+  cases h; rfl
+
+/-- Lens: the `Group` pack of `Shrink α` follows the `Group` pack of `α`. -/
+@[dsimp_congr] theorem _root_.Shrink.instGroup.packLens.{va, ua} {α α' : Type ua}
+    [s : Small.{va} α] [s' : Small.{va} α'] [i : Group α] [i' : Group α']
+    (h : @ClassPack.mk Group α i = @ClassPack.mk Group α' i') :
+    @ClassPack.mk Group (Shrink.{va} α) Shrink.instGroup =
+      @ClassPack.mk Group (Shrink.{va} α') Shrink.instGroup := by
+  cases h; rfl
+
 @[to_additive]
 instance [CommGroup α] : CommGroup (Shrink.{v} α) :=
   fast_instance% (equivShrink α).symm.commGroup

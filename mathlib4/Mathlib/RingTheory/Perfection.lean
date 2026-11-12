@@ -652,13 +652,15 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_frobenius (n : ℕ) (x : PreTilt O p) :
     (coeff (n + 1) (frobenius _ p x)) = coeff n x := by
-  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
+  -- pack-regime: adapted proof (R43)
+  exact Perfection.coeff_frobenius x n
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_iterate_frobenius (m n : ℕ) (x : PreTilt O p) :
     (coeff (m + n) ((frobenius _ p)^[n] x)) = coeff m x := by
-  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
+  -- pack-regime: adapted proof (R43)
+  exact Perfection.coeff_iterate_frobenius x m n
 
 /-- A variant of `PreTilt.coeff_iterate_frobenius` using `m-n` and `n`. -/
 theorem coeff_iterate_frobenius' (x : PreTilt O p) {m n : ℕ} (hmn : m ≤ n) :
@@ -673,13 +675,16 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_frobeniusEquiv_symm (n : ℕ) (x : PreTilt O p) :
     (coeff n (((frobeniusEquiv _ p).symm) x)) = coeff (n + 1) x := by
-  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
+  -- pack-regime: adapted proof (R43)
+  rw [← coeff_frobenius, frobenius_apply_frobeniusEquiv_symm]
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem coeff_iterate_frobeniusEquiv_symm (m n : ℕ) (x : PreTilt O p) :
     (coeff m (((frobeniusEquiv _ p).symm^[n]) x)) = coeff (m + n) x := by
-  (set_option backward.dsimp.instanceTypes false in simp [PreTilt, coeff])
+  -- pack-regime: adapted proof (R43)
+  rw [← coeff_iterate_frobenius m n, (Function.RightInverse.iterate
+    (frobenius_apply_frobeniusEquiv_symm (PreTilt O p) p) n) x]
 
 end coeff
 

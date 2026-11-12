@@ -601,6 +601,17 @@ We send `z : S` to `algebraMap P Q (g x) * (algebraMap P Q (g y))⁻¹`, where
 noncomputable def map (g : R →+* P) (hy : M ≤ T.comap g) : S →+* Q :=
   lift (M := M) (g := (algebraMap P Q).comp g) fun y => map_units _ ⟨g y, hy y.2⟩
 
+/-- Pack congruence for `IsLocalization.map` in the target localization. -/
+@[dsimp_congr] theorem _root_.IsLocalization.map_pack_congr.{ur, us, up, uq} {R : Type ur}
+    [CommSemiring R] {M : Submonoid R} {S : Type us} [CommSemiring S] [Algebra R S]
+    [IsLocalization M S] {P : Type up} [CommSemiring P] {T T' : Submonoid P} (hT : T = T')
+    {Q Q' : Type uq} [CommSemiring Q] [CommSemiring Q'] [Algebra P Q] [Algebra P Q']
+    (hQ : CSAlgPack.mk (R := P) Q = CSAlgPack.mk Q')
+    (hl : IsLocalization T Q) {hl' : IsLocalization T' Q'} (hhl : HEq hl hl')
+    (g : R →+* P) (hy : M ≤ T.comap g) {hy' : M ≤ T'.comap g} (hhy : HEq hy hy') :
+    HEq (IsLocalization.map (S := S) Q g hy) (IsLocalization.map (S := S) Q' g hy') := by
+  cases hT; cases hQ; cases hhl; cases hhy; rfl
+
 end
 
 section

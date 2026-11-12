@@ -68,6 +68,21 @@ def trivial : Representation k G V :=
     HEq (Representation.trivial k G V) (Representation.trivial k G V') := by
   cases h; rfl
 
+/-- Pack congruence for the type `Representation k G V`: it follows the module pack of `V`. -/
+@[dsimp_congr] theorem _root_.Representation.pack_congr.{uk, uG, uV} {k : Type uk} {G : Type uG}
+    [Semiring k] [Monoid G] {V V' : Type uV} [AddCommMonoid V] [AddCommMonoid V'] [Module k V]
+    [Module k V'] (h : SModPack.mk (R := k) V = SModPack.mk V') :
+    Representation k G V = Representation k G V' := by
+  cases h; rfl
+
+/-- Lens: the coercion pack of `Representation k G V` follows the module pack of `V`. -/
+@[dsimp_congr] theorem _root_.Representation.funLikePack_congr.{uk, uG, uV} {k : Type uk}
+    {G : Type uG} [Semiring k] [Monoid G] {V V' : Type uV} [AddCommMonoid V] [AddCommMonoid V']
+    [Module k V] [Module k V'] (h : SModPack.mk (R := k) V = SModPack.mk V') :
+    FunLikePack.mk (Representation k G V) G (fun _ => V →ₗ[k] V) =
+      FunLikePack.mk (Representation k G V') G (fun _ => V' →ₗ[k] V') := by
+  cases h; rfl
+
 variable {G V}
 
 @[simp]

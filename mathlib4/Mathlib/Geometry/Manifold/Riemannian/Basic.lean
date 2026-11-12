@@ -121,9 +121,10 @@ noncomputable def riemannianMetricVectorSpace :
     (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     convert! contMDiffAt_const (c := innerSL ℝ))
     ext v w
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [hom_trivializationAt_apply, ContinuousLinearMap.inCoordinates, TangentSpace])
+    -- pack-regime: adapted proof (R43)
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [hom_trivializationAt_apply, ContinuousLinearMap.inCoordinates])
+    rfl
 
 noncomputable instance : RiemannianBundle (fun (x : F) ↦ TangentSpace% x) :=
   ⟨(riemannianMetricVectorSpace F).toRiemannianMetric⟩

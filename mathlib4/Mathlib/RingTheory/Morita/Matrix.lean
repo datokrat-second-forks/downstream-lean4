@@ -45,6 +45,13 @@ def ModuleCat.toMatrixModCat : ModuleCat R ⥤ ModuleCat (Matrix ι ι R) where
   map_id _ := ModuleCat.hom_ext LinearMap.mapMatrixModule_id
   map_comp f g := ModuleCat.hom_ext (LinearMap.mapMatrixModule_comp f.hom g.hom)
 
+/-- Pack root lemma: the module pack of `(toMatrixModCat R ι).obj M` is that of `ι → M`. -/
+@[simp] lemma ModuleCat.toMatrixModCat_obj_smodPack (M : ModuleCat R) :
+    @SModPack.mk (Matrix ι ι R) _ ((ModuleCat.toMatrixModCat R ι).obj M)
+        ((ModuleCat.toMatrixModCat R ι).obj M).isAddCommGroup.toAddCommMonoid
+        ((ModuleCat.toMatrixModCat R ι).obj M).isModule =
+      SModPack.mk (ι → M) := rfl
+
 variable {ι}
 
 namespace MatrixModCat
@@ -205,7 +212,6 @@ def ModuleCat.matrixEquivalence (i : ι) : ModuleCat R ≌ ModuleCat (Matrix ι 
     simp [unitIso, toModuleCatFromModuleCatLinearEquiv, fromModuleCatToModuleCatLinearEquiv,
       fromModuleCatToModuleCatLinearEquivtoModuleCatObj, Finset.univ_sum_single]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 open ModuleCat.Algebra in
@@ -216,7 +222,9 @@ def moritaEquivalenceMatrix (R₀ : Type*) [CommRing R₀] [Algebra R₀ R] (i :
   eqv := ModuleCat.matrixEquivalence R i
   linear.map_smul {X Y} f r := by
     ext (v : ι → X)
+    -- pack-regime: adapted proof (R43)
     simp only [ModuleCat.matrixEquivalence_functor, ModuleCat.toMatrixModCat_obj_carrier,
+      ModuleCat.toMatrixModCat_obj_smodPack,
       ModuleCat.toMatrixModCat_map, ModuleCat.hom_smul, ModuleCat.hom_ofHom, LinearMap.smul_apply]
     ext i
     simp only [LinearMap.mapMatrixModule_apply, LinearMap.compLeft_apply, Function.comp_apply,

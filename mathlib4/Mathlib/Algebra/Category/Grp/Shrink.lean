@@ -36,6 +36,14 @@ noncomputable def GrpCat.shrinkFunctor (F : C ⥤ GrpCat.{w'}) [∀ X, Small.{w}
   map {X Y} f := GrpCat.ofHom <|
     (Shrink.mulEquiv.symm.toMonoidHom.comp (F.map f).hom).comp Shrink.mulEquiv.toMonoidHom
 
+/-- Pack root lemma: the group pack of `(GrpCat.shrinkFunctor F).obj X`. -/
+@[simp] theorem GrpCat.shrinkFunctor_obj_classPack.{ws, wf, vc, uc} {C : Type uc}
+    [Category.{vc} C] (F : C ⥤ GrpCat.{wf}) [∀ X, Small.{ws} (F.obj X)] (X : C) :
+    @ClassPack.mk Group ((GrpCat.shrinkFunctor.{ws} F).obj X)
+        ((GrpCat.shrinkFunctor.{ws} F).obj X).str =
+      @ClassPack.mk Group (Shrink.{ws} (F.obj X)) Shrink.instGroup :=
+  rfl
+
 /-- The natural transformation `GrpCat.shrinkFunctor.{w} F ⟶ GrpCat.shrinkFunctor.{w} G`
 induces by a natural transformation `τ : F ⟶ G` between `w`-small functors to monoids. -/
 @[simps]

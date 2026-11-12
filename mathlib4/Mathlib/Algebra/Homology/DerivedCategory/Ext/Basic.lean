@@ -437,7 +437,12 @@ noncomputable def extFunctorObj (X : C) (n : ℕ) : C ⥤ AddCommGrpCat.{w} wher
     apply Ext.comp_assoc
     lia
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the additive group on `(extFunctorObj X n).obj Y` is the one of `Ext X Y n`. -/
+@[simp] theorem extFunctorObj_obj_classPack (X : C) (n : ℕ) (Y : C) :
+    @ClassPack.mk AddCommGroup ((extFunctorObj X n).obj Y) ((extFunctorObj X n).obj Y).str =
+      @ClassPack.mk AddCommGroup (Ext X Y n) (by infer_instance) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

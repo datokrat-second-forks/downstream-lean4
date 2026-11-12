@@ -76,6 +76,14 @@ def yonedaGrpObj : Cᵒᵖ ⥤ GrpCat.{v} where
   obj X := ↧(unop X ⟶ G)
   map φ := GrpCat.ofHom ((yonedaMonObj G).map φ).hom
 
+/-- Pack root lemma: the group pack of `(yonedaGrpObj G).obj X` is the pack of `unop X ⟶ G`. -/
+@[to_additive (attr := simp)
+/-- Pack root lemma: the additive group pack of `(yonedaAddGrpObj G).obj X`. -/]
+theorem yonedaGrpObj_obj_classPack (G : C) [GrpObj G] (X : Cᵒᵖ) :
+    @ClassPack.mk Group ((yonedaGrpObj G).obj X) ((yonedaGrpObj G).obj X).str =
+      @ClassPack.mk Group (unop X ⟶ G) Hom.group :=
+  rfl
+
 variable (G) in
 /-- If `G` is a monoid object, then `Hom(-, G)` as a presheaf of monoids is represented by `G`. -/
 @[to_additive
@@ -109,7 +117,6 @@ def yonedaGrpObjIsoOfRepresentableBy (F : Cᵒᵖ ⥤ GrpCat.{v}) (α : (F ⋙ f
   ((yonedaMonObjIsoOfRepresentableBy X (F ⋙ forget₂ GrpCat MonCat) α).hom.app Y).hom.map_mul })
       fun φ ↦ GrpCat.hom_ext <| MonoidHom.ext <| α.homEquiv_comp φ.unop
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

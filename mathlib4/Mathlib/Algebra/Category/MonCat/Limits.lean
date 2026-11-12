@@ -57,7 +57,16 @@ noncomputable instance limitMonoid :
     Monoid (Types.Small.limitCone.{v, u} (F ⋙ forget MonCat.{u})).pt :=
   inferInstanceAs <| Monoid (Shrink (F ⋙ forget MonCat.{u}).sections)
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the monoid on the limit cone point is the monoid of the shrunk sections. -/
+@[to_additive (attr := simp)
+/-- Pack root lemma: the additive monoid on the limit cone point is the additive monoid of the
+shrunk sections. -/]
+theorem limitMonoid_classPack :
+    @ClassPack.mk Monoid (Types.Small.limitCone.{v, u} (F ⋙ forget MonCat.{u})).pt
+        (limitMonoid F) =
+      @ClassPack.mk Monoid (Shrink (F ⋙ forget MonCat.{u}).sections) (by infer_instance) :=
+  rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `limit.π (F ⋙ forget MonCat) j` as a `MonoidHom`. -/
@@ -85,7 +94,6 @@ noncomputable def limitCone : Cone F :=
       naturality := fun _ _ f => MonCat.ext fun x =>
         congr($((Types.Small.limitCone (F ⋙ forget _)).π.naturality f) x) } }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Witness that the limit cone in `MonCat` is a limit cone.

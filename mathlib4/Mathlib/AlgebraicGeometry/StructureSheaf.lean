@@ -1095,7 +1095,9 @@ theorem comapₗ_eq_localRingHom (f : R →+* S) (U : Opens (PrimeSpectrum.Top R
   trans LocalizedModule.mk (f m) ⟨f ↑s, s.2⟩
   · simp
   convert_to! Localization.mk _ _ = Localization.localRingHom _ _ _ _ (Localization.mk _ _)
-  (set_option backward.instanceTypes.subsingletons.prop true in simp [Localization.mk_eq_mk'])
+  -- pack-regime: workaround for two spellings (R53)
+  (set_option backward.instanceTypes.subsingletons.prop true in
+    simp [Localization.mk_eq_mk', -PrimeSpectrum.comap_asIdeal])
 
 /-- For a ring homomorphism `f : R →+* S` and open sets `U` and `V` of the prime spectra of `R` and
 `S` such that `V ⊆ (comap f) ⁻¹ U`, the induced ring homomorphism from the structure sheaf of `R`
@@ -1141,7 +1143,9 @@ theorem comap_const (f : R →+* S) (U : Opens (PrimeSpectrum.Top R))
   Subtype.ext <| funext fun p => by
     rw [comap_apply, const_apply, const_apply]
     convert_to! Localization.localRingHom _ _ _ _ (Localization.mk _ _) = Localization.mk _ _
-    (set_option backward.instanceTypes.subsingletons.prop true in simp [Localization.mk_eq_mk'])
+    -- pack-regime: workaround for two spellings (R53)
+    (set_option backward.instanceTypes.subsingletons.prop true in
+      simp [Localization.mk_eq_mk', -PrimeSpectrum.comap_asIdeal])
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- For an inclusion `i : V ⟶ U` between open sets of the prime spectrum of `R`, the comap of the
@@ -1184,8 +1188,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.Top
     Subtype.ext <|
       funext fun p => by
         rw [comap_apply, Localization.localRingHom_comp _ (PrimeSpectrum.comap g p.1).asIdeal] <;>
-        (set_option backward.dsimp.instanceTypes false in
-        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+        (set_option backward.isDefEq.respectTransparency.instanceTypes false in
         simp)
 
 set_option backward.isDefEq.respectTransparency.types false in

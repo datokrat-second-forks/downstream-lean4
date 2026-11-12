@@ -83,6 +83,13 @@ def condensedSetToTopCat : CondensedSet.{u} ⥤ TopCat.{u + 1} where
   obj X := X.toTopCat
   map f := toTopCatMap f
 
+/-- Pack root lemma: the topology pack of `condensedSetToTopCat.obj X` is that of `X(*)`. -/
+@[simp] theorem condensedSetToTopCat_obj_classPack :
+    @ClassPack.mk TopologicalSpace (condensedSetToTopCat.obj X) (condensedSetToTopCat.obj X).str =
+      @ClassPack.mk TopologicalSpace (X.obj.obj ⟨↧PUnit⟩)
+        X.toTopCat.str :=
+  rfl
+
 namespace CondensedSet
 
 set_option backward.isDefEq.respectTransparency.types false in
@@ -126,7 +133,6 @@ noncomputable def topCatAdjunctionUnit (X : CondensedSet.{u}) : X ⟶ X.toTopCat
         TypeCat.Fun.coe_mk, ← Functor.map_comp_apply]
       rfl }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

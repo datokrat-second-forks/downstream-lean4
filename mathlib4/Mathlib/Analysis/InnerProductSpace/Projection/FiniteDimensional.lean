@@ -285,7 +285,6 @@ theorem OrthogonalFamily.sum_projection_of_mem_iSup [Fintype ι] {V : ι → Sub
     simp_rw [map_add, Finset.sum_add_distrib]
     congrm $hx + $hy
 
-set_option backward.dsimp.instanceTypes false in
 /-- If a family of submodules is orthogonal, then the `orthogonalProjection` on a direct sum
 is just the coefficient of that direct sum. -/
 theorem OrthogonalFamily.projection_directSum_coeAddHom [DecidableEq ι] {V : ι → Submodule 𝕜 E}
@@ -295,12 +294,11 @@ theorem OrthogonalFamily.projection_directSum_coeAddHom [DecidableEq ι] {V : ι
   induction x using DirectSum.induction_on with
   | zero => simp
   | of j x =>
-    simp_rw [DirectSum.coeAddMonoidHom_of, DirectSum.of,
-      -- Need to unfold `DirectSum` to see through the defeq abuse.
-      DirectSum, DFinsupp.singleAddHom_apply]
+    -- pack-regime: adapted proof (R43)
+    simp_rw [DirectSum.coeAddMonoidHom_of]
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [orthogonalProjectionOnto_mem_subspace_eq_self, DFinsupp.single_eq_same]
-    · rw [orthogonalProjectionOnto_apply_of_mem_orthogonal, DFinsupp.single_eq_of_ne hij]
+    · rw [orthogonalProjectionOnto_mem_subspace_eq_self, DirectSum.of_eq_same]
+    · rw [orthogonalProjectionOnto_apply_of_mem_orthogonal, DirectSum.of_eq_of_ne _ _ _ hij]
       exact hV.isOrtho hij.symm x.prop
   | add x y hx hy =>
     simp_rw [map_add]

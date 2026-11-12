@@ -385,6 +385,23 @@ theorem curry_symm_apply (f : α →o β →o γ) (x : α × β) : curry.symm f 
 def comp (g : β →o γ) (f : α →o β) : α →o γ :=
   ⟨g ∘ f, g.mono.comp f.mono⟩
 
+/-- Pack congruence for the type `α →o β`. -/
+@[dsimp_congr] theorem _root_.OrderHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [iα : Preorder α] [iα' : Preorder α'] [iβ : Preorder β] [iβ' : Preorder β']
+    (hα : @ClassPack.mk Preorder α iα = @ClassPack.mk Preorder α' iα')
+    (hβ : @ClassPack.mk Preorder β iβ = @ClassPack.mk Preorder β' iβ') :
+    (α →o β) = (α' →o β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α →o β` follows the packs of `α` and `β`. -/
+@[dsimp_congr] theorem _root_.OrderHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [iα : Preorder α] [iα' : Preorder α'] [iβ : Preorder β] [iβ' : Preorder β']
+    (hα : @ClassPack.mk Preorder α iα = @ClassPack.mk Preorder α' iα')
+    (hβ : @ClassPack.mk Preorder β iβ = @ClassPack.mk Preorder β' iβ') :
+    @FunLikePack.mk (α →o β) α (fun _ => β) OrderHom.instFunLike =
+      @FunLikePack.mk (α' →o β') α' (fun _ => β') OrderHom.instFunLike := by
+  cases hα; cases hβ; rfl
+
 @[mono, to_dual self]
 theorem comp_mono ⦃g₁ g₂ : β →o γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →o β⦄ (hf : f₁ ≤ f₂) :
     g₁.comp f₁ ≤ g₂.comp f₂ := fun _ => (hg _).trans (g₂.mono <| hf _)

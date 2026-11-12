@@ -112,6 +112,22 @@ abbrev Hom.hom {X Y : GrpCat.{u}} (f : Hom X Y) :=
 abbrev ofHom {X Y : Type u} [Group X] [Group Y] (f : X →* Y) : of X ⟶ of Y :=
   ConcreteCategory.ofHom (C := GrpCat) f
 
+/-- Pack congruence for `GrpCat.of`. -/
+@[dsimp_congr] theorem _root_.GrpCat.of_pack_congr.{ua} {M M' : Type ua}
+    [i : Group M] [i' : Group M']
+    (h : @ClassPack.mk Group M i = @ClassPack.mk Group M' i') :
+    GrpCat.of M = GrpCat.of M' := by
+  cases h; rfl
+
+/-- Pack congruence for `GrpCat.ofHom`. -/
+@[dsimp_congr] theorem _root_.GrpCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
+    [i : Group X] [i' : Group X'] [j : Group Y] [j' : Group Y']
+    (hX : @ClassPack.mk Group X i = @ClassPack.mk Group X' i')
+    (hY : @ClassPack.mk Group Y j = @ClassPack.mk Group Y' j')
+    (f : X →* Y) (f' : X' →* Y') (hf : HEq f f') :
+    HEq (GrpCat.ofHom f) (GrpCat.ofHom f') := by
+  cases hX; cases hY; cases hf; rfl
+
 variable {R} in
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
 def Hom.Simps.hom (X Y : GrpCat.{u}) (f : Hom X Y) :=
@@ -562,6 +578,12 @@ end AddCommGrpCat
 @[dsimp_congr] theorem AddCommGrpCat.pack_congr.{ua} {X X' : AddCommGrpCat.{ua}} (h : X = X') :
     @ClassPack.mk AddCommGroup X X.str = @ClassPack.mk AddCommGroup X' X'.str := by
   cases h; rfl
+
+/-- Pack root lemma: the group pack of `AddCommGrpCat.of M` is that of `M`. -/
+@[simp] theorem AddCommGrpCat.of_classPack.{ua} (M : Type ua) [i : AddCommGroup M] :
+    @ClassPack.mk AddCommGroup (AddCommGrpCat.of M) (AddCommGrpCat.of M).str =
+      @ClassPack.mk AddCommGroup M i :=
+  rfl
 
 /-- Build an isomorphism in the category `GrpCat` from a `MulEquiv` between `Group`s. -/
 @[to_additive (attr := simps)]

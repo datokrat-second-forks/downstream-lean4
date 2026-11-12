@@ -82,6 +82,13 @@ def _root_.lightCondSetToTopCat : LightCondSet.{u} ⥤ TopCat.{u} where
   obj X := X.toTopCat
   map f := toTopCatMap f
 
+/-- Pack root lemma: the topology pack of `lightCondSetToTopCat.obj X` is that of `X(*)`. -/
+@[simp] theorem lightCondSetToTopCat_obj_classPack (X : LightCondSet.{u}) :
+    @ClassPack.mk TopologicalSpace (lightCondSetToTopCat.obj X) (lightCondSetToTopCat.obj X).str =
+      @ClassPack.mk TopologicalSpace (X.obj.obj ⟨↧PUnit⟩)
+        (LightCondSet.underlyingTopologicalSpace X) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The counit of the adjunction `lightCondSetToTopCat ⊣ topCatToLightCondSet` -/
 noncomputable def topCatAdjunctionCounit (X : TopCat.{u}) : X.toLightCondSet.toTopCat ⟶ X :=
@@ -121,7 +128,6 @@ noncomputable def topCatAdjunctionUnit (X : LightCondSet.{u}) : X ⟶ X.toTopCat
         TopCat.toSheafCompHausLike_obj_map, ← Functor.map_comp_apply]
       rfl }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

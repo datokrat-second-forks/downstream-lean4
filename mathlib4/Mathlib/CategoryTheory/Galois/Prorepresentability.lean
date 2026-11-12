@@ -216,6 +216,12 @@ noncomputable def autGaloisSystem : PointedGaloisObject F ⥤ GrpCat.{u₂} wher
   obj := fun A ↦ ↧(Aut (A : C))
   map := fun {A B} f ↦ GrpCat.ofHom (autMapHom f)
 
+/-- Pack root lemma: the group pack of `(autGaloisSystem F).obj A` is that of `Aut A`. -/
+@[simp] theorem autGaloisSystem_obj_classPack (A : PointedGaloisObject F) :
+    @ClassPack.mk Group ((autGaloisSystem F).obj A) ((autGaloisSystem F).obj A).str =
+      @ClassPack.mk Group (Aut (A : C)) (Aut.instGroup (A : C)) :=
+  rfl
+
 /-- The limit of `autGaloisSystem`. -/
 noncomputable def AutGalois : Type (max u₁ u₂) :=
   (autGaloisSystem F ⋙ forget _).sections
@@ -331,8 +337,7 @@ noncomputable def autIsoFibers :
   NatIso.ofComponents (fun A ↦ ((evaluationEquivOfIsGalois F A A.pt).toIso))
     (fun f ↦ by
       ext
-      (set_option backward.dsimp.instanceTypes false in
-      simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp]))
+      simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp])
 
 lemma autIsoFibers_inv_app (A : PointedGaloisObject F) (b : F.obj A) :
     (autIsoFibers F).inv.app A b = (evaluationEquivOfIsGalois F A A.pt).symm b :=

@@ -91,10 +91,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma toQuotient_relation (r : relations.R) :
     relations.toQuotient (relations.relation r) = 0 := by
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp only [toQuotient, Quotient])
-  rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
-  exact Submodule.subset_span (by simp)
+  -- pack-regime: adapted proof (R43)
+  exact (Submodule.Quotient.mk_eq_zero _).2 (Submodule.subset_span (by simp))
 
 /-- The linear map `(relations.R →₀ A) →ₗ[A] (relations.G →₀ A)` corresponding to the relations
 given by `relations : Relations A`. -/

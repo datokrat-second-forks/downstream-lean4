@@ -78,8 +78,7 @@ theorem polynomial_comp_attachBound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : 
       Polynomial.aeval f g := by
   ext
   simp only [Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuousMap_apply]
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp)
 
 /-- Given a continuous function `f` in a subalgebra of `C(X, ℝ)`, postcomposing by a polynomial

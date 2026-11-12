@@ -228,8 +228,7 @@ theorem localRingHom_comp_stalkIso {R S : CommRingCat.{u}} (f : R ⟶ S) (p : Pr
   (stalkIso R (PrimeSpectrum.comap f.hom p)).toCommRingCatIso.symm.eq_inv_comp.mp <|
     (stalkIso S p).toCommRingCatIso.symm.comp_inv_eq.mpr <| CommRingCat.hom_ext <|
       Localization.localRingHom_unique _ _ _ (PrimeSpectrum.comap_asIdeal _ _) fun x => by
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp [-RingEquiv.symm_mk])
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [AlgEquiv.commutes, RingEquiv.symm_apply_eq, AlgEquiv.coe_toRingEquiv])
@@ -312,7 +311,8 @@ theorem isIso_specMap_stalkMap_localization (R : CommRingCat.{u}) (M : Submonoid
         (CommRingCat.ofHom (algebraMap R (Localization M))).op).stalkMap x) := by
   dsimp only [Spec.toPresheafedSpace_map, Quiver.Hom.unop_op]
   rw [← localRingHom_comp_stalkIso, ConcreteCategory.isIso_iff_bijective]
-  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  (set_option backward.dsimp.instanceTypes false in
+  set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp)
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [EquivLike.bijective_comp])

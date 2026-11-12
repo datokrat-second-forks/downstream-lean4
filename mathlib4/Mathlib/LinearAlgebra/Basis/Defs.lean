@@ -112,6 +112,13 @@ instance instFunLike : FunLike (Basis ι R M) ι M where
   coe_injective f g h := repr_injective <| LinearEquiv.symm_bijective.injective <|
     LinearEquiv.toLinearMap_injective <| by ext; congrm $h _
 
+/-- Lens: the coercion pack of `Module.Basis ι R M` follows the index type. -/
+@[dsimp_congr] theorem _root_.Module.Basis.funLikePack_congr.{ui, ur, um} {ι ι' : Type ui}
+    {R : Type ur} {M : Type um} [Semiring R] [AddCommMonoid M] [Module R M] (h : ι = ι') :
+    FunLikePack.mk (Module.Basis ι R M) ι (fun _ => M) =
+      FunLikePack.mk (Module.Basis ι' R M) ι' (fun _ => M) := by
+  cases h; rfl
+
 @[simp]
 theorem coe_ofRepr (e : M ≃ₗ[R] ι →₀ R) : ⇑(ofRepr e) = fun i => e.symm (Finsupp.single i 1) :=
   rfl

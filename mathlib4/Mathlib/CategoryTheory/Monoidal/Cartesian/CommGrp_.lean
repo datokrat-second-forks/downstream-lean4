@@ -47,7 +47,12 @@ def yonedaCommGrpGrpObj (G : CommGrp C) : (Grp C)ᵒᵖ ⥤ CommGrpCat where
       ext
       simpa using! ((yonedaGrpObj G.X).map f.unop.hom.hom.op).hom.map_mul g.hom.hom h.hom.hom }
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the commutative group pack of `(yonedaCommGrpGrpObj G).obj H`. -/
+@[simp] theorem yonedaCommGrpGrpObj_obj_classPack (G : CommGrp C) (H : (Grp C)ᵒᵖ) :
+    @ClassPack.mk CommGroup ((yonedaCommGrpGrpObj G).obj H) ((yonedaCommGrpGrpObj G).obj H).str =
+      @ClassPack.mk CommGroup (unop H ⟶ G.toGrp) Hom.commGroup :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

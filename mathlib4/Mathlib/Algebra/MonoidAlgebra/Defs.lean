@@ -933,6 +933,14 @@ instance nonUnitalCommRing [CommSemigroup M] : NonUnitalCommRing R[M] where
 @[to_additive (dont_translate := R)]
 instance commRing [CommMonoid M] : CommRing R[M] where
 
+/-- Lens: the `CommRing` pack of `MonoidAlgebra k G` follows the `CommMonoid` pack of `G`. -/
+@[dsimp_congr] theorem _root_.MonoidAlgebra.commRing.packLens.{uk, ug} {k : Type uk} [CommRing k]
+    {G G' : Type ug} [i : CommMonoid G] [i' : CommMonoid G']
+    (h : @ClassPack.mk CommMonoid G i = @ClassPack.mk CommMonoid G' i') :
+    @ClassPack.mk CommRing (MonoidAlgebra k G) MonoidAlgebra.commRing =
+      @ClassPack.mk CommRing (MonoidAlgebra k G') MonoidAlgebra.commRing := by
+  cases h; rfl
+
 end CommRing
 end MonoidAlgebra
 

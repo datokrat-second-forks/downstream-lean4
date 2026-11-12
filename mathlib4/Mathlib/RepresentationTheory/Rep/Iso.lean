@@ -124,7 +124,6 @@ def counitIsoAddEquiv {M : ModuleCat.{w} k[G]} :
   exact (Representation.ofModule M).asModuleEquiv.toAddEquiv.trans
     (RestrictScalars.addEquiv k k[G] _)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def unitIsoAddEquiv {V : Rep.{w} k G} : V ≃+ (toModuleMonoidAlgebra ⋙
@@ -142,7 +141,6 @@ def counitIso (M : ModuleCat.{w} k[G]) :
       map_smul' := fun r x => by
         simp [counitIsoAddEquiv] }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

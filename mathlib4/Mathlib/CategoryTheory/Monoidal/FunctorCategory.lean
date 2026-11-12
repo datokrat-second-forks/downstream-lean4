@@ -262,7 +262,6 @@ theorem _root_.CategoryTheory.Equivalence.congrLeft_functor_monoidalPack.{va, vb
         ((Functor.whiskeringLeft D C E).obj e.inverse)
         (Functor.Monoidal.whiskeringLeft E e.inverse) := rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 instance (E : Type*) [Category* E] [MonoidalCategory E] (e : C ≌ D) :
     (e.congrLeft (E := E)).IsMonoidal where

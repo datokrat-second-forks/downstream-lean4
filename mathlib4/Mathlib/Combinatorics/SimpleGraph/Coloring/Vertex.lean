@@ -112,10 +112,9 @@ theorem Coloring.colorClasses_finite [Finite α] : C.colorClasses.Finite :=
 
 theorem Coloring.card_colorClasses_le [Fintype α] [Fintype C.colorClasses] :
     Fintype.card C.colorClasses ≤ Fintype.card α := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [colorClasses])
+  -- pack-regime: adapted proof (R43)
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  convert! Setoid.card_classes_ker_le C)
+  exact @Setoid.card_classes_ker_le _ _ _ C ‹_›)
 
 theorem Coloring.not_adj_of_mem_colorClass {c : α} {v w : V} (hv : v ∈ C.colorClass c)
     (hw : w ∈ C.colorClass c) : ¬G.Adj v w := fun h => C.valid h (Eq.trans hv (Eq.symm hw))

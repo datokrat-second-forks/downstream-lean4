@@ -67,6 +67,13 @@ deriving Inhabited, Ring, Algebra R
 
 namespace UniversalEnvelopingAlgebra
 
+/-- Pack root lemma: the algebra pack of `UniversalEnvelopingAlgebra R L` is that of the
+quotient by `ringCon R L`. -/
+theorem sAlgPack_eq :
+    SAlgPack.mk (R := R) (UniversalEnvelopingAlgebra R L) =
+      SAlgPack.mk (R := R) (ringCon R L).Quotient :=
+  rfl
+
 /-- The quotient map from the tensor algebra to the universal enveloping algebra as a morphism of
 associative algebras. -/
 def mkAlgHom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
@@ -106,7 +113,8 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A) 
     --   RingQuot.liftAlgHom_mkAlgHom_apply]
     simp only [LieHom.coe_comp, Function.comp_apply, AlgHom.coe_toLieHom,
       UniversalEnvelopingAlgebra.ι_apply, mkAlgHom]
-    (set_option backward.dsimp.instanceTypes false in simp [UniversalEnvelopingAlgebra])
+    -- pack-regime: workaround (R43)
+    simp [UniversalEnvelopingAlgebra, sAlgPack_eq]
   right_inv F := by
     apply RingCon.Quotient.hom_extₐ
     ext

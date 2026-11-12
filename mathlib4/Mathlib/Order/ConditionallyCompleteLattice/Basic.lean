@@ -232,6 +232,19 @@ instance (priority := 100) ConditionallyCompleteLattice.toConditionallyCompleteP
   isGLB_csInf_of_directed _ _ := isGLB_csInf _
   isLUB_csSup_of_directed _ _ := isLUB_csSup _
 
+/-- Lens: the `ConditionallyCompletePartialOrder` pack of a conditionally complete lattice follows
+its `ConditionallyCompleteLattice` pack. -/
+@[dsimp_congr] theorem
+    _root_.ConditionallyCompleteLattice.toConditionallyCompletePartialOrder.packLens.{ua}
+    {α α' : Type ua} {i : ConditionallyCompleteLattice α} {i' : ConditionallyCompleteLattice α'}
+    (h : @ClassPack.mk ConditionallyCompleteLattice α i =
+      @ClassPack.mk ConditionallyCompleteLattice α' i') :
+    @ClassPack.mk ConditionallyCompletePartialOrder α
+        (@ConditionallyCompleteLattice.toConditionallyCompletePartialOrder α i) =
+      @ClassPack.mk ConditionallyCompletePartialOrder α'
+        (@ConditionallyCompleteLattice.toConditionallyCompletePartialOrder α' i') := by
+  cases h; rfl
+
 theorem subset_Icc_csInf_csSup (hb : BddBelow s) (ha : BddAbove s) : s ⊆ Icc (sInf s) (sSup s) :=
   fun _ hx => ⟨csInf_le hb hx, le_csSup ha hx⟩
 

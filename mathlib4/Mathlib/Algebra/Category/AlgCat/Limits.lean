@@ -67,6 +67,35 @@ instance limitAlgebra :
     Algebra R (Types.Small.limitCone (F ⋙ forget (AlgCat.{w} R))).pt :=
   inferInstanceAs <| Algebra R (Shrink (sectionsSubalgebra F))
 
+/-- Pack root lemma: the ring on the limit cone point is the ring of the shrunk subalgebra of
+sections. -/
+@[simp] theorem limitSemiring_classPack :
+    @ClassPack.mk Ring (Types.Small.limitCone.{v, w} (F ⋙ forget (AlgCat.{w} R))).pt
+        (limitSemiring F) =
+      @ClassPack.mk Ring (Shrink (F ⋙ forget (AlgCat.{w} R)).sections) (by infer_instance) :=
+  rfl
+
+/-- Pack root lemma: the semiring on `(F ⋙ forget _).obj j` is the semiring of `F.obj j`. -/
+@[simp] theorem semiringObj_classPack (j : J) :
+    @ClassPack.mk Semiring ((F ⋙ forget (AlgCat.{w} R)).obj j) (semiringObj F j) =
+      @ClassPack.mk Semiring (F.obj j) (by infer_instance) :=
+  rfl
+
+/-- Pack root lemma: the algebra on the limit cone point is the algebra of the shrunk subalgebra
+of sections. -/
+@[simp] theorem limitAlgebra_algPack :
+    @AlgPack.mk R (Types.Small.limitCone.{v, w} (F ⋙ forget (AlgCat.{w} R))).pt _
+        (limitSemiring F).toSemiring (limitAlgebra F) =
+      @AlgPack.mk R (Shrink (F ⋙ forget (AlgCat.{w} R)).sections) _ (by infer_instance)
+        (by infer_instance) :=
+  rfl
+
+/-- Pack root lemma: the algebra on `(F ⋙ forget _).obj j` is the algebra of `F.obj j`. -/
+@[simp] theorem algebraObj_algPack (j : J) :
+    @AlgPack.mk R ((F ⋙ forget (AlgCat.{w} R)).obj j) _ (semiringObj F j) (algebraObj F j) =
+      @AlgPack.mk R (F.obj j) _ (by infer_instance) (by infer_instance) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 /-- `limit.π (F ⋙ forget (AlgCat R)) j` as an `AlgHom`. -/
 def limitπAlgHom (j) :
@@ -79,10 +108,11 @@ def limitπAlgHom (j) :
       (F ⋙ forget₂ (AlgCat R) RingCat.{w} ⋙ forget₂ RingCat SemiRingCat.{w}) j with
     toFun := (Types.Small.limitCone (F ⋙ forget (AlgCat.{w} R))).π.app j
     commutes' := fun x => by
-      (set_option backward.dsimp.instanceTypes false in
+      -- pack-regime: workaround (R43)
       simp only [Functor.comp_obj, Types.Small.limitCone_pt, Functor.const_obj_obj,
         Types.Small.limitCone_π_app, ConcreteCategory.hom_ofHom, TypeCat.Fun.coe_mk,
-        ← Shrink.algEquiv_apply R, AlgEquiv.commutes])
+        ← Shrink.algEquiv_apply R, AlgEquiv.commutes, limitSemiring_classPack,
+        semiringObj_classPack, limitAlgebra_algPack, algebraObj_algPack]
       rfl
     }
 

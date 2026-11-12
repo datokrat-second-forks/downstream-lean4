@@ -237,7 +237,7 @@ lemma equivPiOfIsSepClosed_self_apply [IsSepClosed K] (x : K) (p : PrimeSpectrum
     IsArtinianRing.primeSpectrumEquivMaximalSpectrum_apply_asIdeal, IsArtinianRing.equivPi_apply]
   apply (AlgEquiv.ofBijective (ofId K (K ⧸ p.asIdeal))
     (IsSepClosed.algebraMap_bijective _ _)).injective
-  (set_option backward.dsimp.instanceTypes false in simp)
+  simp
 
 variable {K A} in
 set_option backward.defeqAttrib.useBackward true in

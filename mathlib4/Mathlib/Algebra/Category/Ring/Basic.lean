@@ -760,6 +760,13 @@ end CommRingCat
       @ClassPack.mk Ring R (@CommRing.toRing R R.commRing) :=
   rfl
 
+/-- Pack root lemma: the `CommMonoid` pack of `(forget₂ CommRingCat CommMonCat).obj X`. -/
+@[simp] theorem _root_.CommRingCat.forget₂_commMonCat_obj_classPack.{ua} (X : CommRingCat.{ua}) :
+    @ClassPack.mk CommMonoid ((CategoryTheory.forget₂ CommRingCat CommMonCat).obj X)
+        ((CategoryTheory.forget₂ CommRingCat CommMonCat).obj X).str =
+      @ClassPack.mk CommMonoid X (by infer_instance) :=
+  rfl
+
 namespace CategoryTheory.Iso
 
 /-- Build a `RingEquiv` from an isomorphism in the category `SemiRingCat`. -/

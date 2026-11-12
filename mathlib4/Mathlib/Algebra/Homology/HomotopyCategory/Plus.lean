@@ -311,9 +311,10 @@ noncomputable instance :
     F.mapHomotopyCategory (.up ℤ)) _).CommShift ℤ)
 
 instance [HasZeroObject C] [HasBinaryBiproducts C] [HasZeroObject D] [HasBinaryBiproducts D] :
-    (F.mapHomotopyCategoryPlus).IsTriangulated := by
-  (set_option backward.dsimp.instanceTypes false in dsimp only [mapHomotopyCategoryPlus])
-  infer_instance
+    (F.mapHomotopyCategoryPlus).IsTriangulated :=
+  -- pack-regime: adapted proof (R43)
+  inferInstanceAs ((HomotopyCategory.plus D).lift
+    (HomotopyCategory.Plus.ι C ⋙ F.mapHomotopyCategory (.up ℤ)) _).IsTriangulated
 
 instance [Full F] [Faithful F] : Full F.mapHomotopyCategoryPlus where
   map_surjective f :=

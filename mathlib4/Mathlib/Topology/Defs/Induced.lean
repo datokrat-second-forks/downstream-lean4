@@ -79,6 +79,13 @@ instance _root_.instTopologicalSpaceSubtype {p : X → Prop} [t : TopologicalSpa
     TopologicalSpace (Subtype p) :=
   induced (↑) t
 
+/-- Lens: the topology pack of a subtype follows the predicate. -/
+@[dsimp_congr] theorem _root_.Subtype.topologicalSpacePack_congr.{ua} {α : Type ua}
+    [TopologicalSpace α] {p p' : α → Prop} (h : p = p') :
+    @ClassPack.mk TopologicalSpace (Subtype p) instTopologicalSpaceSubtype =
+      @ClassPack.mk TopologicalSpace (Subtype p') instTopologicalSpaceSubtype := by
+  cases h; rfl
+
 /-- Given `f : X → Y` and a topology on `X`,
   the coinduced topology on `Y` is defined such that
   `s : Set Y` is open if the preimage of `s` is open.

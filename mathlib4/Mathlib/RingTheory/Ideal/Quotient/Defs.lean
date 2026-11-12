@@ -65,6 +65,13 @@ protected def ringCon (I : Ideal R) [I.IsTwoSided] : RingCon R where
 instance ring (I : Ideal R) [I.IsTwoSided] : Ring (R ⧸ I) :=
   inferInstanceAs <| Ring (Quotient.ringCon I).Quotient
 
+/-- Lens: the ring pack of `R ⧸ I` follows the ideal `I`. -/
+@[dsimp_congr] theorem _root_.Ideal.Quotient.ring.packLens.{ur} {R : Type ur} [Ring R]
+    {I I' : Ideal R} (h : I = I') (hI : I.IsTwoSided) (hI' : I'.IsTwoSided) (hh : HEq hI hI') :
+    @ClassPack.mk Ring (R ⧸ I) (@Ideal.Quotient.ring R _ I hI) =
+      @ClassPack.mk Ring (R ⧸ I') (@Ideal.Quotient.ring R _ I' hI') := by
+  cases h; cases hh; rfl
+
 instance semiring {R} [CommRing R] (I : Ideal R) : Semiring (R ⧸ I) := (ring I).toSemiring
 instance commSemiring {R} [CommRing R] (I : Ideal R) : CommSemiring (R ⧸ I) where
   mul_comm := by rintro ⟨a⟩ ⟨b⟩; exact congr_arg _ (mul_comm a b)

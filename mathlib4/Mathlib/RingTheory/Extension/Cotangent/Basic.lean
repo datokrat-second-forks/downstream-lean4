@@ -450,8 +450,9 @@ lemma cotangentSpaceBasis_repr_tmul (r x i) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma cotangentSpaceBasis_repr_one_tmul (x i) :
-    P.cotangentSpaceBasis.repr (1 ⊗ₜ .D _ _ x) i = aeval P.val (pderiv i x) := by
-  (set_option backward.dsimp.instanceTypes false in simp)
+    P.cotangentSpaceBasis.repr (1 ⊗ₜ .D _ _ x) i = aeval P.val (pderiv i x) :=
+  -- pack-regime: adapted proof (R43)
+  (cotangentSpaceBasis_repr_tmul ..).trans (one_mul _)
 
 set_option backward.isDefEq.respectTransparency false in
 lemma cotangentSpaceBasis_apply (i) :
@@ -476,8 +477,8 @@ lemma cotangentRestrict_mk {σ : Type*} {u : σ → ι} (hu : Function.Injective
   ext j
   simp only [cotangentRestrict, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     Finsupp.lcomapDomain_apply, Finsupp.comapDomain_apply, Extension.cotangentComplex_mk]
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [toExtension_Ring, P.cotangentSpaceBasis_repr_tmul, one_mul])
+  -- pack-regime: adapted proof (R43)
+  simp only [P.cotangentSpaceBasis_repr_one_tmul]
 
 universe w' u' v'
 
@@ -527,9 +528,8 @@ open KaehlerDifferential in
 attribute [local instance] Module.finitePresentation_of_projective in
 instance [Algebra.FinitePresentation R S] : Module.FinitePresentation S Ω[S⁄R] := by
   let P := Algebra.Presentation.ofFinitePresentation R S
-  have : Algebra.FiniteType R P.toExtension.Ring := by
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [Generators.toExtension_Ring]); infer_instance
+  -- pack-regime: adapted proof (R43)
+  have : Algebra.FiniteType R P.toExtension.Ring := inferInstanceAs (Algebra.FiniteType R P.Ring)
   refine Module.finitePresentation_of_surjective _ P.toExtension.toKaehler_surjective ?_
   rw [LinearMap.exact_iff.mp P.toExtension.exact_cotangentComplex_toKaehler, ← Submodule.map_top]
   exact (Extension.Cotangent.finite P.fg_ker).1.map P.toExtension.cotangentComplex
@@ -593,9 +593,8 @@ attribute [local instance] Module.finitePresentation_of_projective in
 instance [FinitePresentation R S] [Module.Projective S Ω[S⁄R]] :
     Module.Finite S (H1Cotangent R S) := by
   let P := Algebra.Presentation.ofFinitePresentation R S
-  have : Algebra.FiniteType R P.toExtension.Ring := by
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [Generators.toExtension_Ring]); infer_instance
+  -- pack-regime: adapted proof (R43)
+  have : Algebra.FiniteType R P.toExtension.Ring := inferInstanceAs (Algebra.FiniteType R P.Ring)
   suffices Module.Finite S P.toExtension.H1Cotangent from
     .of_surjective P.equivH1Cotangent.toLinearMap P.equivH1Cotangent.surjective
   rw [Module.finite_def, Submodule.fg_top, ← LinearMap.ker_rangeRestrict]

@@ -92,7 +92,8 @@ set_option backward.isDefEq.respectTransparency false in
 instance : P.HasCoeffs P.Core where
   coeffs_subset_range := by
     refine subset_trans P.coeffs_subset_core ?_
-    (set_option backward.dsimp.instanceTypes false in simp [Core, Subalgebra.algebraMap_eq])
+    -- pack-regime: adapted proof (R43)
+    exact fun x hx ↦ ⟨(⟨x, hx⟩ : P.core), rfl⟩
 
 variable (R₀ : Type*) [CommRing R₀] [Algebra R₀ R] [Algebra R₀ S] [IsScalarTower R₀ R S]
   [P.HasCoeffs R₀]

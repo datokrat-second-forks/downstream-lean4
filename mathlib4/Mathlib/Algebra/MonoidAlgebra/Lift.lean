@@ -93,6 +93,17 @@ def liftNCRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x
     map_one' := liftNC_one _ _
     map_mul' := fun _a _b => liftNC_mul _ _ _ _ fun {_ _} _ => h_comm _ _ }
 
+/-- Pack congruence for `MonoidAlgebra.liftNCRingHom`. -/
+@[dsimp_congr] theorem _root_.MonoidAlgebra.liftNCRingHom_pack_congr.{uk, ug, ur} {k : Type uk}
+    [Semiring k] {G G' : Type ug} {R R' : Type ur} [iG : Monoid G] [iG' : Monoid G']
+    [iR : Semiring R] [iR' : Semiring R']
+    (hG : @ClassPack.mk Monoid G iG = @ClassPack.mk Monoid G' iG')
+    (hR : @ClassPack.mk Semiring R iR = @ClassPack.mk Semiring R' iR')
+    (f : k →+* R) (f' : k →+* R') (hf : HEq f f') (g : G →* R) (g' : G' →* R') (hg : HEq g g')
+    (hc : ∀ x y, Commute (f x) (g y)) {hc' : ∀ x y, Commute (f' x) (g' y)} (hh : HEq hc hc') :
+    HEq (MonoidAlgebra.liftNCRingHom f g hc) (MonoidAlgebra.liftNCRingHom f' g' hc') := by
+  cases hG; cases hR; cases hf; cases hg; cases hh; rfl
+
 @[simp]
 lemma liftNCRingHom_single (f : k →+* R) (g : G →* R) (h_comm) (a : G) (b : k) :
     liftNCRingHom f g h_comm (single a b) = f b * g a :=

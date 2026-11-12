@@ -326,6 +326,14 @@ def yonedaMonObj : Cᵒᵖ ⥤ MonCat.{v} where
   map_id _ := MonCat.hom_ext (MonoidHom.ext Category.id_comp)
   map_comp _ _ := MonCat.hom_ext (MonoidHom.ext (Category.assoc _ _))
 
+/-- Pack root lemma: the monoid pack of `(yonedaMonObj M).obj X` is the pack of `unop X ⟶ M`. -/
+@[to_additive (attr := simp)
+/-- Pack root lemma: the additive monoid pack of `(yonedaAddMonObj M).obj X`. -/]
+theorem yonedaMonObj_obj_classPack (M : C) [MonObj M] (X : Cᵒᵖ) :
+    @ClassPack.mk Monoid ((yonedaMonObj M).obj X) ((yonedaMonObj M).obj X).str =
+      @ClassPack.mk Monoid (unop X ⟶ M) Hom.monoid :=
+  rfl
+
 variable (X) in
 /-- If `X` represents a presheaf of monoids `F`, then `Hom(-, X)` is isomorphic to `F` as
 a presheaf of monoids. -/
@@ -378,7 +386,6 @@ lemma MonObj.ofRepresentableBy_yonedaMonObjRepresentableBy :
     ofRepresentableBy M _ (yonedaMonObjRepresentableBy M) = ‹_› := by
   ext; change lift (fst M M) (snd M M) ≫ μ = μ; rw [lift_fst_snd, Category.id_comp]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The yoneda embedding for `Mon C` is fully faithful. -/

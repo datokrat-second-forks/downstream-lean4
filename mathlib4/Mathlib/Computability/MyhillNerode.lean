@@ -41,10 +41,11 @@ theorem leftQuotient_nil : L.leftQuotient [] = L := rfl
 
 set_option backward.isDefEq.respectTransparency false in
 variable (L) in
-set_option backward.dsimp.instanceTypes false in
 theorem leftQuotient_append (x y : List α) :
     L.leftQuotient (x ++ y) = (L.leftQuotient x).leftQuotient y := by
-  simp [leftQuotient, Language]
+  -- pack-regime: adapted proof (R43)
+  simp only [leftQuotient, List.append_assoc]
+  rfl
 
 @[simp]
 theorem mem_leftQuotient (x y : List α) : y ∈ L.leftQuotient x ↔ x ++ y ∈ L := Iff.rfl

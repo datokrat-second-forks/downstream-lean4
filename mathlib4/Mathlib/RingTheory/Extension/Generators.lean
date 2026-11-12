@@ -672,8 +672,9 @@ noncomputable abbrev ker : Ideal P.Ring := P.toExtension.ker
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma ker_eq_ker_aeval_val : P.ker = RingHom.ker (aeval P.val) := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [ker, Extension.ker, toExtension_Ring, algebraMap_eq])
+  -- pack-regime: adapted proof (R43)
+  simp only [ker, Extension.ker, toExtension_Ring, algebraMap_eq, toExtension_algPack,
+    toExtension_commRingPack]
   rfl
 
 lemma ker_mvPolynomial : (mvPolynomial R ι).ker = ⊥ := by

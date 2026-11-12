@@ -383,8 +383,8 @@ variable (p n R)
 
 theorem card {R : Type*} [Fintype R] :
     Fintype.card (TruncatedWittVector p n R) = Fintype.card R ^ n := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [TruncatedWittVector, Fintype.card_fin, Fintype.card_fun])
+  -- pack-regime: adapted proof (R43)
+  exact (Fintype.card_fun (α := Fin n) (β := R)).trans (by rw [Fintype.card_fin])
 
 end Fintype
 

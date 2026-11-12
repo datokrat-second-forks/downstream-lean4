@@ -156,7 +156,7 @@ theorem exists_div_of_norm_eq_one (hg : ∀ x, x ∈ Subgroup.zpowers g) {x : L}
     LinearMap.id_coe, id_eq,
     toAdditive_symm_apply, toAdditive_apply, toMul_ofMul, IsUnit.unit_spec, xu] at this
   rw [← this, toMul_sub]
-  (set_option backward.dsimp.instanceTypes false in simp)
+  simp
 
 variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B] [Algebra A L] [Algebra A K]
 variable [Algebra B L] [IsScalarTower A B L] [IsScalarTower A K L] [IsFractionRing A K] [IsDomain A]

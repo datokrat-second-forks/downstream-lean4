@@ -71,6 +71,12 @@ def coyoneda : Type vᵒᵖ ⥤ CommRingCat.{u} ⥤ CommRingCat.{max u v} where
   map {m n} f :=
   { app R := CommRingCat.ofHom (RingHom.pi (Pi.evalRingHom _ <| f.unop ·)) }
 
+/-- Pack root lemma: the ring on `(coyoneda.obj n).obj R` is the ring of functions `unop n → R`. -/
+@[simp] theorem coyoneda_obj_obj_classPack (n : Type vᵒᵖ) (R : CommRingCat.{u}) :
+    @ClassPack.mk CommRing ((coyoneda.obj n).obj R) ((coyoneda.obj n).obj R).commRing =
+      @ClassPack.mk CommRing (unop n → R) (by infer_instance) :=
+  rfl
+
 /-- The adjunction `Hom_{CRing}(Fun(n, R), S) ≃ Fun(n, Hom_{CRing}(R, S))`. -/
 def coyonedaAdj (R : CommRingCat.{u}) :
     (coyoneda.flip.obj R).rightOp ⊣ yoneda.obj R where
@@ -79,7 +85,6 @@ def coyonedaAdj (R : CommRingCat.{u}) :
 
 instance (R : CommRingCat.{u}) : (yoneda.obj R).IsRightAdjoint := ⟨_, ⟨coyonedaAdj R⟩⟩
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -96,7 +101,6 @@ def monoidAlgebra (R : CommRingCat.{max u v}) : CommMonCat.{v} ⥤ Under R where
   map f := Under.homMk (CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom R f.hom)
   map_comp f g := by ext : 2; apply MonoidAlgebra.ringHom_ext <;> intro <;> simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -105,16 +109,20 @@ def monoidAlgebraAdj (R : CommRingCat.{u}) :
     monoidAlgebra R ⊣ Under.forget R ⋙ forget₂ _ _ where
   unit := { app G := CommMonCat.ofHom (MonoidAlgebra.of R G) }
   counit :=
+  -- pack-regime: adapted proof (R43)
   { app S := Under.homMk (CommRingCat.ofHom (MonoidAlgebra.liftNCRingHom S.hom.hom
-      (.id _) fun _ _ ↦ .all _ _)) (by ext; simp [MonoidAlgebra.liftNCRingHom]),
+      (.id _) fun _ _ ↦ .all _ _)) (by ext; simp [MonoidAlgebra.liftNCRingHom_single]),
+    -- pack-regime: adapted proof (R43)
     naturality S T f := by
       ext : 2
       apply MonoidAlgebra.ringHom_ext <;>
-        intro <;> simp [MonoidAlgebra.liftNCRingHom, ← Under.w f, -Under.w] }
+        intro <;> simp [MonoidAlgebra.liftNCRingHom_single, ← Under.w f, -Under.w] }
+  -- pack-regime: adapted proof (R43)
   left_triangle_components G := by
     ext : 2
-    apply MonoidAlgebra.ringHom_ext <;> intro <;> simp [MonoidAlgebra.liftNCRingHom]
-  right_triangle_components S := by dsimp; ext; simp [MonoidAlgebra.liftNCRingHom]
+    apply MonoidAlgebra.ringHom_ext <;> intro <;> simp [MonoidAlgebra.liftNCRingHom_single]
+  -- pack-regime: adapted proof (R43)
+  right_triangle_components S := by dsimp; ext; simp [MonoidAlgebra.liftNCRingHom_single]
 
 /-- The adjunction `G ↦ ℤ[G]` and `R ↦ Rˣ` between `CommGrpCat` and `CommRing`. -/
 def forget₂Adj {R : CommRingCat.{u}} (hR : Limits.IsInitial R) :

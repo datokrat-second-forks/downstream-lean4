@@ -58,7 +58,6 @@ abbrev T :=
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   MvPolynomial ι R ⧸ (Ideal.span <| Set.range <| Subtype.val ∘ D.f ∘ b))
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -66,7 +65,9 @@ set_option backward.isDefEq.respectTransparency false in
 def hom : D.T →ₐ[R] S := Ideal.Quotient.liftₐ _ (aeval P.val) <| by
   simp_rw [← RingHom.mem_ker, ← IsConcreteLE.le_iff, Ideal.span_le, Set.range_subset_iff]
   intro i
-  simpa only [Generators.toExtension_Ring, Generators.toExtension_commRing, Function.comp_apply,
+  -- pack-regime: adapted proof (R43)
+  simpa only [Generators.toExtension_Ring, Generators.toExtension_commRing,
+    Generators.toExtension_commRingPack, Generators.toExtension_algPack, Function.comp_apply,
     SetLike.mem_coe, RingHom.mem_ker, ← P.algebraMap_apply] using (D.f _).property
 
 instance : Algebra D.T S := D.hom.toAlgebra
@@ -132,28 +133,26 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma ker_presLeft_le : D.presLeft.ker ≤ P.ker := by
   intro x hx
-  (set_option backward.dsimp.instanceTypes false in
+  -- pack-regime: adapted proof (R43)
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simpa only [toExtension_commRing, toExtension_Ring, RingHom.mem_ker,
-    toExtension_algebra₂, algebraMap_apply, Ideal.Quotient.algebraMap_eq,
-    map_zero] using! (algebraMap D.T S).congr_arg hx)
+  simpa [algebraMap_apply, Ideal.Quotient.algebraMap_eq] using! (algebraMap D.T S).congr_arg hx
 
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The forward direction of the isomorphism `S ⊗[T] J/J² ≃ₗ[S] I/I²`. -/
 def tensorCotangentHom : S ⊗[D.T] D.presLeft.toExtension.Cotangent →ₗ[S] P.toExtension.Cotangent :=
   LinearMap.liftBaseChange _ (Extension.Cotangent.map D.fhom.toExtensionHom)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma tensorCotangentHom_tmul (x : D.presLeft.toExtension.ker) :
     D.tensorCotangentHom (1 ⊗ₜ[D.T] Extension.Cotangent.mk x) =
       .mk ⟨x.val, D.ker_presLeft_le x.2⟩ := by
-  simp_rw +instances [tensorCotangentHom, LinearMap.liftBaseChange_tmul, one_smul, presLeft,
+  -- pack-regime: adapted proof (R43)
+  simp only [tensorCotangentHom, LinearMap.liftBaseChange_tmul, one_smul,
     Extension.Cotangent.map_mk, Extension.Hom.toAlgHom_apply, Hom.toExtensionHom_toRingHom,
-    toAlgHom_fhom, AlgHom.toRingHom_eq_coe, AlgHom.id_toRingHom, toExtension_Ring,
-    toExtension_commRing, toExtension_algebra₂, Presentation.naive_toGenerators, RingHom.id_apply]
+    toAlgHom_fhom, AlgHom.toRingHom_eq_coe, AlgHom.id_toRingHom, RingHom.id_apply]
+  rfl
 
 /-- The backwards direction of the isomorphism `S ⊗[T] J/J² ≃ₗ[S] I/I²`. -/
 def tensorCotangentInv : P.toExtension.Cotangent →ₗ[S] S ⊗[D.T] D.presLeft.toExtension.Cotangent :=
@@ -210,13 +209,13 @@ lemma map_ofComp_mk [Nontrivial S] :
       Generators.cMulXSubOneCotangent S D.gbar := by
   simp_rw [Extension.Cotangent.map_mk, Generators.Hom.toExtensionHom_toAlgHom_apply]
   congr 2
+  -- pack-regime: workaround (R43)
   have : Nontrivial D.T := inferInstance
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp only [T, Generators.toExtension_Ring, Generators.toExtension_commRing] at this)
   rw [pres, presLeft, presRight, Presentation.relation_comp_localizationAway_inl]
   · exact Generators.toAlgHom_ofComp_localizationAway _ _
   · rw [Presentation.naive, Generators.naive_σ];
-    simp
+    -- pack-regime: workaround (R43)
+    simp [neg_eq_zero, one_ne_zero (α := D.T)]
   · rw [Presentation.naive, Generators.naive_σ]
     simp
 
@@ -405,9 +404,10 @@ public lemma exists_presentation_of_basis_cotangent [Algebra.FinitePresentation 
   rw [← Submodule.coe_subtype, Ideal.span, Set.range_comp, ← Submodule.map_span,
     Submodule.comap_map_eq_of_injective P.ker.subtype_injective,
     ← Extension.Cotangent.ker_mk]
-  (set_option backward.dsimp.instanceTypes false in dsimp)
-  simp only [← LinearMap.map_le_map_iff, Submodule.map_span, ← Set.range_comp,
-    Function.comp_def, ← Submodule.restrictScalars_span P.Ring S P.algebraMap_surjective]
+  -- pack-regime: adapted proof (R43)
+  dsimp
+  simp only [← LinearMap.map_le_map_iff, Submodule.map_span, ← Set.range_comp, Function.comp_def,
+    ← Submodule.restrictScalars_span P.toExtension.Ring S P.algebraMap_surjective]
   refine le_trans le_top (top_le_iff.mpr ?_)
   rw [Submodule.restrictScalars_eq_top_iff]
   convert! b₀.span_eq
