@@ -85,8 +85,8 @@ def condensedSetToTopCat : CondensedSet.{u} ⥤ TopCat.{u + 1} where
 
 /-- Pack root lemma: the topology pack of `condensedSetToTopCat.obj X` is that of `X(*)`. -/
 @[simp] theorem condensedSetToTopCat_obj_classPack :
-    @ClassPack.mk TopologicalSpace (condensedSetToTopCat.obj X) (condensedSetToTopCat.obj X).str =
-      @ClassPack.mk TopologicalSpace (X.obj.obj ⟨↧PUnit⟩)
+    @TopologicalSpacePack.mk (condensedSetToTopCat.obj X) (condensedSetToTopCat.obj X).str =
+      @TopologicalSpacePack.mk (X.obj.obj ⟨↧PUnit⟩)
         X.toTopCat.str :=
   rfl
 

@@ -65,7 +65,7 @@ attribute [coe] V
 /-- Lens: the additive group pack of the carrier of `X : Rep k G` follows `X`. -/
 @[dsimp_congr] theorem _root_.Rep.pack_congr.{wa, uk, uG} {k : Type uk} {G : Type uG} [Semiring k]
     [Monoid G] {X X' : Rep.{wa} k G} (h : X = X') :
-    @ClassPack.mk AddCommGroup X X.hV1 = @ClassPack.mk AddCommGroup X' X'.hV1 := by
+    @AddCommGroupPack.mk X X.hV1 = @AddCommGroupPack.mk X' X'.hV1 := by
   cases h; rfl
 
 /-- Lens: the coercion pack of the intertwining maps `X.ρ.IntertwiningMap Y.ρ` between objects

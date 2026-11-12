@@ -120,8 +120,8 @@ instance (α β : Type*) [LE α] [LE β] : FunLike (α ≃o β) α β := RelIso.
 /-- Pack congruence for the type `α ↪o β`. -/
 @[dsimp_congr] theorem OrderEmbedding.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
-    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
-    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (hα : @LEPack.mk α iα = @LEPack.mk α' iα')
+    (hβ : @LEPack.mk β iβ = @LEPack.mk β' iβ') :
     (α ↪o β) = (α' ↪o β') := by
   cases hα; cases hβ; rfl
 
@@ -129,8 +129,8 @@ instance (α β : Type*) [LE α] [LE β] : FunLike (α ≃o β) α β := RelIso.
 packs of `α` and `β`. -/
 @[dsimp_congr] theorem OrderEmbedding.funLikePack_congr.{ua, va} {α α' : Type ua}
     {β β' : Type va} [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
-    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
-    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (hα : @LEPack.mk α iα = @LEPack.mk α' iα')
+    (hβ : @LEPack.mk β iβ = @LEPack.mk β' iβ') :
     @FunLikePack.mk (α ↪o β) α (fun _ => β) (instFunLikeOrderEmbedding α β) =
       @FunLikePack.mk (α' ↪o β') α' (fun _ => β') (instFunLikeOrderEmbedding α' β') := by
   cases hα; cases hβ; rfl
@@ -139,8 +139,8 @@ packs of `α` and `β`. -/
 packs of `α` and `β`. -/
 @[dsimp_congr] theorem OrderEmbedding.relFunLikePack_congr.{ua, va} {α α' : Type ua}
     {β β' : Type va} [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
-    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
-    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (hα : @LEPack.mk α iα = @LEPack.mk α' iα')
+    (hβ : @LEPack.mk β iβ = @LEPack.mk β' iβ') :
     @FunLikePack.mk (α ↪o β) α (fun _ => β) RelEmbedding.instFunLike =
       @FunLikePack.mk (α' ↪o β') α' (fun _ => β') RelEmbedding.instFunLike := by
   cases hα; cases hβ; rfl
@@ -148,16 +148,16 @@ packs of `α` and `β`. -/
 /-- Pack congruence for the type `α ≃o β` of order isomorphisms. -/
 @[dsimp_congr] theorem OrderIso.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
-    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
-    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (hα : @LEPack.mk α iα = @LEPack.mk α' iα')
+    (hβ : @LEPack.mk β iβ = @LEPack.mk β' iβ') :
     (α ≃o β) = (α' ≃o β') := by
   cases hα; cases hβ; rfl
 
 /-- Lens: the coercion pack of `α ≃o β` follows the packs of `α` and `β`. -/
 @[dsimp_congr] theorem OrderIso.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
-    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
-    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (hα : @LEPack.mk α iα = @LEPack.mk α' iα')
+    (hβ : @LEPack.mk β iβ = @LEPack.mk β' iβ') :
     FunLikePack.mk (α ≃o β) α (fun _ => β) = FunLikePack.mk (α' ≃o β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
 
@@ -388,16 +388,16 @@ def comp (g : β →o γ) (f : α →o β) : α →o γ :=
 /-- Pack congruence for the type `α →o β`. -/
 @[dsimp_congr] theorem _root_.OrderHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [iα : Preorder α] [iα' : Preorder α'] [iβ : Preorder β] [iβ' : Preorder β']
-    (hα : @ClassPack.mk Preorder α iα = @ClassPack.mk Preorder α' iα')
-    (hβ : @ClassPack.mk Preorder β iβ = @ClassPack.mk Preorder β' iβ') :
+    (hα : @PreorderPack.mk α iα = @PreorderPack.mk α' iα')
+    (hβ : @PreorderPack.mk β iβ = @PreorderPack.mk β' iβ') :
     (α →o β) = (α' →o β') := by
   cases hα; cases hβ; rfl
 
 /-- Lens: the coercion pack of `α →o β` follows the packs of `α` and `β`. -/
 @[dsimp_congr] theorem _root_.OrderHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [iα : Preorder α] [iα' : Preorder α'] [iβ : Preorder β] [iβ' : Preorder β']
-    (hα : @ClassPack.mk Preorder α iα = @ClassPack.mk Preorder α' iα')
-    (hβ : @ClassPack.mk Preorder β iβ = @ClassPack.mk Preorder β' iβ') :
+    (hα : @PreorderPack.mk α iα = @PreorderPack.mk α' iα')
+    (hβ : @PreorderPack.mk β iβ = @PreorderPack.mk β' iβ') :
     @FunLikePack.mk (α →o β) α (fun _ => β) OrderHom.instFunLike =
       @FunLikePack.mk (α' →o β') α' (fun _ => β') OrderHom.instFunLike := by
   cases hα; cases hβ; rfl

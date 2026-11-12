@@ -218,8 +218,8 @@ noncomputable def autGaloisSystem : PointedGaloisObject F ⥤ GrpCat.{u₂} wher
 
 /-- Pack root lemma: the group pack of `(autGaloisSystem F).obj A` is that of `Aut A`. -/
 @[simp] theorem autGaloisSystem_obj_classPack (A : PointedGaloisObject F) :
-    @ClassPack.mk Group ((autGaloisSystem F).obj A) ((autGaloisSystem F).obj A).str =
-      @ClassPack.mk Group (Aut (A : C)) (Aut.instGroup (A : C)) :=
+    @GroupPack.mk ((autGaloisSystem F).obj A) ((autGaloisSystem F).obj A).str =
+      @GroupPack.mk (Aut (A : C)) (Aut.instGroup (A : C)) :=
   rfl
 
 /-- The limit of `autGaloisSystem`. -/

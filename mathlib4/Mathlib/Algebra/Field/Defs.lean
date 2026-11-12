@@ -75,6 +75,9 @@ Do not use this directly (instances of `DivisionRing` are allowed to override th
 better definitional properties). Instead, use the coercion. -/
 def Rat.castRec [NatCast K] [IntCast K] [Div K] (q : ℚ) : K := q.num / q.den
 
+-- This pack belongs to Batteries, next to `RatCast`.
+class_pack RatCast
+
 /-- A `DivisionSemiring` is a `Semiring` with multiplicative inverses for nonzero elements.
 
 An instance of `DivisionSemiring K` includes maps `nnratCast : ℚ≥0 → K` and `nnqsmul : ℚ≥0 → K → K`.
@@ -168,6 +171,8 @@ If the semifield has positive characteristic `p`, our division by zero conventio
 `nnratCast (1 / p) = 1 / 0 = 0`. -/
 class Semifield (K : Type*) extends CommSemiring K, DivisionSemiring K, CommGroupWithZero K
 
+class_pack Semifield
+
 /-- A `Field` is a `CommRing` with multiplicative inverses for nonzero elements.
 
 An instance of `Field K` includes maps `ratCast : ℚ → K` and `qsmul : ℚ → K → K`.
@@ -180,13 +185,15 @@ If the field has positive characteristic `p`, our division by zero convention fo
 @[stacks 09FD "first part"]
 class Field (K : Type u) extends CommRing K, DivisionRing K
 
+class_pack Field
+
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toSemifield [Field K] : Semifield K := { ‹Field K› with }
 
 /-- Lens: the semifield pack of a field follows its field pack. -/
 @[dsimp_congr] theorem Field.toSemifield.packLens.{uk} {K K' : Type uk} [i : Field K]
-    [i' : Field K'] (h : @ClassPack.mk Field K i = @ClassPack.mk Field K' i') :
-    @ClassPack.mk Semifield K Field.toSemifield = @ClassPack.mk Semifield K' Field.toSemifield := by
+    [i' : Field K'] (h : @FieldPack.mk K i = @FieldPack.mk K' i') :
+    @SemifieldPack.mk K Field.toSemifield = @SemifieldPack.mk K' Field.toSemifield := by
   cases h; rfl
 
 namespace NNRat

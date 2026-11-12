@@ -84,8 +84,8 @@ def _root_.lightCondSetToTopCat : LightCondSet.{u} ⥤ TopCat.{u} where
 
 /-- Pack root lemma: the topology pack of `lightCondSetToTopCat.obj X` is that of `X(*)`. -/
 @[simp] theorem lightCondSetToTopCat_obj_classPack (X : LightCondSet.{u}) :
-    @ClassPack.mk TopologicalSpace (lightCondSetToTopCat.obj X) (lightCondSetToTopCat.obj X).str =
-      @ClassPack.mk TopologicalSpace (X.obj.obj ⟨↧PUnit⟩)
+    @TopologicalSpacePack.mk (lightCondSetToTopCat.obj X) (lightCondSetToTopCat.obj X).str =
+      @TopologicalSpacePack.mk (X.obj.obj ⟨↧PUnit⟩)
         (LightCondSet.underlyingTopologicalSpace X) :=
   rfl
 

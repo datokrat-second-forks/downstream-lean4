@@ -366,8 +366,8 @@ instance instAddCommMonoid : AddCommMonoid (ι →₀ M) :=
 /-- Lens: the `AddCommMonoid` pack of `α →₀ M` follows the index type. -/
 @[dsimp_congr] theorem addCommMonoidPack_congr.{ua, um} {M : Type um}
     [AddCommMonoid M] {α α' : Type ua} (h : α = α') :
-    @ClassPack.mk AddCommMonoid (α →₀ M) Finsupp.instAddCommMonoid =
-      @ClassPack.mk AddCommMonoid (α' →₀ M) Finsupp.instAddCommMonoid := by
+    @AddCommMonoidPack.mk (α →₀ M) Finsupp.instAddCommMonoid =
+      @AddCommMonoidPack.mk (α' →₀ M) Finsupp.instAddCommMonoid := by
   cases h; rfl
 
 lemma single_add_single_eq_single_add_single {k l m n : ι} {u v : M} (hu : u ≠ 0) (hv : v ≠ 0) :

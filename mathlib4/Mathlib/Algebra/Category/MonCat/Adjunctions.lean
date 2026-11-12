@@ -96,8 +96,8 @@ def free : Type u ⥤ AddCommMonCat.{u} where
 
 /-- Pack root lemma: the `AddCommMonoid` pack of the carrier of `AddCommMonCat.free.obj X`. -/
 @[simp] theorem free_obj_pack.{ua} (X : Type ua) :
-    @ClassPack.mk AddCommMonoid (AddCommMonCat.free.obj X) (AddCommMonCat.free.obj X).str =
-      @ClassPack.mk AddCommMonoid (X →₀ ℕ) (by infer_instance) :=
+    @AddCommMonoidPack.mk (AddCommMonCat.free.obj X) (AddCommMonCat.free.obj X).str =
+      @AddCommMonoidPack.mk (X →₀ ℕ) (by infer_instance) :=
   rfl
 
 set_option backward.dsimp.instanceTypes false in

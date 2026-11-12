@@ -56,6 +56,13 @@ variable {α β γ δ : Type*} {ι : Sort*} {s t u : Set α}
   `MeasurableSet.iUnion` instead. -/
   measurableSet_iUnion : ∀ f : ℕ → Set α, (∀ i, MeasurableSet' (f i)) → MeasurableSet' (⋃ i, f i)
 
+/-- A type with an instance of the class `MeasurableSpace`. -/
+structure MeasurableSpacePack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : MeasurableSpace α]
+
 instance [h : MeasurableSpace α] : MeasurableSpace αᵒᵈ := h
 
 /-- `MeasurableSet s` means that `s` is measurable (in the ambient measure space on `α`) -/

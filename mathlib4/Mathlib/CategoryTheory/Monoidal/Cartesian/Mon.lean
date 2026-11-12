@@ -330,8 +330,8 @@ def yonedaMonObj : Cᵒᵖ ⥤ MonCat.{v} where
 @[to_additive (attr := simp)
 /-- Pack root lemma: the additive monoid pack of `(yonedaAddMonObj M).obj X`. -/]
 theorem yonedaMonObj_obj_classPack (M : C) [MonObj M] (X : Cᵒᵖ) :
-    @ClassPack.mk Monoid ((yonedaMonObj M).obj X) ((yonedaMonObj M).obj X).str =
-      @ClassPack.mk Monoid (unop X ⟶ M) Hom.monoid :=
+    @MonoidPack.mk ((yonedaMonObj M).obj X) ((yonedaMonObj M).obj X).str =
+      @MonoidPack.mk (unop X ⟶ M) Hom.monoid :=
   rfl
 
 variable (X) in

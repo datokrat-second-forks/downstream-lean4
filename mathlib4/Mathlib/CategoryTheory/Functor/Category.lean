@@ -60,10 +60,10 @@ instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
 theorem Functor.category.packLens.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} {iC : Category.{vc} C} {iC' : Category.{vc} C'}
     {iD : Category.{vd} D} {iD' : Category.{vd} D'}
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD') :
-    @ClassPack.mk Category.{max uc vd, max vc vd uc ud} (C ⥤ D) Functor.category =
-      @ClassPack.mk Category.{max uc vd, max vc vd uc ud} (C' ⥤ D') Functor.category := by
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD') :
+    @CategoryPack.mk.{max uc vd, max vc vd uc ud} (C ⥤ D) Functor.category =
+      @CategoryPack.mk.{max uc vd, max vc vd uc ud} (C' ⥤ D') Functor.category := by
   cases hC; cases hD; rfl
 
 namespace NatTrans

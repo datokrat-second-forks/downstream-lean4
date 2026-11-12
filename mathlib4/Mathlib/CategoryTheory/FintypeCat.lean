@@ -58,8 +58,8 @@ noncomputable def fintype {X : FintypeCat} : Fintype X :=
 
 /-- Lens: the `Fintype` pack of the carrier of `X : FintypeCat` follows `X`. -/
 @[dsimp_congr] theorem fintype.packLens.{ua} {X X' : FintypeCat.{ua}} (h : X = X') :
-    @ClassPack.mk Fintype X.obj (@FintypeCat.fintype X) =
-      @ClassPack.mk Fintype X'.obj (@FintypeCat.fintype X') := by
+    @FintypePack.mk X.obj (@FintypeCat.fintype X) =
+      @FintypePack.mk X'.obj (@FintypeCat.fintype X') := by
   cases h; rfl
 
 /-- The fully faithful embedding of `FintypeCat` into the category of types. -/

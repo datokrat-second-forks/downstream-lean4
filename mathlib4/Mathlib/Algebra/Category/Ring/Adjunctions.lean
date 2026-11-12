@@ -73,8 +73,8 @@ def coyoneda : Type vᵒᵖ ⥤ CommRingCat.{u} ⥤ CommRingCat.{max u v} where
 
 /-- Pack root lemma: the ring on `(coyoneda.obj n).obj R` is the ring of functions `unop n → R`. -/
 @[simp] theorem coyoneda_obj_obj_classPack (n : Type vᵒᵖ) (R : CommRingCat.{u}) :
-    @ClassPack.mk CommRing ((coyoneda.obj n).obj R) ((coyoneda.obj n).obj R).commRing =
-      @ClassPack.mk CommRing (unop n → R) (by infer_instance) :=
+    @CommRingPack.mk ((coyoneda.obj n).obj R) ((coyoneda.obj n).obj R).commRing =
+      @CommRingPack.mk (unop n → R) (by infer_instance) :=
   rfl
 
 /-- The adjunction `Hom_{CRing}(Fun(n, R), S) ≃ Fun(n, Hom_{CRing}(R, S))`. -/

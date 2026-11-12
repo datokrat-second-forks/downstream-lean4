@@ -70,15 +70,15 @@ instance limitAlgebra :
 /-- Pack root lemma: the ring on the limit cone point is the ring of the shrunk subalgebra of
 sections. -/
 @[simp] theorem limitSemiring_classPack :
-    @ClassPack.mk Ring (Types.Small.limitCone.{v, w} (F ⋙ forget (AlgCat.{w} R))).pt
+    @RingPack.mk (Types.Small.limitCone.{v, w} (F ⋙ forget (AlgCat.{w} R))).pt
         (limitSemiring F) =
-      @ClassPack.mk Ring (Shrink (F ⋙ forget (AlgCat.{w} R)).sections) (by infer_instance) :=
+      @RingPack.mk (Shrink (F ⋙ forget (AlgCat.{w} R)).sections) (by infer_instance) :=
   rfl
 
 /-- Pack root lemma: the semiring on `(F ⋙ forget _).obj j` is the semiring of `F.obj j`. -/
 @[simp] theorem semiringObj_classPack (j : J) :
-    @ClassPack.mk Semiring ((F ⋙ forget (AlgCat.{w} R)).obj j) (semiringObj F j) =
-      @ClassPack.mk Semiring (F.obj j) (by infer_instance) :=
+    @SemiringPack.mk ((F ⋙ forget (AlgCat.{w} R)).obj j) (semiringObj F j) =
+      @SemiringPack.mk (F.obj j) (by infer_instance) :=
   rfl
 
 /-- Pack root lemma: the algebra on the limit cone point is the algebra of the shrunk subalgebra

@@ -53,9 +53,9 @@ instance (priority := 100) smallCategory (α : Type u) [Preorder α] : SmallCate
 /-- Lens: the category pack of a preorder follows the preorder pack. -/
 @[dsimp_congr] theorem smallCategory.packLens.{ua} {α α' : Type ua}
     {i : Preorder α} {i' : Preorder α'}
-    (h : @ClassPack.mk Preorder α i = @ClassPack.mk Preorder α' i') :
-    @ClassPack.mk CategoryTheory.Category.{ua, ua} α (@Preorder.smallCategory α i) =
-      @ClassPack.mk CategoryTheory.Category.{ua, ua} α' (@Preorder.smallCategory α' i') := by
+    (h : @PreorderPack.mk α i = @PreorderPack.mk α' i') :
+    @CategoryTheory.CategoryPack.mk.{ua, ua} α (@Preorder.smallCategory α i) =
+      @CategoryTheory.CategoryPack.mk.{ua, ua} α' (@Preorder.smallCategory α' i') := by
   cases h; rfl
 
 instance subsingleton_hom {α : Type u} [Preorder α] (U V : α) : Subsingleton (U ⟶ V) :=

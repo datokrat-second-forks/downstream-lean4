@@ -108,8 +108,8 @@ instance (X : C) : PartialOrder (Subobject X) :=
 /-- Lens: the partial order pack of `Subobject X` follows `X`. -/
 @[dsimp_congr] theorem Subobject.instPartialOrder.packLens.{vc, uc} {C : Type uc}
     [Category.{vc} C] {X X' : C} (h : X = X') :
-    @ClassPack.mk PartialOrder (Subobject X) (instPartialOrderSubobject X) =
-      @ClassPack.mk PartialOrder (Subobject X') (instPartialOrderSubobject X') := by
+    @PartialOrderPack.mk (Subobject X) (instPartialOrderSubobject X) =
+      @PartialOrderPack.mk (Subobject X') (instPartialOrderSubobject X') := by
   cases h; rfl
 
 namespace Subobject

@@ -62,9 +62,9 @@ noncomputable instance limitMonoid :
 /-- Pack root lemma: the additive monoid on the limit cone point is the additive monoid of the
 shrunk sections. -/]
 theorem limitMonoid_classPack :
-    @ClassPack.mk Monoid (Types.Small.limitCone.{v, u} (F ⋙ forget MonCat.{u})).pt
+    @MonoidPack.mk (Types.Small.limitCone.{v, u} (F ⋙ forget MonCat.{u})).pt
         (limitMonoid F) =
-      @ClassPack.mk Monoid (Shrink (F ⋙ forget MonCat.{u}).sections) (by infer_instance) :=
+      @MonoidPack.mk (Shrink (F ⋙ forget MonCat.{u}).sections) (by infer_instance) :=
   rfl
 
 set_option backward.defeqAttrib.useBackward true in

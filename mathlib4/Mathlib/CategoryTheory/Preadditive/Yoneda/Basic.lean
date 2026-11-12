@@ -51,9 +51,9 @@ def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (End Y) where
 /-- Pack root lemma: the group pack of `(preadditiveYonedaObj Y).obj X`. -/
 @[simp] theorem preadditiveYonedaObj_obj_groupPack.{vc, uc} {C : Type uc} [Category.{vc} C]
     [Preadditive C] (Y : C) (X : Cᵒᵖ) :
-    @ClassPack.mk AddCommGroup ((preadditiveYonedaObj Y).obj X)
+    @AddCommGroupPack.mk ((preadditiveYonedaObj Y).obj X)
         ((preadditiveYonedaObj Y).obj X).isAddCommGroup =
-      @ClassPack.mk AddCommGroup (X.unop ⟶ Y) (Preadditive.homGroup X.unop Y) := rfl
+      @AddCommGroupPack.mk (X.unop ⟶ Y) (Preadditive.homGroup X.unop Y) := rfl
 
 /-- Pack root lemma: the module pack of `(preadditiveYonedaObj Y).obj X`. -/
 @[simp] theorem preadditiveYonedaObj_obj_smodPack.{vc, uc} {C : Type uc} [Category.{vc} C]

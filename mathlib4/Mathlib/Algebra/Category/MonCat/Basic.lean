@@ -314,8 +314,8 @@ abbrev ofHom {X Y : Type u} [CommMonoid X] [CommMonoid Y] (f : X →* Y) : of X 
 /-- Pack congruence for `AddCommMonCat.ofHom`. -/
 @[dsimp_congr] theorem _root_.AddCommMonCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
     [i : AddCommMonoid X] [i' : AddCommMonoid X'] [j : AddCommMonoid Y] [j' : AddCommMonoid Y']
-    (hX : @ClassPack.mk AddCommMonoid X i = @ClassPack.mk AddCommMonoid X' i')
-    (hY : @ClassPack.mk AddCommMonoid Y j = @ClassPack.mk AddCommMonoid Y' j')
+    (hX : @AddCommMonoidPack.mk X i = @AddCommMonoidPack.mk X' i')
+    (hY : @AddCommMonoidPack.mk Y j = @AddCommMonoidPack.mk Y' j')
     (f : X →+ Y) (f' : X' →+ Y') (hf : HEq f f') :
     HEq (AddCommMonCat.ofHom f) (AddCommMonCat.ofHom f') := by
   cases hX; cases hY; cases hf; rfl
@@ -323,8 +323,8 @@ abbrev ofHom {X Y : Type u} [CommMonoid X] [CommMonoid Y] (f : X →* Y) : of X 
 /-- Pack congruence for `CommMonCat.ofHom`. -/
 @[dsimp_congr] theorem _root_.CommMonCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
     [i : CommMonoid X] [i' : CommMonoid X'] [j : CommMonoid Y] [j' : CommMonoid Y']
-    (hX : @ClassPack.mk CommMonoid X i = @ClassPack.mk CommMonoid X' i')
-    (hY : @ClassPack.mk CommMonoid Y j = @ClassPack.mk CommMonoid Y' j')
+    (hX : @CommMonoidPack.mk X i = @CommMonoidPack.mk X' i')
+    (hY : @CommMonoidPack.mk Y j = @CommMonoidPack.mk Y' j')
     (f : X →* Y) (f' : X' →* Y') (hf : HEq f f') :
     HEq (CommMonCat.ofHom f) (CommMonCat.ofHom f') := by
   cases hX; cases hY; cases hf; rfl
@@ -453,22 +453,22 @@ end CommMonCat
 
 /-- Lens: the `Monoid` pack of the carrier of `X : MonCat` follows `X`. -/
 @[dsimp_congr] theorem MonCat.pack_congr.{ua} {X X' : MonCat.{ua}} (h : X = X') :
-    @ClassPack.mk Monoid X X.str = @ClassPack.mk Monoid X' X'.str := by
+    @MonoidPack.mk X X.str = @MonoidPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `AddMonoid` pack of the carrier of `X : AddMonCat` follows `X`. -/
 @[dsimp_congr] theorem AddMonCat.pack_congr.{ua} {X X' : AddMonCat.{ua}} (h : X = X') :
-    @ClassPack.mk AddMonoid X X.str = @ClassPack.mk AddMonoid X' X'.str := by
+    @AddMonoidPack.mk X X.str = @AddMonoidPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `CommMonoid` pack of the carrier of `X : CommMonCat` follows `X`. -/
 @[dsimp_congr] theorem CommMonCat.pack_congr.{ua} {X X' : CommMonCat.{ua}} (h : X = X') :
-    @ClassPack.mk CommMonoid X X.str = @ClassPack.mk CommMonoid X' X'.str := by
+    @CommMonoidPack.mk X X.str = @CommMonoidPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `AddCommMonoid` pack of the carrier of `X : AddCommMonCat` follows `X`. -/
 @[dsimp_congr] theorem AddCommMonCat.pack_congr.{ua} {X X' : AddCommMonCat.{ua}} (h : X = X') :
-    @ClassPack.mk AddCommMonoid X X.str = @ClassPack.mk AddCommMonoid X' X'.str := by
+    @AddCommMonoidPack.mk X X.str = @AddCommMonoidPack.mk X' X'.str := by
   cases h; rfl
 
 variable {X Y : Type u}

@@ -426,9 +426,9 @@ instance (x : orbitRel.Quotient G α) : MulAction G x.orbit where
 `orbit G a`. -/
 @[simp] theorem orbitRel.Quotient.orbit_mk_smulPack {G : Type*} {α : Type*} [Group G]
     [MulAction G α] (a : α) :
-    ClassPack.mk (c := SMul G)
+    SMulPack.mk (α := G)
         ↑(orbitRel.Quotient.orbit (Quotient.mk'' a : orbitRel.Quotient G α)) =
-      ClassPack.mk (c := SMul G) ↑(MulAction.orbit G a) :=
+      SMulPack.mk (α := G) ↑(MulAction.orbit G a) :=
   rfl
 
 @[to_additive (attr := simp)]

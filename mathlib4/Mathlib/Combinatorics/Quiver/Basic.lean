@@ -39,6 +39,13 @@ class Quiver (V : Type u) where
   /-- The type of edges/arrows/morphisms between a given source and target. -/
   Hom : V → V → Type v
 
+/-- A type with an instance of the class `Quiver`. -/
+structure QuiverPack.{vq, uq} where
+  /-- The carrier. -/
+  α : Type uq
+  /-- The instance. -/
+  [inst : Quiver.{vq} α]
+
 attribute [to_dual self (reorder := 3 4)] Quiver.Hom
 attribute [to_dual self (reorder := Hom (1 2))] Quiver.mk
 
@@ -52,7 +59,7 @@ infixr:10 " ⟶ " => Quiver.Hom
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem Quiver.Hom_pack_congr.{vq, uq} {V V' : Type uq} [i : Quiver.{vq} V]
     [i' : Quiver.{vq} V']
-    (h : @ClassPack.mk Quiver.{vq, uq} V i = @ClassPack.mk Quiver.{vq, uq} V' i')
+    (h : @QuiverPack.mk.{vq, uq} V i = @QuiverPack.mk.{vq, uq} V' i')
     (a : V) (a' : V') (ha : HEq a a') (b : V) (b' : V') (hb : HEq b b') :
     (a ⟶ b) = (a' ⟶ b') := by
   cases h; cases ha; cases hb; rfl

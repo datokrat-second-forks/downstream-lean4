@@ -385,16 +385,16 @@ instance instFunLike : FunLike (α →+* β) α β where
 /-- Pack congruence for the type `α →+* β` of ring homomorphisms. -/
 @[dsimp_congr] theorem _root_.RingHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : NonAssocSemiring α] [i' : NonAssocSemiring α'] [j : NonAssocSemiring β] [j' : NonAssocSemiring β']
-    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
-    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j') :
+    (hα : @NonAssocSemiringPack.mk α i = @NonAssocSemiringPack.mk α' i')
+    (hβ : @NonAssocSemiringPack.mk β j = @NonAssocSemiringPack.mk β' j') :
     (α →+* β) = (α' →+* β') := by
   cases hα; cases hβ; rfl
 
 /-- Lens: the coercion pack of `α →+* β` follows the packs of `α` and `β`. -/
 @[dsimp_congr] theorem _root_.RingHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : NonAssocSemiring α] [i' : NonAssocSemiring α'] [j : NonAssocSemiring β] [j' : NonAssocSemiring β']
-    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
-    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j') :
+    (hα : @NonAssocSemiringPack.mk α i = @NonAssocSemiringPack.mk α' i')
+    (hβ : @NonAssocSemiringPack.mk β j = @NonAssocSemiringPack.mk β' j') :
     FunLikePack.mk (α →+* β) α (fun _ => β) =
       FunLikePack.mk (α' →+* β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
@@ -605,7 +605,7 @@ def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
 /-- Pack congruence for `RingHom.id`. -/
 @[dsimp_congr] theorem _root_.RingHom.id_pack_congr.{ua} {α α' : Type ua} [i : NonAssocSemiring α]
     [i' : NonAssocSemiring α']
-    (h : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i') :
+    (h : @NonAssocSemiringPack.mk α i = @NonAssocSemiringPack.mk α' i') :
     HEq (RingHom.id α) (RingHom.id α') := by
   cases h; rfl
 
@@ -614,9 +614,9 @@ def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
     {β β' : Type va} {γ γ' : Type wa} [i : NonAssocSemiring α] [i' : NonAssocSemiring α']
     [j : NonAssocSemiring β] [j' : NonAssocSemiring β'] [k : NonAssocSemiring γ]
     [k' : NonAssocSemiring γ']
-    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
-    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j')
-    (hγ : @ClassPack.mk NonAssocSemiring γ k = @ClassPack.mk NonAssocSemiring γ' k')
+    (hα : @NonAssocSemiringPack.mk α i = @NonAssocSemiringPack.mk α' i')
+    (hβ : @NonAssocSemiringPack.mk β j = @NonAssocSemiringPack.mk β' j')
+    (hγ : @NonAssocSemiringPack.mk γ k = @NonAssocSemiringPack.mk γ' k')
     (g : β →+* γ) (g' : β' →+* γ') (hg : HEq g g') (f : α →+* β) (f' : α' →+* β')
     (hf : HEq f f') :
     HEq (g.comp f) (g'.comp f') := by

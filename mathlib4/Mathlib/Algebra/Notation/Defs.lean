@@ -90,6 +90,13 @@ section Star
 class Star (R : Type u) where
   star : R → R
 
+/-- A type with an instance of the class `Star`. -/
+structure StarPack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : Star α]
+
 export Star (star)
 
 /-- A star operation (e.g. complex conjugate).

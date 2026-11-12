@@ -65,8 +65,8 @@ attribute [to_dual self (reorder := mk (map (X Y), map_comp (X Z, f g)))] Functo
 theorem Functor.pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD') :
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD') :
     (C ⥤ D) = (C' ⥤ D') := by
   cases hC; cases hD; rfl
 
@@ -75,8 +75,8 @@ theorem Functor.pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
 theorem Functor.obj_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
     (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') (X : C) (X' : C') (hX : HEq X X') :
     HEq (F.obj X) (F'.obj X') := by
   cases hC; cases hD; cases hF; cases hX; rfl
@@ -86,8 +86,8 @@ theorem Functor.obj_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
 theorem Functor.map_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
     (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') {X Y : C} {X' Y' : C'} (hX : HEq X X')
     (hY : HEq Y Y') (f : X ⟶ Y) (f' : X' ⟶ Y') (hf : HEq f f') :
     HEq (F.map f) (F'.map f') := by
@@ -136,7 +136,7 @@ end
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem id_pack_congr.{vc, uc} {C C' : Type uc}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC') :
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC') :
     HEq (Functor.id C) (Functor.id C') := by
   cases hC; rfl
 
@@ -175,9 +175,9 @@ theorem comp_pack_congr.{vc, vd, ve, uc, ud, ue}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
     [iE : Category.{ve} E] [iE' : Category.{ve} E']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
-    (hE : @ClassPack.mk Category.{ve, ue} E iE = @ClassPack.mk Category.{ve, ue} E' iE')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hE : @CategoryPack.mk.{ve, ue} E iE = @CategoryPack.mk.{ve, ue} E' iE')
     (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') (G : D ⥤ E) (G' : D' ⥤ E') (hG : HEq G G') :
     HEq (F ⋙ G) (F' ⋙ G') := by
   cases hC; cases hD; cases hE; cases hF; cases hG; rfl

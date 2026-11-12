@@ -51,7 +51,7 @@ class QuasiSeparatedSpace (α : Type*) [TopologicalSpace α] : Prop where
 /-- Pack congruence for `QuasiSeparatedSpace`. -/
 @[dsimp_congr] theorem QuasiSeparatedSpace.pack_congr.{ux} {X X' : Type ux}
     [i : TopologicalSpace X] [i' : TopologicalSpace X']
-    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    (h : @TopologicalSpacePack.mk X i = @TopologicalSpacePack.mk X' i') :
     QuasiSeparatedSpace X = QuasiSeparatedSpace X' := by
   cases h; rfl
 

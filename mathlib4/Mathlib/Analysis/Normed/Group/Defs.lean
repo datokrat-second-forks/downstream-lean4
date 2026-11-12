@@ -76,6 +76,8 @@ class ENorm (E : Type*) where
   /-- the `ℝ≥0∞`-valued norm function. -/
   enorm : E → ℝ≥0∞
 
+class_pack ENorm
+
 export Norm (norm)
 export NNNorm (nnnorm)
 export ENorm (enorm)
@@ -86,7 +88,7 @@ export ENorm (enorm)
 
 /-- Pack congruence for `enorm`. -/
 @[dsimp_congr] theorem enorm_pack_congr.{ua} {E E' : Type ua} [i : ENorm E] [i' : ENorm E']
-    (h : @ClassPack.mk ENorm E i = @ClassPack.mk ENorm E' i') (x : E) (x' : E') (hx : HEq x x') :
+    (h : @ENormPack.mk E i = @ENormPack.mk E' i') (x : E) (x' : E') (hx : HEq x x') :
     ‖x‖ₑ = ‖x'‖ₑ := by
   cases h; cases hx; rfl
 

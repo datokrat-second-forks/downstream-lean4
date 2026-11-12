@@ -80,6 +80,13 @@ class TopologicalSpace (X : Type u) where
   Use `isOpen_sUnion` in the root namespace instead. -/
   protected isOpen_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
 
+/-- A type with an instance of the class `TopologicalSpace`. -/
+structure TopologicalSpacePack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : TopologicalSpace α]
+
 variable {X : Type u} {Y : Type v}
 
 /-! ### Predicates on sets -/

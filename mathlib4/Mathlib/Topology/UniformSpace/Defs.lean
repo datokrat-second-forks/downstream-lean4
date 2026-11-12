@@ -204,6 +204,8 @@ class UniformSpace (α : Type u) extends TopologicalSpace α where
   is equal to `Filter.comap (Prod.mk x) (𝓤 α)`. -/
   protected nhds_eq_comap_uniformity (x : α) : 𝓝 x = comap (Prod.mk x) uniformity
 
+class_pack UniformSpace
+
 /-- The uniformity is a filter on α × α (inferred from an ambient uniform space
   structure on α). -/
 def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
@@ -212,7 +214,7 @@ def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
 /-- Pack congruence for `uniformity`. -/
 @[dsimp_congr] theorem uniformity_pack_congr {α α' : Type ua}
     [i : UniformSpace α] [i' : UniformSpace α']
-    (h : @ClassPack.mk UniformSpace α i = @ClassPack.mk UniformSpace α' i') :
+    (h : @UniformSpacePack.mk α i = @UniformSpacePack.mk α' i') :
     HEq (uniformity α) (uniformity α') := by
   cases h; rfl
 

@@ -59,7 +59,7 @@ class IsLocalization : Prop where
 @[dsimp_congr] theorem IsLocalization.pack_congr.{vc, uc, vd, ud}
     {C : Type uc} [Category.{vc} C] {D D' : Type ud}
     [i : Category.{vd} D] [i' : Category.{vd} D']
-    (h : @ClassPack.mk Category.{vd, ud} D i = @ClassPack.mk Category.{vd, ud} D' i')
+    (h : @CategoryPack.mk.{vd, ud} D i = @CategoryPack.mk.{vd, ud} D' i')
     (L : C ⥤ D) (L' : C ⥤ D') (hL : HEq L L') (W : MorphismProperty C) :
     L.IsLocalization W = L'.IsLocalization W := by
   cases h; cases hL; rfl

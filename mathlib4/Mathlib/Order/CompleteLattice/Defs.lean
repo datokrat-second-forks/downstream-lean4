@@ -143,6 +143,8 @@ instance {α : Type*} [CompleteSemilatticeInf α] : CompleteSemilatticeSup αᵒ
 class CompleteLattice (α : Type*) extends Lattice α, CompleteSemilatticeSup α,
     CompleteSemilatticeInf α, BoundedOrder α
 
+class_pack CompleteLattice
+
 attribute [to_dual existing] CompleteLattice.toCompleteSemilatticeInf CompleteLattice.toInfSet
 attribute [to_dual self (reorder := toSupSet toInfSet, isLUB_sSup isGLB_sInf)] CompleteLattice.mk
 

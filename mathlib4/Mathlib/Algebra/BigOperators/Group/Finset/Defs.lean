@@ -71,7 +71,7 @@ protected def prod [CommMonoid M] (s : Finset ι) (f : ι → M) : M :=
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem sum_pack_congr.{ui, um} {ι : Type ui} {M M' : Type um}
     [i : AddCommMonoid M] [i' : AddCommMonoid M']
-    (h : @ClassPack.mk AddCommMonoid M i = @ClassPack.mk AddCommMonoid M' i') :
+    (h : @AddCommMonoidPack.mk M i = @AddCommMonoidPack.mk M' i') :
     HEq (@Finset.sum ι M i) (@Finset.sum ι M' i') := by
   cases h; rfl
 

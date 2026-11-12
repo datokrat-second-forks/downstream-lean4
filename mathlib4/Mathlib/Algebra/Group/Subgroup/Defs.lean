@@ -558,13 +558,13 @@ instance toGroup {G : Type*} [Group G] (H : Subgroup G) : Group H :=
 /-- Lens: the `MulOneClass` pack of the carrier of a subgroup follows the subgroup. -/
 @[dsimp_congr] theorem mulOneClassPack_congr.{ug} {G : Type ug} [Group G]
     {H H' : Subgroup G} (h : H = H') :
-    ClassPack.mk (c := MulOneClass) ↥H = ClassPack.mk (c := MulOneClass) ↥H' := by
+    MulOneClassPack.mk ↥H = MulOneClassPack.mk ↥H' := by
   cases h; rfl
 
 /-- Lens: the `Mul` pack of the carrier of a subgroup follows the subgroup. -/
 @[dsimp_congr] theorem mulPack_congr.{ug} {G : Type ug} [Group G]
     {H H' : Subgroup G} (h : H = H') :
-    @ClassPack.mk Mul ↥H H.mul = @ClassPack.mk Mul ↥H' H'.mul := by
+    @MulPack.mk ↥H H.mul = @MulPack.mk ↥H' H'.mul := by
   cases h; rfl
 
 /-- A subgroup of a `CommGroup` is a `CommGroup`. -/

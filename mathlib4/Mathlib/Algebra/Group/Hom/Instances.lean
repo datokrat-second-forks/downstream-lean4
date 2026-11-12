@@ -122,8 +122,8 @@ instance MonoidHom.instCommGroup [MulOneClass M] [CommGroup N] : CommGroup (M �
 `A`. -/
 @[dsimp_congr] theorem MonoidHom.mulOneClassPack_congr.{ua, ub} {A A' : Type ua} {B : Type ub}
     [iA : MulOneClass A] [iA' : MulOneClass A'] [CommGroup B]
-    (h : @ClassPack.mk MulOneClass A iA = @ClassPack.mk MulOneClass A' iA') :
-    ClassPack.mk (c := MulOneClass) (A →* B) = ClassPack.mk (c := MulOneClass) (A' →* B) := by
+    (h : @MulOneClassPack.mk A iA = @MulOneClassPack.mk A' iA') :
+    MulOneClassPack.mk (A →* B) = MulOneClassPack.mk (A' →* B) := by
   cases h; rfl
 
 @[to_additive]

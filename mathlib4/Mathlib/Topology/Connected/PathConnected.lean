@@ -583,7 +583,7 @@ class PathConnectedSpace (X : Type*) [TopologicalSpace X] : Prop where
 /-- Pack congruence for `PathConnectedSpace`. -/
 @[dsimp_congr] theorem PathConnectedSpace.pack_congr.{ux} {X X' : Type ux}
     [i : TopologicalSpace X] [i' : TopologicalSpace X']
-    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    (h : @TopologicalSpacePack.mk X i = @TopologicalSpacePack.mk X' i') :
     PathConnectedSpace X = PathConnectedSpace X' := by
   cases h; rfl
 

@@ -755,7 +755,7 @@ instance (priority := low) : (ker f).IsTwoSided := inferInstanceAs (Ideal.comap 
 /-- Pack congruence for the kernel of a ring homomorphism: it follows the pack of the codomain. -/
 @[dsimp_congr] theorem ker_pack_congr.{ur, us} {R : Type ur} [Semiring R] {S S' : Type us}
     [i : Semiring S] [i' : Semiring S']
-    (h : @ClassPack.mk Semiring S i = @ClassPack.mk Semiring S' i')
+    (h : @SemiringPack.mk S i = @SemiringPack.mk S' i')
     (f : R →+* S) (f' : R →+* S') (hf : HEq f f') : ker f = ker f' := by
   cases h; cases hf; rfl
 

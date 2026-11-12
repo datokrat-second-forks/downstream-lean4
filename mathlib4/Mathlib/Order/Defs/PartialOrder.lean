@@ -47,6 +47,8 @@ class Preorder (α : Type*) extends LE α, LT α where
   lt := fun a b => a ≤ b ∧ ¬b ≤ a
   protected lt_iff_le_not_ge : ∀ a b : α, a < b ↔ a ≤ b ∧ ¬b ≤ a := by intros; rfl
 
+class_pack Preorder
+
 attribute [to_dual self (reorder := le_trans (a c, 4 5), lt_iff_le_not_ge (a b))] Preorder.mk
 attribute [to_dual self (reorder := a c, 6 7)] Preorder.le_trans
 attribute [to_dual self] Preorder.lt_iff_le_not_ge
@@ -175,6 +177,8 @@ section PartialOrder
 /-- A partial order is a reflexive, transitive, antisymmetric relation `≤`. -/
 class PartialOrder (α : Type*) extends Preorder α where
   protected le_antisymm : ∀ a b : α, a ≤ b → b ≤ a → a = b
+
+class_pack PartialOrder
 
 attribute [to_dual self (reorder := le_antisymm (3 4))] PartialOrder.mk
 attribute [to_dual self (reorder := 5 6)] PartialOrder.le_antisymm

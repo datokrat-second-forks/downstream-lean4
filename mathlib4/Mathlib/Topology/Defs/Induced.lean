@@ -82,8 +82,8 @@ instance _root_.instTopologicalSpaceSubtype {p : X → Prop} [t : TopologicalSpa
 /-- Lens: the topology pack of a subtype follows the predicate. -/
 @[dsimp_congr] theorem _root_.Subtype.topologicalSpacePack_congr.{ua} {α : Type ua}
     [TopologicalSpace α] {p p' : α → Prop} (h : p = p') :
-    @ClassPack.mk TopologicalSpace (Subtype p) instTopologicalSpaceSubtype =
-      @ClassPack.mk TopologicalSpace (Subtype p') instTopologicalSpaceSubtype := by
+    @TopologicalSpacePack.mk (Subtype p) instTopologicalSpaceSubtype =
+      @TopologicalSpacePack.mk (Subtype p') instTopologicalSpaceSubtype := by
   cases h; rfl
 
 /-- Given `f : X → Y` and a topology on `X`,

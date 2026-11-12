@@ -41,11 +41,11 @@ Lemmas about the operators `⊔` and `⊓` should use the names `sup` and `inf` 
 public section
 
 -- This theorem belongs to Lean core, next to `LE`. It is here, in the first file of order
--- notation that sees `ClassPack`.
+-- notation that imports the pack of `LE`.
 /-- Pack congruence for `≤`. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem LE.le_pack_congr.{ua} {α α' : Type ua} [i : LE α] [i' : LE α']
-    (h : @ClassPack.mk LE α i = @ClassPack.mk LE α' i') (a : α) (a' : α') (ha : HEq a a')
+    (h : @LEPack.mk α i = @LEPack.mk α' i') (a : α) (a' : α') (ha : HEq a a')
     (b : α) (b' : α') (hb : HEq b b') : (a ≤ b) = (a' ≤ b') := by
   cases h; cases ha; cases hb; rfl
 
@@ -62,10 +62,12 @@ postfix:1024 "ᶜ" => compl
 
 initialize_simps_projections Compl
 
+class_pack Compl
+
 /-- Pack congruence for the complement. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem Compl.compl_pack_congr.{ua} {α α' : Type ua} [i : Compl α]
-    [i' : Compl α'] (h : @ClassPack.mk Compl α i = @ClassPack.mk Compl α' i') (a : α) (a' : α')
+    [i' : Compl α'] (h : @ComplPack.mk α i = @ComplPack.mk α' i') (a : α) (a' : α')
     (ha : HEq a a') :
     HEq (Compl.compl a) (Compl.compl a') := by
   cases h; cases ha; rfl
@@ -203,6 +205,9 @@ class Bot (α : Type*) where
   /-- The bot (`⊥`, `\bot`) element -/
   bot : α
 
+class_pack Top
+class_pack Bot
+
 /-- The top (`⊤`, `\top`) element -/
 notation "⊤" => Top.top
 
@@ -212,7 +217,7 @@ notation "⊥" => Bot.bot
 /-- Pack congruence for `⊤`. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem Top.top_pack_congr.{ua} {α α' : Type ua} [i : Top α] [i' : Top α']
-    (h : @ClassPack.mk Top α i = @ClassPack.mk Top α' i') :
+    (h : @TopPack.mk α i = @TopPack.mk α' i') :
     HEq (⊤ : α) (⊤ : α') := by
   cases h; rfl
 
@@ -237,3 +242,5 @@ recommended_spelling "min" for "min" in [Min.min]
 recommended_spelling "sup" for "⊔" in [Max.max]
 /-- `⊓` is the preferred notation for `min` when the type is not linearly ordered. -/
 recommended_spelling "inf" for "⊓" in [Min.min]
+
+derive_pack_edges

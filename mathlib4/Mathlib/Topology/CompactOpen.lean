@@ -55,10 +55,10 @@ instance compactOpen : TopologicalSpace C(X, Y) :=
 @[dsimp_congr] theorem compactOpen.packLens.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
     [j' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
-    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
-    @ClassPack.mk TopologicalSpace C(α, β) compactOpen =
-      @ClassPack.mk TopologicalSpace C(α', β') compactOpen := by
+    (hα : @TopologicalSpacePack.mk α i = @TopologicalSpacePack.mk α' i')
+    (hβ : @TopologicalSpacePack.mk β j = @TopologicalSpacePack.mk β' j') :
+    @TopologicalSpacePack.mk C(α, β) compactOpen =
+      @TopologicalSpacePack.mk C(α', β') compactOpen := by
   cases hα; cases hβ; rfl
 
 /-- Definition of `ContinuousMap.compactOpen`. -/

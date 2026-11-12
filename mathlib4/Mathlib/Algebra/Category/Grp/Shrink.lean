@@ -39,9 +39,9 @@ noncomputable def GrpCat.shrinkFunctor (F : C ⥤ GrpCat.{w'}) [∀ X, Small.{w}
 /-- Pack root lemma: the group pack of `(GrpCat.shrinkFunctor F).obj X`. -/
 @[simp] theorem GrpCat.shrinkFunctor_obj_classPack.{ws, wf, vc, uc} {C : Type uc}
     [Category.{vc} C] (F : C ⥤ GrpCat.{wf}) [∀ X, Small.{ws} (F.obj X)] (X : C) :
-    @ClassPack.mk Group ((GrpCat.shrinkFunctor.{ws} F).obj X)
+    @GroupPack.mk ((GrpCat.shrinkFunctor.{ws} F).obj X)
         ((GrpCat.shrinkFunctor.{ws} F).obj X).str =
-      @ClassPack.mk Group (Shrink.{ws} (F.obj X)) Shrink.instGroup :=
+      @GroupPack.mk (Shrink.{ws} (F.obj X)) Shrink.instGroup :=
   rfl
 
 /-- The natural transformation `GrpCat.shrinkFunctor.{w} F ⟶ GrpCat.shrinkFunctor.{w} G`

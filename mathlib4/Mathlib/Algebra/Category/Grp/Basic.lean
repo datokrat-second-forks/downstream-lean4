@@ -115,15 +115,15 @@ abbrev ofHom {X Y : Type u} [Group X] [Group Y] (f : X →* Y) : of X ⟶ of Y :
 /-- Pack congruence for `GrpCat.of`. -/
 @[dsimp_congr] theorem _root_.GrpCat.of_pack_congr.{ua} {M M' : Type ua}
     [i : Group M] [i' : Group M']
-    (h : @ClassPack.mk Group M i = @ClassPack.mk Group M' i') :
+    (h : @GroupPack.mk M i = @GroupPack.mk M' i') :
     GrpCat.of M = GrpCat.of M' := by
   cases h; rfl
 
 /-- Pack congruence for `GrpCat.ofHom`. -/
 @[dsimp_congr] theorem _root_.GrpCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
     [i : Group X] [i' : Group X'] [j : Group Y] [j' : Group Y']
-    (hX : @ClassPack.mk Group X i = @ClassPack.mk Group X' i')
-    (hY : @ClassPack.mk Group Y j = @ClassPack.mk Group Y' j')
+    (hX : @GroupPack.mk X i = @GroupPack.mk X' i')
+    (hY : @GroupPack.mk Y j = @GroupPack.mk Y' j')
     (f : X →* Y) (f' : X' →* Y') (hf : HEq f f') :
     HEq (GrpCat.ofHom f) (GrpCat.ofHom f') := by
   cases hX; cases hY; cases hf; rfl
@@ -361,15 +361,15 @@ abbrev ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X �
 /-- Pack congruence for `AddCommGrpCat.of`. -/
 @[dsimp_congr] theorem _root_.AddCommGrpCat.of_pack_congr.{ua} {M M' : Type ua}
     [i : AddCommGroup M] [i' : AddCommGroup M']
-    (h : @ClassPack.mk AddCommGroup M i = @ClassPack.mk AddCommGroup M' i') :
+    (h : @AddCommGroupPack.mk M i = @AddCommGroupPack.mk M' i') :
     AddCommGrpCat.of M = AddCommGrpCat.of M' := by
   cases h; rfl
 
 /-- Pack congruence for `AddCommGrpCat.ofHom`. -/
 @[dsimp_congr] theorem _root_.AddCommGrpCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
     [i : AddCommGroup X] [i' : AddCommGroup X'] [j : AddCommGroup Y] [j' : AddCommGroup Y']
-    (hX : @ClassPack.mk AddCommGroup X i = @ClassPack.mk AddCommGroup X' i')
-    (hY : @ClassPack.mk AddCommGroup Y j = @ClassPack.mk AddCommGroup Y' j')
+    (hX : @AddCommGroupPack.mk X i = @AddCommGroupPack.mk X' i')
+    (hY : @AddCommGroupPack.mk Y j = @AddCommGroupPack.mk Y' j')
     (f : X →+ Y) (f' : X' →+ Y') (hf : HEq f f') :
     HEq (AddCommGrpCat.ofHom f) (AddCommGrpCat.ofHom f') := by
   cases hX; cases hY; cases hf; rfl
@@ -561,28 +561,28 @@ end AddCommGrpCat
 
 /-- Lens: the `Group` pack of the carrier of `X : GrpCat` follows `X`. -/
 @[dsimp_congr] theorem GrpCat.pack_congr.{ua} {X X' : GrpCat.{ua}} (h : X = X') :
-    @ClassPack.mk Group X X.str = @ClassPack.mk Group X' X'.str := by
+    @GroupPack.mk X X.str = @GroupPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `AddGroup` pack of the carrier of `X : AddGrpCat` follows `X`. -/
 @[dsimp_congr] theorem AddGrpCat.pack_congr.{ua} {X X' : AddGrpCat.{ua}} (h : X = X') :
-    @ClassPack.mk AddGroup X X.str = @ClassPack.mk AddGroup X' X'.str := by
+    @AddGroupPack.mk X X.str = @AddGroupPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `CommGroup` pack of the carrier of `X : CommGrpCat` follows `X`. -/
 @[dsimp_congr] theorem CommGrpCat.pack_congr.{ua} {X X' : CommGrpCat.{ua}} (h : X = X') :
-    @ClassPack.mk CommGroup X X.str = @ClassPack.mk CommGroup X' X'.str := by
+    @CommGroupPack.mk X X.str = @CommGroupPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Lens: the `AddCommGroup` pack of the carrier of `X : AddCommGrpCat` follows `X`. -/
 @[dsimp_congr] theorem AddCommGrpCat.pack_congr.{ua} {X X' : AddCommGrpCat.{ua}} (h : X = X') :
-    @ClassPack.mk AddCommGroup X X.str = @ClassPack.mk AddCommGroup X' X'.str := by
+    @AddCommGroupPack.mk X X.str = @AddCommGroupPack.mk X' X'.str := by
   cases h; rfl
 
 /-- Pack root lemma: the group pack of `AddCommGrpCat.of M` is that of `M`. -/
 @[simp] theorem AddCommGrpCat.of_classPack.{ua} (M : Type ua) [i : AddCommGroup M] :
-    @ClassPack.mk AddCommGroup (AddCommGrpCat.of M) (AddCommGrpCat.of M).str =
-      @ClassPack.mk AddCommGroup M i :=
+    @AddCommGroupPack.mk (AddCommGrpCat.of M) (AddCommGrpCat.of M).str =
+      @AddCommGroupPack.mk M i :=
   rfl
 
 /-- Build an isomorphism in the category `GrpCat` from a `MulEquiv` between `Group`s. -/

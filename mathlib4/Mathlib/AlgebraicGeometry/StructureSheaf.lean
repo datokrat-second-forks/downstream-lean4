@@ -240,9 +240,9 @@ instance (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
 the sections. -/
 @[simp]
 theorem structurePresheafInCommRingCat_obj_classPack (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
-    @ClassPack.mk CommRing ((structurePresheafInCommRingCat R).obj U)
+    @CommRingPack.mk ((structurePresheafInCommRingCat R).obj U)
         ((structurePresheafInCommRingCat R).obj U).commRing =
-      @ClassPack.mk CommRing ((structureSheafInType R R).obj.obj U)
+      @CommRingPack.mk ((structureSheafInType R R).obj.obj U)
         (instCommRingObjOppositeOpensCarrierTopObjFunctorTypeIsSheafGrothendieckTopologyStructureSheafInType U) :=
   rfl
 
@@ -250,9 +250,9 @@ theorem structurePresheafInCommRingCat_obj_classPack (U : (Opens (PrimeSpectrum.
 the sections. -/
 @[simp]
 theorem structurePresheafInModuleCat_obj_classPack (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
-    @ClassPack.mk AddCommGroup ((structurePresheafInModuleCat R M).obj U)
+    @AddCommGroupPack.mk ((structurePresheafInModuleCat R M).obj U)
         ((structurePresheafInModuleCat R M).obj U).isAddCommGroup =
-      @ClassPack.mk AddCommGroup ((structureSheafInType R M).obj.obj U)
+      @AddCommGroupPack.mk ((structureSheafInType R M).obj.obj U)
         (instAddCommGroupObjOppositeOpensCarrierTopObjFunctorTypeIsSheafGrothendieckTopologyStructureSheafInType U) :=
   rfl
 

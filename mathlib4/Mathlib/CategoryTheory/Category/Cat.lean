@@ -57,13 +57,13 @@ def of (C : Type u) [Category.{v} C] : Cat.{v, u} :=
 
 /-- Lens: the category pack of the carrier of `C : Cat` follows `C`. -/
 @[dsimp_congr] theorem str.packLens.{vc, uc} {C C' : Cat.{vc, uc}} (h : C = C') :
-    @ClassPack.mk Category.{vc, uc} C C.str = @ClassPack.mk Category.{vc, uc} C' C'.str := by
+    @CategoryPack.mk.{vc, uc} C C.str = @CategoryPack.mk.{vc, uc} C' C'.str := by
   cases h; rfl
 
 /-- Pack root lemma: the category pack of `Cat.of C`. -/
 @[simp] theorem of_classPack.{vc, uc} (C : Type uc) [i : Category.{vc} C] :
-    @ClassPack.mk Category.{vc, uc} (Cat.of C) (Cat.of C).str =
-      @ClassPack.mk Category.{vc, uc} C i :=
+    @CategoryPack.mk.{vc, uc} (Cat.of C) (Cat.of C).str =
+      @CategoryPack.mk.{vc, uc} C i :=
   rfl
 
 open Lean.PrettyPrinter.Delaborator in

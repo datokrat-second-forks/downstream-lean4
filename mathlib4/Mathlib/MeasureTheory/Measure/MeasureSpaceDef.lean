@@ -95,14 +95,14 @@ instance Measure.instFunLike [MeasurableSpace α] : FunLike (Measure α) (Set α
 /-- Pack congruence for the type `Measure α`. -/
 @[dsimp_congr] theorem _root_.MeasureTheory.Measure.pack_congr.{ua} {α α' : Type ua}
     [i : MeasurableSpace α] [i' : MeasurableSpace α']
-    (h : @ClassPack.mk MeasurableSpace α i = @ClassPack.mk MeasurableSpace α' i') :
+    (h : @MeasurableSpacePack.mk α i = @MeasurableSpacePack.mk α' i') :
     MeasureTheory.Measure α = MeasureTheory.Measure α' := by
   cases h; rfl
 
 /-- Lens: the coercion pack of `Measure α` follows the measurable-space pack of `α`. -/
 @[dsimp_congr] theorem _root_.MeasureTheory.Measure.funLikePack_congr.{ua} {α α' : Type ua}
     [i : MeasurableSpace α] [i' : MeasurableSpace α']
-    (h : @ClassPack.mk MeasurableSpace α i = @ClassPack.mk MeasurableSpace α' i') :
+    (h : @MeasurableSpacePack.mk α i = @MeasurableSpacePack.mk α' i') :
     FunLikePack.mk (MeasureTheory.Measure α) (Set α) (fun _ => ENNReal) =
       FunLikePack.mk (MeasureTheory.Measure α') (Set α') (fun _ => ENNReal) := by
   cases h; rfl

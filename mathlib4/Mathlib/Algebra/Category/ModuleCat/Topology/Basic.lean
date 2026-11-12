@@ -424,8 +424,8 @@ lemma coe_freeObj (X : TopCat.{v}) : freeObj R X = (X →₀ R) := rfl
 /-- Pack root lemma: the `AddCommGroup` pack of the carrier of `freeObj R X`. -/
 @[simp] theorem freeObj_addCommGroupPack (R : Type u) [Ring R] [TopologicalSpace R]
     (X : TopCat.{v}) :
-    @ClassPack.mk AddCommGroup (freeObj R X).toModuleCat (freeObj R X).toModuleCat.isAddCommGroup =
-      @ClassPack.mk AddCommGroup (X →₀ R) (by infer_instance) :=
+    @AddCommGroupPack.mk (freeObj R X).toModuleCat (freeObj R X).toModuleCat.isAddCommGroup =
+      @AddCommGroupPack.mk (X →₀ R) (by infer_instance) :=
   rfl
 
 set_option backward.isDefEq.respectTransparency.instanceTypes false in

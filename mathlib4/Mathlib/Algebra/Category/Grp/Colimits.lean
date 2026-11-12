@@ -195,8 +195,8 @@ def toCocone [DecidableEq J] {A : Type w} [AddCommGroup A] (f : Quot F →+ A) :
 /-- Pack root lemma: the additive group on the point of `toCocone F f` is the one of `A`. -/
 @[simp] theorem toCocone_pt_classPack [DecidableEq J] {A : Type w} [i : AddCommGroup A]
     (f : Quot F →+ A) :
-    @ClassPack.mk AddCommGroup (toCocone F f).pt (toCocone F f).pt.str =
-      @ClassPack.mk AddCommGroup A i :=
+    @AddCommGroupPack.mk (toCocone F f).pt (toCocone F f).pt.str =
+      @AddCommGroupPack.mk A i :=
   rfl
 
 set_option backward.defeqAttrib.useBackward true in

@@ -367,8 +367,8 @@ infixl:25 " ≃ᵢ " => IsometryEquiv
 @[dsimp_congr] theorem IsometryEquiv.pack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
     [iα : PseudoEMetricSpace α] [iα' : PseudoEMetricSpace α'] [iβ : PseudoEMetricSpace β]
     [iβ' : PseudoEMetricSpace β']
-    (hα : @ClassPack.mk PseudoEMetricSpace α iα = @ClassPack.mk PseudoEMetricSpace α' iα')
-    (hβ : @ClassPack.mk PseudoEMetricSpace β iβ = @ClassPack.mk PseudoEMetricSpace β' iβ') :
+    (hα : @PseudoEMetricSpacePack.mk α iα = @PseudoEMetricSpacePack.mk α' iα')
+    (hβ : @PseudoEMetricSpacePack.mk β iβ = @PseudoEMetricSpacePack.mk β' iβ') :
     (α ≃ᵢ β) = (α' ≃ᵢ β') := by
   cases hα; cases hβ; rfl
 

@@ -60,6 +60,13 @@ class Fintype (α : Type*) where
   /-- A proof that `elems` contains every element of the type -/
   complete : ∀ x : α, x ∈ elems
 
+/-- A type with an instance of the class `Fintype`. -/
+structure FintypePack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : Fintype α]
+
 /-! ### Preparatory lemmas -/
 
 namespace Finset
@@ -94,7 +101,7 @@ def univ : Finset α :=
 
 /-- Pack congruence for `Finset.univ`. -/
 @[dsimp_congr] theorem univ_pack_congr.{ua} {α α' : Type ua} [i : Fintype α] [i' : Fintype α']
-    (h : @ClassPack.mk Fintype α i = @ClassPack.mk Fintype α' i') :
+    (h : @FintypePack.mk α i = @FintypePack.mk α' i') :
     HEq (@Finset.univ α i) (@Finset.univ α' i') := by
   cases h; rfl
 

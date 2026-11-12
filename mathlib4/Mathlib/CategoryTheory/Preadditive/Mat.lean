@@ -288,14 +288,14 @@ def embedding : C ⥤ Mat_ C where
 /-- Lens: the `Fintype` pack of the index type of `M : Mat_ C` follows `M`. -/
 @[dsimp_congr] theorem fintype.packLens.{vm, um} {C : Type um} [Category.{vm} C] [Preadditive C]
     {M M' : Mat_ C} (h : M = M') :
-    @ClassPack.mk Fintype M.ι M.fintype = @ClassPack.mk Fintype M'.ι M'.fintype := by
+    @FintypePack.mk M.ι M.fintype = @FintypePack.mk M'.ι M'.fintype := by
   cases h; rfl
 
 /-- Pack root lemma: the `Fintype` pack of the index type of `(embedding C).obj X`. -/
 @[simp] theorem embedding_obj_fintypePack.{vm, um} {C : Type um} [Category.{vm} C]
     [Preadditive C] (X : C) :
-    @ClassPack.mk Fintype ((embedding C).obj X).ι ((embedding C).obj X).fintype =
-      @ClassPack.mk Fintype PUnit.{1} PUnit.fintype := rfl
+    @FintypePack.mk ((embedding C).obj X).ι ((embedding C).obj X).fintype =
+      @FintypePack.mk PUnit.{1} PUnit.fintype := rfl
 
 namespace Embedding
 

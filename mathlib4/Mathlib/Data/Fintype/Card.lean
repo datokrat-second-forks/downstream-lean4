@@ -42,7 +42,7 @@ def card (α) [Fintype α] : ℕ :=
 
 /-- Pack congruence for `Fintype.card`. -/
 @[dsimp_congr] theorem card_pack_congr.{ua} {α α' : Type ua} [i : Fintype α] [i' : Fintype α']
-    (h : @ClassPack.mk Fintype α i = @ClassPack.mk Fintype α' i') :
+    (h : @FintypePack.mk α i = @FintypePack.mk α' i') :
     Fintype.card α = Fintype.card α' := by
   cases h; rfl
 

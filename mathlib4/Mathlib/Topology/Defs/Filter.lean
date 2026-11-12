@@ -303,7 +303,7 @@ class CompactSpace : Prop where
 /-- Pack congruence for `CompactSpace`. -/
 @[dsimp_congr] theorem CompactSpace.pack_congr.{ux} {X X' : Type ux}
     [i : TopologicalSpace X] [i' : TopologicalSpace X']
-    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    (h : @TopologicalSpacePack.mk X i = @TopologicalSpacePack.mk X' i') :
     CompactSpace X = CompactSpace X' := by
   cases h; rfl
 

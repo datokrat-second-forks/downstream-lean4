@@ -42,6 +42,13 @@ class NNRatCast (K : Type*) where
   Do not use directly. Use the coercion instead. -/
   protected nnratCast : ℚ≥0 → K
 
+/-- A type with an instance of the class `NNRatCast`. -/
+structure NNRatCastPack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : NNRatCast α]
+
 instance NNRat.instNNRatCast : NNRatCast ℚ≥0 where nnratCast q := q
 
 variable {K : Type*} [NNRatCast K]

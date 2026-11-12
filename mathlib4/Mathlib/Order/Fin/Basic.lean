@@ -45,7 +45,7 @@ open Function Nat Set
 
 /-- Lens: the `LE` pack of `Fin n` follows `n`. -/
 @[dsimp_congr] theorem Fin.lePack_congr {n n' : ℕ} (h : n = n') :
-    @ClassPack.mk LE (Fin n) instLEFin = @ClassPack.mk LE (Fin n') instLEFin := by
+    @LEPack.mk (Fin n) instLEFin = @LEPack.mk (Fin n') instLEFin := by
   cases h; rfl
 
 namespace Fin
@@ -95,8 +95,8 @@ instance instCoheytingAlgebra [NeZero n] : CoheytingAlgebra (Fin n) := inferInst
 
 /-- Lens: the `PartialOrder` pack of `Fin n` follows `n`. -/
 @[dsimp_congr] theorem _root_.Fin.instPartialOrder.packLens {n n' : ℕ} (h : n = n') :
-    @ClassPack.mk PartialOrder (Fin n) Fin.instPartialOrder =
-      @ClassPack.mk PartialOrder (Fin n') Fin.instPartialOrder := by
+    @PartialOrderPack.mk (Fin n) Fin.instPartialOrder =
+      @PartialOrderPack.mk (Fin n') Fin.instPartialOrder := by
   cases h; rfl
 
 /-! ### Miscellaneous lemmas -/

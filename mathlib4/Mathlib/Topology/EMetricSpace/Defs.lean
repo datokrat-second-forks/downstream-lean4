@@ -120,6 +120,8 @@ class PseudoEMetricSpace (α : Type u) : Type u extends EDist α where
   toUniformSpace : UniformSpace α := uniformSpaceOfEDist edist edist_self edist_comm edist_triangle
   uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } := by rfl
 
+class_pack PseudoEMetricSpace
+
 attribute [instance_reducible, instance] PseudoEMetricSpace.toUniformSpace
 
 /- Pseudoemetric spaces are less common than metric spaces. Therefore, we work in a dedicated
@@ -457,8 +459,8 @@ instance {α : Type*} {p : α → Prop} [PseudoEMetricSpace α] : PseudoEMetricS
 /-- Lens: the `PseudoEMetricSpace` pack of a subtype follows the predicate. -/
 @[dsimp_congr] theorem Subtype.pseudoEMetricSpacePack_congr.{ua} {α : Type ua}
     [PseudoEMetricSpace α] {p p' : α → Prop} (h : p = p') :
-    @ClassPack.mk PseudoEMetricSpace (Subtype p) instPseudoEMetricSpaceSubtype =
-      @ClassPack.mk PseudoEMetricSpace (Subtype p') instPseudoEMetricSpaceSubtype := by
+    @PseudoEMetricSpacePack.mk (Subtype p) instPseudoEMetricSpaceSubtype =
+      @PseudoEMetricSpacePack.mk (Subtype p') instPseudoEMetricSpaceSubtype := by
   cases h; rfl
 
 section

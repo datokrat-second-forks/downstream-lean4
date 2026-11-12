@@ -394,16 +394,16 @@ instance MonoidHom.instFunLike : FunLike (M →* N) M N where
 /-- Pack congruence for the type `α →* β` of monoid homomorphisms. -/
 @[dsimp_congr] theorem MonoidHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : MulOne α] [i' : MulOne α'] [j : MulOne β] [j' : MulOne β']
-    (hα : @ClassPack.mk MulOne α i = @ClassPack.mk MulOne α' i')
-    (hβ : @ClassPack.mk MulOne β j = @ClassPack.mk MulOne β' j') :
+    (hα : @MulOnePack.mk α i = @MulOnePack.mk α' i')
+    (hβ : @MulOnePack.mk β j = @MulOnePack.mk β' j') :
     (α →* β) = (α' →* β') := by
   cases hα; cases hβ; rfl
 
 /-- Lens: the coercion pack of `α →* β` follows the packs of `α` and `β`. -/
 @[dsimp_congr] theorem MonoidHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : MulOne α] [i' : MulOne α'] [j : MulOne β] [j' : MulOne β']
-    (hα : @ClassPack.mk MulOne α i = @ClassPack.mk MulOne α' i')
-    (hβ : @ClassPack.mk MulOne β j = @ClassPack.mk MulOne β' j') :
+    (hα : @MulOnePack.mk α i = @MulOnePack.mk α' i')
+    (hβ : @MulOnePack.mk β j = @MulOnePack.mk β' j') :
     FunLikePack.mk (α →* β) α (fun _ => β) =
       FunLikePack.mk (α' →* β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
@@ -411,16 +411,16 @@ instance MonoidHom.instFunLike : FunLike (M →* N) M N where
 /-- Pack congruence for the type `α →+ β` of additive monoid homomorphisms. -/
 @[dsimp_congr] theorem AddMonoidHom.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : AddZero α] [i' : AddZero α'] [j : AddZero β] [j' : AddZero β']
-    (hα : @ClassPack.mk AddZero α i = @ClassPack.mk AddZero α' i')
-    (hβ : @ClassPack.mk AddZero β j = @ClassPack.mk AddZero β' j') :
+    (hα : @AddZeroPack.mk α i = @AddZeroPack.mk α' i')
+    (hβ : @AddZeroPack.mk β j = @AddZeroPack.mk β' j') :
     (α →+ β) = (α' →+ β') := by
   cases hα; cases hβ; rfl
 
 /-- Lens: the coercion pack of `α →+ β` follows the packs of `α` and `β`. -/
 @[dsimp_congr] theorem AddMonoidHom.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : AddZero α] [i' : AddZero α'] [j : AddZero β] [j' : AddZero β']
-    (hα : @ClassPack.mk AddZero α i = @ClassPack.mk AddZero α' i')
-    (hβ : @ClassPack.mk AddZero β j = @ClassPack.mk AddZero β' j') :
+    (hα : @AddZeroPack.mk α i = @AddZeroPack.mk α' i')
+    (hβ : @AddZeroPack.mk β j = @AddZeroPack.mk β' j') :
     FunLikePack.mk (α →+ β) α (fun _ => β) =
       FunLikePack.mk (α' →+ β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
@@ -648,8 +648,8 @@ end MonoidHom
 /-- Pack congruence for `MonoidHom.mk'`: the function follows the packs of the two types. -/
 @[dsimp_congr] theorem MonoidHom.mk'_pack_congr.{ua, va} {M M' : Type ua} {G G' : Type va}
     [i : MulOneClass M] [i' : MulOneClass M'] [j : Group G] [j' : Group G']
-    (hM : @ClassPack.mk MulOneClass M i = @ClassPack.mk MulOneClass M' i')
-    (hG : @ClassPack.mk Group G j = @ClassPack.mk Group G' j')
+    (hM : @MulOneClassPack.mk M i = @MulOneClassPack.mk M' i')
+    (hG : @GroupPack.mk G j = @GroupPack.mk G' j')
     (f : M → G) (f' : M' → G') (hf : HEq f f') (h : ∀ a b : M, f (a * b) = f a * f b)
     {h' : ∀ a b : M', f' (a * b) = f' a * f' b} (hh : HEq h h') :
     HEq (MonoidHom.mk' f h) (MonoidHom.mk' f' h') := by
@@ -658,8 +658,8 @@ end MonoidHom
 /-- Pack congruence for `AddMonoidHom.mk'`: the function follows the packs of the two types. -/
 @[dsimp_congr] theorem AddMonoidHom.mk'_pack_congr.{ua, va} {M M' : Type ua} {G G' : Type va}
     [i : AddZeroClass M] [i' : AddZeroClass M'] [j : AddGroup G] [j' : AddGroup G']
-    (hM : @ClassPack.mk AddZeroClass M i = @ClassPack.mk AddZeroClass M' i')
-    (hG : @ClassPack.mk AddGroup G j = @ClassPack.mk AddGroup G' j')
+    (hM : @AddZeroClassPack.mk M i = @AddZeroClassPack.mk M' i')
+    (hG : @AddGroupPack.mk G j = @AddGroupPack.mk G' j')
     (f : M → G) (f' : M' → G') (hf : HEq f f') (h : ∀ a b : M, f (a + b) = f a + f b)
     {h' : ∀ a b : M', f' (a + b) = f' a + f' b} (hh : HEq h h') :
     HEq (AddMonoidHom.mk' f h) (AddMonoidHom.mk' f' h') := by
@@ -668,8 +668,8 @@ end MonoidHom
 /-- Pack congruence for `ZeroHom.mk`. -/
 @[dsimp_congr] theorem ZeroHom.mk_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
     [i : Zero M] [i' : Zero M'] [j : Zero N] [j' : Zero N']
-    (hM : @ClassPack.mk Zero M i = @ClassPack.mk Zero M' i')
-    (hN : @ClassPack.mk Zero N j = @ClassPack.mk Zero N' j')
+    (hM : @ZeroPack.mk M i = @ZeroPack.mk M' i')
+    (hN : @ZeroPack.mk N j = @ZeroPack.mk N' j')
     (f : M → N) (f' : M' → N') (hf : HEq f f') (h : f 0 = 0) {h' : f' 0 = 0} (hh : HEq h h') :
     HEq (ZeroHom.mk f h) (ZeroHom.mk f' h') := by
   cases hM; cases hN; cases hf; rfl
@@ -677,8 +677,8 @@ end MonoidHom
 /-- Pack congruence for `AddMonoidHom.mk`. -/
 @[dsimp_congr] theorem AddMonoidHom.mk_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
     [i : AddZero M] [i' : AddZero M'] [j : AddZero N] [j' : AddZero N']
-    (hM : @ClassPack.mk AddZero M i = @ClassPack.mk AddZero M' i')
-    (hN : @ClassPack.mk AddZero N j = @ClassPack.mk AddZero N' j')
+    (hM : @AddZeroPack.mk M i = @AddZeroPack.mk M' i')
+    (hN : @AddZeroPack.mk N j = @AddZeroPack.mk N' j')
     (f : ZeroHom M N) (f' : ZeroHom M' N') (hf : HEq f f')
     (h : ∀ x y, f.toFun (x + y) = f.toFun x + f.toFun y)
     {h' : ∀ x y, f'.toFun (x + y) = f'.toFun x + f'.toFun y} (hh : HEq h h') :
@@ -927,9 +927,9 @@ theorem MonoidHom.comp_apply [MulOne M] [MulOne N] [MulOne P]
 @[dsimp_congr] theorem MonoidHom.comp_pack_congr.{ua, va, wa} {M M' : Type ua} {N N' : Type va}
     {P P' : Type wa} [iM : MulOne M] [iM' : MulOne M'] [iN : MulOne N] [iN' : MulOne N']
     [iP : MulOne P] [iP' : MulOne P']
-    (hM : @ClassPack.mk MulOne M iM = @ClassPack.mk MulOne M' iM')
-    (hN : @ClassPack.mk MulOne N iN = @ClassPack.mk MulOne N' iN')
-    (hP : @ClassPack.mk MulOne P iP = @ClassPack.mk MulOne P' iP')
+    (hM : @MulOnePack.mk M iM = @MulOnePack.mk M' iM')
+    (hN : @MulOnePack.mk N iN = @MulOnePack.mk N' iN')
+    (hP : @MulOnePack.mk P iP = @MulOnePack.mk P' iP')
     (f : N →* P) (f' : N' →* P') (hf : HEq f f') (g : M →* N) (g' : M' →* N')
     (hg : HEq g g') :
     HEq (f.comp g) (f'.comp g') := by
@@ -937,7 +937,7 @@ theorem MonoidHom.comp_apply [MulOne M] [MulOne N] [MulOne P]
 
 /-- Pack congruence for `MonoidHom.id`. -/
 @[dsimp_congr] theorem MonoidHom.id_pack_congr.{ua} {M M' : Type ua} [iM : MulOne M]
-    [iM' : MulOne M'] (hM : @ClassPack.mk MulOne M iM = @ClassPack.mk MulOne M' iM') :
+    [iM' : MulOne M'] (hM : @MulOnePack.mk M iM = @MulOnePack.mk M' iM') :
     HEq (MonoidHom.id M) (MonoidHom.id M') := by
   cases hM; rfl
 
@@ -945,9 +945,9 @@ theorem MonoidHom.comp_apply [MulOne M] [MulOne N] [MulOne P]
 @[dsimp_congr] theorem AddMonoidHom.comp_pack_congr.{ua, va, wa} {M M' : Type ua} {N N' : Type va}
     {P P' : Type wa} [iM : AddZero M] [iM' : AddZero M'] [iN : AddZero N] [iN' : AddZero N']
     [iP : AddZero P] [iP' : AddZero P']
-    (hM : @ClassPack.mk AddZero M iM = @ClassPack.mk AddZero M' iM')
-    (hN : @ClassPack.mk AddZero N iN = @ClassPack.mk AddZero N' iN')
-    (hP : @ClassPack.mk AddZero P iP = @ClassPack.mk AddZero P' iP')
+    (hM : @AddZeroPack.mk M iM = @AddZeroPack.mk M' iM')
+    (hN : @AddZeroPack.mk N iN = @AddZeroPack.mk N' iN')
+    (hP : @AddZeroPack.mk P iP = @AddZeroPack.mk P' iP')
     (f : N →+ P) (f' : N' →+ P') (hf : HEq f f') (g : M →+ N) (g' : M' →+ N')
     (hg : HEq g g') :
     HEq (f.comp g) (f'.comp g') := by
@@ -955,7 +955,7 @@ theorem MonoidHom.comp_apply [MulOne M] [MulOne N] [MulOne P]
 
 /-- Pack congruence for `AddMonoidHom.id`. -/
 @[dsimp_congr] theorem AddMonoidHom.id_pack_congr.{ua} {M M' : Type ua} [iM : AddZero M]
-    [iM' : AddZero M'] (hM : @ClassPack.mk AddZero M iM = @ClassPack.mk AddZero M' iM') :
+    [iM' : AddZero M'] (hM : @AddZeroPack.mk M iM = @AddZeroPack.mk M' iM') :
     HEq (AddMonoidHom.id M) (AddMonoidHom.id M') := by
   cases hM; rfl
 

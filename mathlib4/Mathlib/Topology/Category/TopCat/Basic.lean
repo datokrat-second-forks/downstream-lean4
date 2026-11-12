@@ -274,7 +274,7 @@ lemma const_apply {X Y : TopCat.{u}} (y : Y) (x : X) :
 
 /-- Lens: the topology pack of the carrier of `X : TopCat` follows `X`. -/
 @[dsimp_congr] theorem pack_congr.{ua} {X X' : TopCat.{ua}} (h : X = X') :
-    @ClassPack.mk TopologicalSpace X X.str = @ClassPack.mk TopologicalSpace X' X'.str := by
+    @TopologicalSpacePack.mk X X.str = @TopologicalSpacePack.mk X' X'.str := by
   cases h; rfl
 
 end TopCat

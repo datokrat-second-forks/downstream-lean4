@@ -258,8 +258,8 @@ end ModuleCat
 /-- Lens: the `AddCommGroup` pack of the carrier of `X : ModuleCat R` follows `X`. -/
 @[dsimp_congr] theorem ModuleCat.pack_congr.{ua, va} {R : Type ua} [Ring R] {X X' : ModuleCat.{va} R}
     (h : X = X') :
-    @ClassPack.mk AddCommGroup X X.isAddCommGroup =
-      @ClassPack.mk AddCommGroup X' X'.isAddCommGroup := by
+    @AddCommGroupPack.mk X X.isAddCommGroup =
+      @AddCommGroupPack.mk X' X'.isAddCommGroup := by
   cases h; rfl
 
 /-- Lens: the module pack of the carrier of `X : ModuleCat R` follows `X`. -/

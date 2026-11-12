@@ -419,9 +419,9 @@ instance (priority := 100) DivisionMonoid.toDivInvOneMonoid : DivInvOneMonoid α
 /-- Lens: the `SubNegZeroMonoid` pack follows the `SubtractionMonoid` pack. -/
 @[dsimp_congr] theorem SubtractionMonoid.toSubNegZeroMonoid.packLens.{u_pack} {α α' : Type u_pack}
     {i : SubtractionMonoid α} {i' : SubtractionMonoid α'}
-    (h : @ClassPack.mk SubtractionMonoid α i = @ClassPack.mk SubtractionMonoid α' i') :
-    @ClassPack.mk SubNegZeroMonoid α (@SubtractionMonoid.toSubNegZeroMonoid α i) =
-      @ClassPack.mk SubNegZeroMonoid α' (@SubtractionMonoid.toSubNegZeroMonoid α' i') := by
+    (h : @SubtractionMonoidPack.mk α i = @SubtractionMonoidPack.mk α' i') :
+    @SubNegZeroMonoidPack.mk α (@SubtractionMonoid.toSubNegZeroMonoid α i) =
+      @SubNegZeroMonoidPack.mk α' (@SubtractionMonoid.toSubNegZeroMonoid α' i') := by
   cases h; rfl
 
 @[to_additive (attr := simp)]

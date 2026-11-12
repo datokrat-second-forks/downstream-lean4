@@ -133,8 +133,8 @@ instance : CompleteLattice (Sieve X) where
 /-- Lens: the complete lattice pack of `Sieve X` follows `X`. -/
 @[dsimp_congr] theorem instCompleteLattice.packLens.{va, ua} {C : Type ua} [Category.{va} C]
     {X X' : C} (h : X = X') :
-    @ClassPack.mk CompleteLattice (Sieve X) instCompleteLattice =
-      @ClassPack.mk CompleteLattice (Sieve X') instCompleteLattice := by
+    @CompleteLatticePack.mk (Sieve X) instCompleteLattice =
+      @CompleteLatticePack.mk (Sieve X') instCompleteLattice := by
   cases h; rfl
 
 /-- The maximal sieve always exists. -/

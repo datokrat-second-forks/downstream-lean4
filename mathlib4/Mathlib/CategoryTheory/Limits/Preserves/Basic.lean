@@ -73,9 +73,9 @@ class PreservesLimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) : Prop
     [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
-    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
-    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hJ : @CategoryPack.mk.{vj, uj} J iJ = @CategoryPack.mk.{vj, uj} J' iJ')
     (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') :
     PreservesLimitsOfShape J F = PreservesLimitsOfShape J' F' := by
   cases hC; cases hD; cases hJ; cases hF; rfl

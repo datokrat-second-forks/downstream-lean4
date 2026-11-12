@@ -55,6 +55,13 @@ class Encodable (α : Type*) where
   /-- Invariant relationship between encoding and decoding -/
   encodek : ∀ a, decode (encode a) = some a
 
+/-- A type with an instance of the class `Encodable`. -/
+structure EncodablePack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : Encodable α]
+
 attribute [simp] Encodable.encodek
 
 namespace Encodable

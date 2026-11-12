@@ -88,7 +88,7 @@ instance : Group (DihedralGroup n) where
 
 /-- Lens: the `Mul` pack of `DihedralGroup n` follows `n`. -/
 @[dsimp_congr] theorem mulPack_congr {n n' : ℕ} (h : n = n') :
-    ClassPack.mk (c := Mul) (DihedralGroup n) = ClassPack.mk (c := Mul) (DihedralGroup n') := by
+    MulPack.mk (DihedralGroup n) = MulPack.mk (DihedralGroup n') := by
   cases h; rfl
 
 @[simp]

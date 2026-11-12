@@ -244,8 +244,8 @@ noncomputable instance : AddCommGroup (Ext X Y n) :=
 @[dsimp_congr] theorem instAddCommGroup.packLens.{we, ve, ue}
     {C : Type ue} [Category.{ve} C] [Abelian C] [HasExt.{we} C] {X X' Y Y' : C} {n : ℕ}
     (hX : X = X') (hY : Y = Y') :
-    @ClassPack.mk AddCommGroup (Ext X Y n) instAddCommGroup =
-      @ClassPack.mk AddCommGroup (Ext X' Y' n) instAddCommGroup := by
+    @AddCommGroupPack.mk (Ext X Y n) instAddCommGroup =
+      @AddCommGroupPack.mk (Ext X' Y' n) instAddCommGroup := by
   cases hX; cases hY; rfl
 
 /-- The map from `Ext X Y n` to a `ShiftedHom` type in the *constructed* derived
@@ -439,8 +439,8 @@ noncomputable def extFunctorObj (X : C) (n : ℕ) : C ⥤ AddCommGrpCat.{w} wher
 
 /-- Pack root lemma: the additive group on `(extFunctorObj X n).obj Y` is the one of `Ext X Y n`. -/
 @[simp] theorem extFunctorObj_obj_classPack (X : C) (n : ℕ) (Y : C) :
-    @ClassPack.mk AddCommGroup ((extFunctorObj X n).obj Y) ((extFunctorObj X n).obj Y).str =
-      @ClassPack.mk AddCommGroup (Ext X Y n) (by infer_instance) :=
+    @AddCommGroupPack.mk ((extFunctorObj X n).obj Y) ((extFunctorObj X n).obj Y).str =
+      @AddCommGroupPack.mk (Ext X Y n) (by infer_instance) :=
   rfl
 
 set_option backward.isDefEq.respectTransparency.instanceTypes false in

@@ -478,9 +478,9 @@ instance homogeneousLocalizationCommRing : CommRing (HomogeneousLocalization �
     {ι : Type uι} {A : Type uA} {σ : Type uσ} [CommRing A] [SetLike σ A] [AddSubgroupClass σ A]
     [AddCommMonoid ι] [DecidableEq ι] {𝒜 : ι → σ} [GradedRing 𝒜] {x x' : Submonoid A}
     (h : x = x') :
-    @ClassPack.mk CommRing (HomogeneousLocalization 𝒜 x)
+    @CommRingPack.mk (HomogeneousLocalization 𝒜 x)
         HomogeneousLocalization.homogeneousLocalizationCommRing =
-      @ClassPack.mk CommRing (HomogeneousLocalization 𝒜 x')
+      @CommRingPack.mk (HomogeneousLocalization 𝒜 x')
         HomogeneousLocalization.homogeneousLocalizationCommRing := by
   cases h; rfl
 

@@ -1058,8 +1058,8 @@ deriving
     {H : Type uh} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
     {M : Type um} [TopologicalSpace M] [ChartedSpace H M] [i : ∀ x : M, ENorm (TangentSpace I x)]
     {x x' : M} (h : x = x') :
-    @ClassPack.mk ENorm (TangentSpace I x) (i x) =
-      @ClassPack.mk ENorm (TangentSpace I x') (i x') := by
+    @ENormPack.mk (TangentSpace I x) (i x) =
+      @ENormPack.mk (TangentSpace I x') (i x') := by
   cases h; rfl
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]

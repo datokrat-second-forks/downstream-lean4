@@ -70,6 +70,8 @@ least upper (respectively, greatest lower) bound. -/
 class ConditionallyCompletePartialOrder (α : Type*)
     extends ConditionallyCompletePartialOrderSup α, ConditionallyCompletePartialOrderInf α where
 
+class_pack ConditionallyCompletePartialOrder
+
 attribute [to_dual existing]
   ConditionallyCompletePartialOrder.toConditionallyCompletePartialOrderSup
 

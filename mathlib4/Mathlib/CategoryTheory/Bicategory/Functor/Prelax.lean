@@ -51,8 +51,8 @@ This theorem belongs to `Mathlib/CategoryTheory/Bicategory/Basic.lean`. It is he
 file imports both that file and `ClassPack`. -/
 @[dsimp_congr] theorem Bicategory.homCategory.packLens.{wb, vb, ub} {B : Type ub}
     [Bicategory.{wb, vb} B] {a a' b b' : B} (ha : a = a') (hb : b = b') :
-    @ClassPack.mk Category.{wb, vb} (a ⟶ b) (Bicategory.homCategory a b) =
-      @ClassPack.mk Category.{wb, vb} (a' ⟶ b') (Bicategory.homCategory a' b') := by
+    @CategoryPack.mk.{wb, vb} (a ⟶ b) (Bicategory.homCategory a b) =
+      @CategoryPack.mk.{wb, vb} (a' ⟶ b') (Bicategory.homCategory a' b') := by
   cases ha; cases hb; rfl
 
 section

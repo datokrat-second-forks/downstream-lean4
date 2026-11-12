@@ -32,10 +32,15 @@ variable {G : Type*}
 compatibility. See `AddZeroClass` for the additional assumption that 0 is an identity. -/
 class AddZero (M : Type*) extends Zero M, Add M
 
+class_pack AddZero
+
 /-- Bundling a `Mul` and `One` structure together without any axioms about their
 compatibility. See `MulOneClass` for the additional assumption that 1 is an identity. -/
 @[to_additive (attr := ext)]
 class MulOne (M : Type*) extends One M, Mul M
+
+class_pack MulOne
+attribute [to_additive existing] MulOnePack
 
 /-- An additive monoid is Dedekind-finite if every left inverse is also a right inverse.
 Also called von Neumann-finite or directly finite. -/
@@ -69,6 +74,8 @@ class AddZeroClass (M : Type*) extends Zero M, Add M, AddZero M where
   /-- Zero is a right neutral element for addition -/
   protected add_zero : ∀ a : M, a + 0 = a
 
+class_pack AddZeroClass
+
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
 `1 * a = a` and `a * 1 = a` for all `a : M`. -/
 @[to_additive]
@@ -77,6 +84,9 @@ class MulOneClass (M : Type*) extends One M, Mul M, MulOne M where
   protected one_mul : ∀ a : M, 1 * a = a
   /-- One is a right neutral element for multiplication -/
   protected mul_one : ∀ a : M, a * 1 = a
+
+class_pack MulOneClass
+attribute [to_additive existing] MulOneClassPack
 
 @[to_additive (attr := ext)]
 theorem MulOneClass.ext {M : Type*} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ := by
@@ -381,6 +391,8 @@ class AddMonoid (M : Type*) extends Zero M, Add M, AddSemigroup M, AddZeroClass 
   /-- Multiplication by `(n + 1 : ℕ)` behaves as expected. -/
   protected nsmul_succ (n : ℕ) (x : M) : (n + 1) • x = n • x + x := by intros; rfl
 
+class_pack AddMonoid
+
 attribute [instance 150] AddSemigroup.toAdd
 attribute [instance 50] AddZero.toAdd
 
@@ -392,6 +404,9 @@ class Monoid (M : Type*) extends One M, Mul M, Semigroup M, MulOneClass M, NPow 
   protected npow_zero (x : M) : x ^ 0 = 1 := by intros; rfl
   /-- Raising to the power `(n + 1 : ℕ)` behaves as expected. -/
   protected npow_succ (n : ℕ) (x : M) : x ^ (n + 1) = x ^ n * x := by intros; rfl
+
+class_pack Monoid
+attribute [to_additive existing] MonoidPack
 
 section Monoid
 variable {M : Type*} [Monoid M] {a b c : M}
@@ -599,9 +614,14 @@ instance (M : Type*) [Monoid M] [HasUniqueRoots M] : IsMulTorsionFree M where
 /-- An additive commutative monoid is an additive monoid with commutative `(+)`. -/
 class AddCommMonoid (M : Type*) extends AddMonoid M, AddCommSemigroup M
 
+class_pack AddCommMonoid
+
 /-- A commutative monoid is a monoid with commutative `(*)`. -/
 @[to_additive]
 class CommMonoid (M : Type*) extends Monoid M, CommSemigroup M
+
+class_pack CommMonoid
+attribute [to_additive existing] CommMonoidPack
 
 /-- Shortcut instance for `IsCommutativeHMul M → IsDedekindFiniteMonoid M`.
 

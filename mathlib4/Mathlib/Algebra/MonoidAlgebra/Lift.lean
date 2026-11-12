@@ -97,8 +97,8 @@ def liftNCRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x
 @[dsimp_congr] theorem _root_.MonoidAlgebra.liftNCRingHom_pack_congr.{uk, ug, ur} {k : Type uk}
     [Semiring k] {G G' : Type ug} {R R' : Type ur} [iG : Monoid G] [iG' : Monoid G']
     [iR : Semiring R] [iR' : Semiring R']
-    (hG : @ClassPack.mk Monoid G iG = @ClassPack.mk Monoid G' iG')
-    (hR : @ClassPack.mk Semiring R iR = @ClassPack.mk Semiring R' iR')
+    (hG : @MonoidPack.mk G iG = @MonoidPack.mk G' iG')
+    (hR : @SemiringPack.mk R iR = @SemiringPack.mk R' iR')
     (f : k →+* R) (f' : k →+* R') (hf : HEq f f') (g : G →* R) (g' : G' →* R') (hg : HEq g g')
     (hc : ∀ x y, Commute (f x) (g y)) {hc' : ∀ x y, Commute (f' x) (g' y)} (hh : HEq hc hc') :
     HEq (MonoidAlgebra.liftNCRingHom f g hc) (MonoidAlgebra.liftNCRingHom f' g' hc') := by

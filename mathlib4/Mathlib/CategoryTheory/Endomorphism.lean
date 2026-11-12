@@ -75,8 +75,8 @@ instance monoid {C : Type u} [Category.{v} C] {X : C} : Monoid (End X) where
 /-- Lens: the monoid pack of `End X` follows `X`. -/
 @[dsimp_congr] theorem _root_.CategoryTheory.End.monoid.packLens.{vc, uc} {C : Type uc}
     [CategoryTheory.Category.{vc} C] {X X' : C} (h : X = X') :
-    @ClassPack.mk Monoid (CategoryTheory.End X) CategoryTheory.End.monoid =
-      @ClassPack.mk Monoid (CategoryTheory.End X') CategoryTheory.End.monoid := by
+    @MonoidPack.mk (CategoryTheory.End X) CategoryTheory.End.monoid =
+      @MonoidPack.mk (CategoryTheory.End X') CategoryTheory.End.monoid := by
   cases h; rfl
 
 section MulAction

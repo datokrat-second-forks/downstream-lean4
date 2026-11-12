@@ -45,12 +45,12 @@ namespace Prod
 /-- Lens: the `Add` pack of `M × N` follows the `Add` packs of `M` and `N`.
 
 This theorem belongs to `Mathlib/Algebra/Notation/Prod.lean`. It is here because that file does
-not import `ClassPack`. -/
+not import the pack of `Add`. -/
 @[dsimp_congr] theorem instAdd.packLens.{ua, va} {M M' : Type ua} {N N' : Type va}
     {iM : Add M} {iM' : Add M'} {iN : Add N} {iN' : Add N'}
-    (hM : @ClassPack.mk Add M iM = @ClassPack.mk Add M' iM')
-    (hN : @ClassPack.mk Add N iN = @ClassPack.mk Add N' iN') :
-    @ClassPack.mk Add (M × N) Prod.instAdd = @ClassPack.mk Add (M' × N') Prod.instAdd := by
+    (hM : @AddPack.mk M iM = @AddPack.mk M' iM')
+    (hN : @AddPack.mk N iN = @AddPack.mk N' iN') :
+    @AddPack.mk (M × N) Prod.instAdd = @AddPack.mk (M' × N') Prod.instAdd := by
   cases hM; cases hN; rfl
 
 @[to_additive]

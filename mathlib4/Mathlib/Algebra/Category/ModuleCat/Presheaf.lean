@@ -151,8 +151,8 @@ lemma presheaf_obj_coe (X : Cᵒᵖ) :
 /-- Pack root lemma: the group pack of `M.presheaf.obj X` is that of `M.obj X`. -/
 @[simp]
 theorem presheaf_obj_classPack (X : Cᵒᵖ) :
-    @ClassPack.mk AddCommGroup (M.presheaf.obj X) (M.presheaf.obj X).str =
-      @ClassPack.mk AddCommGroup (M.obj X) (M.obj X).isAddCommGroup :=
+    @AddCommGroupPack.mk (M.presheaf.obj X) (M.presheaf.obj X).str =
+      @AddCommGroupPack.mk (M.obj X) (M.obj X).isAddCommGroup :=
   rfl
 
 set_option backward.isDefEq.respectTransparency.instanceTypes false in

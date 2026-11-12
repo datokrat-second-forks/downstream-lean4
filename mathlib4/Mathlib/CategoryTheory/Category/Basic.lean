@@ -126,6 +126,13 @@ class CategoryStruct (obj : Type u) : Type max u (v + 1) extends Quiver.{v} obj 
   /-- Composition of morphisms in a category, written `f ≫ g`. -/
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
+/-- A type with an instance of the class `CategoryStruct`. -/
+structure CategoryStructPack.{vc, uc} where
+  /-- The carrier. -/
+  α : Type uc
+  /-- The instance. -/
+  [inst : CategoryStruct.{vc} α]
+
 attribute [trans, to_dual self (reorder := X Z, 6 7)] CategoryStruct.comp
 attribute [to_dual self (reorder := comp (X Z, 4 5))] CategoryStruct.mk
 
@@ -141,15 +148,15 @@ scoped infixr:80 " ≫ " => CategoryStruct.comp -- type as \gg
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem CategoryStruct.toQuiver.packLens.{vc, uc} {C C' : Type uc}
     {i : CategoryStruct.{vc} C} {i' : CategoryStruct.{vc} C'}
-    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i') :
-    @ClassPack.mk Quiver.{vc, uc} C i.toQuiver = @ClassPack.mk Quiver.{vc, uc} C' i'.toQuiver := by
+    (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i') :
+    @QuiverPack.mk.{vc, uc} C i.toQuiver = @QuiverPack.mk.{vc, uc} C' i'.toQuiver := by
   cases h; rfl
 
 /-- Pack congruence for the composition of morphisms. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem CategoryStruct.comp_pack_congr.{vc, uc} {C C' : Type uc}
     [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
-    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i')
+    (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i')
     {X Y Z : C} {X' Y' Z' : C'} (hX : HEq X X') (hY : HEq Y Y') (hZ : HEq Z Z')
     (f : X ⟶ Y) (f' : X' ⟶ Y') (hf : HEq f f') (g : Y ⟶ Z) (g' : Y' ⟶ Z') (hg : HEq g g') :
     HEq (CategoryStruct.comp f g) (CategoryStruct.comp f' g') := by
@@ -159,7 +166,7 @@ theorem CategoryStruct.comp_pack_congr.{vc, uc} {C C' : Type uc}
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem CategoryStruct.id_pack_congr.{vc, uc} {C C' : Type uc}
     [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
-    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i')
+    (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i')
     (X : C) (X' : C') (hX : HEq X X') :
     HEq (CategoryStruct.id X) (CategoryStruct.id X') := by
   cases h; cases hX; rfl
@@ -267,6 +274,13 @@ class Category (obj : Type u) : Type max u (v + 1) extends CategoryStruct.{v} ob
   assoc : ∀ {W X Y Z : obj} (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z), (f ≫ g) ≫ h = f ≫ g ≫ h := by
     cat_disch
 
+/-- A type with an instance of the class `Category`. -/
+structure CategoryPack.{vc, uc} where
+  /-- The carrier. -/
+  α : Type uc
+  /-- The instance. -/
+  [inst : Category.{vc} α]
+
 attribute [to_dual existing (attr := simp, grind =) id_comp] Category.comp_id
 attribute [simp, grind _=_] Category.assoc
 
@@ -280,9 +294,9 @@ to_dual_for Category.mk := {}
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem Category.toCategoryStruct.packLens.{vc, uc} {C C' : Type uc}
     {i : Category.{vc} C} {i' : Category.{vc} C'}
-    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
-    @ClassPack.mk CategoryStruct.{vc, uc} C i.toCategoryStruct =
-      @ClassPack.mk CategoryStruct.{vc, uc} C' i'.toCategoryStruct := by
+    (h : @CategoryPack.mk.{vc, uc} C i = @CategoryPack.mk.{vc, uc} C' i') :
+    @CategoryStructPack.mk.{vc, uc} C i.toCategoryStruct =
+      @CategoryStructPack.mk.{vc, uc} C' i'.toCategoryStruct := by
   cases h; rfl
 
 example {C} [Category C] {X Y : C} (f : X ⟶ Y) : 𝟙 X ≫ f = f := by simp

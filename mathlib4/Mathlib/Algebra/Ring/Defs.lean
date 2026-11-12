@@ -126,6 +126,8 @@ class NonUnitalSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, Semi
 class NonAssocSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, MulZeroOneClass α,
     AddCommMonoidWithOne α
 
+class_pack NonAssocSemiring
+
 /-- A not-necessarily-unital, not-necessarily-associative ring. -/
 class NonUnitalNonAssocRing (α : Type u) extends AddCommGroup α, NonUnitalNonAssocSemiring α
 
@@ -142,9 +144,13 @@ addition, and `0` and `1` are additive and multiplicative identities. -/
 class Semiring (α : Type u) extends AddCommMonoid α, MonoidWithZero α, NonUnitalSemiring α,
   NonAssocSemiring α
 
+class_pack Semiring
+
 /-- A `Ring` is a `Semiring` with negation making it an additive group. -/
 @[wikidata Q161172]
 class Ring (R : Type u) extends Semiring R, AddCommGroup R, AddGroupWithOne R
+
+class_pack Ring
 
 -- Add some short-cut instances to avoid going through the less used ring type classes.
 instance [Semiring α] : Distrib α := inferInstance
@@ -227,6 +233,8 @@ class NonAssocCommSemiring (α : Type u)
 
 /-- A commutative semiring is a semiring with commutative multiplication. -/
 class CommSemiring (R : Type u) extends Semiring R, CommMonoid R
+
+class_pack CommSemiring
 
 attribute [instance 100] NonAssocCommSemiring.toNonAssocSemiring
 attribute [instance 100] NonAssocCommSemiring.toNonUnitalNonAssocCommSemiring
@@ -413,6 +421,8 @@ instance (priority := 100) NonUnitalCommRing.toNonUnitalCommSemiring [s : NonUni
 @[wikidata Q858656]
 class CommRing (α : Type u) extends Ring α, CommMonoid α
 
+class_pack CommRing
+
 instance (priority := 100) CommRing.toNonAssocCommRing [CommRing α] : NonAssocCommRing α where
 
 instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemiring α :=
@@ -421,9 +431,9 @@ instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemir
 /-- Lens: the `CommSemiring` pack follows the `CommRing` pack. -/
 @[dsimp_congr] theorem CommRing.toCommSemiring.packLens.{u_pack} {α α' : Type u_pack}
     {i : CommRing α} {i' : CommRing α'}
-    (h : @ClassPack.mk CommRing α i = @ClassPack.mk CommRing α' i') :
-    @ClassPack.mk CommSemiring α (@CommRing.toCommSemiring α i) =
-      @ClassPack.mk CommSemiring α' (@CommRing.toCommSemiring α' i') := by
+    (h : @CommRingPack.mk α i = @CommRingPack.mk α' i') :
+    @CommSemiringPack.mk α (@CommRing.toCommSemiring α i) =
+      @CommSemiringPack.mk α' (@CommRing.toCommSemiring α' i') := by
   cases h; rfl
 
 -- see Note [lower instance priority]

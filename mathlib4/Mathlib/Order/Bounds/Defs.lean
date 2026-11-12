@@ -76,6 +76,20 @@ class InfSet (α : Type*) where
   /-- Infimum of a set -/
   sInf : Set α → α
 
+/-- A type with an instance of the class `SupSet`. -/
+structure SupSetPack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : SupSet α]
+
+/-- A type with an instance of the class `InfSet`. -/
+structure InfSetPack.{ua} where
+  /-- The carrier. -/
+  α : Type ua
+  /-- The instance. -/
+  [inst : InfSet α]
+
 export SupSet (sSup)
 
 export InfSet (sInf)

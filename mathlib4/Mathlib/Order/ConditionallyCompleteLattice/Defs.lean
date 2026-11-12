@@ -50,6 +50,8 @@ class ConditionallyCompleteLattice (α : Type*) extends Lattice α, SupSet α, I
   /-- Every nonempty subset which is bounded below has a greatest lower bound. -/
   isGLB_csInf : ∀ s : Set α, s.Nonempty → BddBelow s → IsGLB s (sInf s)
 
+class_pack ConditionallyCompleteLattice
+
 attribute [to_dual self (reorder := 3 4, 5 6)] ConditionallyCompleteLattice.mk
 attribute [to_dual existing] ConditionallyCompleteLattice.toSupSet
 attribute [to_dual existing] ConditionallyCompleteLattice.isLUB_csSup

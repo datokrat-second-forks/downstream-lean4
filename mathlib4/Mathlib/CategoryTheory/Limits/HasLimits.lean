@@ -124,7 +124,7 @@ class HasColimitsOfShape : Prop where
 @[dsimp_congr] theorem HasLimitsOfShape.pack_congr.{vj, uj, vc, uc}
     {J : Type uj} [Category.{vj} J] {C C' : Type uc}
     [i : Category.{vc} C] [i' : Category.{vc} C']
-    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
+    (h : @CategoryPack.mk.{vc, uc} C i = @CategoryPack.mk.{vc, uc} C' i') :
     HasLimitsOfShape J C = HasLimitsOfShape J C' := by
   cases h; rfl
 
@@ -132,7 +132,7 @@ class HasColimitsOfShape : Prop where
 @[dsimp_congr] theorem HasColimitsOfShape.pack_congr.{vj, uj, vc, uc}
     {J : Type uj} [Category.{vj} J] {C C' : Type uc}
     [i : Category.{vc} C] [i' : Category.{vc} C']
-    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
+    (h : @CategoryPack.mk.{vc, uc} C i = @CategoryPack.mk.{vc, uc} C' i') :
     HasColimitsOfShape J C = HasColimitsOfShape J C' := by
   cases h; rfl
 
@@ -218,8 +218,8 @@ theorem colimit.eqToHom_comp_ι (F : J ⥤ C) [HasColimit F] {j j' : J} (hj : j 
 @[dsimp_congr] theorem colimit_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
     {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
-    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hJ : @CategoryPack.mk.{vj, uj} J iJ = @CategoryPack.mk.{vj, uj} J' iJ')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
     (F : J ⥤ C) (F' : J' ⥤ C') (hF : HEq F F')
     [h : HasColimit F] {h' : HasColimit F'} (hh : HEq h h') :
     HEq (@colimit J iJ C iC F h) (@colimit J' iJ' C' iC' F' h') := by
@@ -229,8 +229,8 @@ theorem colimit.eqToHom_comp_ι (F : J ⥤ C) [HasColimit F] {j j' : J} (hj : j 
 @[dsimp_congr] theorem colimit.ι_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
     {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
-    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hJ : @CategoryPack.mk.{vj, uj} J iJ = @CategoryPack.mk.{vj, uj} J' iJ')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
     (F : J ⥤ C) (F' : J' ⥤ C') (hF : HEq F F')
     [h : HasColimit F] {h' : HasColimit F'} (hh : HEq h h')
     (j : J) (j' : J') (hj : HEq j j') :
@@ -608,8 +608,8 @@ def lim.π (j : J) : lim ⟶ (evaluation J C).obj j where
 @[dsimp_congr] theorem colim_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
     {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
-    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
-    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hJ : @CategoryPack.mk.{vj, uj} J iJ = @CategoryPack.mk.{vj, uj} J' iJ')
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
     [h : HasColimitsOfShape J C] {h' : HasColimitsOfShape J' C'} (hh : HEq h h') :
     HEq (@colim J iJ C iC h) (@colim J' iJ' C' iC' h') := by
   cases hJ; cases hC; rfl

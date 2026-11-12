@@ -143,7 +143,7 @@ abbrev Away :=
 /-- Pack congruence for `Localization.Away`. -/
 @[dsimp_congr] theorem Away.pack_congr.{ua} {M M' : Type ua}
     [i : CommMonoid M] [i' : CommMonoid M']
-    (h : @ClassPack.mk CommMonoid M i = @ClassPack.mk CommMonoid M' i')
+    (h : @CommMonoidPack.mk M i = @CommMonoidPack.mk M' i')
     (x : M) (x' : M') (hx : HEq x x') :
     Localization.Away x = Localization.Away x' := by
   cases h; cases hx; rfl

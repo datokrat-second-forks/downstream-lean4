@@ -67,10 +67,10 @@ instance mulOneClass [∀ i, MulOneClass (f i)] : MulOneClass (∀ i, f i) where
 /-- Lens: the `MulOneClass` pack of `∀ a, f a` follows the packs of the family. -/
 @[dsimp_congr] theorem mulOneClass.packLens {I : Type u} {f f' : I → Type v₁}
     [i : ∀ a, MulOneClass (f a)] [i' : ∀ a, MulOneClass (f' a)]
-    (h : ∀ a, @ClassPack.mk MulOneClass (f a) (i a) = @ClassPack.mk MulOneClass (f' a) (i' a)) :
-    @ClassPack.mk MulOneClass (∀ a, f a) Pi.mulOneClass =
-      @ClassPack.mk MulOneClass (∀ a, f' a) Pi.mulOneClass := by
-  have hf : f = f' := funext fun a => congrArg ClassPack.α (h a)
+    (h : ∀ a, @MulOneClassPack.mk (f a) (i a) = @MulOneClassPack.mk (f' a) (i' a)) :
+    @MulOneClassPack.mk (∀ a, f a) Pi.mulOneClass =
+      @MulOneClassPack.mk (∀ a, f' a) Pi.mulOneClass := by
+  have hf : f = f' := funext fun a => congrArg MulOneClassPack.α (h a)
   subst hf
   have hi : i = i' := funext fun a => by injection h a
   subst hi; rfl
@@ -78,10 +78,10 @@ instance mulOneClass [∀ i, MulOneClass (f i)] : MulOneClass (∀ i, f i) where
 /-- Lens: the `AddZeroClass` pack of `∀ a, f a` follows the packs of the family. -/
 @[dsimp_congr] theorem addZeroClass.packLens {I : Type u} {f f' : I → Type v₁}
     [i : ∀ a, AddZeroClass (f a)] [i' : ∀ a, AddZeroClass (f' a)]
-    (h : ∀ a, @ClassPack.mk AddZeroClass (f a) (i a) = @ClassPack.mk AddZeroClass (f' a) (i' a)) :
-    @ClassPack.mk AddZeroClass (∀ a, f a) Pi.addZeroClass =
-      @ClassPack.mk AddZeroClass (∀ a, f' a) Pi.addZeroClass := by
-  have hf : f = f' := funext fun a => congrArg ClassPack.α (h a)
+    (h : ∀ a, @AddZeroClassPack.mk (f a) (i a) = @AddZeroClassPack.mk (f' a) (i' a)) :
+    @AddZeroClassPack.mk (∀ a, f a) Pi.addZeroClass =
+      @AddZeroClassPack.mk (∀ a, f' a) Pi.addZeroClass := by
+  have hf : f = f' := funext fun a => congrArg AddZeroClassPack.α (h a)
   subst hf
   have hi : i = i' := funext fun a => by injection h a
   subst hi; rfl
@@ -89,8 +89,8 @@ instance mulOneClass [∀ i, MulOneClass (f i)] : MulOneClass (∀ i, f i) where
 /-- Lens: the `Add` pack of `α → β` follows `α` and the `Add` pack of `β`. -/
 @[dsimp_congr] theorem addPack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
     [i : Add β] [i' : Add β'] (hα : α = α')
-    (hβ : @ClassPack.mk Add β i = @ClassPack.mk Add β' i') :
-    @ClassPack.mk Add (α → β) Pi.instAdd = @ClassPack.mk Add (α' → β') Pi.instAdd := by
+    (hβ : @AddPack.mk β i = @AddPack.mk β' i') :
+    @AddPack.mk (α → β) Pi.instAdd = @AddPack.mk (α' → β') Pi.instAdd := by
   cases hα; cases hβ; rfl
 
 @[to_additive]

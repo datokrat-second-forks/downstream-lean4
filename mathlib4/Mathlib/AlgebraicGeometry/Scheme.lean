@@ -51,9 +51,9 @@ instance : CoeSort Scheme Type* where
 
 /-- Lens: the topology pack of the carrier of a scheme follows the scheme. -/
 @[dsimp_congr] theorem topPack_congr.{ux} {X X' : Scheme.{ux}} (h : X = X') :
-    @ClassPack.mk TopologicalSpace X
+    @TopologicalSpacePack.mk X
         (PresheafedSpace.instTopologicalSpaceCarrierCarrier X.toPresheafedSpace) =
-      @ClassPack.mk TopologicalSpace X'
+      @TopologicalSpacePack.mk X'
         (PresheafedSpace.instTopologicalSpaceCarrierCarrier X'.toPresheafedSpace) := by
   cases h; rfl
 

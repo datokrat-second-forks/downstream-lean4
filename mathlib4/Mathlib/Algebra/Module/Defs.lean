@@ -62,8 +62,8 @@ class Module (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] extends
 /-- Pack congruence for the class `Module`. -/
 @[dsimp_congr] theorem Module.pack_congr.{ua, va} {R R' : Type ua} {M M' : Type va}
     [iR : Semiring R] [iR' : Semiring R'] [iM : AddCommMonoid M] [iM' : AddCommMonoid M']
-    (hR : @ClassPack.mk Semiring R iR = @ClassPack.mk Semiring R' iR')
-    (hM : @ClassPack.mk AddCommMonoid M iM = @ClassPack.mk AddCommMonoid M' iM') :
+    (hR : @SemiringPack.mk R iR = @SemiringPack.mk R' iR')
+    (hM : @AddCommMonoidPack.mk M iM = @AddCommMonoidPack.mk M' iM') :
     Module R M = Module R' M' := by
   cases hR; cases hM; rfl
 

@@ -173,8 +173,8 @@ def toExtension : Extension R S where
 /-- Pack root lemma: the ring of `P.toExtension`. -/
 @[simp] theorem _root_.Algebra.Generators.toExtension_commRingPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
     [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
-    @ClassPack.mk CommRing P₀.toExtension.Ring P₀.toExtension.commRing =
-      @ClassPack.mk CommRing P₀.Ring _ := rfl
+    @CommRingPack.mk P₀.toExtension.Ring P₀.toExtension.commRing =
+      @CommRingPack.mk P₀.Ring _ := rfl
 
 /-- Pack root lemma: the algebra `P.toExtension.Ring → S`. -/
 @[simp] theorem _root_.Algebra.Generators.toExtension_algPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]

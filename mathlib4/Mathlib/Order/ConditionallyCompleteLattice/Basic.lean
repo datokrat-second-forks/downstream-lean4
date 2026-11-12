@@ -163,10 +163,10 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
 /-- Lens: the conditionally complete lattice pack follows the complete lattice pack. -/
 @[dsimp_congr] theorem CompleteLattice.toConditionallyCompleteLattice.packLens.{ua}
     {α α' : Type ua} {i : CompleteLattice α} {i' : CompleteLattice α'}
-    (h : @ClassPack.mk CompleteLattice α i = @ClassPack.mk CompleteLattice α' i') :
-    @ClassPack.mk ConditionallyCompleteLattice α
+    (h : @CompleteLatticePack.mk α i = @CompleteLatticePack.mk α' i') :
+    @ConditionallyCompleteLatticePack.mk α
         (@CompleteLattice.toConditionallyCompleteLattice α i) =
-      @ClassPack.mk ConditionallyCompleteLattice α'
+      @ConditionallyCompleteLatticePack.mk α'
         (@CompleteLattice.toConditionallyCompleteLattice α' i') := by
   cases h; rfl
 
@@ -237,11 +237,11 @@ its `ConditionallyCompleteLattice` pack. -/
 @[dsimp_congr] theorem
     _root_.ConditionallyCompleteLattice.toConditionallyCompletePartialOrder.packLens.{ua}
     {α α' : Type ua} {i : ConditionallyCompleteLattice α} {i' : ConditionallyCompleteLattice α'}
-    (h : @ClassPack.mk ConditionallyCompleteLattice α i =
-      @ClassPack.mk ConditionallyCompleteLattice α' i') :
-    @ClassPack.mk ConditionallyCompletePartialOrder α
+    (h : @ConditionallyCompleteLatticePack.mk α i =
+      @ConditionallyCompleteLatticePack.mk α' i') :
+    @ConditionallyCompletePartialOrderPack.mk α
         (@ConditionallyCompleteLattice.toConditionallyCompletePartialOrder α i) =
-      @ClassPack.mk ConditionallyCompletePartialOrder α'
+      @ConditionallyCompletePartialOrderPack.mk α'
         (@ConditionallyCompleteLattice.toConditionallyCompletePartialOrder α' i') := by
   cases h; rfl
 

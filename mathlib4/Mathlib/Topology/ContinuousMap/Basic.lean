@@ -126,9 +126,9 @@ theorem comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g 
     {γ γ' : Type wa} [iα : TopologicalSpace α] [iα' : TopologicalSpace α']
     [iβ : TopologicalSpace β] [iβ' : TopologicalSpace β'] [iγ : TopologicalSpace γ]
     [iγ' : TopologicalSpace γ']
-    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
-    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ')
-    (hγ : @ClassPack.mk TopologicalSpace γ iγ = @ClassPack.mk TopologicalSpace γ' iγ')
+    (hα : @TopologicalSpacePack.mk α iα = @TopologicalSpacePack.mk α' iα')
+    (hβ : @TopologicalSpacePack.mk β iβ = @TopologicalSpacePack.mk β' iβ')
+    (hγ : @TopologicalSpacePack.mk γ iγ = @TopologicalSpacePack.mk γ' iγ')
     (f : C(β, γ)) (f' : C(β', γ')) (hf : HEq f f') (g : C(α, β)) (g' : C(α', β'))
     (hg : HEq g g') :
     HEq (f.comp g) (f'.comp g') := by
@@ -137,7 +137,7 @@ theorem comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g 
 /-- Pack congruence for `ContinuousMap.id`. -/
 @[dsimp_congr] theorem id_pack_congr.{ua} {α α' : Type ua} [iα : TopologicalSpace α]
     [iα' : TopologicalSpace α']
-    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα') :
+    (hα : @TopologicalSpacePack.mk α iα = @TopologicalSpacePack.mk α' iα') :
     HEq (ContinuousMap.id α) (ContinuousMap.id α') := by
   cases hα; rfl
 

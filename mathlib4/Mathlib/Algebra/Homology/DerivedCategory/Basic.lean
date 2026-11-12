@@ -90,8 +90,8 @@ deriving Category
 /-- Pack root lemma: the category pack of `DerivedCategory C` is that of the localized category. -/
 @[simp]
 theorem DerivedCategory.category_classPack :
-    @ClassPack.mk Category.{w, max u v} (DerivedCategory C) (instCategoryDerivedCategory C) =
-      @ClassPack.mk Category.{w, max u v} (HomologicalComplexUpToQuasiIso C (ComplexShape.up ℤ))
+    @CategoryPack.mk.{w, max u v} (DerivedCategory C) (instCategoryDerivedCategory C) =
+      @CategoryPack.mk.{w, max u v} (HomologicalComplexUpToQuasiIso C (ComplexShape.up ℤ))
         (@MorphismProperty.instCategoryLocalization' _ _
           (HomologicalComplex.quasiIso C (ComplexShape.up ℤ)) _) :=
   rfl

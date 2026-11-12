@@ -36,8 +36,8 @@ abbrev Ideal.ResidueField : Type _ :=
 /-- Lens: the field pack of `I.ResidueField` follows `I`. -/
 @[dsimp_congr] theorem Ideal.ResidueField.field_packLens.{ua} {A : Type ua} [CommRing A]
     {I I' : Ideal A} [I.IsPrime] [I'.IsPrime] (h : I = I') :
-    @ClassPack.mk Field I.ResidueField (IsLocalRing.ResidueField.field _) =
-      @ClassPack.mk Field I'.ResidueField (IsLocalRing.ResidueField.field _) := by
+    @FieldPack.mk I.ResidueField (IsLocalRing.ResidueField.field _) =
+      @FieldPack.mk I'.ResidueField (IsLocalRing.ResidueField.field _) := by
   cases h; rfl
 
 /-- Lens: the algebra pack of `I.ResidueField` over a fixed base follows `I`. -/

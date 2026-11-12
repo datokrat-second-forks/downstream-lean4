@@ -72,8 +72,8 @@ instance : EquivLike (X ≃ₜ Y) X Y where
 @[dsimp_congr] theorem pack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
     [iα : TopologicalSpace α] [iα' : TopologicalSpace α'] [iβ : TopologicalSpace β]
     [iβ' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
-    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ') :
+    (hα : @TopologicalSpacePack.mk α iα = @TopologicalSpacePack.mk α' iα')
+    (hβ : @TopologicalSpacePack.mk β iβ = @TopologicalSpacePack.mk β' iβ') :
     (α ≃ₜ β) = (α' ≃ₜ β') := by
   cases hα; cases hβ; rfl
 
@@ -81,8 +81,8 @@ instance : EquivLike (X ≃ₜ Y) X Y where
 @[dsimp_congr] theorem funLikePack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
     [iα : TopologicalSpace α] [iα' : TopologicalSpace α'] [iβ : TopologicalSpace β]
     [iβ' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
-    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ') :
+    (hα : @TopologicalSpacePack.mk α iα = @TopologicalSpacePack.mk α' iα')
+    (hβ : @TopologicalSpacePack.mk β iβ = @TopologicalSpacePack.mk β' iβ') :
     FunLikePack.mk (α ≃ₜ β) α (fun _ => β) = FunLikePack.mk (α' ≃ₜ β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
 

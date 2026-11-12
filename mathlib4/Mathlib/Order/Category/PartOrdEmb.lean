@@ -36,7 +36,7 @@ attribute [instance] PartOrdEmb.str
 
 /-- Lens: the partial order pack of the carrier of `X : PartOrdEmb` follows `X`. -/
 @[dsimp_congr] theorem PartOrdEmb.str.packLens.{ua} {X X' : PartOrdEmb.{ua}} (h : X = X') :
-    @ClassPack.mk PartialOrder X.carrier X.str = @ClassPack.mk PartialOrder X'.carrier X'.str := by
+    @PartialOrderPack.mk X.carrier X.str = @PartialOrderPack.mk X'.carrier X'.str := by
   cases h; rfl
 
 initialize_simps_projections PartOrdEmb (carrier → coe, -str)

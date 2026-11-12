@@ -210,7 +210,7 @@ end AlgCat
 /-- Lens: the `Ring` pack of the carrier of `X : AlgCat R` follows `X`. -/
 @[dsimp_congr] theorem AlgCat.pack_congr.{ua, va} {R : Type ua} [CommRing R] {X X' : AlgCat.{va} R}
     (h : X = X') :
-    @ClassPack.mk Ring X X.isRing = @ClassPack.mk Ring X' X'.isRing := by
+    @RingPack.mk X X.isRing = @RingPack.mk X' X'.isRing := by
   cases h; rfl
 
 /-- Lens: the algebra pack of the carrier of `X : AlgCat R` follows `X`. -/

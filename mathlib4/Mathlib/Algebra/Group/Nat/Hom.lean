@@ -56,7 +56,7 @@ def multiplesHom : M ≃ (ℕ →+ M) where
 /-- Pack congruence for `multiplesHom`. -/
 @[dsimp_congr] theorem multiplesHom_pack_congr.{um} {M M' : Type um}
     [i : AddMonoid M] [i' : AddMonoid M']
-    (h : @ClassPack.mk AddMonoid M i = @ClassPack.mk AddMonoid M' i') :
+    (h : @AddMonoidPack.mk M i = @AddMonoidPack.mk M' i') :
     HEq (multiplesHom M) (multiplesHom M') := by
   cases h; rfl
 

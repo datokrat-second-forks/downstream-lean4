@@ -33,7 +33,7 @@ attribute [instance] Preord.str
 
 /-- Lens: the `Preorder` pack of the carrier of `X : Preord` follows `X`. -/
 @[dsimp_congr] theorem Preord.pack_congr.{ua} {X X' : Preord.{ua}} (h : X = X') :
-    @ClassPack.mk Preorder X.carrier X.str = @ClassPack.mk Preorder X'.carrier X'.str := by
+    @PreorderPack.mk X.carrier X.str = @PreorderPack.mk X'.carrier X'.str := by
   cases h; rfl
 
 initialize_simps_projections Preord (carrier → coe, -str)

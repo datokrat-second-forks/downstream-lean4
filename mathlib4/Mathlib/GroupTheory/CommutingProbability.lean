@@ -40,7 +40,7 @@ def commProb : ℚ :=
 
 /-- Pack congruence for `commProb`. -/
 @[dsimp_congr] theorem commProb_pack_congr.{ua} {M M' : Type ua} [i : Mul M] [i' : Mul M']
-    (h : @ClassPack.mk Mul M i = @ClassPack.mk Mul M' i') : commProb M = commProb M' := by
+    (h : @MulPack.mk M i = @MulPack.mk M' i') : commProb M = commProb M' := by
   cases h; rfl
 
 theorem commProb_def :

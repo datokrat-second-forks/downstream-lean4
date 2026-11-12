@@ -84,8 +84,8 @@ instance instFunLike : FunLike C(X, Y) X Y where
 @[dsimp_congr] theorem pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
     [j' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
-    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
+    (hα : @TopologicalSpacePack.mk α i = @TopologicalSpacePack.mk α' i')
+    (hβ : @TopologicalSpacePack.mk β j = @TopologicalSpacePack.mk β' j') :
     C(α, β) = C(α', β') := by
   cases hα; cases hβ; rfl
 
@@ -93,8 +93,8 @@ instance instFunLike : FunLike C(X, Y) X Y where
 @[dsimp_congr] theorem funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
     [j' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
-    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j') :
+    (hα : @TopologicalSpacePack.mk α i = @TopologicalSpacePack.mk α' i')
+    (hβ : @TopologicalSpacePack.mk β j = @TopologicalSpacePack.mk β' j') :
     FunLikePack.mk C(α, β) α (fun _ => β) = FunLikePack.mk C(α', β') α' (fun _ => β') := by
   cases hα; cases hβ; rfl
 
@@ -102,8 +102,8 @@ instance instFunLike : FunLike C(X, Y) X Y where
 @[dsimp_congr] theorem mk_pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
     [i : TopologicalSpace α] [i' : TopologicalSpace α'] [j : TopologicalSpace β]
     [j' : TopologicalSpace β']
-    (hα : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i')
-    (hβ : @ClassPack.mk TopologicalSpace β j = @ClassPack.mk TopologicalSpace β' j')
+    (hα : @TopologicalSpacePack.mk α i = @TopologicalSpacePack.mk α' i')
+    (hβ : @TopologicalSpacePack.mk β j = @TopologicalSpacePack.mk β' j')
     (f : α → β) (f' : α' → β') (hf : HEq f f') (hc : Continuous f) (hc' : Continuous f')
     (hh : HEq hc hc') : HEq (ContinuousMap.mk f hc) (ContinuousMap.mk f' hc') := by
   cases hα; cases hβ; cases hf; rfl

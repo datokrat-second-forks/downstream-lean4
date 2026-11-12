@@ -164,8 +164,8 @@ def baseChange {T} [CommRing T] [Algebra R T] (P : Extension R S) : Extension T 
 /-- Pack root lemma: the ring of `P.baseChange`. -/
 @[simp] theorem _root_.Algebra.Extension.baseChange_commRingPack {R₀ S₀ T₀ : Type*} [CommRing R₀]
     [CommRing S₀] [Algebra R₀ S₀] [CommRing T₀] [Algebra R₀ T₀] (P₀ : Algebra.Extension R₀ S₀) :
-    @ClassPack.mk CommRing (P₀.baseChange (T := T₀)).Ring (P₀.baseChange (T := T₀)).commRing =
-      @ClassPack.mk CommRing (TensorProduct R₀ T₀ P₀.Ring) _ := rfl
+    @CommRingPack.mk (P₀.baseChange (T := T₀)).Ring (P₀.baseChange (T := T₀)).commRing =
+      @CommRingPack.mk (TensorProduct R₀ T₀ P₀.Ring) _ := rfl
 
 -- pack-regime: root lemma with a risk for other simp calls
 /-- Pack root lemma: the algebra `T → P.baseChange.Ring`, through the tower instance. -/

@@ -284,6 +284,8 @@ class NegZeroClass (G : Type*) extends Zero G, Neg G where
 /-- A `SubNegMonoid` where `-0 = 0`. -/
 class SubNegZeroMonoid (G : Type*) extends SubNegMonoid G, NegZeroClass G
 
+class_pack SubNegZeroMonoid
+
 /-- Typeclass for expressing that `1⁻¹ = 1`. -/
 @[to_additive]
 class InvOneClass (G : Type*) extends One G, Inv G where
@@ -308,6 +310,8 @@ class SubtractionMonoid (G : Type*) extends SubNegMonoid G, InvolutiveNeg G wher
   /-- Despite the asymmetry of `neg_eq_of_add`, the symmetric version is true thanks to the
   involutivity of negation. -/
   protected neg_eq_of_add (a b : G) : a + b = 0 → -a = b
+
+class_pack SubtractionMonoid
 
 /-- A `DivisionMonoid` is a `DivInvMonoid` with involutive inversion and such that
 `(a * b)⁻¹ = b⁻¹ * a⁻¹` and `a * b = 1 → a⁻¹ = b`.
@@ -344,6 +348,8 @@ end DivisionMonoid
 
 /-- Commutative `SubtractionMonoid`. -/
 class SubtractionCommMonoid (G : Type*) extends SubtractionMonoid G, AddCommMonoid G
+
+class_pack SubtractionCommMonoid
 
 /-- Commutative `DivisionMonoid`.
 

@@ -42,7 +42,7 @@ structure HMulPack.{ua, va, wa} where
 
 /-- Lens: the multiplication pack of `instHMul` follows the `Mul` pack. -/
 @[dsimp_congr] theorem instHMul.hMulPack_congr.{ua} {α α' : Type ua} [i : Mul α] [i' : Mul α']
-    (h : @ClassPack.mk Mul α i = @ClassPack.mk Mul α' i') :
+    (h : @MulPack.mk α i = @MulPack.mk α' i') :
     @HMulPack.mk α α α (@instHMul α i) = @HMulPack.mk α' α' α' (@instHMul α' i') := by
   cases h; rfl
 
@@ -73,7 +73,7 @@ argument type. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem instHSMul.hSMulPack_congr.{ua, va} {α : Type ua} {β β' : Type va}
     [i : SMul α β] [i' : SMul α β']
-    (h : @ClassPack.mk (SMul α) β i = @ClassPack.mk (SMul α) β' i') :
+    (h : @SMulPack.mk α β i = @SMulPack.mk α β' i') :
     @HSMulPack.mk α β β (@instHSMul α β i) = @HSMulPack.mk α β' β' (@instHSMul α β' i') := by
   cases h; rfl
 
@@ -102,7 +102,7 @@ theorem HAdd.hAdd_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
 /-- Lens: the addition pack of `instHAdd` follows the `Add` pack. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem instHAdd.hAddPack_congr.{ua} {α α' : Type ua} [i : Add α] [i' : Add α']
-    (h : @ClassPack.mk Add α i = @ClassPack.mk Add α' i') :
+    (h : @AddPack.mk α i = @AddPack.mk α' i') :
     @HAddPack.mk α α α (@instHAdd α i) = @HAddPack.mk α' α' α' (@instHAdd α' i') := by
   cases h; rfl
 
@@ -111,7 +111,7 @@ theorem instHAdd.hAddPack_congr.{ua} {α α' : Type ua} [i : Add α] [i' : Add �
 /-- Pack congruence for negation. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
 theorem Neg.neg_pack_congr.{ua} {α α' : Type ua} [i : Neg α] [i' : Neg α']
-    (h : @ClassPack.mk Neg α i = @ClassPack.mk Neg α' i') (a : α) (a' : α') (ha : HEq a a') :
+    (h : @NegPack.mk α i = @NegPack.mk α' i') (a : α) (a' : α') (ha : HEq a a') :
     HEq (-a) (-a') := by
   cases h; cases ha; rfl
 
@@ -128,6 +128,8 @@ on a type with the minimum proof obligations.
 class Group (G : Type*) extends DivInvMonoid G where
   protected inv_mul_cancel : ∀ a : G, a⁻¹ * a = 1
 
+class_pack Group
+
 /-- An `AddGroup` is an `AddMonoid` with a unary `-` satisfying `-a + a = 0`.
 
 There is also a binary operation `-` such that `a - b = a + -b`,
@@ -139,7 +141,11 @@ additive group structure on a type with the minimum proof obligations.
 class AddGroup (A : Type*) extends SubNegMonoid A where
   protected neg_add_cancel : ∀ a : A, -a + a = 0
 
+class_pack AddGroup
+
 attribute [to_additive (attr := wikidata Q83478)] Group
+
+attribute [to_additive existing] GroupPack
 
 section Group
 
@@ -205,10 +211,15 @@ end Group
 /-- An additive commutative group is an additive group with commutative `(+)`. -/
 class AddCommGroup (G : Type*) extends AddGroup G, AddCommMonoid G
 
+class_pack AddCommGroup
+
 /-- A commutative group is a group with commutative `(*)`. -/
 -- There is intentionally no `IsMulCommutative` for `CommGroup` instance for performance reasons.
 @[to_additive (attr := wikidata Q181296)]
 class CommGroup (G : Type*) extends Group G, CommMonoid G
+
+class_pack CommGroup
+attribute [to_additive existing] CommGroupPack
 
 section CommGroup
 
@@ -227,9 +238,9 @@ instance (priority := 100) CommGroup.toDivisionCommMonoid : DivisionCommMonoid G
 /-- Lens: the `SubtractionCommMonoid` pack follows the `AddCommGroup` pack. -/
 @[dsimp_congr] theorem AddCommGroup.toDivisionAddCommMonoid.packLens.{u_pack} {α α' : Type u_pack}
     {i : AddCommGroup α} {i' : AddCommGroup α'}
-    (h : @ClassPack.mk AddCommGroup α i = @ClassPack.mk AddCommGroup α' i') :
-    @ClassPack.mk SubtractionCommMonoid α (@AddCommGroup.toDivisionAddCommMonoid α i) =
-      @ClassPack.mk SubtractionCommMonoid α' (@AddCommGroup.toDivisionAddCommMonoid α' i') := by
+    (h : @AddCommGroupPack.mk α i = @AddCommGroupPack.mk α' i') :
+    @SubtractionCommMonoidPack.mk α (@AddCommGroup.toDivisionAddCommMonoid α i) =
+      @SubtractionCommMonoidPack.mk α' (@AddCommGroup.toDivisionAddCommMonoid α' i') := by
   cases h; rfl
 
 @[to_additive (attr := simp)] lemma inv_mul_cancel_comm (a b : G) : a⁻¹ * b * a = b := by

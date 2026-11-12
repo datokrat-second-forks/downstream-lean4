@@ -175,7 +175,8 @@ theorem colimit_mul_mk_eq (x y : Σ j, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1
 @[to_additive]
 lemma colimit_mul_mk_eq' {j : J} (x y : F.obj j) :
     M.mk.{v, u} F ⟨j, x⟩ * M.mk.{v, u} F ⟨j, y⟩ = M.mk.{v, u} F ⟨j, x * y⟩ := by
-  simpa using! colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 _) (𝟙 _)
+  -- pack-regime: adapted proof (R43)
+  simpa using! colimit_mul_mk_eq.{v, u} F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 _) (𝟙 _)
 
 @[to_additive]
 noncomputable instance colimitMulOneClass : MulOneClass (M.{v, u} F) :=

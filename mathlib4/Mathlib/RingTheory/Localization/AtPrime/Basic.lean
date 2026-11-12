@@ -59,16 +59,16 @@ protected abbrev Localization.AtPrime :=
 @[dsimp_congr] theorem _root_.Localization.AtPrime.semiringPackLens.{ur} {R : Type ur}
     [CommSemiring R] {I I' : Ideal R} (h : I = I') [hI : I.IsPrime] {hI' : I'.IsPrime}
     (hh : HEq hI hI') :
-    @ClassPack.mk Semiring (Localization.AtPrime I) OreLocalization.instSemiring =
-      @ClassPack.mk Semiring (Localization.AtPrime I') OreLocalization.instSemiring := by
+    @SemiringPack.mk (Localization.AtPrime I) OreLocalization.instSemiring =
+      @SemiringPack.mk (Localization.AtPrime I') OreLocalization.instSemiring := by
   cases h; cases hh; rfl
 
 /-- Lens: the `CommRing` pack of `Localization.AtPrime I` follows the ideal `I`. -/
 @[dsimp_congr] theorem _root_.Localization.AtPrime.commRingPackLens.{ur} {R : Type ur}
     [CommRing R] {I I' : Ideal R} (h : I = I') [hI : I.IsPrime] {hI' : I'.IsPrime}
     (hh : HEq hI hI') :
-    @ClassPack.mk CommRing (Localization.AtPrime I) OreLocalization.instCommRing =
-      @ClassPack.mk CommRing (Localization.AtPrime I') OreLocalization.instCommRing := by
+    @CommRingPack.mk (Localization.AtPrime I) OreLocalization.instCommRing =
+      @CommRingPack.mk (Localization.AtPrime I') OreLocalization.instCommRing := by
   cases h; cases hh; rfl
 
 /-- Lens: the algebra pack of `Localization.AtPrime I` over the base follows the ideal `I`. -/
