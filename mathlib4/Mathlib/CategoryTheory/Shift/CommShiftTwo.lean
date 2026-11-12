@@ -115,12 +115,46 @@ namespace CommShift₂
 attribute [instance_reducible] commShiftObj commShiftFlipObj
 attribute [instance] commShiftObj commShiftFlipObj commShift_map commShift_flip_map
 
+/-- Lens: the `CommShift` pack of `G.obj X₁` follows `X₁`. -/
+@[dsimp_congr] theorem commShiftObj.packLens {M : Type*} [AddCommMonoid M] [HasShift C₁ M]
+    [HasShift C₂ M] [HasShift D M] (G : C₁ ⥤ C₂ ⥤ D) (h : CommShift₂Setup D M) [G.CommShift₂ h]
+    {X₁ X₁' : C₁} (hX : X₁ = X₁') :
+    @CommShiftPack.mk _ _ _ _ M _ _ _ (G.obj X₁) (commShiftObj h X₁) =
+      @CommShiftPack.mk _ _ _ _ M _ _ _ (G.obj X₁') (commShiftObj h X₁') := by
+  cases hX; rfl
+
+/-- Lens: the `CommShift` pack of `G.flip.obj X₂` follows `X₂`. -/
+@[dsimp_congr] theorem commShiftFlipObj.packLens {M : Type*} [AddCommMonoid M] [HasShift C₁ M]
+    [HasShift C₂ M] [HasShift D M] (G : C₁ ⥤ C₂ ⥤ D) (h : CommShift₂Setup D M) [G.CommShift₂ h]
+    {X₂ X₂' : C₂} (hX : X₂ = X₂') :
+    @CommShiftPack.mk _ _ _ _ M _ _ _ (G.flip.obj X₂) (commShiftFlipObj h X₂) =
+      @CommShiftPack.mk _ _ _ _ M _ _ _ (G.flip.obj X₂') (commShiftFlipObj h X₂') := by
+  cases hX; rfl
+
+/-- The `CommShift` structure on `(F ⋙ G).obj X₁'` for a bifunctor `G` that commutes with the
+shifts. This is the field `commShiftObj` of `precomp₁`, as a constant that a pack root lemma can
+name. -/
+@[instance_reducible]
+def precomp₁CommShiftObj {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C₂ M]
+    [HasShift D M] (F : C₁' ⥤ C₁) (G : C₁ ⥤ C₂ ⥤ D) (h : CommShift₂Setup D M) [G.CommShift₂ h]
+    (X₁' : C₁') : ((F ⋙ G).obj X₁').CommShift M :=
+  inferInstanceAs ((G.obj (F.obj X₁')).CommShift M)
+
+/-- Pack root lemma: the `CommShift` structure on `(F ⋙ G).obj X₁'` is the one of
+`G.obj (F.obj X₁')`. -/
+@[simp] theorem precomp₁CommShiftObj_commShiftPack {M : Type*} [AddCommMonoid M] [HasShift C₁ M]
+    [HasShift C₂ M] [HasShift D M] (F : C₁' ⥤ C₁) (G : C₁ ⥤ C₂ ⥤ D) (h : CommShift₂Setup D M)
+    [G.CommShift₂ h] (X₁' : C₁') :
+    @CommShiftPack.mk _ _ _ _ M _ _ _ ((F ⋙ G).obj X₁') (precomp₁CommShiftObj F G h X₁') =
+      @CommShiftPack.mk _ _ _ _ M _ _ _ (G.obj (F.obj X₁')) (commShiftObj h (F.obj X₁')) :=
+  rfl
+
 set_option backward.defeqAttrib.useBackward true in
 instance precomp₁ {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C₁' M]
     [HasShift C₂ M] [HasShift D M] (F : C₁' ⥤ C₁) [F.CommShift M]
     (G : C₁ ⥤ C₂ ⥤ D) (h : CommShift₂Setup D M) [G.CommShift₂ h] :
     (F ⋙ G).CommShift₂ h where
-  commShiftObj (X₁' : C₁') := inferInstanceAs ((G.obj (F.obj X₁')).CommShift M)
+  commShiftObj (X₁' : C₁') := precomp₁CommShiftObj F G h X₁'
   commShift_map {X₁' Y₁' : C₁'} (f : X₁' ⟶ Y₁') := by dsimp; infer_instance
   commShiftFlipObj (X₂ : C₂) := CommShift.comp F (G.flip.obj X₂)
   commShift_flip_map {X₂ Y₂ : C₂} (g : X₂ ⟶ Y₂) :=
@@ -130,8 +164,7 @@ instance precomp₁ {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C�
     dsimp [commShiftIso] at this ⊢
     simp only [Category.comp_id, Category.id_comp, map_comp, Category.assoc]
     rw [NatTrans.shift_app (G.map ((F.commShiftIso m).hom.app X₁')) n X₂]
-    (set_option backward.dsimp.instanceTypes false in
-    simp [this])
+    simp [this]
 
 set_option backward.defeqAttrib.useBackward true in
 instance precomp₂ {M : Type*} [AddCommMonoid M] [HasShift C₁ M] [HasShift C₂' M]
