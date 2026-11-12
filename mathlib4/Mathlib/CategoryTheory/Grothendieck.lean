@@ -315,7 +315,6 @@ def compAsSmallFunctorEquivalenceInverse :
   obj X := ⟨X.base, AsSmall.up.obj X.fiber⟩
   map f := ⟨f.base, AsSmall.up.map f.fiber⟩
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The functor to build the equivalence `compAsSmallFunctorEquivalence`. -/

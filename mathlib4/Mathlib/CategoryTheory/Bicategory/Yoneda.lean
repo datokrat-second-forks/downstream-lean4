@@ -77,7 +77,6 @@ def associatorNatIsoLeftCat (a : B) {b c d : B} (g : b ⟶ c) (h : c ⟶ d) :
       (postcomposingCat ..).obj (g ≫ h) :=
   Cat.Hom.isoMk <| NatIso.ofComponents (α_ · g h)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

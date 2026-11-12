@@ -122,7 +122,7 @@ lemma surjective_hom₁ : Function.Surjective (hom₁ pres) := by
   have h₁ := Algebra.Extension.Cotangent.mk_surjective (P := pres.toExtension)
   have h₂ : Submodule.span pres.Ring
       (Set.range (fun r ↦ (⟨pres.relation r, by
-        (set_option backward.dsimp.instanceTypes false in simp)⟩ : pres.ker))) = ⊤ := by
+        simp⟩ : pres.ker))) = ⊤ := by
     refine Submodule.map_injective_of_injective (f := Submodule.subtype pres.ker)
       Subtype.coe_injective ?_
     rw [Submodule.map_top, Submodule.range_subtype, Submodule.map_span,

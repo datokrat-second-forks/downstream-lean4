@@ -684,13 +684,12 @@ lemma ZariskisMainProperty.exists_fg_and_exists_notMem_and_awayMap_bijective
     intro x hx
     suffices ∃ a ∈ Algebra.adjoin R t, ∃ n, r ^ n ∈ Algebra.adjoin R t ∧
         ∃ k, r ^ k * a = r ^ k * (x * r ^ n) by
-      (set_option backward.dsimp.instanceTypes false in
       set_option backward.isDefEq.respectTransparency.instanceTypes false in
       simpa [(IsLocalization.mk'_surjective (.powers r')).exists,
         (IsLocalization.mk'_surjective (.powers r)).forall, Localization.awayMapₐ,
         IsLocalization.Away.map, IsLocalization.map_mk', Submonoid.mem_powers_iff,
         Subtype.ext_iff, IsLocalization.mk'_eq_iff_eq_mul, ← map_mul, ← map_pow,
-        IsLocalization.eq_iff_exists (.powers r), Subalgebra.val])
+        IsLocalization.eq_iff_exists (.powers r), Subalgebra.val]
     exact ⟨_, Algebra.subset_adjoin (Set.mem_insert_of_mem _ ⟨x, hx, mul_comm _ _⟩),
       m x, pow_mem r'.2 _, 1, rfl⟩
   intro x

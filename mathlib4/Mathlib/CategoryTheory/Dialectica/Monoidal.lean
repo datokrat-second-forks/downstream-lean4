@@ -47,8 +47,7 @@ set_option backward.isDefEq.respectTransparency false in
   f := prod.map f.f g.f
   F := π(prod.map π₁ π₁ ≫ f.F, prod.map π₂ π₂ ≫ g.F)
   le := by
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [tensorObjImpl, Subobject.inf_pullback])
+    simp only [tensorObjImpl, Subobject.inf_pullback]
     apply inf_le_inf <;> rw [← Subobject.pullback_comp, ← Subobject.pullback_comp]
     · have := (Subobject.pullback (prod.map π₁ π₁ :
         (X₁.src ⨯ Y₁.src) ⨯ X₂.tgt ⨯ Y₂.tgt ⟶ _)).monotone (Hom.le f)

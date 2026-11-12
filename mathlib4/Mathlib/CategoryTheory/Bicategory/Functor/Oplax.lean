@@ -170,7 +170,6 @@ lemma mapComp'_eq_mapComp {b₀ b₁ b₂ : B} (f : b₀ ⟶ b₁) (g : b₁ ⟶
     F.mapComp' f g _ rfl = F.mapComp f g := by
   simp [mapComp']
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Composition of oplax functors. -/

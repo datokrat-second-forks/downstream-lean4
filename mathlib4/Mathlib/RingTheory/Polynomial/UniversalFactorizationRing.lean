@@ -471,12 +471,12 @@ def UniversalFactorizationRing.homEquiv :
       simp [Algebra.compHom_algebraMap_apply]
     refine Algebra.TensorProduct.ext (by ext) ?_
     refine AlgHom.restrictScalars_injective R (Algebra.TensorProduct.ext ?_ ?_)
-    · ext; (set_option backward.dsimp.instanceTypes false in
+    · ext
       simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
-        UniversalFactorizationRing.factor₁, coeff_freeMonic]); rfl
-    · ext; (set_option backward.dsimp.instanceTypes false in
+        UniversalFactorizationRing.factor₁, coeff_freeMonic]; rfl
+    · ext
       simp [MvPolynomial.universalFactorizationMapLiftEquiv, MvPolynomial.mapEquivMonic,
-        UniversalFactorizationRing.factor₂, coeff_freeMonic]); rfl
+        UniversalFactorizationRing.factor₂, coeff_freeMonic]; rfl
   right_inv q := by
     let := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
     let := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra

@@ -35,7 +35,6 @@ namespace StrongTrans
 
 variable {F G H I : Pseudofunctor B C}
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Left whiskering of a strong natural transformation between pseudofunctors
 and a modification. -/
@@ -47,7 +46,6 @@ abbrev whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ
       rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc]
       simp }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Right whiskering of a strong natural transformation between pseudofunctors
 and a modification. -/

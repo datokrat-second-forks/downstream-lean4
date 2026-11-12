@@ -289,7 +289,7 @@ lemma exists_awayMap_bijective_of_localRingHom_bijective
   intro x
   obtain ⟨x, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.exists_mk'_eq (.powers (algebraMap R S r')) x
   obtain ⟨y, hy : awayMap _ _ _ = _⟩ := H ⟨x, rfl⟩
-  (set_option backward.dsimp.instanceTypes false in dsimp at hy)
+  dsimp at hy
   refine ⟨y * Localization.Away.invSelf _ ^ n, ?_⟩
   simp only [map_mul, hy]
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in

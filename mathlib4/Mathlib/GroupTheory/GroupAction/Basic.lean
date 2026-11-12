@@ -196,7 +196,6 @@ theorem pretransitive_iff_unique_quotient_of_nonempty [Nonempty α] :
 
 variable {G α}
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[to_additive]
 instance (x : orbitRel.Quotient G α) : IsPretransitive G x.orbit where
