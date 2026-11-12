@@ -67,13 +67,16 @@ When the index type is a `Fintype`, the notation `∑ x, f x`, is a shorthand fo
 protected def prod [CommMonoid M] (s : Finset ι) (f : ι → M) : M :=
   (s.1.map f).prod
 
-/-- Pack congruence for `Finset.sum`: the sum follows the pack of the additive monoid. -/
+/-- Pack congruence for `Finset.sum`: the sum follows the pack of the additive monoid. `simp` gets
+the hypothesis `x ∈ s'` for the summand, as with `Finset.sum_congr`. -/
 -- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+-- With the attribute on, `Finset.sum_congr` must not be a `congr` theorem (record R66).
 theorem sum_pack_congr.{ui, um} {ι : Type ui} {M M' : Type um}
-    [i : AddCommMonoid M] [i' : AddCommMonoid M']
-    (h : @AddCommMonoidPack.mk M i = @AddCommMonoidPack.mk M' i') :
-    HEq (@Finset.sum ι M i) (@Finset.sum ι M' i') := by
-  cases h; rfl
+    [i : AddCommMonoid M] [i' : AddCommMonoid M'] {s s' : Finset ι} {f : ι → M} {f' : ι → M'}
+    (h : @AddCommMonoidPack.mk M i = @AddCommMonoidPack.mk M' i') (hs : s = s')
+    (hf : ∀ x ∈ s', HEq (f x) (f' x)) : HEq (Finset.sum s f) (Finset.sum s' f') := by
+  cases h; cases hs
+  exact heq_of_eq (congrArg Multiset.sum (Multiset.map_congr rfl fun x hx => eq_of_heq (hf x hx)))
 
 @[to_additive (attr := simp)]
 theorem prod_mk [CommMonoid M] (s : Multiset ι) (hs : s.Nodup) (f : ι → M) :
