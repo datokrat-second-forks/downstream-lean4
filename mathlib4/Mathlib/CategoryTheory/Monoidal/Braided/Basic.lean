@@ -447,6 +447,40 @@ def of (F : C ⥤ D) [F.LaxBraided] : LaxBraidedFunctor C D where
 def toLaxMonoidalFunctor (F : LaxBraidedFunctor C D) : LaxMonoidalFunctor C D where
   toFunctor := F.toFunctor
 
+/-- Lens: the pack of `G.toFunctor` with the instance of `G.laxBraided` follows `G`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.LaxBraidedFunctor.laxBraided.packLens.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    [CategoryTheory.BraidedCategory D]
+    {G G' : CategoryTheory.LaxBraidedFunctor C D} (h : G = G') :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G.toFunctor G.laxBraided.toLaxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G'.toFunctor
+        G'.laxBraided.toLaxMonoidal := by
+  cases h; rfl
+
+/-- Pack root lemma for `LaxBraidedFunctor.toLaxMonoidalFunctor`. -/
+@[simp] theorem _root_.CategoryTheory.LaxBraidedFunctor.toLaxMonoidalFunctor_pack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    [CategoryTheory.BraidedCategory D] (G : CategoryTheory.LaxBraidedFunctor C D) :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G.toLaxMonoidalFunctor.toFunctor
+        G.toLaxMonoidalFunctor.laxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G.toFunctor
+        G.laxBraided.toLaxMonoidal := rfl
+
+/-- Pack root lemma for `LaxBraidedFunctor.of`. -/
+@[simp] theorem _root_.CategoryTheory.LaxBraidedFunctor.of_pack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    [CategoryTheory.BraidedCategory D] (F : CategoryTheory.Functor C D) [i : F.LaxBraided] :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _
+        (CategoryTheory.LaxBraidedFunctor.of F).toFunctor
+        (CategoryTheory.LaxBraidedFunctor.of F).laxBraided.toLaxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ F i.toLaxMonoidal := rfl
+
 instance : Category (LaxBraidedFunctor C D) :=
   inferInstanceAs (Category (InducedCategory _ toLaxMonoidalFunctor))
 

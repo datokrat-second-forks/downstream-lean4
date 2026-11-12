@@ -38,6 +38,11 @@ variable (M : Type*) [Mul M]
 def commProb : ℚ :=
   Nat.card { p : M × M // Commute p.1 p.2 } / (Nat.card M : ℚ) ^ 2
 
+/-- Pack congruence for `commProb`. -/
+@[dsimp_congr] theorem commProb_pack_congr.{ua} {M M' : Type ua} [i : Mul M] [i' : Mul M']
+    (h : @ClassPack.mk Mul M i = @ClassPack.mk Mul M' i') : commProb M = commProb M' := by
+  cases h; rfl
+
 theorem commProb_def :
     commProb M = Nat.card { p : M × M // Commute p.1 p.2 } / (Nat.card M : ℚ) ^ 2 :=
   rfl
@@ -180,9 +185,8 @@ lemma commProb_nil : commProb (Product []) = 1 := by
 set_option backward.isDefEq.respectTransparency false in
 lemma commProb_cons (n : ℕ) (l : List ℕ) :
     commProb (Product (n :: l)) = commProb (DihedralGroup n) * commProb (Product l) := by
-  (set_option backward.dsimp.instanceTypes false in
   simp only [commProb_pi, Fin.prod_univ_succ, Fin.getElem_fin, Fin.val_succ, Fin.val_zero,
-    List.getElem_cons_zero, List.length_cons, List.getElem_cons_succ])
+    List.getElem_cons_zero, List.length_cons, List.getElem_cons_succ]
 
 /-- Construction of a group with commuting probability `1 / n`. -/
 theorem commProb_reciprocal (n : ℕ) :

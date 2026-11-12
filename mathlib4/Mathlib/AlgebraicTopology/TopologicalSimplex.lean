@@ -55,7 +55,7 @@ noncomputable instance : Unique (toTop.{u}.obj ⦋0⦌) := inferInstanceAs (Uniq
 
 set_option backward.defeqAttrib.useBackward true in
 instance (n : SimplexCategory) : PathConnectedSpace (toTop₀.obj n) := by
-  (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
+  (dsimp); infer_instance
 
 instance (n : SimplexCategory) : PathConnectedSpace (toTop.{u}.obj n) :=
   ULift.up_surjective.pathConnectedSpace continuous_uliftUp

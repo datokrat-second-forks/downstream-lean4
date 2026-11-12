@@ -48,6 +48,13 @@ class QuasiSeparatedSpace (α : Type*) [TopologicalSpace α] : Prop where
   inter_isCompact :
     ∀ U V : Set α, IsOpen U → IsCompact U → IsOpen V → IsCompact V → IsCompact (U ∩ V)
 
+/-- Pack congruence for `QuasiSeparatedSpace`. -/
+@[dsimp_congr] theorem QuasiSeparatedSpace.pack_congr.{ux} {X X' : Type ux}
+    [i : TopologicalSpace X] [i' : TopologicalSpace X']
+    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    QuasiSeparatedSpace X = QuasiSeparatedSpace X' := by
+  cases h; rfl
+
 theorem isQuasiSeparated_univ_iff {α : Type*} [TopologicalSpace α] :
     IsQuasiSeparated (Set.univ : Set α) ↔ QuasiSeparatedSpace α := by
   rw [quasiSeparatedSpace_iff]

@@ -454,6 +454,13 @@ instance {α : Type*} {p : α → Prop} [TopologicalSpace α] [WeakPseudoEMetric
 instance {α : Type*} {p : α → Prop} [PseudoEMetricSpace α] : PseudoEMetricSpace (Subtype p) :=
   PseudoEMetricSpace.induced Subtype.val ‹_›
 
+/-- Lens: the `PseudoEMetricSpace` pack of a subtype follows the predicate. -/
+@[dsimp_congr] theorem Subtype.pseudoEMetricSpacePack_congr.{ua} {α : Type ua}
+    [PseudoEMetricSpace α] {p p' : α → Prop} (h : p = p') :
+    @ClassPack.mk PseudoEMetricSpace (Subtype p) instPseudoEMetricSpaceSubtype =
+      @ClassPack.mk PseudoEMetricSpace (Subtype p') instPseudoEMetricSpaceSubtype := by
+  cases h; rfl
+
 section
 
 variable [TopologicalSpace α] [WeakPseudoEMetricSpace α]

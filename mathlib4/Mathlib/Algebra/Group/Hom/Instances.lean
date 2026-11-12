@@ -118,6 +118,14 @@ instance MonoidHom.instCommGroup [MulOneClass M] [CommGroup N] : CommGroup (M �
     DFunLike.coe_injective.commGroup DFunLike.coe
       rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
 
+/-- Lens: the `MulOneClass` pack of `A →* B` into a commutative group `B` follows the pack of
+`A`. -/
+@[dsimp_congr] theorem MonoidHom.mulOneClassPack_congr.{ua, ub} {A A' : Type ua} {B : Type ub}
+    [iA : MulOneClass A] [iA' : MulOneClass A'] [CommGroup B]
+    (h : @ClassPack.mk MulOneClass A iA = @ClassPack.mk MulOneClass A' iA') :
+    ClassPack.mk (c := MulOneClass) (A →* B) = ClassPack.mk (c := MulOneClass) (A' →* B) := by
+  cases h; rfl
+
 @[to_additive]
 instance [One M] [MulOneClass N] [IsLeftCancelMul N] : IsLeftCancelMul (OneHom M N) :=
   DFunLike.coe_injective.isLeftCancelMul _ fun _ _ => rfl

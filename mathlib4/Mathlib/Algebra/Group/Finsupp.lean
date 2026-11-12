@@ -363,6 +363,13 @@ instance instAddCommMonoid : AddCommMonoid (ι →₀ M) :=
   fast_instance% DFunLike.coe_injective.addCommMonoid
     DFunLike.coe coe_zero coe_add (fun _ _ => rfl)
 
+/-- Lens: the `AddCommMonoid` pack of `α →₀ M` follows the index type. -/
+@[dsimp_congr] theorem addCommMonoidPack_congr.{ua, um} {M : Type um}
+    [AddCommMonoid M] {α α' : Type ua} (h : α = α') :
+    @ClassPack.mk AddCommMonoid (α →₀ M) Finsupp.instAddCommMonoid =
+      @ClassPack.mk AddCommMonoid (α' →₀ M) Finsupp.instAddCommMonoid := by
+  cases h; rfl
+
 lemma single_add_single_eq_single_add_single {k l m n : ι} {u v : M} (hu : u ≠ 0) (hv : v ≠ 0) :
     single k u + single l v = single m u + single n v ↔
       (k = m ∧ l = n) ∨ (u = v ∧ k = n ∧ l = m) ∨ (u + v = 0 ∧ k = l ∧ m = n) := by

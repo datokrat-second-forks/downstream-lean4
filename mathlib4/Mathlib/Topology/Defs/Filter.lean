@@ -300,6 +300,13 @@ class CompactSpace : Prop where
   /-- In a compact space, `Set.univ` is a compact set. -/
   isCompact_univ : IsCompact (Set.univ : Set X)
 
+/-- Pack congruence for `CompactSpace`. -/
+@[dsimp_congr] theorem CompactSpace.pack_congr.{ux} {X X' : Type ux}
+    [i : TopologicalSpace X] [i' : TopologicalSpace X']
+    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    CompactSpace X = CompactSpace X' := by
+  cases h; rfl
+
 variable (X) in
 /-- `X` is a noncompact topological space if it is not a compact space. -/
 class NoncompactSpace : Prop where

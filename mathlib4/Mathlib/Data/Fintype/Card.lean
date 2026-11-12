@@ -40,6 +40,12 @@ namespace Fintype
 def card (α) [Fintype α] : ℕ :=
   (@univ α _).card
 
+/-- Pack congruence for `Fintype.card`. -/
+@[dsimp_congr] theorem card_pack_congr.{ua} {α α' : Type ua} [i : Fintype α] [i' : Fintype α']
+    (h : @ClassPack.mk Fintype α i = @ClassPack.mk Fintype α' i') :
+    Fintype.card α = Fintype.card α' := by
+  cases h; rfl
+
 theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
     @card { x // p x } (Fintype.subtype s H) = #s :=
   Multiset.card_pmap _ _ _

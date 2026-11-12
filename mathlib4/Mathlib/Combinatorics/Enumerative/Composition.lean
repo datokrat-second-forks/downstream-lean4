@@ -812,7 +812,6 @@ Combinatorial viewpoints on compositions, seen as finite subsets of `Fin (n+1)` 
 -/
 
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Bijection between compositions of `n` and subsets of `{0, ..., n-2}`, defined by

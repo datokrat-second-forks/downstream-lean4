@@ -991,8 +991,7 @@ lemma H1π_eq_zero_iff (x : cocycles₁ A) : H1π A x = 0 ↔ ⇑x ∈ coboundar
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  (set_option backward.dsimp.instanceTypes false in
-  simp [LinearMap.range_codRestrict, coboundaries₁, shortComplexH1, cocycles₁])
+  simp [LinearMap.range_codRestrict, coboundaries₁, shortComplexH1, cocycles₁]
 
 lemma H1π_eq_iff (x y : cocycles₁ A) :
     H1π A x = H1π A y ↔ ⇑x - ⇑y ∈ coboundaries₁ A := by
@@ -1073,8 +1072,7 @@ lemma H2π_eq_zero_iff (x : cocycles₂ A) : H2π A x = 0 ↔ ⇑x ∈ coboundar
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  (set_option backward.dsimp.instanceTypes false in
-  simp [LinearMap.range_codRestrict, coboundaries₂, shortComplexH2, cocycles₂])
+  simp [LinearMap.range_codRestrict, coboundaries₂, shortComplexH2, cocycles₂]
 
 lemma H2π_eq_iff (x y : cocycles₂ A) :
     H2π A x = H2π A y ↔ ⇑x - ⇑y ∈ coboundaries₂ A := by

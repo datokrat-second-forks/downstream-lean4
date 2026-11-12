@@ -70,6 +70,26 @@ attribute [reassoc +to_dual (attr := simp), grind =] Iso.hom_inv_id Iso.inv_hom_
 /-- Notation for an isomorphism in a category. -/
 infixr:10 " ≅ " => Iso -- type as \cong or \iso
 
+/-- Pack congruence for the forward morphism of an isomorphism. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Iso.hom_pack_congr.{vc, uc} {C C' : Type uc}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    {X Y : C} {X' Y' : C'} (hX : HEq X X') (hY : HEq Y Y')
+    (e : X ≅ Y) (e' : X' ≅ Y') (he : HEq e e') :
+    HEq e.hom e'.hom := by
+  cases hC; cases hX; cases hY; cases he; rfl
+
+/-- Pack congruence for the backward morphism of an isomorphism. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Iso.inv_pack_congr.{vc, uc} {C C' : Type uc}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    {X Y : C} {X' Y' : C'} (hX : HEq X X') (hY : HEq Y Y')
+    (e : X ≅ Y) (e' : X' ≅ Y') (he : HEq e e') :
+    HEq e.inv e'.inv := by
+  cases hC; cases hX; cases hY; cases he; rfl
+
 variable {C : Type u} [Category.{v} C] {X Y Z : C}
 
 namespace Iso

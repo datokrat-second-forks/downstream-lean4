@@ -245,9 +245,8 @@ public theorem exists_subalgebra_fg [Smooth A B] :
     exact hh i ▸ congr($hsig (P.val i))
   have (i : Fin (Presentation.ofFinitePresentationVars A B)) :
       h i - X i ∈ Ideal.span (.range P.relation) := by
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simpa [P.span_range_relation_eq_ker, sub_eq_zero, f] using hsig i)
+    simpa [P.span_range_relation_eq_ker, sub_eq_zero, f] using hsig i
   simp_rw [Ideal.mem_span_iff_exists_isHomogeneous] at this
   choose q hqhom hq using this
   let D : DescentAux A B :=

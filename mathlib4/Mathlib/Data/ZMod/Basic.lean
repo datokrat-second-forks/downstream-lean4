@@ -1121,8 +1121,8 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem ringHom_map_cast [NonAssocRing R] (f : R →+* ZMod n) (k : ZMod n) : f (cast k) = k := by
   cases n
-  · (dsimp +instances [ZMod, ZMod.cast] at f k ⊢)
-    simp
+  -- pack-regime: adapted, the proof no longer unfolds `ZMod` with `dsimp +instances` (R49)
+  · exact map_intCast f k
   · dsimp [ZMod.cast]
     rw [map_natCast, natCast_zmod_val]
 

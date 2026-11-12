@@ -225,6 +225,22 @@ end AlgCat
     SModPack.mk (R := R) X = SModPack.mk X' := by
   cases h; rfl
 
+/-- Lens: the group-module pack of the carrier of `X : AlgCat R` follows `X`. -/
+@[dsimp_congr] theorem AlgCat.gmodPack_congr.{ua, va} {R : Type ua} [CommRing R]
+    {X X' : AlgCat.{va} R} (h : X = X') :
+    GModPack.mk (R := R) X = GModPack.mk X' := by
+  cases h; rfl
+
+/-- Pack root lemma: the group-module pack of the carrier of `AlgCat.of R A` is that of `A`. -/
+@[simp] theorem AlgCat.of_gmodPack.{ua, va} {R : Type ua} [CommRing R] (A : Type va) [Ring A]
+    [Algebra R A] : GModPack.mk (R := R) (AlgCat.of R A) = GModPack.mk A :=
+  rfl
+
+/-- Pack root lemma: the algebra pack of the carrier of `AlgCat.of R A` is that of `A`. -/
+@[simp] theorem AlgCat.of_sAlgPack.{ua, va} {R : Type ua} [CommRing R] (A : Type va) [Ring A]
+    [Algebra R A] : SAlgPack.mk (R := R) (AlgCat.of R A) = SAlgPack.mk A :=
+  rfl
+
 variable {R}
 variable {X₁ X₂ : Type v}
 

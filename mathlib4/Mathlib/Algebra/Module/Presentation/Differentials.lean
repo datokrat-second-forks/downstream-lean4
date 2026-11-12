@@ -75,11 +75,9 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The canonical map `(σ →₀ S) →ₗ[S] pres.toExtension.Cotangent`. -/
 noncomputable def hom₁ : (σ →₀ S) →ₗ[S] pres.toExtension.Cotangent :=
   Finsupp.linearCombination S (fun r ↦ Extension.Cotangent.mk ⟨pres.relation r, by
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp)⟩)
+    simp⟩)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -158,9 +156,8 @@ lemma comm₁₂ : pres.toExtension.cotangentComplex.comp (hom₁ pres) =
     pres.cotangentSpaceBasis.repr.symm.comp (differentialsRelations pres).map := by
   ext r
   have := (differentialsRelations pres).map_single
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  dsimp at this ⊢)
+  dsimp at this ⊢
   rw [comm₁₂_single, this]
 
 end differentials

@@ -473,7 +473,8 @@ set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 private lemma stereographic'_neg {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     stereographic' n (-v) v = 0 := by
-  dsimp [stereographic']
+  -- pack-regime workaround (R45): without `-coe_neg_sphere` the term gets two spellings
+  dsimp [stereographic', -coe_neg_sphere]
   simp only [EmbeddingLike.map_eq_zero_iff]
   apply stereographic_neg_apply
 

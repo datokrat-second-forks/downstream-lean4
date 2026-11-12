@@ -157,8 +157,7 @@ lemma pathELength_comp_of_monotoneOn {f : ℝ → ℝ} (h : a ≤ b) (hf : Monot
     · rw [uniqueMDiffWithinAt_iff_uniqueDiffWithinAt]
       exact uniqueDiffOn_Icc h _ ht
   rw [this]
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply])
+  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply]
   have : mfderiv[Icc a b] f t 1 = derivWithin f (Icc a b) t • (1 : TangentSpace% (f t)) := by
     simp only [mfderivWithin_eq_fderivWithin, ← fderivWithin_derivWithin, smul_eq_mul, mul_one]
     rfl
@@ -191,8 +190,7 @@ lemma pathELength_comp_of_antitoneOn {f : ℝ → ℝ} (h : a ≤ b) (hf : Antit
     · rw [uniqueMDiffWithinAt_iff_uniqueDiffWithinAt]
       exact uniqueDiffOn_Icc h _ ht
   rw [this]
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply])
+  simp only [Function.comp_apply, ContinuousLinearMap.comp_apply]
   have : mfderiv[Icc a b] f t 1
       = derivWithin f (Icc a b) t • (1 : TangentSpace% (f t)) := by
     simp only [mfderivWithin_eq_fderivWithin, ← fderivWithin_derivWithin, smul_eq_mul, mul_one]

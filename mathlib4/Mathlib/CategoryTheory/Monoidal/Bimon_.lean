@@ -95,10 +95,24 @@ theorem toMon_forget : toMon C ⋙ Mon.forget C = forget C := rfl
 @[simps!]
 def toComon : Bimon C ⥤ Comon C := (Mon.forget C).mapComon
 
+/-- The comonoid structure of `(toComon C).obj M`, on the spelling `M.X.X` of the object. -/
+abbrev _root_.CategoryTheory.Bimon.toComon.comonObj.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Bimon C) :
+    CategoryTheory.ComonObj M.X.X :=
+  ((CategoryTheory.Bimon.toComon C).obj M).comon
+
+/-- Pack root lemma for `(toComon C).obj M`. -/
+@[simp] theorem _root_.CategoryTheory.Bimon.toComon_obj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Bimon C) :
+    @CategoryTheory.Comon.mk C _ _ ((CategoryTheory.Bimon.toComon C).obj M).X
+        ((CategoryTheory.Bimon.toComon C).obj M).comon =
+      @CategoryTheory.Comon.mk C _ _ M.X.X (CategoryTheory.Bimon.toComon.comonObj M) := rfl
+
 @[simp]
 theorem toComon_forget : toComon C ⋙ Comon.forget C = forget C := rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -111,7 +125,23 @@ def toMonComonObj (M : Bimon C) : Mon (Comon C) where
   mon.mul.hom := μ[M.X.X]
   mon.mul.isComonHom_hom.hom_comul := by simp
 
-set_option backward.dsimp.instanceTypes false in
+/-- The monoid structure of `toMonComonObj M`, on the spelling `(toComon C).obj M` of the
+object. -/
+abbrev _root_.CategoryTheory.Bimon.toMonComonObj.monObj.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Bimon C) :
+    CategoryTheory.MonObj ((CategoryTheory.Bimon.toComon C).obj M) :=
+  (CategoryTheory.Bimon.toMonComonObj M).mon
+
+/-- Pack root lemma for `toMonComonObj`. -/
+@[simp] theorem _root_.CategoryTheory.Bimon.toMonComonObj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Bimon C) :
+    @CategoryTheory.Mon.mk (CategoryTheory.Comon C) _ _ (CategoryTheory.Bimon.toMonComonObj M).X
+        (CategoryTheory.Bimon.toMonComonObj M).mon =
+      @CategoryTheory.Mon.mk (CategoryTheory.Comon C) _ _ ((CategoryTheory.Bimon.toComon C).obj M)
+        (CategoryTheory.Bimon.toMonComonObj.monObj M) := rfl
+
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The forward direction of `Comon (Mon C) ≌ Mon (Comon C)` -/
 @[simps]
@@ -145,7 +175,23 @@ def ofMonComonObj (M : Mon (Comon C)) : Bimon C where
   comon.counit := .mk' ε[M.X.X]
   comon.comul := .mk' Δ[M.X.X]
 
-set_option backward.dsimp.instanceTypes false in
+/-- The comonoid structure of `ofMonComonObj M`, on the spelling `ofMonComonObjX M` of the
+object. -/
+abbrev _root_.CategoryTheory.Bimon.ofMonComonObj.comonObj.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Mon (CategoryTheory.Comon C)) :
+    CategoryTheory.ComonObj (CategoryTheory.Bimon.ofMonComonObjX M) :=
+  (CategoryTheory.Bimon.ofMonComonObj M).comon
+
+/-- Pack root lemma for `ofMonComonObj`. -/
+@[simp] theorem _root_.CategoryTheory.Bimon.ofMonComonObj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (M : CategoryTheory.Mon (CategoryTheory.Comon C)) :
+    @CategoryTheory.Comon.mk (CategoryTheory.Mon C) _ _ (CategoryTheory.Bimon.ofMonComonObj M).X
+        (CategoryTheory.Bimon.ofMonComonObj M).comon =
+      @CategoryTheory.Comon.mk (CategoryTheory.Mon C) _ _ (CategoryTheory.Bimon.ofMonComonObjX M)
+        (CategoryTheory.Bimon.ofMonComonObj.comonObj M) := rfl
+
 set_option backward.isDefEq.respectTransparency.types false in
 variable (C) in
 /-- The backward direction of `Comon (Mon C) ≌ Mon (Comon C)` -/

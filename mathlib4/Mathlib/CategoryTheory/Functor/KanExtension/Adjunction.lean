@@ -231,6 +231,7 @@ noncomputable def colimitIsoColimitGrothendieck :
   _ ≅ colimit (CostructuredArrow.grothendieckProj L ⋙ G) :=
         colimitFiberwiseColimitIso _
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -238,9 +239,8 @@ lemma ι_colimitIsoColimitGrothendieck_inv (X : Grothendieck (CostructuredArrow.
     colimit.ι (CostructuredArrow.grothendieckProj L ⋙ G) X ≫
       (colimitIsoColimitGrothendieck L G).inv =
     colimit.ι G ((CostructuredArrow.proj L X.base).obj X.fiber) := by
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp [colimitIsoColimitGrothendieck])
+  simp [colimitIsoColimitGrothendieck]
 
 set_option backward.isDefEq.respectTransparency.types false in
 @[reassoc (attr := simp)]

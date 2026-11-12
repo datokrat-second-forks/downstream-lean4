@@ -480,7 +480,6 @@ the integral ideal `J`. -/
 def idealSet : Set (mixedSpace K) :=
   fundamentalCone K ∩ (mixedEmbedding.idealLattice K (FractionalIdeal.mk0 K J))
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 variable {K J} in

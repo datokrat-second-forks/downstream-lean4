@@ -382,6 +382,14 @@ def liftAddHom [AddZeroClass M] [AddCommMonoid N] : (α → M →+ N) ≃+ ((α 
   right_inv F := by ext; simp
   map_add' F G := by ext; simp
 
+/-- Pack congruence for `Finsupp.liftAddHom`. -/
+@[dsimp_congr] theorem liftAddHom_pack_congr.{ua, um, un} {α α' : Type ua}
+    {M : Type um} [AddZeroClass M] {N N' : Type un} [i : AddCommMonoid N] [i' : AddCommMonoid N']
+    (hα : α = α') (hN : @ClassPack.mk AddCommMonoid N i = @ClassPack.mk AddCommMonoid N' i') :
+    HEq (Finsupp.liftAddHom (α := α) (M := M) (N := N))
+      (Finsupp.liftAddHom (α := α') (M := M) (N := N')) := by
+  cases hα; cases hN; rfl
+
 @[simp]
 theorem liftAddHom_apply [AddZeroClass M] [AddCommMonoid N] (F : α → M →+ N) (f : α →₀ M) :
     (liftAddHom (α := α) (M := M) (N := N)) F f = f.sum fun x => F x :=

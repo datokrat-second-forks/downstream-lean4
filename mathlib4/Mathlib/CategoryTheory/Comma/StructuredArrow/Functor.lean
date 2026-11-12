@@ -26,6 +26,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 namespace StructuredArrow
 
+set_option backward.dsimp.instanceTypes false in
 /-- The structured arrow category `StructuredArrow d T` depends on the chosen domain `d : D` in a
 functorial way, inducing a functor `Dᵒᵖ ⥤ Cat`. -/
 @[simps]
@@ -34,17 +35,16 @@ def functor (T : C ⥤ D) : Dᵒᵖ ⥤ Cat where
   map f := (map f.unop).toCatHom
   map_id d := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    exact Functor.ext (fun ⟨_, _, _⟩ => by simp))
+    exact Functor.ext (fun ⟨_, _, _⟩ => by simp)
   map_comp f g := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    exact Functor.ext (fun _ => by simp))
+    exact Functor.ext (fun _ => by simp)
 
 end StructuredArrow
 
 namespace CostructuredArrow
 
+set_option backward.dsimp.instanceTypes false in
 /-- The costructured arrow category `CostructuredArrow T d` depends on the chosen codomain `d : D`
 in a functorial way, inducing a functor `D ⥤ Cat`. -/
 @[simps]
@@ -53,12 +53,10 @@ def functor (T : C ⥤ D) : D ⥤ Cat where
   map f := (CostructuredArrow.map f).toCatHom
   map_id d := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    exact Functor.ext (fun ⟨_, _, _⟩ => by simp [CostructuredArrow.map, Comma.mapRight]))
+    exact Functor.ext (fun ⟨_, _, _⟩ => by simp [CostructuredArrow.map, Comma.mapRight])
   map_comp f g := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    exact Functor.ext (fun _ => by simp [CostructuredArrow.map, Comma.mapRight]))
+    exact Functor.ext (fun _ => by simp [CostructuredArrow.map, Comma.mapRight])
 
 variable {E : Type u₃} [Category.{v₃} E]
 variable (L : C ⥤ D) (R : E ⥤ D)

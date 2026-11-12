@@ -169,7 +169,7 @@ instance quasiCompact_isStableUnderBaseChange :
   let 𝒰 := Scheme.Pullback.openCoverOfRight Y.affineCover.finiteSubcover f g
   have : Finite 𝒰.I₀ := by dsimp [𝒰]; infer_instance
   have : ∀ i, CompactSpace (𝒰.X i) := by
-    intro i; (set_option backward.dsimp.instanceTypes false in dsimp [𝒰]); infer_instance
+    intro i; (dsimp [𝒰]); infer_instance
   exact 𝒰.compactSpace
 
 variable {Z : Scheme.{u}}

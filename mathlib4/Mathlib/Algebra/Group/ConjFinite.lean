@@ -40,7 +40,14 @@ namespace ConjClasses
 
 variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
 
-instance {x : ConjClasses α} : Fintype (carrier x) :=
+instance instFintypeElemCarrier {x : ConjClasses α} : Fintype (carrier x) :=
   Quotient.recOnSubsingleton x fun _ => conjugatesOf.fintype
+
+/-- Lens: the `Fintype` pack of the carrier of a conjugacy class follows the class. -/
+@[dsimp_congr] theorem fintypeCarrierPack_congr.{ua} {α : Type ua} [Monoid α] [Fintype α]
+    [DecidableRel (IsConj : α → α → Prop)] {x x' : ConjClasses α} (h : x = x') :
+    @Set.FintypePack.mk α (ConjClasses.carrier x) ConjClasses.instFintypeElemCarrier =
+      @Set.FintypePack.mk α (ConjClasses.carrier x') ConjClasses.instFintypeElemCarrier := by
+  cases h; rfl
 
 end ConjClasses

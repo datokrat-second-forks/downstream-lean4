@@ -154,6 +154,43 @@ def lift {A : Type*} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlg
             simp
             rfl }
 
+/-- Pack congruence for the type `TensorAlgebra R M`. -/
+@[dsimp_congr] theorem pack_congr.{ur, um} {R : Type ur} [CommSemiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    TensorAlgebra R M = TensorAlgebra R M' := by
+  cases h; rfl
+
+/-- Lens: the algebra pack of `TensorAlgebra R M` follows the module pack of `M`. -/
+@[dsimp_congr] theorem sAlgPack_congr.{ur, um} {R : Type ur} [CommSemiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    SAlgPack.mk (R := R) (TensorAlgebra R M) = SAlgPack.mk (TensorAlgebra R M') := by
+  cases h; rfl
+
+/-- Lens: the module pack of `TensorAlgebra R M` follows the module pack of `M`. -/
+@[dsimp_congr] theorem smodPack_congr.{ur, um} {R : Type ur} [CommSemiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    SModPack.mk (R := R) (TensorAlgebra R M) = SModPack.mk (TensorAlgebra R M') := by
+  cases h; rfl
+
+/-- Pack congruence for `TensorAlgebra.ι`. -/
+@[dsimp_congr] theorem ι_pack_congr.{ur, um} {R : Type ur} [CommSemiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    HEq (TensorAlgebra.ι R (M := M)) (TensorAlgebra.ι R (M := M')) := by
+  cases h; rfl
+
+/-- Pack congruence for `TensorAlgebra.lift`. -/
+@[dsimp_congr] theorem lift_pack_congr.{ur, um, ua} {R : Type ur}
+    [CommSemiring R] {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M]
+    [Module R M'] {A A' : Type ua} [Semiring A] [Semiring A'] [Algebra R A] [Algebra R A']
+    (h : SModPack.mk (R := R) M = SModPack.mk M')
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') :
+    HEq (TensorAlgebra.lift R (M := M) (A := A)) (TensorAlgebra.lift R (M := M') (A := A')) := by
+  cases h; cases hA; rfl
+
 variable {R}
 
 @[simp]

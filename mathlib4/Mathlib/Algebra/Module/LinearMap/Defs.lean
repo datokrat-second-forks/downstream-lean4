@@ -181,6 +181,26 @@ structure SModPack.{ua, va} (R : Type ua) [Semiring R] where
   /-- The module structure. -/
   [mod : Module R M]
 
+/-- Pack: a module over a ring whose carrier is an additive commutative group. -/
+structure GModPack.{ua, va} (R : Type ua) [Ring R] where
+  /-- The carrier. -/
+  M : Type va
+  /-- The additive structure. -/
+  [acg : AddCommGroup M]
+  /-- The module structure. -/
+  [mod : Module R M]
+
+/-- Pack: a carrier with module structures over two bases. -/
+structure SMod2Pack.{ur, us, um} (R : Type ur) (S : Type us) [Semiring R] [Semiring S] where
+  /-- The carrier. -/
+  M : Type um
+  /-- The additive structure. -/
+  [acm : AddCommMonoid M]
+  /-- The module structure over `R`. -/
+  [modR : Module R M]
+  /-- The module structure over `S`. -/
+  [modS : Module S M]
+
 namespace LinearMap
 
 section AddCommMonoid
@@ -218,6 +238,14 @@ instance instFunLike : FunLike (M →ₛₗ[σ] M₃) M M₃ where
     (hM : SModPack.mk (R := R) M = SModPack.mk M') (hN : SModPack.mk (R := S) N = SModPack.mk N') :
     FunLikePack.mk (M →ₛₗ[σ] N) M (fun _ => N) =
       FunLikePack.mk (M' →ₛₗ[σ] N') M' (fun _ => N') := by
+  cases hM; cases hN; rfl
+
+/-- Lens: the pack of the coercion of `M →ₗ[R] N` to `M →+ N` follows the module packs. -/
+@[dsimp_congr] theorem addHomClassPack_congr.{ua, wa, xa} {R : Type ua} [Semiring R]
+    {M M' : Type wa} {N N' : Type xa} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module R N] [Module R N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M') (hN : SModPack.mk (R := R) N = SModPack.mk N') :
+    AddHomClassPack.mk (M →ₗ[R] N) M N = AddHomClassPack.mk (M' →ₗ[R] N') M' N' := by
   cases hM; cases hN; rfl
 
 instance semilinearMapClass : SemilinearMapClass (M →ₛₗ[σ] M₃) σ M M₃ where
@@ -285,6 +313,13 @@ theorem ofClass_injective {F : Type*} [FunLike F M M₃] [SemilinearMapClass F �
 @[instance_reducible]
 def id : M →ₗ[R] M :=
   { DistribMulActionHom.id R with toFun x := x }
+
+/-- Pack congruence for `LinearMap.id`. -/
+@[dsimp_congr] theorem id_pack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    HEq (LinearMap.id (R := R) (M := M)) (LinearMap.id (R := R) (M := M')) := by
+  cases h; rfl
 
 theorem id_apply (x : M) : @id R M _ _ _ x = x :=
   rfl
@@ -444,6 +479,19 @@ See also `LinearMap.map_smul_of_tower`. -/
   toFun := fₗ
   map_add' := fₗ.map_add
   map_smul' := fₗ.map_smul_of_tower
+
+/-- Pack congruence for `LinearMap.restrictScalars`. -/
+@[dsimp_congr] theorem restrictScalars_pack_congr.{ur, us, um, un} {R : Type ur} {S : Type us}
+    [Semiring R] [Semiring S] {M M' : Type um} {M₂ M₂' : Type un}
+    [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid M₂] [AddCommMonoid M₂']
+    [Module R M] [Module R M'] [Module R M₂] [Module R M₂']
+    [Module S M] [Module S M'] [Module S M₂] [Module S M₂']
+    [LinearMap.CompatibleSMul M M₂ R S] [LinearMap.CompatibleSMul M' M₂' R S]
+    (hM : SMod2Pack.mk (R := R) (S := S) M = SMod2Pack.mk M')
+    (hM₂ : SMod2Pack.mk (R := R) (S := S) M₂ = SMod2Pack.mk M₂')
+    (f : M →ₗ[S] M₂) (f' : M' →ₗ[S] M₂') (hf : HEq f f') :
+    HEq (LinearMap.restrictScalars R f) (LinearMap.restrictScalars R f') := by
+  cases hM; cases hM₂; cases hf; rfl
 
 instance coeIsScalarTower : CoeHTCT (M →ₗ[S] M₂) (M →ₗ[R] M₂) :=
   ⟨restrictScalars R⟩

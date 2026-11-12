@@ -489,7 +489,6 @@ theorem completion_apply {_ : MeasurableSpace α} (μ : Measure α) (s : Set α)
     μ.completion s = μ s :=
   rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 theorem ae_completion {_ : MeasurableSpace α} (μ : Measure α) : ae μ.completion = ae μ := rfl

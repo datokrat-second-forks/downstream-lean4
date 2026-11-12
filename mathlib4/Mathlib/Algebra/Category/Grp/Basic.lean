@@ -342,6 +342,22 @@ abbrev Hom.hom {X Y : CommGrpCat.{u}} (f : Hom X Y) :=
 abbrev ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X ⟶ of Y :=
   ConcreteCategory.ofHom (C := CommGrpCat) f
 
+/-- Pack congruence for `AddCommGrpCat.of`. -/
+@[dsimp_congr] theorem _root_.AddCommGrpCat.of_pack_congr.{ua} {M M' : Type ua}
+    [i : AddCommGroup M] [i' : AddCommGroup M']
+    (h : @ClassPack.mk AddCommGroup M i = @ClassPack.mk AddCommGroup M' i') :
+    AddCommGrpCat.of M = AddCommGrpCat.of M' := by
+  cases h; rfl
+
+/-- Pack congruence for `AddCommGrpCat.ofHom`. -/
+@[dsimp_congr] theorem _root_.AddCommGrpCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
+    [i : AddCommGroup X] [i' : AddCommGroup X'] [j : AddCommGroup Y] [j' : AddCommGroup Y']
+    (hX : @ClassPack.mk AddCommGroup X i = @ClassPack.mk AddCommGroup X' i')
+    (hY : @ClassPack.mk AddCommGroup Y j = @ClassPack.mk AddCommGroup Y' j')
+    (f : X →+ Y) (f' : X' →+ Y') (hf : HEq f f') :
+    HEq (AddCommGrpCat.ofHom f) (AddCommGrpCat.ofHom f') := by
+  cases hX; cases hY; cases hf; rfl
+
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
 @[to_additive /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/]
 def Hom.Simps.hom (X Y : CommGrpCat.{u}) (f : Hom X Y) :=

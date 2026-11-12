@@ -211,9 +211,8 @@ def coev_app : G ⟶ H where
           simp only [MonoidalClosed.curry_natural_right] at this
           dsimp
           rw [← this]
-          (set_option backward.dsimp.instanceTypes false in
           set_option backward.isDefEq.respectTransparency.instanceTypes false in
-          simp [MonoidalClosed.curry_eq]))
+          simp [MonoidalClosed.curry_eq])
   naturality {c c'} f := by
     dsimp
     apply Wedge.IsLimit.hom_ext <| ℌ.isLimitWedge c'
@@ -233,9 +232,8 @@ def coev_app : G ⟶ H where
     replace this := congrArg MonoidalClosed.curry this
     simp only [MonoidalClosed.curry_natural_right] at this
     rw [← this]
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [MonoidalClosed.curry_eq])
+    simp [MonoidalClosed.curry_eq]
 
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]
@@ -259,7 +257,7 @@ lemma coev_naturality_app {G' H' : C ⥤ V} [DayConvolution F G'] (η : G ⟶ G'
   apply Wedge.IsLimit.hom_ext <| ℌ'.isLimitWedge c
   intro j
   apply MonoidalClosed.uncurry_injective
-  (set_option backward.dsimp.instanceTypes false in dsimp)
+  (dsimp)
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [Category.assoc, coev_app_π, Functor.comp_obj, tensor_obj,
     map_app_comp_π, coev_app_π_assoc, MonoidalClosed.uncurry_natural_right,
@@ -289,9 +287,8 @@ theorem right_triangle_components (G : C ⥤ V) [DayConvolution F H]
   apply Wedge.IsLimit.hom_ext <| ℌ.isLimitWedge c
   intro j
   apply MonoidalClosed.uncurry_injective
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp [MonoidalClosed.uncurry_natural_right])
+  simp [MonoidalClosed.uncurry_natural_right]
 
 end DayConvolutionInternalHom
 

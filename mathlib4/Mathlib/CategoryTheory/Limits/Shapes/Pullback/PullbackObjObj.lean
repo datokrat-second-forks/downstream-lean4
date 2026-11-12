@@ -597,9 +597,8 @@ def leibnizAdjunction (adj₂ : F ⊣₂ G) [HasPullbacks C₂] [HasPushouts C�
     ext
     · simp [← homEquiv_naturality_one, ← homEquiv_naturality_three]
     · apply pullback.hom_ext <;>
-        (set_option backward.dsimp.instanceTypes false in
         set_option backward.isDefEq.respectTransparency.instanceTypes false in
-        simp [← homEquiv_naturality_one, ← homEquiv_naturality_three])
+        simp [← homEquiv_naturality_one, ← homEquiv_naturality_three]
 
 end
 

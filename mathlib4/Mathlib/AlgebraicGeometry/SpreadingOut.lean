@@ -151,7 +151,8 @@ lemma Scheme.IsGermInjective.Spec
             @IsLocalization.invertible_mk'_one ..)
   -- There is an `Opposite.unop (Opposite.op _)` in `hx` which doesn't seem removable using
   -- `simp`/`rw`.
-  (erw [elementwise_of% StructureSheaf.algebraMap_germ] at hx)
+  (set_option backward.dsimp.instanceTypes false in
+  erw [elementwise_of% StructureSheaf.algebraMap_germ] at hx)
   obtain ⟨⟨y, hy⟩, hy'⟩ := (IsLocalization.map_eq_zero_iff p.asIdeal.primeCompl
     ((Spec.structureSheaf R).presheaf.stalk p) _).mp hx
   obtain ⟨n, hn⟩ := H x y hy' hy

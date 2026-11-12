@@ -422,6 +422,15 @@ instance (x : orbitRel.Quotient G α) : MulAction G x.orbit where
   one_smul a := Subtype.ext (one_smul G (a : α))
   mul_smul g g' a' := Subtype.ext (mul_smul g g' (a' : α))
 
+/-- Pack root lemma: the `SMul G` pack of the orbit of the class of `a` is the `SMul G` pack of
+`orbit G a`. -/
+@[simp] theorem orbitRel.Quotient.orbit_mk_smulPack {G : Type*} {α : Type*} [Group G]
+    [MulAction G α] (a : α) :
+    ClassPack.mk (c := SMul G)
+        ↑(orbitRel.Quotient.orbit (Quotient.mk'' a : orbitRel.Quotient G α)) =
+      ClassPack.mk (c := SMul G) ↑(MulAction.orbit G a) :=
+  rfl
+
 @[to_additive (attr := simp)]
 lemma orbitRel.Quotient.orbit.coe_smul {g : G} {x : orbitRel.Quotient G α} {a : x.orbit} :
     ↑(g • a) = g • (a : α) :=

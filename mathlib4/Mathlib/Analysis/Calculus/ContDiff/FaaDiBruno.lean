@@ -1060,8 +1060,7 @@ theorem HasFTaylorSeriesUpToOn.comp {n : WithTop ℕ∞} {g : F → G} {f : E �
   `OrderedFinpartition.extendEquiv m`. -/
   constructor
   · intro x hx
-    (set_option backward.dsimp.instanceTypes false in
-    simp [FormalMultilinearSeries.taylorComp, default, HasFTaylorSeriesUpToOn.zero_eq' hg (h hx)])
+    simp [FormalMultilinearSeries.taylorComp, default, HasFTaylorSeriesUpToOn.zero_eq' hg (h hx)]
   · intro m hm x hx
     have A (c : OrderedFinpartition m) :
       HasFDerivWithinAt (fun x ↦ (q (f x)).compAlongOrderedFinpartition (p x) c)

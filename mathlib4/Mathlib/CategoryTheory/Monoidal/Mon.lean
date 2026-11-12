@@ -255,6 +255,29 @@ structure Mon where
 
 attribute [instance] Mon.mon AddMon.addMon
 
+/-- Pack congruence for `MonObj.one`: the unit follows the pack `Mon.mk X` of the object. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.MonObj.one_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.MonObj X] [i' : CategoryTheory.MonObj X']
+    (h : CategoryTheory.Mon.mk X = CategoryTheory.Mon.mk X') :
+    HEq (CategoryTheory.MonObj.one (X := X)) (CategoryTheory.MonObj.one (X := X')) := by
+  cases h; rfl
+
+/-- Pack congruence for `MonObj.mul`: the multiplication follows the pack `Mon.mk X`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.MonObj.mul_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.MonObj X] [i' : CategoryTheory.MonObj X']
+    (h : CategoryTheory.Mon.mk X = CategoryTheory.Mon.mk X') :
+    HEq (CategoryTheory.MonObj.mul (X := X)) (CategoryTheory.MonObj.mul (X := X')) := by
+  cases h; rfl
+
+/-- Lens: the pack of `M.X` with the instance `M.mon` follows `M`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Mon.mon.packLens.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {M M' : CategoryTheory.Mon C} (h : M = M') :
+    @CategoryTheory.Mon.mk C _ _ M.X M.mon = @CategoryTheory.Mon.mk C _ _ M'.X M'.mon := by
+  cases h; rfl
+
 namespace Mon
 
 variable (C) in
@@ -863,6 +886,14 @@ def mapMon : Mon C ⥤ Mon D where
   obj A := .mk (F.obj A.X)
   map f := .mk (F.map f.hom)
 
+/-- Pack root lemma: the pack of `(F.mapMon.obj A).X` is the pack of `F.obj A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Functor.mapMon_obj_pack.{va, vb, ua, ub} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {D : Type ub}
+    [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D] (F : C ⥤ D)
+    [F.LaxMonoidal] (A : CategoryTheory.Mon C) :
+    @CategoryTheory.Mon.mk D _ _ (F.mapMon.obj A).X (F.mapMon.obj A).mon =
+      @CategoryTheory.Mon.mk D _ _ (F.obj A.X) (CategoryTheory.Functor.monObjObj A.X) := rfl
+
 @[to_additive (attr := simp)]
 theorem id_mapMon_one (X : Mon C) : η[((𝟭 C).mapMon.obj X).X] = 𝟙 _ ≫ η[X.X] := rfl
 
@@ -897,7 +928,6 @@ def mapMonCompIso : (F ⋙ G).mapMon ≅ F.mapMon ⋙ G.mapMon :=
 protected instance Faithful.mapMon [F.Faithful] : F.mapMon.Faithful where
   map_injective {_X _Y} _f _g hfg := Mon.Hom.ext <| map_injective congr(($hfg).hom)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural transformations between functors lift to monoid objects. -/
 @[to_additive (attr := simps!)
@@ -905,7 +935,6 @@ set_option backward.defeqAttrib.useBackward true in
 def mapMonNatTrans (f : F ⟶ F') [NatTrans.IsMonoidal f] : F.mapMon ⟶ F'.mapMon where
   app X := .mk' (f.app _)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural isomorphisms between functors lift to monoid objects. -/
@@ -941,7 +970,6 @@ variable [F.Monoidal]
 
 open scoped Obj
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 @[to_additive]
 protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
@@ -1040,7 +1068,6 @@ instance [F.Braided] : F.mapMon.Braided where
 
 set_option backward.defeqAttrib.useBackward true in
 variable (C D) in
-set_option backward.dsimp.instanceTypes false in
 /-- `mapMon` is functorial in the lax monoidal functor. -/
 @[to_additive (attr := simps)
 /-- `mapAddMon` is functorial in the lax monoidal functor. -/]
@@ -1116,7 +1143,6 @@ lemma monToLaxMonoidalObj_μ (A : Mon C) (X Y) :
 
 variable (C)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/
@@ -1131,7 +1157,6 @@ def monToLaxMonoidal : Mon C ⥤ LaxMonoidalFunctor (Discrete PUnit.{w + 1}) C w
 attribute [local aesop safe tactic (rule_sets := [CategoryTheory])]
   CategoryTheory.Discrete.discreteCases
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/

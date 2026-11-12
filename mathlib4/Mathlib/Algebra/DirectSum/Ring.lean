@@ -290,7 +290,8 @@ theorem mul_eq_dfinsuppSum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' :
   -- simpa only [mul_hom, to_add_monoid, dfinsupp.lift_add_hom_apply, dfinsupp.sum_add_hom_apply,
   -- add_monoid_hom.dfinsupp_sum_apply, flip_apply, add_monoid_hom.dfinsupp_sum_add_hom_apply],
   rw [mulHom, toAddMonoid, DFinsupp.liftAddHom_apply]
-  (dsimp only [DirectSum])
+  (set_option backward.dsimp.instanceTypes false in
+  dsimp only [DirectSum])
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [DFinsupp.sumAddHom_apply, AddMonoidHom.dfinsuppSum_apply])
   apply congrArg _

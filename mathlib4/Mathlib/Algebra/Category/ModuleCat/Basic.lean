@@ -268,6 +268,29 @@ end ModuleCat
     SModPack.mk (R := R) X = SModPack.mk X' := by
   cases h; rfl
 
+/-- Lens: the group-module pack of the carrier of `X : ModuleCat R` follows `X`. -/
+@[dsimp_congr] theorem ModuleCat.gmodPack_congr.{ua, va} {R : Type ua} [Ring R]
+    {X X' : ModuleCat.{va} R} (h : X = X') :
+    GModPack.mk (R := R) X = GModPack.mk X' := by
+  cases h; rfl
+
+/-- Pack congruence for `ModuleCat.of`: the object follows the group-module pack of the carrier. -/
+@[dsimp_congr] theorem ModuleCat.of_pack_congr.{ur, va} {R : Type ur} [Ring R] {X X' : Type va}
+    [AddCommGroup X] [AddCommGroup X'] [Module R X] [Module R X']
+    (h : GModPack.mk (R := R) X = GModPack.mk X') :
+    HEq (ModuleCat.of R X) (ModuleCat.of R X') := by
+  cases h; rfl
+
+/-- Pack root lemma: the module pack of the carrier of `ModuleCat.of R M` is that of `M`. -/
+@[simp] theorem ModuleCat.of_smodPack.{ua, va} {R : Type ua} [Ring R] (M : Type va)
+    [AddCommGroup M] [Module R M] : SModPack.mk (R := R) (ModuleCat.of R M) = SModPack.mk M :=
+  rfl
+
+/-- Pack root lemma: the group-module pack of the carrier of `ModuleCat.of R M` is that of `M`. -/
+@[simp] theorem ModuleCat.of_gmodPack.{ua, va} {R : Type ua} [Ring R] (M : Type va)
+    [AddCommGroup M] [Module R M] : GModPack.mk (R := R) (ModuleCat.of R M) = GModPack.mk M :=
+  rfl
+
 variable {R}
 variable {X₁ X₂ : Type v}
 

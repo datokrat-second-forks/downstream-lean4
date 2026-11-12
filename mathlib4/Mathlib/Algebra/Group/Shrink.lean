@@ -109,6 +109,13 @@ instance [CommMonoid α] : CommMonoid (Shrink.{v} α) :=
 instance [Group α] : Group (Shrink.{v} α) :=
   fast_instance% (equivShrink α).symm.group
 
+/-- Pack congruence for `Shrink.mulEquiv`. -/
+@[dsimp_congr] theorem _root_.Shrink.mulEquiv_pack_congr.{va, ua} {α α' : Type ua}
+    [s : Small.{va} α] [s' : Small.{va} α'] [i : Mul α] [i' : Mul α']
+    (h : @ClassPack.mk Mul α i = @ClassPack.mk Mul α' i') :
+    HEq (Shrink.mulEquiv.{va} (α := α)) (Shrink.mulEquiv.{va} (α := α')) := by
+  cases h; rfl
+
 @[to_additive]
 instance [CommGroup α] : CommGroup (Shrink.{v} α) :=
   fast_instance% (equivShrink α).symm.commGroup

@@ -713,6 +713,22 @@ end CommRingCat
     @ClassPack.mk CommRing X X.commRing = @ClassPack.mk CommRing X' X'.commRing := by
   cases h; rfl
 
+/-- Pack congruence for `CommRingCat.of`. -/
+@[dsimp_congr] theorem CommRingCat.of_pack_congr.{ua} {R R' : Type ua}
+    [i : CommRing R] [i' : CommRing R']
+    (h : @ClassPack.mk CommRing R i = @ClassPack.mk CommRing R' i') :
+    HEq (CommRingCat.of R) (CommRingCat.of R') := by
+  cases h; rfl
+
+/-- Pack congruence for `CommRingCat.ofHom`. -/
+@[dsimp_congr] theorem CommRingCat.ofHom_pack_congr.{ua} {R R' S S' : Type ua}
+    [i : CommRing R] [i' : CommRing R'] [j : CommRing S] [j' : CommRing S']
+    (hR : @ClassPack.mk CommRing R i = @ClassPack.mk CommRing R' i')
+    (hS : @ClassPack.mk CommRing S j = @ClassPack.mk CommRing S' j')
+    (f : R →+* S) (f' : R' →+* S') (hf : HEq f f') :
+    HEq (CommRingCat.ofHom f) (CommRingCat.ofHom f') := by
+  cases hR; cases hS; cases hf; rfl
+
 /-- Lens: the `Semiring` pack of `(forget SemiRingCat).obj X` follows `X`. -/
 @[dsimp_congr] theorem SemiRingCat.forget_pack_congr.{ua} {X X' : SemiRingCat.{ua}} (h : X = X') :
     @ClassPack.mk Semiring X (inferInstanceAs (Semiring ((CategoryTheory.forget SemiRingCat).obj X))) =
@@ -736,6 +752,13 @@ end CommRingCat
     @ClassPack.mk CommRing X (inferInstanceAs (CommRing ((CategoryTheory.forget CommRingCat).obj X))) =
       @ClassPack.mk CommRing X' (inferInstanceAs (CommRing ((CategoryTheory.forget CommRingCat).obj X'))) := by
   cases h; rfl
+
+/-- Pack root lemma: the `Ring` pack of `(forget₂ CommRingCat RingCat).obj R` is that of `R`. -/
+@[simp] theorem CommRingCat.forgetToRingCat_obj_classPack.{ua} (R : CommRingCat.{ua}) :
+    @ClassPack.mk Ring ((forget₂ CommRingCat RingCat).obj R)
+        (inferInstanceAs (Ring ((CategoryTheory.forget RingCat).obj ((forget₂ CommRingCat RingCat).obj R)))) =
+      @ClassPack.mk Ring R (@CommRing.toRing R R.commRing) :=
+  rfl
 
 namespace CategoryTheory.Iso
 

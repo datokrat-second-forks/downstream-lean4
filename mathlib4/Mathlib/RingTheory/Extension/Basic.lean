@@ -160,6 +160,21 @@ def baseChange {T} [CommRing T] [Algebra R T] (P : Extension R S) : Extension T 
     (IsScalarTower.toAlgHom _ _ _)) (LinearMap.lTensor_surjective T
     (g := (IsScalarTower.toAlgHom R P.Ring S).toLinearMap) P.algebraMap_surjective)
 
+-- pack-regime: root lemma with a risk for other simp calls
+/-- Pack root lemma: the ring of `P.baseChange`. -/
+@[simp] theorem _root_.Algebra.Extension.baseChange_commRingPack {R₀ S₀ T₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] [CommRing T₀] [Algebra R₀ T₀] (P₀ : Algebra.Extension R₀ S₀) :
+    @ClassPack.mk CommRing (P₀.baseChange (T := T₀)).Ring (P₀.baseChange (T := T₀)).commRing =
+      @ClassPack.mk CommRing (TensorProduct R₀ T₀ P₀.Ring) _ := rfl
+
+-- pack-regime: root lemma with a risk for other simp calls
+/-- Pack root lemma: the algebra `T → P.baseChange.Ring`, through the tower instance. -/
+@[simp] theorem _root_.Algebra.Extension.baseChange_algPack_tower {R₀ S₀ T₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] [CommRing T₀] [Algebra R₀ T₀] (P₀ : Algebra.Extension R₀ S₀) :
+    @AlgPack.mk T₀ (P₀.baseChange (T := T₀)).Ring _ _
+        (P₀.baseChange (T := T₀)).instRingOfIsScalarTower =
+      AlgPack.mk T₀ (TensorProduct R₀ T₀ P₀.Ring) := rfl
+
 variable (T) in
 lemma ker_baseChange :
     (P.baseChange (T := T)).ker = P.ker.map Algebra.TensorProduct.includeRight.toRingHom :=
@@ -176,7 +191,6 @@ not an instance.
 noncomputable def algebraBaseChange : Algebra P.Ring (P.baseChange (T := T)).Ring :=
   fast_instance% TensorProduct.rightAlgebra
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 attribute [local instance] algebraBaseChange in
 instance : IsScalarTower R P.Ring (P.baseChange (T := T)).Ring :=
@@ -282,7 +296,6 @@ def Hom.mapKer (f : P.Hom P')
   map_add' _ _ := Subtype.ext (map_add _ _ _)
   map_smul' := by simp [Algebra.smul_def, ← halg]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 /-- The canonical hom from `P` to its base change `P.baseChange`. -/

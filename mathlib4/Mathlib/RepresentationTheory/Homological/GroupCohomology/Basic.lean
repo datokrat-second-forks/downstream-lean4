@@ -104,9 +104,8 @@ theorem d_eq :
         ((barComplex k G).linearYonedaObj k A).d n (n + 1) ≫
           (freeLiftLEquiv k G (Fin (n + 1) → G) A).toModuleIso.hom := by
   ext
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp [d_hom_apply, map_add, barComplex.d_single (k := k), homEquiv])
+  simp [d_hom_apply, map_add, barComplex.d_single (k := k), homEquiv]
 
 end inhomogeneousCochains
 

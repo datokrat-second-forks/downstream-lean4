@@ -220,7 +220,6 @@ theorem homEquiv_symm_id (X : D) : (adj.homEquiv _ X).symm (𝟙 _) = adj.counit
 -- With the instance type check, `dsimp%` keeps `(𝟭 C).obj X` in the type arguments of the
 -- coercion (as in `chosenCoend.map_apply`), and the statement no longer matches its uses in
 -- `Mathlib.CategoryTheory.Sites.CoverLifting`.
-set_option backward.dsimp.instanceTypes false in
 @[simp, to_dual none]
 lemma homEquiv_symm_unit (X : C) : dsimp% (adj.homEquiv _ _).symm (adj.unit.app X) = 𝟙 _ := by
   simp

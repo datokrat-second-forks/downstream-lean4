@@ -194,7 +194,6 @@ noncomputable def coinvariantsTensorIndHom :
       tprod_apply, ind_apply]
     ext; simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 variable {A B} in
@@ -221,7 +220,6 @@ noncomputable def coinvariantsTensorIndInv :
       Coinvariants.mem_ker_of_eq (φ s) (IndV.mk φ A.ρ (1 : H) x ⊗ₜ[k] y) _ <| by
       simp [← Coinvariants.mk_inv_tmul]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 variable {A B} in
@@ -231,7 +229,6 @@ lemma coinvariantsTensorIndInv_mk_tmul_indMk (x : A) (y : B) :
       coinvariantsTensorMk _ _ (IndV.mk φ _ 1 x) y := by
   simp [coinvariantsTensorIndInv, coinvariantsTensorMk]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a group hom `φ : G →* H`, `A : Rep k G` and `B : Rep k H`, this is the `k`-linear
@@ -252,7 +249,6 @@ noncomputable def coinvariantsTensorIndIso :
     ext
     simp [coinvariantsTensorIndInv, coinvariantsTensorMk, coinvariantsTensorIndHom]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Given a group hom `φ : G →* H` and `A : Rep k G`, the functor `Rep k H ⥤ ModuleCat k` sending

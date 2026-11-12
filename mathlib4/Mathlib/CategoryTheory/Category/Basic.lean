@@ -137,6 +137,33 @@ scoped notation "𝟙" => CategoryStruct.id  -- type as \b1
 /-- Notation for composition of morphisms in a category. -/
 scoped infixr:80 " ≫ " => CategoryStruct.comp -- type as \gg
 
+/-- Lens: the quiver pack follows the pack of the category structure. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem CategoryStruct.toQuiver.packLens.{vc, uc} {C C' : Type uc}
+    {i : CategoryStruct.{vc} C} {i' : CategoryStruct.{vc} C'}
+    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i') :
+    @ClassPack.mk Quiver.{vc, uc} C i.toQuiver = @ClassPack.mk Quiver.{vc, uc} C' i'.toQuiver := by
+  cases h; rfl
+
+/-- Pack congruence for the composition of morphisms. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem CategoryStruct.comp_pack_congr.{vc, uc} {C C' : Type uc}
+    [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
+    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i')
+    {X Y Z : C} {X' Y' Z' : C'} (hX : HEq X X') (hY : HEq Y Y') (hZ : HEq Z Z')
+    (f : X ⟶ Y) (f' : X' ⟶ Y') (hf : HEq f f') (g : Y ⟶ Z) (g' : Y' ⟶ Z') (hg : HEq g g') :
+    HEq (CategoryStruct.comp f g) (CategoryStruct.comp f' g') := by
+  cases h; cases hX; cases hY; cases hZ; cases hf; cases hg; rfl
+
+/-- Pack congruence for the identity morphism. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem CategoryStruct.id_pack_congr.{vc, uc} {C C' : Type uc}
+    [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
+    (h : @ClassPack.mk CategoryStruct.{vc, uc} C i = @ClassPack.mk CategoryStruct.{vc, uc} C' i')
+    (X : C) (X' : C') (hX : HEq X X') :
+    HEq (CategoryStruct.id X) (CategoryStruct.id X') := by
+  cases h; cases hX; rfl
+
 /-- Close the main goal with `sorry` if its type contains `sorry`, and fail otherwise. -/
 syntax (name := sorryIfSorry) "sorry_if_sorry" : tactic
 
@@ -248,6 +275,15 @@ to_dual_for Category.assoc := (self.assoc h g f).symm
 initialize_simps_projections Category (-Hom)
 
 to_dual_for Category.mk := {}
+
+/-- Lens: the pack of the category structure follows the category pack. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Category.toCategoryStruct.packLens.{vc, uc} {C C' : Type uc}
+    {i : Category.{vc} C} {i' : Category.{vc} C'}
+    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
+    @ClassPack.mk CategoryStruct.{vc, uc} C i.toCategoryStruct =
+      @ClassPack.mk CategoryStruct.{vc, uc} C' i'.toCategoryStruct := by
+  cases h; rfl
 
 example {C} [Category C] {X Y : C} (f : X ⟶ Y) : 𝟙 X ≫ f = f := by simp
 example {C} [Category C] {X Y : C} (f : X ⟶ Y) : f ≫ 𝟙 Y = f := by simp

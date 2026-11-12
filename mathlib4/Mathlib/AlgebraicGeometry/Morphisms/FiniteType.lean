@@ -170,7 +170,7 @@ lemma essentiallySmall_costructuredArrow_Spec
     choose f hqf hf using this
     refine ⟨Set.range f, PrimeSpectrum.iSup_basicOpen_eq_top_iff.mp ?_, Set.forall_mem_range.mpr ?_⟩
     · exact top_le_iff.mp fun x _ ↦ TopologicalSpace.Opens.mem_iSup.mpr ⟨x, hqf _⟩
-    · (set_option backward.dsimp.instanceTypes false in dsimp)
+    · (dsimp)
       exact fun q ↦ ⟨_, hf q,
         ⟨(set_option backward.isDefEq.respectTransparency.instanceTypes false in
         (IsLocalization.algEquiv (.powers (f q)) _

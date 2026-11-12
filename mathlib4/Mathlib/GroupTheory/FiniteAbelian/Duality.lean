@@ -196,7 +196,6 @@ theorem mem_subgroupOrderIsoSubgroupMonoidHom_iff (H : Subgroup G) (φ : G →* 
     φ ∈ (subgroupOrderIsoSubgroupMonoidHom G M H).ofDual ↔ ∀ g ∈ H, φ g = 1 := by
   simp [subgroupOrderIsoSubgroupMonoidHom]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]

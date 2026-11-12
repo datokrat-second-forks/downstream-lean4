@@ -23,6 +23,14 @@ affine map.
 @[expose] public section
 
 
+/-- Lens: the pack of the carrier of a nonempty affine subspace `A`, with the direction of `A` as
+vector space, follows `A`. -/
+@[dsimp_congr] theorem AffineSubspace.topAffPack_congr.{ur, uv, up} {R : Type ur} [Ring R]
+    {V : Type uv} {P : Type up} [AddCommGroup V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
+    {A A' : AffineSubspace R P} [Nonempty A] [Nonempty A'] (h : A = A') :
+    TopAffPack.mk (R := R) ↥A.direction ↥A = TopAffPack.mk ↥A'.direction ↥A' := by
+  cases h; rfl
+
 namespace AffineSubspace
 
 variable {R V P : Type*} [Ring R] [AddCommGroup V] [Module R V] [TopologicalSpace P]

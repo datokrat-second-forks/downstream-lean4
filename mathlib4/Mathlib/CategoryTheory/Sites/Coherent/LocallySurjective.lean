@@ -78,11 +78,10 @@ lemma extensiveTopology.surjective_of_isLocallySurjective_sheaf_of_types [Finita
   refine ⟨i.hom y, ?_⟩
   apply Concrete.isLimit_ext _ (isLimitOfPreserves G ht')
   intro ⟨a⟩
-  (
   simp only [Functor.comp_obj, Discrete.opposite_inverse_obj, Functor.op_obj, Discrete.functor_obj,
     Functor.mapCone_pt, Cone.whisker_pt, Cocone.op_pt, Cofan.mk_pt, Functor.const_obj_obj,
     Functor.mapCone_π_app, Cone.whisker_π, Cocone.op_π, Functor.whiskerLeft_app, NatTrans.op_app,
-    Cofan.mk_ι_app])
+    Cofan.mk_ι_app]
   rw [← (h' a).choose_spec, ← NatTrans.naturality_apply (φ := f)]
   simp only [IsLimit.conePointsIsoOfNatIso_hom, ← comp_apply, i]
   erw [IsLimit.map_π]
@@ -123,11 +122,10 @@ lemma regularTopology.isLocallySurjective_sheaf_of_types [Preregular C] [Finitar
     have := preservesLimitsOfShape_of_equiv (Discrete.opposite α).symm G
     apply Concrete.isLimit_ext _ (isLimitOfPreserves G (coproductIsCoproduct Z).op)
     intro ⟨⟨a⟩⟩
-    (set_option backward.dsimp.instanceTypes false in
     simp only [Functor.comp_obj, Functor.op_obj, Discrete.functor_obj_eq_as, Functor.mapCone_pt,
       Cocone.op_pt, Cofan.mk_pt, Functor.const_obj_obj, Functor.mapCone_π_app, Cocone.op_π,
       NatTrans.op_app, Cofan.mk_ι_app, Functor.mapIso_symm, Iso.trans_hom, Iso.symm_hom,
-      Functor.mapIso_inv, comp_apply, ← f.naturality_apply (Sigma.ι Z a).op, i'])
+      Functor.mapIso_inv, comp_apply, ← f.naturality_apply (Sigma.ι Z a).op, i']
     have : f.app ⟨Z a⟩ (x a) = G.map (π a).op y := (h' a).choose_spec
     -- pack-regime workaround (B)
     refine (congrArg _ ?_).trans (this.trans (Eq.symm ?_))

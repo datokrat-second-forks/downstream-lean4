@@ -90,6 +90,23 @@ manifolds. The identification is not true in general, though. -/
 abbrev PointDerivation (x : M) :=
   Derivation 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜
 
+/-- Lens: the coercion pack of `PointDerivation I x` follows the point `x`. -/
+@[dsimp_congr] theorem PointDerivation.funLikePack_congr.{uk, ue, uh, um} {𝕜 : Type uk}
+    [NontriviallyNormedField 𝕜] {E : Type ue} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {H : Type uh} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
+    {M : Type um} [TopologicalSpace M] [ChartedSpace H M] {x x' : M} (h : x = x') :
+    FunLikePack.mk (PointDerivation I x) C^∞⟮I, M; 𝕜⟯⟨x⟩ (fun _ => 𝕜) =
+      FunLikePack.mk (PointDerivation I x') C^∞⟮I, M; 𝕜⟯⟨x'⟩ (fun _ => 𝕜) := by
+  cases h; rfl
+
+/-- Lens: the module pack of `PointDerivation I x` follows the point `x`. -/
+@[dsimp_congr] theorem PointDerivation.smodPack_congr.{uk, ue, uh, um} {𝕜 : Type uk}
+    [NontriviallyNormedField 𝕜] {E : Type ue} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {H : Type uh} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
+    {M : Type um} [TopologicalSpace M] [ChartedSpace H M] {x x' : M} (h : x = x') :
+    SModPack.mk (R := 𝕜) (PointDerivation I x) = SModPack.mk (PointDerivation I x') := by
+  cases h; rfl
+
 section
 
 open scoped Derivation

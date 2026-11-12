@@ -108,11 +108,10 @@ lemma groupHomologyπEven_eq_zero_iff (hg : ∀ x, x ∈ Subgroup.zpowers g)
     (i : ℕ) [NeZero i] (hi : Even i) (x : LinearMap.ker A.ρ.norm) :
     groupHomologyπEven A g hg i hi x = 0 ↔
       x.1 ∈ LinearMap.range (applyAsHom A g - 𝟙 A).hom.toLinearMap := by
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [sub_hom, groupHomologyπEven, map_eq_zero_iff _ ((ModuleCat.mono_iff_injective _).1
     inferInstance), ShortComplex.moduleCatToCycles, -LinearMap.mem_range, Rep.applyAsHom, Rep.norm,
-    LinearMap.range_codRestrict])
+    LinearMap.range_codRestrict]
 
 lemma groupHomologyπEven_eq_iff (hg : ∀ x, x ∈ Subgroup.zpowers g)
     (i : ℕ) [NeZero i] (hi : Even i) (x y : LinearMap.ker A.ρ.norm) :
@@ -143,9 +142,8 @@ set_option backward.isDefEq.respectTransparency false in
 lemma groupHomologyπOdd_eq_zero_iff (hg : ∀ x, x ∈ Subgroup.zpowers g)
     (i : ℕ) (hi : Odd i) (x : LinearMap.ker (applyAsHom A g - 𝟙 A).hom.toLinearMap) :
     groupHomologyπOdd A g hg i hi x = 0 ↔ x.1 ∈ LinearMap.range A.ρ.norm := by
-  (set_option backward.dsimp.instanceTypes false in
   simp [groupHomologyπOdd, map_eq_zero_iff _ ((ModuleCat.mono_iff_injective _).1 inferInstance),
-    ShortComplex.moduleCatToCycles, -LinearMap.mem_range, Rep.norm, LinearMap.range_codRestrict])
+    ShortComplex.moduleCatToCycles, -LinearMap.mem_range, Rep.norm, LinearMap.range_codRestrict]
 
 lemma groupHomologyπOdd_eq_iff (g : G) (hg : ∀ x, x ∈ Subgroup.zpowers g)
     (A : Rep k G) (i : ℕ) (hi : Odd i) (x y : LinearMap.ker

@@ -473,6 +473,17 @@ instance homogeneousLocalizationCommRing : CommRing (HomogeneousLocalization �
   (HomogeneousLocalization.val_injective x).commRing _ val_zero val_one val_add val_mul val_neg
     val_sub (val_nsmul x · ·) (val_zsmul x · ·) val_pow val_natCast val_intCast
 
+/-- Lens: the `CommRing` pack of `HomogeneousLocalization 𝒜 x` follows the submonoid `x`. -/
+@[dsimp_congr] theorem commRingPack_congr.{uι, uA, uσ}
+    {ι : Type uι} {A : Type uA} {σ : Type uσ} [CommRing A] [SetLike σ A] [AddSubgroupClass σ A]
+    [AddCommMonoid ι] [DecidableEq ι] {𝒜 : ι → σ} [GradedRing 𝒜] {x x' : Submonoid A}
+    (h : x = x') :
+    @ClassPack.mk CommRing (HomogeneousLocalization 𝒜 x)
+        HomogeneousLocalization.homogeneousLocalizationCommRing =
+      @ClassPack.mk CommRing (HomogeneousLocalization 𝒜 x')
+        HomogeneousLocalization.homogeneousLocalizationCommRing := by
+  cases h; rfl
+
 instance homogeneousLocalizationAlgebra :
     Algebra (HomogeneousLocalization 𝒜 x) (Localization x) where
   smul p q := p.val * q

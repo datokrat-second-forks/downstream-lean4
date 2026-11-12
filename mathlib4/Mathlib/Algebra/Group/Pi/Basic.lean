@@ -86,6 +86,13 @@ instance mulOneClass [∀ i, MulOneClass (f i)] : MulOneClass (∀ i, f i) where
   have hi : i = i' := funext fun a => by injection h a
   subst hi; rfl
 
+/-- Lens: the `Add` pack of `α → β` follows `α` and the `Add` pack of `β`. -/
+@[dsimp_congr] theorem addPack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
+    [i : Add β] [i' : Add β'] (hα : α = α')
+    (hβ : @ClassPack.mk Add β i = @ClassPack.mk Add β' i') :
+    @ClassPack.mk Add (α → β) Pi.instAdd = @ClassPack.mk Add (α' → β') Pi.instAdd := by
+  cases hα; cases hβ; rfl
+
 @[to_additive]
 instance [∀ i, MulOneClass (f i)] [∀ i, IsDedekindFiniteMonoid (f i)] :
     IsDedekindFiniteMonoid (∀ i, f i) where

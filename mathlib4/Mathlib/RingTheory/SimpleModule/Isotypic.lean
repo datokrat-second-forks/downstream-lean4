@@ -55,6 +55,14 @@ to `S`. If `M` is semisimple, it is equivalent to requiring that all simple quot
 isomorphic to `S`. -/
 def IsIsotypicOfType : Prop := ∀ (m : Submodule R M) [IsSimpleModule R m], Nonempty (m ≃ₗ[R] S)
 
+/-- Pack congruence for `IsIsotypicOfType`. -/
+@[dsimp_congr] theorem IsIsotypicOfType.pack_congr.{ur, um, us} {R : Type ur} [Ring R]
+    {M M' : Type um} {S S' : Type us} [AddCommGroup M] [AddCommGroup M'] [AddCommGroup S]
+    [AddCommGroup S'] [Module R M] [Module R M'] [Module R S] [Module R S']
+    (hM : GModPack.mk (R := R) M = GModPack.mk M') (hS : GModPack.mk (R := R) S = GModPack.mk S') :
+    IsIsotypicOfType R M S = IsIsotypicOfType R M' S' := by
+  cases hM; cases hS; rfl
+
 /-- An `R`-module `M` is isotypic if all its simple submodules are isomorphic. -/
 def IsIsotypic : Prop := ∀ (m : Submodule R M) [IsSimpleModule R m], IsIsotypicOfType R M m
 
@@ -118,11 +126,9 @@ theorem isIsotypicOfType_submodule_iff {N : Submodule R M} :
     IsIsotypicOfType R N S ↔ ∀ m ≤ N, [IsSimpleModule R m] → Nonempty (m ≃ₗ[R] S) := by
   rw [Subtype.forall', ← (Submodule.MapSubtype.orderIso N).forall_congr_right]
   have e := Submodule.equivMapOfInjective _ N.subtype_injective
-  (set_option backward.dsimp.instanceTypes false in
-  simp_rw [Submodule.MapSubtype.orderIso, Equiv.coe_fn_mk, ← (e _).isSimpleModule_iff])
+  simp_rw [Submodule.MapSubtype.orderIso, Equiv.coe_fn_mk, ← (e _).isSimpleModule_iff]
   exact forall₂_congr fun m _ ↦ ⟨fun ⟨e'⟩ ↦ ⟨(e m).symm.trans e'⟩, fun ⟨e'⟩ ↦ ⟨(e m).trans e'⟩⟩
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 theorem isIsotypic_submodule_iff {N : Submodule R M} :
     IsIsotypic R N ↔ ∀ m ≤ N, [IsSimpleModule R m] → IsIsotypicOfType R N m := by

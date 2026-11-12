@@ -138,7 +138,6 @@ section Right
 
 variable {P Q : Profunctor.{max u w} C D} (R : Profunctor.{max u w} D E) (f : P ⟶ Q)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 attribute [local simp] chosenCoend_def chosenCoend.map_apply in
@@ -256,7 +255,6 @@ def rightUnitor (P : Profunctor.{u} C D) : P.comp .id ≅ P :=
       (simp [Types.chosenCoend_def, chosenCoend.map_apply]))
 
 -- Same issue as in `chosenCoend.map_apply`; without the option, `whiskerRight_id` breaks.
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local simp] Types.chosenCoend_def in
 @[simp]
@@ -384,14 +382,12 @@ def associator : (P.comp Q).comp R ≅ P.comp (Q.comp R) :=
   NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ associatorComponents P Q R X Y)
     fun _ ↦ by
       ext ⟨_, ⟨_, _, _⟩, _⟩
-      (
-      simp [associatorComponents, associatorHom, associatorHomFun, chosenCoend_def,
-        chosenCoend.map_apply, Quot.map]))
-    fun _ ↦ by
-      ext _ ⟨_, ⟨_, _, _⟩, _⟩
-      (
       simp [associatorComponents, associatorHom, associatorHomFun, chosenCoend_def,
         chosenCoend.map_apply, Quot.map])
+    fun _ ↦ by
+      ext _ ⟨_, ⟨_, _, _⟩, _⟩
+      simp [associatorComponents, associatorHom, associatorHomFun, chosenCoend_def,
+        chosenCoend.map_apply, Quot.map]
 
 attribute [local simp] Types.chosenCoend_def in
 @[simp]

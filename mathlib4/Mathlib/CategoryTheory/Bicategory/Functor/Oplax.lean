@@ -170,6 +170,7 @@ lemma mapComp'_eq_mapComp {b₀ b₁ b₂ : B} (f : b₀ ⟶ b₁) (g : b₁ ⟶
     F.mapComp' f g _ rfl = F.mapComp f g := by
   simp [mapComp']
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Composition of oplax functors. -/
@@ -188,8 +189,7 @@ def comp (F : B ⥤ᵒᵖᴸ C) (G : C ⥤ᵒᵖᴸ D) : B ⥤ᵒᵖᴸ D where
     rw [← G.map₂_comp_assoc, mapComp_naturality_right, G.map₂_comp_assoc,
       mapComp_naturality_right, assoc]
   map₂_associator := fun f g h => by
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp)
+    dsimp
     simp only [map₂_associator, ← PrelaxFunctor.map₂_comp_assoc, ← mapComp_naturality_right_assoc,
       whiskerLeft_comp, assoc]
     simp only [map₂_associator, PrelaxFunctor.map₂_comp, mapComp_naturality_left_assoc,

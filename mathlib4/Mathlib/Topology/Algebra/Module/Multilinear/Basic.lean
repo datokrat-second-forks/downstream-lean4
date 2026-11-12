@@ -81,6 +81,27 @@ instance funLike : FunLike (ContinuousMultilinearMap R M₁ M₂) (∀ i, M₁ i
   coe f := f.toFun
   coe_injective _ _ h := toMultilinearMap_injective <| MultilinearMap.coe_injective h
 
+/-- Pack congruence for the type of continuous multilinear maps with a constant family `M₁`:
+the type follows the index type. -/
+@[dsimp_congr] theorem const_pack_congr.{ur, ui, u1, u2} {R : Type ur}
+    [Semiring R] {ι ι' : Type ui} {M₁ : Type u1} {M₂ : Type u2}
+    [AddCommMonoid M₁] [AddCommMonoid M₂] [Module R M₁] [Module R M₂]
+    [TopologicalSpace M₁] [TopologicalSpace M₂] (h : ι = ι') :
+    ContinuousMultilinearMap R (fun _ : ι => M₁) M₂ =
+      ContinuousMultilinearMap R (fun _ : ι' => M₁) M₂ := by
+  cases h; rfl
+
+/-- Lens: the coercion pack of continuous multilinear maps with a constant family `M₁` follows
+the index type. -/
+@[dsimp_congr] theorem const_funLikePack_congr.{ur, ui, u1, u2}
+    {R : Type ur} [Semiring R] {ι ι' : Type ui} {M₁ : Type u1} {M₂ : Type u2}
+    [AddCommMonoid M₁] [AddCommMonoid M₂] [Module R M₁] [Module R M₂]
+    [TopologicalSpace M₁] [TopologicalSpace M₂] (h : ι = ι') :
+    FunLikePack.mk (ContinuousMultilinearMap R (fun _ : ι => M₁) M₂) (ι → M₁) (fun _ => M₂) =
+      FunLikePack.mk (ContinuousMultilinearMap R (fun _ : ι' => M₁) M₂) (ι' → M₁)
+        (fun _ => M₂) := by
+  cases h; rfl
+
 instance continuousMapClass :
     ContinuousMapClass (ContinuousMultilinearMap R M₁ M₂) (∀ i, M₁ i) M₂ where
   map_continuous := ContinuousMultilinearMap.cont

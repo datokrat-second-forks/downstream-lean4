@@ -1043,6 +1043,25 @@ deriving
   -- which takes a long time to be found. We register a shortcut instance instead
   ContinuousConstSMul 𝕜, IsNormableSpace 𝕜
 
+/-- Lens: the topological module pack of `TangentSpace I x` follows the point `x`. -/
+@[dsimp_congr] theorem TangentSpace.topModPack_congr.{uk, ue, uh, um} {𝕜 : Type uk}
+    [NontriviallyNormedField 𝕜] {E : Type ue} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {H : Type uh} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
+    {M : Type um} [TopologicalSpace M] [ChartedSpace H M] {x x' : M} (h : x = x') :
+    TopModPack.mk (R := 𝕜) (TangentSpace I x) = TopModPack.mk (TangentSpace I x') := by
+  cases h; rfl
+
+/-- Lens: for a family `i` of `ENorm` instances on the tangent spaces, the `ENorm` pack of
+`TangentSpace I x` follows the point `x`. -/
+@[dsimp_congr] theorem TangentSpace.enormPack_family_congr.{uk, ue, uh, um} {𝕜 : Type uk}
+    [NontriviallyNormedField 𝕜] {E : Type ue} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {H : Type uh} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H}
+    {M : Type um} [TopologicalSpace M] [ChartedSpace H M] [i : ∀ x : M, ENorm (TangentSpace I x)]
+    {x x' : M} (h : x = x') :
+    @ClassPack.mk ENorm (TangentSpace I x) (i x) =
+      @ClassPack.mk ENorm (TangentSpace I x') (i x') := by
+  cases h; rfl
+
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
   {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
   {H : Type*} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)

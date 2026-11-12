@@ -315,6 +315,7 @@ def compAsSmallFunctorEquivalenceInverse :
   obj X := ⟨X.base, AsSmall.up.obj X.fiber⟩
   map f := ⟨f.base, AsSmall.up.map f.fiber⟩
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The functor to build the equivalence `compAsSmallFunctorEquivalence`. -/
@@ -324,9 +325,9 @@ def compAsSmallFunctorEquivalenceFunctor :
   obj X := ⟨X.base, AsSmall.down.obj X.fiber⟩
   map f := ⟨f.base, AsSmall.down.map f.fiber⟩
   map_id _ := by
-    apply Grothendieck.ext <;> (set_option backward.dsimp.instanceTypes false in simp)
+    apply Grothendieck.ext <;> (simp)
   map_comp _ _ := by
-    apply Grothendieck.ext <;> (set_option backward.dsimp.instanceTypes false in simp [down_comp])
+    apply Grothendieck.ext <;> (simp [down_comp])
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Taking the Grothendieck construction on `F ⋙ asSmallFunctor`, where
@@ -340,6 +341,7 @@ def compAsSmallFunctorEquivalence :
   counitIso := Iso.refl _
   unitIso := Iso.refl _
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {F} in
@@ -355,8 +357,7 @@ def mapWhiskerRightAsSmallFunctor (α : F ⟶ G) :
     (fun f => by
       fapply Grothendieck.ext
       · simp [compAsSmallFunctorEquivalenceInverse]
-      · (set_option backward.dsimp.instanceTypes false in
-        set_option backward.isDefEq.respectTransparency.instanceTypes false in
+      · set_option backward.isDefEq.respectTransparency.instanceTypes false in
         simp only [compAsSmallFunctorEquivalence_functor, compAsSmallFunctorEquivalence_inverse,
         comp_obj, compAsSmallFunctorEquivalenceInverse_obj_base, map_obj_base,
         compAsSmallFunctorEquivalenceFunctor_obj_base, Cat.asSmallFunctor_obj, Cat.of_α,
@@ -368,7 +369,7 @@ def mapWhiskerRightAsSmallFunctor (α : F ⟶ G) :
         compAsSmallFunctorEquivalenceFunctor_obj_fiber, comp_fiber, map_map_fiber, AsSmall.down_map,
         down_comp, eqToHom_down, AsSmall.up_map_down, map_comp, eqToHom_map, id_fiber,
         Category.assoc, eqToHom_trans_assoc, compAsSmallFunctorEquivalenceInverse_map_fiber,
-        compAsSmallFunctorEquivalenceFunctor_map_fiber, eqToHom_comp_iff, comp_eqToHom_iff])
+        compAsSmallFunctorEquivalenceFunctor_map_fiber, eqToHom_comp_iff, comp_eqToHom_iff]
         simp only [conj_eqToHom_iff_heq']
         rw [G.map_id]
         simp)

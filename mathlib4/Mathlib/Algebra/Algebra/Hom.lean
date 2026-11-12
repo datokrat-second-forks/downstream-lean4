@@ -85,6 +85,17 @@ structure SAlgPack.{ua, va} (R : Type ua) [CommSemiring R] where
   /-- The algebra structure. -/
   [alg : Algebra R A]
 
+/-- Pack congruence for the constructor of `A →ₐ[R] B`. -/
+@[dsimp_congr] theorem AlgHom.mk_pack_congr.{ur, ua, ub} {R : Type ur} [CommSemiring R]
+    {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B] [Semiring B']
+    [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (f : A →+* B) (f' : A' →+* B') (hf : HEq f f')
+    (h : ∀ r : R, f.toFun (algebraMap R A r) = algebraMap R B r)
+    {h' : ∀ r : R, f'.toFun (algebraMap R A' r) = algebraMap R B' r} (hh : HEq h h') :
+    HEq (AlgHom.mk f h) (AlgHom.mk f' h') := by
+  cases hA; cases hB; cases hf; rfl
+
 namespace AlgHom
 
 variable {R : Type u} {A : Type v} {B : Type w} {C : Type u₁} {D : Type v₁}
@@ -286,6 +297,13 @@ theorem id_toRingHom : (AlgHom.id R A : A →+* A) = RingHom.id _ :=
 
 end
 
+/-- Pack congruence for `AlgHom.id`. -/
+@[dsimp_congr] theorem id_pack_congr.{ur, ua} {R : Type ur} [CommSemiring R]
+    {A A' : Type ua} [Semiring A] [Semiring A'] [Algebra R A] [Algebra R A']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') :
+    HEq (AlgHom.id R A) (AlgHom.id R A') := by
+  cases hA; rfl
+
 theorem id_apply (p : A) : AlgHom.id R A p = p :=
   rfl
 
@@ -296,6 +314,17 @@ domain of `φ₁` equal to the codomain of `φ₂`, then
 def comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : A →ₐ[R] C :=
   { φ₁.toRingHom.comp ↑φ₂ with
     commutes' := fun r : R => by rw [← φ₁.commutes, ← φ₂.commutes]; rfl }
+
+/-- Pack congruence for `AlgHom.comp`. -/
+@[dsimp_congr] theorem _root_.AlgHom.comp_pack_congr.{ur, ua, ub, uc} {R : Type ur}
+    [CommSemiring R] {A A' : Type ua} {B B' : Type ub} {C C' : Type uc}
+    [Semiring A] [Semiring A'] [Semiring B] [Semiring B'] [Semiring C] [Semiring C']
+    [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B'] [Algebra R C] [Algebra R C']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (hC : SAlgPack.mk (R := R) C = SAlgPack.mk C')
+    (f : B →ₐ[R] C) (f' : B' →ₐ[R] C') (hf : HEq f f') (g : A →ₐ[R] B) (g' : A' →ₐ[R] B')
+    (hg : HEq g g') : HEq (f.comp g) (f'.comp g') := by
+  cases hA; cases hB; cases hC; cases hf; cases hg; rfl
 
 @[simp]
 theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : ⇑(φ₁.comp φ₂) = φ₁ ∘ φ₂ :=
@@ -328,6 +357,15 @@ def toLinearMap : A →ₗ[R] B where
   toFun := φ
   map_add' := map_add _
   map_smul' := map_smul _
+
+/-- Pack congruence for `AlgHom.toLinearMap`. -/
+@[dsimp_congr] theorem toLinearMap_pack_congr.{ur, va, vb} {R : Type ur} [CommSemiring R]
+    {A A' : Type va} {B B' : Type vb} [Semiring A] [Semiring A'] [Semiring B] [Semiring B']
+    [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (f : A →ₐ[R] B) (f' : A' →ₐ[R] B') (hf : HEq f f') :
+    HEq f.toLinearMap f'.toLinearMap := by
+  cases hA; cases hB; cases hf; rfl
 
 theorem toLinearMap_eq_coe (f : A →ₐ[R] B) : f.toLinearMap = f :=
   rfl
@@ -452,6 +490,15 @@ theorem coe_toAlgHom' : (toAlgHom R S A : S → A) = algebraMap S A := rfl
     HEq (toAlgHom R S A) (toAlgHom R S A') := by
   cases h; rfl
 
+/-- Pack congruence for `IsScalarTower.toAlgHom`: the map follows the tower pack of the middle
+ring. -/
+@[dsimp_congr] theorem toAlgHom_mid_pack_congr.{ur, us, ua} (R : Type ur)
+    {S S' : Type us} (A : Type ua) [CommSemiring R] [CommSemiring S] [CommSemiring S'] [Semiring A]
+    [Algebra R S] [Algebra R S'] [Algebra S A] [Algebra S' A] [Algebra R A] [IsScalarTower R S A]
+    [IsScalarTower R S' A] (h : TowerMidPack.mk (R := R) (A := A) S = TowerMidPack.mk S') :
+    HEq (toAlgHom R S A) (toAlgHom R S' A) := by
+  cases h; rfl
+
 end IsScalarTower
 
 /-- The algebra morphism underlying `algebraMap`. -/
@@ -527,6 +574,12 @@ variable [CommSemiring R] [Semiring A] [Algebra R A] [Semiring B] [Algebra R B]
 /-- `AlgebraMap` as an `AlgHom`. -/
 def ofId : R →ₐ[R] A :=
   { algebraMap R A with commutes' := fun _ => rfl }
+
+/-- Pack congruence for `Algebra.ofId`. -/
+@[dsimp_congr] theorem ofId_pack_congr.{ur, ua} (R : Type ur) [CommSemiring R]
+    {A A' : Type ua} [Semiring A] [Semiring A'] [Algebra R A] [Algebra R A']
+    (h : SAlgPack.mk (R := R) A = SAlgPack.mk A') : HEq (Algebra.ofId R A) (Algebra.ofId R A') := by
+  cases h; rfl
 
 variable {R}
 

@@ -378,6 +378,16 @@ instance {A} [CommRing A] [Algebra R₁ A] (I : Ideal A) : Algebra R₁ (A ⧸ I
       @AlgPack.mk R (A ⧸ I') _ (Quotient.semiring I') (instAlgebraQuotient R I') := by
   cases h; rfl
 
+/-- Lens: the algebra pack of the field `A ⧸ I` follows the maximal ideal `I`. -/
+@[dsimp_congr] theorem _root_.Ideal.Quotient.field.sAlgPackLens.{ur, ua} {R : Type ur}
+    [CommSemiring R] {A : Type ua} [CommRing A] [Algebra R A] {I I' : Ideal A} (h : I = I')
+    (hI : I.IsMaximal) (hI' : I'.IsMaximal) (hh : HEq hI hI') :
+    @SAlgPack.mk R _ (A ⧸ I) (Ideal.Quotient.field I).toSemifield.toCommSemiring.toSemiring
+        (Ideal.instAlgebraQuotient R I) =
+      @SAlgPack.mk R _ (A ⧸ I') (Ideal.Quotient.field I').toSemifield.toCommSemiring.toSemiring
+        (Ideal.instAlgebraQuotient R I') := by
+  cases h; rfl
+
 -- This instance can be inferred, but is kept around as a useful shortcut.
 instance Quotient.isScalarTower [SMul R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) :
     IsScalarTower R₁ R₂ (A ⧸ I) := inferInstance
@@ -555,7 +565,6 @@ def quotientKerAlgEquivOfRightInverse {f : A →ₐ[R₁] B} {g : B → A}
 
 -- With the instance type check, `simps!` states `_apply` at `ker f.toRingHom` instead of
 -- `ker (RingHomClass.toRingHom f)`, which no longer matches its uses in `Smooth/Basic.lean`.
-set_option backward.dsimp.instanceTypes false in
 /-- The **first isomorphism theorem** for algebras. -/
 @[simps! -isSimp apply]
 noncomputable def quotientKerAlgEquivOfSurjective {f : A →ₐ[R₁] B} (hf : Function.Surjective f) :

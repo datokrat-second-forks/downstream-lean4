@@ -8,6 +8,7 @@ module
 public meta import Lean.PrettyPrinter.Delaborator.Builtins
 public meta import Mathlib.Lean.PrettyPrinter.Delaborator
 public meta import Qq
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.Simps
 public import Mathlib.Tactic.ToDual
 
@@ -39,6 +40,15 @@ Lemmas about the operators `⊔` and `⊓` should use the names `sup` and `inf` 
 
 public section
 
+-- This theorem belongs to Lean core, next to `LE`. It is here, in the first file of order
+-- notation that sees `ClassPack`.
+/-- Pack congruence for `≤`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem LE.le_pack_congr.{ua} {α α' : Type ua} [i : LE α] [i' : LE α']
+    (h : @ClassPack.mk LE α i = @ClassPack.mk LE α' i') (a : α) (a' : α') (ha : HEq a a')
+    (b : α) (b' : α') (hb : HEq b b') : (a ≤ b) = (a' ≤ b') := by
+  cases h; cases ha; cases hb; rfl
+
 /-- Set / lattice complement -/
 @[notation_class]
 class Compl (α : Type*) where
@@ -51,6 +61,14 @@ export Compl (compl)
 postfix:1024 "ᶜ" => compl
 
 initialize_simps_projections Compl
+
+/-- Pack congruence for the complement. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Compl.compl_pack_congr.{ua} {α α' : Type ua} [i : Compl α]
+    [i' : Compl α'] (h : @ClassPack.mk Compl α i = @ClassPack.mk Compl α' i') (a : α) (a' : α')
+    (ha : HEq a a') :
+    HEq (Compl.compl a) (Compl.compl a') := by
+  cases h; cases ha; rfl
 
 /-! ### `Sup` and `Inf` -/
 
@@ -190,6 +208,13 @@ notation "⊤" => Top.top
 
 /-- The bot (`⊥`, `\bot`) element -/
 notation "⊥" => Bot.bot
+
+/-- Pack congruence for `⊤`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Top.top_pack_congr.{ua} {α α' : Type ua} [i : Top α] [i' : Top α']
+    (h : @ClassPack.mk Top α i = @ClassPack.mk Top α' i') :
+    HEq (⊤ : α) (⊤ : α') := by
+  cases h; rfl
 
 @[to_dual]
 instance (priority := 100) top_nonempty (α : Type*) [Top α] : Nonempty α :=

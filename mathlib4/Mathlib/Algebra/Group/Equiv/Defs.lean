@@ -161,6 +161,38 @@ instance : EquivLike (M ≃* N) M N where
     congr
     apply Equiv.coe_fn_injective h₁
 
+/-- Pack congruence for the type `A ≃+ B`: the type follows the `Add` packs of `A` and `B`. -/
+@[dsimp_congr] theorem _root_.AddEquiv.pack_congr.{ua, ub} {A A' : Type ua} {B B' : Type ub}
+    [i : Add A] [i' : Add A'] [j : Add B] [j' : Add B']
+    (hA : @ClassPack.mk Add A i = @ClassPack.mk Add A' i')
+    (hB : @ClassPack.mk Add B j = @ClassPack.mk Add B' j') :
+    (A ≃+ B) = (A' ≃+ B') := by
+  cases hA; cases hB; rfl
+
+/-- Lens: the coercion pack of `A ≃+ B` follows the `Add` packs of `A` and `B`. -/
+@[dsimp_congr] theorem _root_.AddEquiv.funLikePack_congr.{ua, ub} {A A' : Type ua} {B B' : Type ub}
+    [i : Add A] [i' : Add A'] [j : Add B] [j' : Add B']
+    (hA : @ClassPack.mk Add A i = @ClassPack.mk Add A' i')
+    (hB : @ClassPack.mk Add B j = @ClassPack.mk Add B' j') :
+    FunLikePack.mk (A ≃+ B) A (fun _ => B) = FunLikePack.mk (A' ≃+ B') A' (fun _ => B') := by
+  cases hA; cases hB; rfl
+
+/-- Pack congruence for the type `M ≃* N`: the type follows the `Mul` packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.MulEquiv.pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : Mul M] [i' : Mul M'] [j : Mul N] [j' : Mul N']
+    (hM : @ClassPack.mk Mul M i = @ClassPack.mk Mul M' i')
+    (hN : @ClassPack.mk Mul N j = @ClassPack.mk Mul N' j') :
+    (M ≃* N) = (M' ≃* N') := by
+  cases hM; cases hN; rfl
+
+/-- Lens: the coercion pack of `M ≃* N` follows the packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.MulEquiv.funLikePack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : Mul M] [i' : Mul M'] [j : Mul N] [j' : Mul N']
+    (hM : @ClassPack.mk Mul M i = @ClassPack.mk Mul M' i')
+    (hN : @ClassPack.mk Mul N j = @ClassPack.mk Mul N' j') :
+    FunLikePack.mk (M ≃* N) M (fun _ => N) = FunLikePack.mk (M' ≃* N') M' (fun _ => N') := by
+  cases hM; cases hN; rfl
+
 @[to_additive] -- shortcut instance that doesn't generate any subgoals
 instance : CoeFun (M ≃* N) fun _ ↦ M → N where
   coe f := f
@@ -277,6 +309,23 @@ lemma symm_map_mul {M N : Type*} [Mul M] [Mul N] (h : M ≃* N) (x y : N) :
 @[to_additive (attr := symm) /-- The inverse of an isomorphism is an isomorphism. -/]
 def symm {M N : Type*} [Mul M] [Mul N] (h : M ≃* N) : N ≃* M :=
   ⟨h.toEquiv.symm, h.symm_map_mul⟩
+
+/-- Pack congruence for `MulEquiv.symm`. -/
+@[dsimp_congr] theorem _root_.MulEquiv.symm_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : Mul M] [i' : Mul M'] [j : Mul N] [j' : Mul N']
+    (hM : @ClassPack.mk Mul M i = @ClassPack.mk Mul M' i')
+    (hN : @ClassPack.mk Mul N j = @ClassPack.mk Mul N' j')
+    (e : M ≃* N) (e' : M' ≃* N') (he : HEq e e') :
+    HEq e.symm e'.symm := by
+  cases hM; cases hN; cases he; rfl
+
+/-- Pack congruence for `AddEquiv.symm`. -/
+@[dsimp_congr] theorem _root_.AddEquiv.symm_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [iM : Add M] [iM' : Add M'] [iN : Add N] [iN' : Add N']
+    (hM : @ClassPack.mk Add M iM = @ClassPack.mk Add M' iM')
+    (hN : @ClassPack.mk Add N iN = @ClassPack.mk Add N' iN')
+    (e : M ≃+ N) (e' : M' ≃+ N') (he : HEq e e') : HEq e.symm e'.symm := by
+  cases hM; cases hN; cases he; rfl
 
 @[to_additive]
 theorem invFun_eq_symm {f : M ≃* N} : f.invFun = f.symm := rfl
@@ -516,6 +565,26 @@ as a multiplication-preserving function.
   as an addition-preserving function. -/]
 def toMonoidHom (h : M ≃* N) : M →* N :=
   { h with map_one' := h.map_one }
+
+/-- Pack congruence for `MulEquiv.toMonoidHom`. -/
+@[dsimp_congr]
+theorem _root_.MulEquiv.toMonoidHom_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : MulOneClass M] [i' : MulOneClass M'] [j : MulOneClass N] [j' : MulOneClass N']
+    (hM : @ClassPack.mk MulOneClass M i = @ClassPack.mk MulOneClass M' i')
+    (hN : @ClassPack.mk MulOneClass N j = @ClassPack.mk MulOneClass N' j')
+    (e : M ≃* N) (e' : M' ≃* N') (he : HEq e e') :
+    HEq e.toMonoidHom e'.toMonoidHom := by
+  cases hM; cases hN; cases he; rfl
+
+/-- Pack congruence for `AddEquiv.toAddMonoidHom`. -/
+@[dsimp_congr] theorem _root_.AddEquiv.toAddMonoidHom_pack_congr.{ua, va} {M M' : Type ua}
+    {N N' : Type va} [iM : AddZeroClass M] [iM' : AddZeroClass M'] [iN : AddZeroClass N]
+    [iN' : AddZeroClass N']
+    (hM : @ClassPack.mk AddZeroClass M iM = @ClassPack.mk AddZeroClass M' iM')
+    (hN : @ClassPack.mk AddZeroClass N iN = @ClassPack.mk AddZeroClass N' iN')
+    (e : M ≃+ N) (e' : M' ≃+ N') (he : HEq e e') :
+    HEq e.toAddMonoidHom e'.toAddMonoidHom := by
+  cases hM; cases hN; cases he; rfl
 
 @[to_additive (attr := simp)]
 theorem coe_toMonoidHom (e : M ≃* N) : ⇑e.toMonoidHom = e := rfl

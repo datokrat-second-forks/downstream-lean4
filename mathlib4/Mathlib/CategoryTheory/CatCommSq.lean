@@ -39,6 +39,24 @@ class CatCommSq (T : C₁ ⥤ C₂) (L : C₁ ⥤ C₃) (R : C₂ ⥤ C₄) (B :
   given by the 2-commutative square. -/
   iso (T) (L) (R) (B) : T ⋙ R ≅ L ⋙ B
 
+/-- Pack: the two vertical functors of a 2-commutative square with the square. -/
+structure CatCommSqPack {C₁ C₂ C₃ C₄ : Type*} [Category* C₁] [Category* C₂] [Category* C₃]
+    [Category* C₄] (T : C₁ ⥤ C₂) (B : C₃ ⥤ C₄) where
+  /-- The left functor. -/
+  L : C₁ ⥤ C₃
+  /-- The right functor. -/
+  R : C₂ ⥤ C₄
+  /-- The square. -/
+  [sq : CatCommSq T L R B]
+
+/-- Pack congruence for the isomorphism of a 2-commutative square. -/
+@[dsimp_congr] theorem CatCommSq.iso_pack_congr {C₁ C₂ C₃ C₄ : Type*} [Category* C₁]
+    [Category* C₂] [Category* C₃] [Category* C₄] {T : C₁ ⥤ C₂} {B : C₃ ⥤ C₄}
+    {L L' : C₁ ⥤ C₃} {R R' : C₂ ⥤ C₄} [i : CatCommSq T L R B] [i' : CatCommSq T L' R' B]
+    (h : CatCommSqPack.mk (T := T) (B := B) L R = CatCommSqPack.mk (T := T) (B := B) L' R') :
+    HEq (CatCommSq.iso T L R B) (CatCommSq.iso T L' R' B) := by
+  cases h; rfl
+
 variable (T : C₁ ⥤ C₂) (L : C₁ ⥤ C₃) (R : C₂ ⥤ C₄) (B : C₃ ⥤ C₄)
 
 namespace CatCommSq

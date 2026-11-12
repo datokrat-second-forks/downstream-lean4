@@ -72,6 +72,13 @@ class Module.Projective (R : Type*) [Semiring R] (P : Type*) [AddCommMonoid P] [
     Prop where
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.linearCombination R id) s
 
+/-- Pack congruence for the class `Module.Projective`. -/
+@[dsimp_congr] theorem Module.Projective.pack_congr.{ur, up} {R : Type ur} [Semiring R]
+    {P P' : Type up} [AddCommMonoid P] [AddCommMonoid P'] [Module R P] [Module R P']
+    (h : SModPack.mk (R := R) P = SModPack.mk P') :
+    Module.Projective R P = Module.Projective R P' := by
+  cases h; rfl
+
 namespace Module
 
 section Semiring

@@ -122,8 +122,7 @@ set_option backward.isDefEq.respectTransparency false in
 theorem norm_ofAlgebraAutOnUnits_eq (x : Lˣ) :
     (toMul <| toAdditive ((Rep.ofAlgebraAutOnUnits K L).norm.asHom.hom
       (toAdditive.symm <| ofMul x))).1 = algebraMap K L (Algebra.norm K (x : L)) := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp [Algebra.norm_eq_prod_automorphisms, Representation.norm])
+  simp [Algebra.norm_eq_prod_automorphisms, Representation.norm]
 
 variable [IsCyclic (L ≃ₐ[K] L)] {g : Gal(L/K)}
 

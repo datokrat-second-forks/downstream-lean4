@@ -85,6 +85,14 @@ structure Grp where
 
 attribute [instance] Grp.grp AddGrp.addGrp
 
+/-- Lens: the monoid object pack follows the group object pack. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.GrpObj.toMonObj.packLens.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.CartesianMonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.GrpObj X] [i' : CategoryTheory.GrpObj X']
+    (h : CategoryTheory.Grp.mk X = CategoryTheory.Grp.mk X') :
+    @CategoryTheory.Mon.mk C _ _ X i.toMonObj = @CategoryTheory.Mon.mk C _ _ X' i'.toMonObj := by
+  cases h; rfl
+
 namespace Grp
 
 /-- A group object is a monoid object. -/
@@ -600,6 +608,14 @@ def mapGrp : Grp C ⥤ Grp D where
   obj A := .mk (F.obj A.X)
   map f := Grp.homMk' (F.mapMon.map f.hom)
 
+/-- Pack root lemma: the pack of `(F.mapGrp.obj A).X` is the pack of `F.obj A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Functor.mapGrp_obj_pack.{va, vb, ua, ub} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.CartesianMonoidalCategory.{va} C] {D : Type ub}
+    [CategoryTheory.Category.{vb} D] [CategoryTheory.CartesianMonoidalCategory.{vb} D] (F : C ⥤ D)
+    [F.Monoidal] (A : CategoryTheory.Grp C) :
+    @CategoryTheory.Grp.mk D _ _ (F.mapGrp.obj A).X (F.mapGrp.obj A).grp =
+      @CategoryTheory.Grp.mk D _ _ (F.obj A.X) CategoryTheory.Functor.grpObjObj := rfl
+
 @[to_additive]
 protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
   map_injective hfg :=
@@ -660,7 +676,6 @@ set_option backward.defeqAttrib.useBackward true in
 def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where
   app X := Grp.homMk' ((mapMonNatTrans f).app X.toMon)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Natural isomorphisms between functors lift to group objects. -/
@@ -669,7 +684,6 @@ set_option backward.defeqAttrib.useBackward true in
 def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
   NatIso.ofComponents fun X ↦ Grp.mkIso (e.app _)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [local instance] Monoidal.ofChosenFiniteProducts in

@@ -240,6 +240,28 @@ instance (E : Type*) [Category* E] [MonoidalCategory E] (e : C ≌ D) :
     (e.congrLeft (E := E)).inverse.Monoidal :=
   inferInstanceAs ((Functor.whiskeringLeft _ _ E).obj e.functor).Monoidal
 
+/-- Pack root lemma for the monoidal structure of `e.congrLeft.inverse`. -/
+@[simp]
+theorem _root_.CategoryTheory.Equivalence.congrLeft_inverse_monoidalPack.{va, vb, vc, ua, ub, uc}
+    {C : Type ua} [Category.{va} C] {D : Type ub} [Category.{vb} D]
+    (E : Type uc) [Category.{vc} E] [MonoidalCategory E] (e : C ≌ D) :
+    @Functor.MonoidalPack.mk (D ⥤ E) _ _ (C ⥤ E) _ _ (e.congrLeft (E := E)).inverse
+        (instMonoidalFunctorInverseCongrLeft E e) =
+      @Functor.MonoidalPack.mk (D ⥤ E) _ _ (C ⥤ E) _ _
+        ((Functor.whiskeringLeft C D E).obj e.functor)
+        (Functor.Monoidal.whiskeringLeft E e.functor) := rfl
+
+/-- Pack root lemma for the monoidal structure of `e.congrLeft.functor`. -/
+@[simp]
+theorem _root_.CategoryTheory.Equivalence.congrLeft_functor_monoidalPack.{va, vb, vc, ua, ub, uc}
+    {C : Type ua} [Category.{va} C] {D : Type ub} [Category.{vb} D]
+    (E : Type uc) [Category.{vc} E] [MonoidalCategory E] (e : C ≌ D) :
+    @Functor.MonoidalPack.mk (C ⥤ E) _ _ (D ⥤ E) _ _ (e.congrLeft (E := E)).functor
+        (instMonoidalFunctorFunctorCongrLeft E e) =
+      @Functor.MonoidalPack.mk (C ⥤ E) _ _ (D ⥤ E) _ _
+        ((Functor.whiskeringLeft D C E).obj e.inverse)
+        (Functor.Monoidal.whiskeringLeft E e.inverse) := rfl
+
 set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 instance (E : Type*) [Category* E] [MonoidalCategory E] (e : C ≌ D) :

@@ -95,6 +95,8 @@ lemma longSequenceHom_id (h : n₀ + 1 = n₁ := by lia) :
     longSequenceHom n₀ n₁ h₁ h₁ (𝟙 _) h = 𝟙 _ := by
   ext1 <;> cat_disch
 
+-- pack-regime finding (R50): `simp` needs about 266000 heartbeats here, most of them in failed matches of lenses
+set_option maxHeartbeats 400000 in
 attribute [local simp] H.map_comp_apply in
 @[simp]
 lemma longSequenceHom_comp {S₃ : ShortComplex (Sheaf J AddCommGrpCat)} (h₃ : S₃.ShortExact)

@@ -785,7 +785,6 @@ lemma touchpoint_reindex (e : Fin (n + 1) ≃ Fin (m + 1)) (signs : Finset (Fin 
     (s.reindex e).touchpoint signs i = s.touchpoint (signs.map e.symm) (e.symm i) :=
   orthogonalProjectionSpan_congr (s.range_faceOpposite_reindex _ _) (s.excenter_reindex _ _)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 variable {s} in
 @[simp] lemma ExcenterExists.touchpoint_map {signs : Finset (Fin (n + 1))}

@@ -55,6 +55,18 @@ class Linear (R : Type w) [Semiring R] (C : Type u) [Category.{v} C] [Preadditiv
 
 attribute [instance_reducible, instance] Linear.homModule
 
+/-- Lens: the module pack of the hom type `P ⟶ Q` of an `R`-linear category follows `P` and `Q`.
+-/
+@[dsimp_congr] theorem _root_.CategoryTheory.Linear.homModule.smodPackLens.{ur, uc, vc}
+    {R : Type ur} [Semiring R] {C : Type uc} [CategoryTheory.Category.{vc} C]
+    [CategoryTheory.Preadditive C] [CategoryTheory.Linear R C] {P P' Q Q' : C} (hP : P = P')
+    (hQ : Q = Q') :
+    @SModPack.mk R _ (P ⟶ Q) (CategoryTheory.Preadditive.homGroup P Q).toAddCommMonoid
+        (CategoryTheory.Linear.homModule P Q) =
+      @SModPack.mk R _ (P' ⟶ Q') (CategoryTheory.Preadditive.homGroup P' Q').toAddCommMonoid
+        (CategoryTheory.Linear.homModule P' Q') := by
+  cases hP; cases hQ; rfl
+
 attribute [simp] Linear.smul_comp Linear.comp_smul
 
 -- (the linter doesn't like `simp` on the `_assoc` lemma)

@@ -94,7 +94,23 @@ def inverseObj (F : C ⥤ Mon D) : Mon (C ⥤ D) where
   { one := { app X := η[(F.obj X).X] }
     mul := { app X := μ[(F.obj X).X] } }
 
-set_option backward.dsimp.instanceTypes false in
+/-- The monoid structure of `inverseObj F`, on the spelling `F ⋙ Mon.forget D` of the object. -/
+abbrev inverseObj.monObj.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] {D : Type ub} [CategoryTheory.Category.{vb} D]
+    [CategoryTheory.MonoidalCategory.{vb} D] (F : C ⥤ CategoryTheory.Mon D) :
+    CategoryTheory.MonObj (F ⋙ CategoryTheory.Mon.forget D) :=
+  (CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverseObj F).mon
+
+/-- Pack root lemma for `inverseObj`. -/
+@[simp] theorem inverseObj_pack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] {D : Type ub} [CategoryTheory.Category.{vb} D]
+    [CategoryTheory.MonoidalCategory.{vb} D] (F : C ⥤ CategoryTheory.Mon D) :
+    @CategoryTheory.Mon.mk (C ⥤ D) _ _
+        (CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverseObj F).X
+        (CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverseObj F).mon =
+      @CategoryTheory.Mon.mk (C ⥤ D) _ _ (F ⋙ CategoryTheory.Mon.forget D)
+        (CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverseObj.monObj F) := rfl
+
 set_option backward.defeqAttrib.useBackward true in
 /-- Functor translating a functor into the category of monoid objects
 to a monoid object in the functor category
@@ -196,6 +212,24 @@ def inverseObj (F : C ⥤ Comon D) : Comon (C ⥤ D) where
   { counit := { app X := ε[(F.obj X).X] }
     comul := { app X := Δ[(F.obj X).X] } }
 
+/-- The comonoid structure of `inverseObj F`, on the spelling `F ⋙ Comon.forget D` of the
+object. -/
+abbrev inverseObj.comonObj.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] {D : Type ub} [CategoryTheory.Category.{vb} D]
+    [CategoryTheory.MonoidalCategory.{vb} D] (F : C ⥤ CategoryTheory.Comon D) :
+    CategoryTheory.ComonObj (F ⋙ CategoryTheory.Comon.forget D) :=
+  (CategoryTheory.Monoidal.ComonFunctorCategoryEquivalence.inverseObj F).comon
+
+/-- Pack root lemma for `inverseObj`. -/
+@[simp] theorem inverseObj_pack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] {D : Type ub} [CategoryTheory.Category.{vb} D]
+    [CategoryTheory.MonoidalCategory.{vb} D] (F : C ⥤ CategoryTheory.Comon D) :
+    @CategoryTheory.Comon.mk (C ⥤ D) _ _
+        (CategoryTheory.Monoidal.ComonFunctorCategoryEquivalence.inverseObj F).X
+        (CategoryTheory.Monoidal.ComonFunctorCategoryEquivalence.inverseObj F).comon =
+      @CategoryTheory.Comon.mk (C ⥤ D) _ _ (F ⋙ CategoryTheory.Comon.forget D)
+        (CategoryTheory.Monoidal.ComonFunctorCategoryEquivalence.inverseObj.comonObj F) := rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.privateInPublic true in
 /-- Functor translating a functor into the category of comonoid objects
@@ -210,11 +244,11 @@ private def inverse : (C ⥤ Comon D) ⥤ Comon (C ⥤ D) where
         naturality _ _ f := congr($(α.naturality f).hom) }
       isComonHom_hom.hom_counit := by
         ext x
-        (set_option backward.dsimp.instanceTypes false in dsimp)
+        (dsimp)
         rw [IsComonHom.hom_counit (α.app x).hom]
       isComonHom_hom.hom_comul := by
         ext x
-        (set_option backward.dsimp.instanceTypes false in dsimp)
+        (dsimp)
         rw [IsComonHom.hom_comul (α.app x).hom] }
 
 set_option backward.isDefEq.respectTransparency.types false in

@@ -305,6 +305,12 @@ instance : Module ℝ (ModularForm Γ k) := fast_instance% FunLike.module
 
 instance [Γ.HasDetOne] : Module ℂ (ModularForm Γ k) := fast_instance% FunLike.module
 
+/-- Lens: the `ℂ`-module pack of `ModularForm Γ k` follows the weight `k`. -/
+@[dsimp_congr] theorem smodPackℂ_congr {Γ : Subgroup (GL (Fin 2) ℝ)} [Γ.HasDetOne]
+    {k k' : ℤ} (h : k = k') :
+    SModPack.mk (R := ℂ) (ModularForm Γ k) = SModPack.mk (ModularForm Γ k') := by
+  cases h; rfl
+
 instance : Inhabited (ModularForm Γ k) :=
   ⟨0⟩
 

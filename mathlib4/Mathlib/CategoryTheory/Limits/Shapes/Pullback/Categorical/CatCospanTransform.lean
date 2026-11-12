@@ -101,6 +101,56 @@ end
 
 end CatCospanTransform
 
+section PackLemmas
+
+variable {A B C A' B' C' A'' B'' C'' : Type*} [Category* A] [Category* B] [Category* C]
+  [Category* A'] [Category* B'] [Category* C'] [Category* A''] [Category* B''] [Category* C'']
+  {F : A ⥤ B} {G : C ⥤ B} {F' : A' ⥤ B'} {G' : C' ⥤ B'} {F'' : A'' ⥤ B''} {G'' : C'' ⥤ B''}
+
+/-- Lens: the pack of the left square of `ψ` follows `ψ`. -/
+@[dsimp_congr] theorem CatCospanTransform.squareLeft.packLens
+    {ψ ψ' : CatCospanTransform F G F' G'} (h : ψ = ψ') :
+    CatCommSqPack.mk (T := F) (B := F') ψ.left ψ.base (sq := ψ.squareLeft) =
+      CatCommSqPack.mk (T := F) (B := F') ψ'.left ψ'.base (sq := ψ'.squareLeft) := by
+  cases h; rfl
+
+/-- Lens: the pack of the right square of `ψ` follows `ψ`. -/
+@[dsimp_congr] theorem CatCospanTransform.squareRight.packLens
+    {ψ ψ' : CatCospanTransform F G F' G'} (h : ψ = ψ') :
+    CatCommSqPack.mk (T := G) (B := G') ψ.right ψ.base (sq := ψ.squareRight) =
+      CatCommSqPack.mk (T := G) (B := G') ψ'.right ψ'.base (sq := ψ'.squareRight) := by
+  cases h; rfl
+
+/-- Pack root lemma: the left square of a composition. -/
+@[simp] theorem CatCospanTransform.comp_squareLeft_pack
+    (ψ : CatCospanTransform F G F' G') (ψ' : CatCospanTransform F' G' F'' G'') :
+    CatCommSqPack.mk (T := F) (B := F'') (ψ.comp ψ').left (ψ.comp ψ').base
+        (sq := (ψ.comp ψ').squareLeft) =
+      CatCommSqPack.mk (T := F) (B := F'') (ψ.left ⋙ ψ'.left) (ψ.base ⋙ ψ'.base)
+        (sq := ψ.squareLeft.vComp' ψ'.squareLeft) := rfl
+
+/-- Pack root lemma: the right square of a composition. -/
+@[simp] theorem CatCospanTransform.comp_squareRight_pack
+    (ψ : CatCospanTransform F G F' G') (ψ' : CatCospanTransform F' G' F'' G'') :
+    CatCommSqPack.mk (T := G) (B := G'') (ψ.comp ψ').right (ψ.comp ψ').base
+        (sq := (ψ.comp ψ').squareRight) =
+      CatCommSqPack.mk (T := G) (B := G'') (ψ.right ⋙ ψ'.right) (ψ.base ⋙ ψ'.base)
+        (sq := ψ.squareRight.vComp' ψ'.squareRight) := rfl
+
+/-- Pack root lemma: the left square of the identity. -/
+@[simp] theorem CatCospanTransform.id_squareLeft_pack (F : A ⥤ B) (G : C ⥤ B) :
+    CatCommSqPack.mk (T := F) (B := F) (CatCospanTransform.id F G).left
+        (CatCospanTransform.id F G).base (sq := (CatCospanTransform.id F G).squareLeft) =
+      CatCommSqPack.mk (T := F) (B := F) (𝟭 A) (𝟭 B) (sq := CatCommSq.vId F) := rfl
+
+/-- Pack root lemma: the right square of the identity. -/
+@[simp] theorem CatCospanTransform.id_squareRight_pack (F : A ⥤ B) (G : C ⥤ B) :
+    CatCommSqPack.mk (T := G) (B := G) (CatCospanTransform.id F G).right
+        (CatCospanTransform.id F G).base (sq := (CatCospanTransform.id F G).squareRight) =
+      CatCommSqPack.mk (T := G) (B := G) (𝟭 C) (𝟭 B) (sq := CatCommSq.vId G) := rfl
+
+end PackLemmas
+
 variable {A : Type u₁} {B : Type u₂} {C : Type u₃}
     {A' : Type u₄} {B' : Type u₅} {C' : Type u₆}
     {A'' : Type u₇} {B'' : Type u₈} {C'' : Type u₉}
@@ -176,7 +226,6 @@ lemma right_coherence_app {ψ ψ' : CatCospanTransform F G F' G'}
     α.base.app (G.obj x) ≫ ψ'.squareRight.iso.hom.app x :=
   congr_app α.right_coherence x
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Whiskering left of a `CatCospanTransformMorphism` by a `CatCospanTransform`. -/
@@ -200,15 +249,13 @@ def whiskerRight {ψ ψ' : CatCospanTransform F G F' G'} (α : ψ ⟶ ψ')
   base := Functor.whiskerRight α.base φ.base
   left_coherence := by
     ext x
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp)
+    dsimp
     simp only [CatCommSq.vComp_iso_hom_app, Category.assoc]
     rw [← Functor.map_comp_assoc, ← left_coherence_app, Functor.map_comp_assoc]
     simp
   right_coherence := by
     ext x
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp)
+    dsimp
     simp only [CatCommSq.vComp_iso_hom_app, Category.assoc]
     rw [← Functor.map_comp_assoc, ← right_coherence_app, Functor.map_comp_assoc]
     simp
@@ -318,7 +365,6 @@ lemma isIso_iff : IsIso f ↔ IsIso f.left ∧ IsIso f.base ∧ IsIso f.right wh
 
 end Iso
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The left unitor isomorphism for categorical cospan transformations. -/
@@ -327,7 +373,6 @@ def leftUnitor (φ : CatCospanTransform F G F' G') :
     (CatCospanTransform.id F G).comp φ ≅ φ :=
   mkIso φ.left.leftUnitor φ.right.leftUnitor φ.base.leftUnitor
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The right unitor isomorphism for categorical cospan transformations. -/
@@ -336,7 +381,6 @@ def rightUnitor (φ : CatCospanTransform F G F' G') :
     φ.comp (.id F' G') ≅ φ :=
   mkIso φ.left.rightUnitor φ.right.rightUnitor φ.base.rightUnitor
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The associator isomorphism for categorical cospan transformations. -/

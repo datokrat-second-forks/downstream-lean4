@@ -35,6 +35,70 @@ open Function Set
 
 universe u'' u' u v w
 
+/-- Lens: the module pack of the carrier of a submodule follows the submodule. -/
+@[dsimp_congr] theorem Submodule.smodPack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M : Type um} [AddCommMonoid M] [Module R M] {p p' : Submodule R M} (h : p = p') :
+    SModPack.mk (R := R) ↥p = SModPack.mk ↥p' := by
+  cases h; rfl
+
+/-- Lens: the `ℤ`-module pack of the carrier of a submodule follows the submodule. -/
+@[dsimp_congr] theorem Submodule.intSModPack_congr.{ur, um} {R : Type ur} [Ring R]
+    {M : Type um} [AddCommGroup M] [Module R M] {p p' : Submodule R M} (h : p = p') :
+    @SModPack.mk ℤ _ ↥p p.addCommMonoid (AddCommGroup.toIntModule ↥p) =
+      @SModPack.mk ℤ _ ↥p' p'.addCommMonoid (AddCommGroup.toIntModule ↥p') := by
+  cases h; rfl
+
+/-- Lens: the pack of the carrier of a submodule as a `ℤ`-module and an `R`-module follows the
+submodule. -/
+@[dsimp_congr] theorem Submodule.intSMod2Pack_congr.{ur, um} {R : Type ur} [Ring R]
+    {M : Type um} [AddCommGroup M] [Module R M] {p p' : Submodule R M} (h : p = p') :
+    @SMod2Pack.mk ℤ R _ _ ↥p p.addCommMonoid (AddCommGroup.toIntModule ↥p) p.module =
+      @SMod2Pack.mk ℤ R _ _ ↥p' p'.addCommMonoid (AddCommGroup.toIntModule ↥p') p'.module := by
+  cases h; rfl
+
+/-- Lens: the group-module pack of the carrier of a submodule follows the submodule. -/
+@[dsimp_congr] theorem Submodule.gmodPack_congr.{ur, um} {R : Type ur} [Ring R] {M : Type um}
+    [AddCommGroup M] [Module R M] {p p' : Submodule R M} (h : p = p') :
+    GModPack.mk (R := R) ↥p = GModPack.mk ↥p' := by
+  cases h; rfl
+
+/-- Lens: the module pack of the carrier of a submodule follows the module pack of the ambient
+module and the submodule. -/
+@[dsimp_congr] theorem Submodule.smodPack_congr₂.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (p : Submodule R M) (p' : Submodule R M') (hp : HEq p p') :
+    SModPack.mk (R := R) ↥p = SModPack.mk ↥p' := by
+  cases hM; cases hp; rfl
+
+/-- Lens: the group-module pack of the carrier of a submodule follows the group-module pack of the
+ambient module and the submodule. -/
+@[dsimp_congr] theorem Submodule.gmodPack_congr₂.{ur, um} {R : Type ur} [Ring R] {M M' : Type um}
+    [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
+    (hM : GModPack.mk (R := R) M = GModPack.mk M')
+    (p : Submodule R M) (p' : Submodule R M') (hp : HEq p p') :
+    GModPack.mk (R := R) ↥p = GModPack.mk ↥p' := by
+  cases hM; cases hp; rfl
+
+/-- Lens: the module pack of the carrier of a submodule over a second base `S` follows the
+submodule. -/
+@[dsimp_congr] theorem Submodule.smodPack'_congr.{us, ur, um} {S : Type us} {R : Type ur}
+    [Semiring S] [Semiring R] {M : Type um} [AddCommMonoid M] [Module R M] [SMul S R] [Module S M]
+    [IsScalarTower S R M] {p p' : Submodule R M} (h : p = p') :
+    @SModPack.mk S _ ↥p (Submodule.addCommMonoid p) (Submodule.module' p) =
+      @SModPack.mk S _ ↥p' (Submodule.addCommMonoid p') (Submodule.module' p') := by
+  cases h; rfl
+
+/-- Lens: the two-base module pack of the carrier of a submodule follows the submodule. -/
+@[dsimp_congr] theorem Submodule.smod2Pack_congr.{us, ur, um} {S : Type us} {R : Type ur}
+    [Semiring S] [Semiring R] {M : Type um} [AddCommMonoid M] [Module R M] [SMul S R] [Module S M]
+    [IsScalarTower S R M] {p p' : Submodule R M} (h : p = p') :
+    @SMod2Pack.mk S R _ _ ↥p (Submodule.addCommMonoid p) (Submodule.module' p)
+        (Submodule.module p) =
+      @SMod2Pack.mk S R _ _ ↥p' (Submodule.addCommMonoid p') (Submodule.module' p')
+        (Submodule.module p') := by
+  cases h; rfl
+
 section
 
 variable {R : Type u} {M : Type v} {ι : Type w}

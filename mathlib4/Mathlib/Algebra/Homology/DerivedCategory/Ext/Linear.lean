@@ -140,7 +140,19 @@ noncomputable def linearExtFunctorObj (X : C) (n : ℕ) : C ⥤ ModuleCat.{w} R 
   obj Y := ModuleCat.of R (Ext X Y n)
   map f := ModuleCat.ofHom (Ext.postcompOfLinear (Ext.mk₀ f) R X (add_zero n))
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the module pack of the carrier of `(linearExtFunctorObj R X n).obj Y`. -/
+@[simp] theorem linearExtFunctorObj_obj_smodPack (R : Type t) [CommRing R] {C : Type u}
+    [Category.{v} C] [Abelian C] [Linear R C] [HasExt.{w} C] (X Y : C) (n : ℕ) :
+    SModPack.mk (R := R) ((linearExtFunctorObj R X n).obj Y) = SModPack.mk (Ext X Y n) :=
+  rfl
+
+/-- Pack root lemma: the group-module pack of the carrier of `(linearExtFunctorObj R X n).obj Y`.
+-/
+@[simp] theorem linearExtFunctorObj_obj_gmodPack (R : Type t) [CommRing R] {C : Type u}
+    [Category.{v} C] [Abelian C] [Linear R C] [HasExt.{w} C] (X Y : C) (n : ℕ) :
+    GModPack.mk (R := R) ((linearExtFunctorObj R X n).obj Y) = GModPack.mk (Ext X Y n) :=
+  rfl
+
 variable (C) in
 /-- The functor `Cᵒᵖ ⥤ C ⥤ ModuleCat R` which sends `X : C` and `Y : C`
 to `Ext X Y n`. -/

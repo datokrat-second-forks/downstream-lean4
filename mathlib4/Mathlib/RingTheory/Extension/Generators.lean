@@ -170,6 +170,51 @@ def toExtension : Extension R S where
   σ := P.σ
   algebraMap_σ := by simp
 
+/-- Pack root lemma: the ring of `P.toExtension`. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_commRingPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @ClassPack.mk CommRing P₀.toExtension.Ring P₀.toExtension.commRing =
+      @ClassPack.mk CommRing P₀.Ring _ := rfl
+
+/-- Pack root lemma: the algebra `P.toExtension.Ring → S`. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_algPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @AlgPack.mk P₀.toExtension.Ring S₀ _ _ P₀.toExtension.algebra₂ = AlgPack.mk P₀.Ring S₀ := rfl
+
+/-- Pack root lemma: the algebra `R → P.toExtension.Ring`. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_sAlgPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @SAlgPack.mk R₀ _ P₀.toExtension.Ring _ P₀.toExtension.algebra₁ = SAlgPack.mk P₀.Ring := rfl
+
+/-- Pack root lemma: the algebra `R → P.toExtension.Ring`, through the tower instance. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_sAlgPack_tower {R₀ S₀ ι₀ : Type*}
+    [CommRing R₀] [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @SAlgPack.mk R₀ _ P₀.toExtension.Ring _ P₀.toExtension.instRingOfIsScalarTower =
+      SAlgPack.mk P₀.Ring := rfl
+
+/-- Pack root lemma: the algebra `R → P.toExtension.Ring`, as a pack with a varying base. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_algPack_base {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @AlgPack.mk R₀ P₀.toExtension.Ring _ _ P₀.toExtension.algebra₁ = AlgPack.mk R₀ P₀.Ring := rfl
+
+/-- Pack root lemma: the same, through the tower instance. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_algPack_tower {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @AlgPack.mk R₀ P₀.toExtension.Ring _ _ P₀.toExtension.instRingOfIsScalarTower =
+      AlgPack.mk R₀ P₀.Ring := rfl
+
+/-- Pack root lemma: `P.toExtension.Ring` as the middle ring of the tower `R → P.Ring → S`. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_towerMidPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @TowerMidPack.mk R₀ S₀ _ _ _ P₀.toExtension.Ring _ P₀.toExtension.algebra₁
+        P₀.toExtension.algebra₂ = TowerMidPack.mk P₀.Ring := rfl
+
+/-- Pack root lemma: the same, through the tower instance. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_towerMidPack_tower {R₀ S₀ ι₀ : Type*}
+    [CommRing R₀] [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @TowerMidPack.mk R₀ S₀ _ _ _ P₀.toExtension.Ring _ P₀.toExtension.instRingOfIsScalarTower
+        P₀.toExtension.algebra₂ = TowerMidPack.mk P₀.Ring := rfl
+
 /-- Transport generators along an algebra isomorphism. -/
 noncomputable def ofAlgEquiv
     (P : Generators R S ι) {T : Type*} [CommRing T] [Algebra R T] (e : S ≃ₐ[R] T) :
@@ -309,9 +354,8 @@ noncomputable def baseChangeToBaseChange :
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
 lemma baseChangeToBaseChange_apply (x : (baseChange T P).toExtension.Ring) :
-    (
     dsimp% (P.baseChangeToBaseChange T).toRingHom x =
-      (MvPolynomial.algebraTensorAlgEquiv R T).symm x) :=
+      (MvPolynomial.algebraTensorAlgEquiv R T).symm x :=
   rfl
 
 /-- Extend generators by more variables. -/
@@ -594,17 +638,16 @@ noncomputable
 def Hom.toExtensionHom [Algebra R S'] [IsScalarTower R R' S'] [IsScalarTower R S S']
     (f : P.Hom P') : P.toExtension.Hom P'.toExtension where
   toRingHom := f.toAlgHom.toRingHom
-  toRingHom_algebraMap x := by (set_option backward.dsimp.instanceTypes false in simp)
-  algebraMap_toRingHom x := by (set_option backward.dsimp.instanceTypes false in simp)
+  toRingHom_algebraMap x := by (simp)
+  algebraMap_toRingHom x := by (simp)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma Hom.toExtensionHom_id : Hom.toExtensionHom (.id P) = .id _ := by
   ext
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp)
+  simp
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -616,9 +659,8 @@ lemma Hom.toExtensionHom_comp [Algebra R S'] [IsScalarTower R S S']
     (f : P'.Hom P'') (g : P.Hom P') :
     toExtensionHom (f.comp g) = f.toExtensionHom.comp g.toExtensionHom := by
   ext
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp)
+  simp
 
 lemma Hom.toExtensionHom_toAlgHom_apply [Algebra R S'] [IsScalarTower R R' S']
     [IsScalarTower R S S'] (f : P.Hom P') (x) :
@@ -652,8 +694,7 @@ lemma ker_ofAlgHom {I : Type*} (f : MvPolynomial I R →ₐ[R] S) (h : Function.
     (ofAlgHom f h).ker = RingHom.ker f.toRingHom := by
   change RingHom.ker _ = _
   congr
-  (set_option backward.dsimp.instanceTypes false in
-  exact MvPolynomial.ringHom_ext (by simp) (by simp [ofAlgHom]))
+  exact MvPolynomial.ringHom_ext (by simp) (by simp [ofAlgHom])
 
 @[simp]
 lemma ker_ofAlgEquiv (P : Generators R S ι) {T : Type*} [CommRing T] [Algebra R T] (e : S ≃ₐ[R] T) :
@@ -812,7 +853,7 @@ set_option backward.defeqAttrib.useBackward true in
 noncomputable
 def defaultHom (P : Extension.{w} R S) : (Generators.self R S).toExtension.Hom P :=
   .ofAlgHom (MvPolynomial.aeval P.σ) (by
-    (set_option backward.dsimp.instanceTypes false in dsimp)
+    (dsimp)
     ext
     (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp))
 

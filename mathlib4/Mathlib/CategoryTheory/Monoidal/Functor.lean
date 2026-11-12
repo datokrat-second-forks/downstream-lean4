@@ -390,6 +390,97 @@ class Monoidal (F : C ⥤ D) extends F.LaxMonoidal, F.OplaxMonoidal where
   μ_δ (F) (X Y : C) : μ X Y ≫ δ X Y = 𝟙 _ := by cat_disch
   δ_μ (F) (X Y : C) : δ X Y ≫ μ X Y = 𝟙 _ := by cat_disch
 
+/-- A functor between monoidal categories with a `LaxMonoidal` instance. -/
+structure LaxMonoidalPack.{va, vb, ua, ub} (C : Type ua)
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] (D : Type ub)
+    [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D] where
+  /-- The functor. -/
+  F : CategoryTheory.Functor C D
+  /-- The instance. -/
+  [inst : F.LaxMonoidal]
+
+/-- A functor between monoidal categories with an `OplaxMonoidal` instance. -/
+structure OplaxMonoidalPack.{va, vb, ua, ub} (C : Type ua)
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] (D : Type ub)
+    [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D] where
+  /-- The functor. -/
+  F : CategoryTheory.Functor C D
+  /-- The instance. -/
+  [inst : F.OplaxMonoidal]
+
+/-- A functor between monoidal categories with a `Monoidal` instance. -/
+structure MonoidalPack.{va, vb, ua, ub} (C : Type ua)
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] (D : Type ub)
+    [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D] where
+  /-- The functor. -/
+  F : CategoryTheory.Functor C D
+  /-- The instance. -/
+  [inst : F.Monoidal]
+
+/-- Pack congruence for `Functor.LaxMonoidal.ε`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Functor.LaxMonoidal.ε_pack_congr.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.LaxMonoidal] [i' : F'.LaxMonoidal]
+    (h : CategoryTheory.Functor.LaxMonoidalPack.mk F =
+      CategoryTheory.Functor.LaxMonoidalPack.mk F') :
+    HEq (CategoryTheory.Functor.LaxMonoidal.ε F) (CategoryTheory.Functor.LaxMonoidal.ε F') := by
+  cases h; rfl
+
+/-- Pack congruence for `Functor.LaxMonoidal.μ`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Functor.LaxMonoidal.μ_pack_congr.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.LaxMonoidal] [i' : F'.LaxMonoidal]
+    (h : CategoryTheory.Functor.LaxMonoidalPack.mk F =
+      CategoryTheory.Functor.LaxMonoidalPack.mk F') :
+    HEq (CategoryTheory.Functor.LaxMonoidal.μ F) (CategoryTheory.Functor.LaxMonoidal.μ F') := by
+  cases h; rfl
+
+/-- Pack congruence for `Functor.OplaxMonoidal.η`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Functor.OplaxMonoidal.η_pack_congr.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.OplaxMonoidal] [i' : F'.OplaxMonoidal]
+    (h : CategoryTheory.Functor.OplaxMonoidalPack.mk F =
+      CategoryTheory.Functor.OplaxMonoidalPack.mk F') :
+    HEq (CategoryTheory.Functor.OplaxMonoidal.η F)
+      (CategoryTheory.Functor.OplaxMonoidal.η F') := by
+  cases h; rfl
+
+/-- Pack congruence for `Functor.OplaxMonoidal.δ`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Functor.OplaxMonoidal.δ_pack_congr.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.OplaxMonoidal] [i' : F'.OplaxMonoidal]
+    (h : CategoryTheory.Functor.OplaxMonoidalPack.mk F =
+      CategoryTheory.Functor.OplaxMonoidalPack.mk F') :
+    HEq (CategoryTheory.Functor.OplaxMonoidal.δ F)
+      (CategoryTheory.Functor.OplaxMonoidal.δ F') := by
+  cases h; rfl
+
+/-- Lens: the `LaxMonoidal` pack follows the `Monoidal` pack. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Functor.Monoidal.toLaxMonoidal.packLens.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.Monoidal] [i' : F'.Monoidal]
+    (h : CategoryTheory.Functor.MonoidalPack.mk F = CategoryTheory.Functor.MonoidalPack.mk F') :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ F i.toLaxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ F' i'.toLaxMonoidal := by
+  cases h; rfl
+
+/-- Lens: the `OplaxMonoidal` pack follows the `Monoidal` pack. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Functor.Monoidal.toOplaxMonoidal.packLens.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {F F' : CategoryTheory.Functor C D} [i : F.Monoidal] [i' : F'.Monoidal]
+    (h : CategoryTheory.Functor.MonoidalPack.mk F = CategoryTheory.Functor.MonoidalPack.mk F') :
+    @CategoryTheory.Functor.OplaxMonoidalPack.mk C _ _ D _ _ F i.toOplaxMonoidal =
+      @CategoryTheory.Functor.OplaxMonoidalPack.mk C _ _ D _ _ F' i'.toOplaxMonoidal := by
+  cases h; rfl
+
 namespace Monoidal
 
 attribute [map (attr := reassoc (attr := simp))] ε_η η_ε μ_δ δ_μ
@@ -1131,6 +1222,24 @@ variable (e : C ≌ D)
 instance [e.inverse.Monoidal] : e.symm.functor.Monoidal := inferInstanceAs (e.inverse.Monoidal)
 instance [e.functor.Monoidal] : e.symm.inverse.Monoidal := inferInstanceAs (e.functor.Monoidal)
 
+/-- Pack root lemma for the monoidal structure of `e.symm.inverse`. -/
+@[simp] theorem _root_.CategoryTheory.Equivalence.symm_inverse_monoidalPack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    (e : C ≌ D) [i : e.functor.Monoidal] :
+    @CategoryTheory.Functor.MonoidalPack.mk C _ _ D _ _ e.symm.inverse
+        e.instMonoidalInverseSymmOfFunctor =
+      @CategoryTheory.Functor.MonoidalPack.mk C _ _ D _ _ e.functor i := rfl
+
+/-- Pack root lemma for the monoidal structure of `e.symm.functor`. -/
+@[simp] theorem _root_.CategoryTheory.Equivalence.symm_functor_monoidalPack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    (e : C ≌ D) [i : e.inverse.Monoidal] :
+    @CategoryTheory.Functor.MonoidalPack.mk D _ _ C _ _ e.symm.functor
+        e.instMonoidalFunctorSymmOfInverse =
+      @CategoryTheory.Functor.MonoidalPack.mk D _ _ C _ _ e.inverse i := rfl
+
 /-- If a monoidal functor `F` is an equivalence of categories then its inverse is also monoidal. -/
 @[instance_reducible]
 noncomputable def inverseMonoidal [e.functor.Monoidal] : e.inverse.Monoidal := by
@@ -1245,13 +1354,11 @@ instance isMonoidal_refl : (Equivalence.refl (C := C)).IsMonoidal :=
 instance isMonoidal_symm : e.symm.IsMonoidal where
   leftAdjoint_ε := by
     simp only [toAdjunction]
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp [symm])
+    dsimp [symm]
     rw [counitIso_inv_app_comp_functor_map_η_inverse]
   leftAdjoint_μ X Y := by
     simp only [toAdjunction]
-    (set_option backward.dsimp.instanceTypes false in
-    dsimp [symm])
+    dsimp [symm]
     rw [map_comp, counitIso_inv_app_tensor_comp_functor_map_δ_inverse_assoc]
     simp [← map_comp]
 
@@ -1293,6 +1400,26 @@ variable {C D}
 @[simps toFunctor]
 def of (F : C ⥤ D) [F.LaxMonoidal] : LaxMonoidalFunctor C D where
   toFunctor := F
+
+/-- Lens: the pack of `G.toFunctor` with the instance `G.laxMonoidal` follows `G`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.LaxMonoidalFunctor.laxMonoidal.packLens.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    {G G' : CategoryTheory.LaxMonoidalFunctor C D} (h : G = G') :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G.toFunctor G.laxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ G'.toFunctor G'.laxMonoidal := by
+  cases h; rfl
+
+/-- Pack root lemma for `LaxMonoidalFunctor.of`. -/
+@[simp] theorem _root_.CategoryTheory.LaxMonoidalFunctor.of_pack.{va, vb, ua, ub}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {D : Type ub} [CategoryTheory.Category.{vb} D] [CategoryTheory.MonoidalCategory.{vb} D]
+    (F : CategoryTheory.Functor C D) [i : F.LaxMonoidal] :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _
+        (CategoryTheory.LaxMonoidalFunctor.of F).toFunctor
+        (CategoryTheory.LaxMonoidalFunctor.of F).laxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk C _ _ D _ _ F i := rfl
 
 end LaxMonoidalFunctor
 

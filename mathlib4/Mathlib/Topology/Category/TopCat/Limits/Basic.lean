@@ -124,7 +124,6 @@ variable {F : J ⥤ TopCat.{u}} (c : Cone F) (hc : IsLimit c)
 
 include hc
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 theorem induced_of_isLimit :
@@ -250,8 +249,7 @@ theorem coinduced_of_isColimit :
   have he (j : J) : c'.ι.app j ≫ e.hom = c.ι.app j :=
     IsColimit.comp_coconePointUniqueUpToIso_hom hc' hc j
   apply (homeoOfIso e).coinduced_eq.symm.trans
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [coconeOfCoconeForget_pt, c', topologicalSpaceCoconePtOfCoconeForget])
+  dsimp [coconeOfCoconeForget_pt, c', topologicalSpaceCoconePtOfCoconeForget]
   simp only [coinduced_iSup]
   conv_rhs => simp only [← he]
   rfl

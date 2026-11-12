@@ -48,7 +48,19 @@ def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (End Y) where
       map_add' := fun _ _ => comp_add _ _ _ _ _ _
       map_smul' := fun _ _ => Eq.symm <| Category.assoc _ _ _ }
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the group pack of `(preadditiveYonedaObj Y).obj X`. -/
+@[simp] theorem preadditiveYonedaObj_obj_groupPack.{vc, uc} {C : Type uc} [Category.{vc} C]
+    [Preadditive C] (Y : C) (X : Cᵒᵖ) :
+    @ClassPack.mk AddCommGroup ((preadditiveYonedaObj Y).obj X)
+        ((preadditiveYonedaObj Y).obj X).isAddCommGroup =
+      @ClassPack.mk AddCommGroup (X.unop ⟶ Y) (Preadditive.homGroup X.unop Y) := rfl
+
+/-- Pack root lemma: the module pack of `(preadditiveYonedaObj Y).obj X`. -/
+@[simp] theorem preadditiveYonedaObj_obj_smodPack.{vc, uc} {C : Type uc} [Category.{vc} C]
+    [Preadditive C] (Y : C) (X : Cᵒᵖ) :
+    SModPack.mk (R := End Y) ((preadditiveYonedaObj Y).obj X) =
+      SModPack.mk (R := End Y) (X.unop ⟶ Y) := rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The Yoneda embedding for preadditive categories sends an object `Y` to the presheaf sending an
@@ -147,7 +159,6 @@ section
 
 variable {D : Type u₁} [Category.{v} D] [Preadditive D] (F : C ⥤ D) [F.Additive]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

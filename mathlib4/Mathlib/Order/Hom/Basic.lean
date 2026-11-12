@@ -117,6 +117,50 @@ instance (α β : Type*) [LE α] [LE β] : FunLike (α ↪o β) α β := RelEmbe
 @[macro_inline]
 instance (α β : Type*) [LE α] [LE β] : FunLike (α ≃o β) α β := RelIso.instFunLike
 
+/-- Pack congruence for the type `α ↪o β`. -/
+@[dsimp_congr] theorem OrderEmbedding.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
+    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
+    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (α ↪o β) = (α' ↪o β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α ↪o β` with the instance `instFunLikeOrderEmbedding` follows the
+packs of `α` and `β`. -/
+@[dsimp_congr] theorem OrderEmbedding.funLikePack_congr.{ua, va} {α α' : Type ua}
+    {β β' : Type va} [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
+    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
+    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    @FunLikePack.mk (α ↪o β) α (fun _ => β) (instFunLikeOrderEmbedding α β) =
+      @FunLikePack.mk (α' ↪o β') α' (fun _ => β') (instFunLikeOrderEmbedding α' β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α ↪o β` with the instance `RelEmbedding.instFunLike` follows the
+packs of `α` and `β`. -/
+@[dsimp_congr] theorem OrderEmbedding.relFunLikePack_congr.{ua, va} {α α' : Type ua}
+    {β β' : Type va} [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
+    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
+    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    @FunLikePack.mk (α ↪o β) α (fun _ => β) RelEmbedding.instFunLike =
+      @FunLikePack.mk (α' ↪o β') α' (fun _ => β') RelEmbedding.instFunLike := by
+  cases hα; cases hβ; rfl
+
+/-- Pack congruence for the type `α ≃o β` of order isomorphisms. -/
+@[dsimp_congr] theorem OrderIso.pack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
+    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
+    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    (α ≃o β) = (α' ≃o β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α ≃o β` follows the packs of `α` and `β`. -/
+@[dsimp_congr] theorem OrderIso.funLikePack_congr.{ua, va} {α α' : Type ua} {β β' : Type va}
+    [iα : LE α] [iα' : LE α'] [iβ : LE β] [iβ' : LE β']
+    (hα : @ClassPack.mk LE α iα = @ClassPack.mk LE α' iα')
+    (hβ : @ClassPack.mk LE β iβ = @ClassPack.mk LE β' iβ') :
+    FunLikePack.mk (α ≃o β) α (fun _ => β) = FunLikePack.mk (α' ≃o β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
+
 section
 
 /-- `OrderHomClass F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/

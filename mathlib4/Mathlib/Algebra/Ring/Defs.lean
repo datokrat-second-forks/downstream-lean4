@@ -418,6 +418,14 @@ instance (priority := 100) CommRing.toNonAssocCommRing [CommRing α] : NonAssocC
 instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemiring α :=
   { s with }
 
+/-- Lens: the `CommSemiring` pack follows the `CommRing` pack. -/
+@[dsimp_congr] theorem CommRing.toCommSemiring.packLens.{u_pack} {α α' : Type u_pack}
+    {i : CommRing α} {i' : CommRing α'}
+    (h : @ClassPack.mk CommRing α i = @ClassPack.mk CommRing α' i') :
+    @ClassPack.mk CommSemiring α (@CommRing.toCommSemiring α i) =
+      @ClassPack.mk CommSemiring α' (@CommRing.toCommSemiring α' i') := by
+  cases h; rfl
+
 -- see Note [lower instance priority]
 instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonUnitalCommRing α :=
   { s with }

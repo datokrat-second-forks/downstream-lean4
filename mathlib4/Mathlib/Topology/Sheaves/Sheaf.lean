@@ -97,6 +97,13 @@ theorem isSheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.Is
 theorem isSheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
   (isSheaf_iso_iff α).1 h
 
+/-- Pack root lemma: `TopCat.Presheaf C X` is the functor category. -/
+@[simp] theorem zeroPack_eq.{w₀, v₀, u₀} (C : Type u₀) [Category.{v₀} C] (X : TopCat.{w₀})
+    [z : HasZeroMorphisms (Presheaf C X)] :
+    @HasZeroMorphismsPack.mk (Presheaf C X) (TopCat.instCategoryPresheaf C X) z =
+      @HasZeroMorphismsPack.mk ((Opens X)ᵒᵖ ⥤ C) CategoryTheory.Functor.category z :=
+  rfl
+
 end Presheaf
 
 variable (C X)

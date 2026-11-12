@@ -49,6 +49,12 @@ variable {σ₂₃ : R₂ →+* R₃} {σ₃₂ : R₃ →+* R₂}
 variable {σ₁₃ : R →+* R₃} {σ₃₁ : R₃ →+* R}
 variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₃₂ σ₂₁ σ₃₁]
 
+/-- Lens: the module pack of `α →₀ M` follows the index type. -/
+@[dsimp_congr] theorem _root_.Finsupp.smodPack_congr.{ur, ua, um} {R : Type ur} [Semiring R]
+    {M : Type um} [AddCommMonoid M] [Module R M] {α α' : Type ua} (h : α = α') :
+    SModPack.mk (R := R) (α →₀ M) = SModPack.mk (α' →₀ M) := by
+  cases h; rfl
+
 section LinearEquivFunOnFinite
 
 variable (R : Type*) (M : Type*) (α : Type*)

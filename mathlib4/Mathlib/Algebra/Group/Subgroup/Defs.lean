@@ -555,6 +555,18 @@ theorem mk_eq_one {g : G} {h} : (⟨g, h⟩ : H) = 1 ↔ g = 1 := Submonoid.mk_e
 instance toGroup {G : Type*} [Group G] (H : Subgroup G) : Group H :=
   SubgroupClass.toGroup H
 
+/-- Lens: the `MulOneClass` pack of the carrier of a subgroup follows the subgroup. -/
+@[dsimp_congr] theorem mulOneClassPack_congr.{ug} {G : Type ug} [Group G]
+    {H H' : Subgroup G} (h : H = H') :
+    ClassPack.mk (c := MulOneClass) ↥H = ClassPack.mk (c := MulOneClass) ↥H' := by
+  cases h; rfl
+
+/-- Lens: the `Mul` pack of the carrier of a subgroup follows the subgroup. -/
+@[dsimp_congr] theorem mulPack_congr.{ug} {G : Type ug} [Group G]
+    {H H' : Subgroup G} (h : H = H') :
+    @ClassPack.mk Mul ↥H H.mul = @ClassPack.mk Mul ↥H' H'.mul := by
+  cases h; rfl
+
 /-- A subgroup of a `CommGroup` is a `CommGroup`. -/
 @[to_additive /-- An `AddSubgroup` of an `AddCommGroup` is an `AddCommGroup`. -/]
 instance toCommGroup {G : Type*} [CommGroup G] (H : Subgroup G) : CommGroup H :=

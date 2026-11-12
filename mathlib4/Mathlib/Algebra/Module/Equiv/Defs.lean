@@ -75,6 +75,16 @@ notation:50 M " ≃ₛₗ[" σ "] " M₂ => LinearEquiv σ M M₂
 a plain linear map `M →ₗ M₂`. -/
 notation:50 M " ≃ₗ[" R "] " M₂ => LinearEquiv (RingHom.id R) M M₂
 
+/-- Pack congruence for `LinearEquiv.toLinearMap`: the linear map follows the module packs of
+the domain and the codomain and the equivalence. -/
+@[dsimp_congr] theorem _root_.LinearEquiv.toLinearMap_pack_congr.{ur, um, un} {R : Type ur}
+    [Semiring R] {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M']
+    [AddCommMonoid N] [AddCommMonoid N'] [Module R M] [Module R M'] [Module R N] [Module R N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M') (hN : SModPack.mk (R := R) N = SModPack.mk N')
+    (e : M ≃ₗ[R] N) (e' : M' ≃ₗ[R] N') (he : HEq e e') :
+    HEq e.toLinearMap e'.toLinearMap := by
+  cases hM; cases hN; cases he; rfl
+
 /-- `SemilinearEquivClass F σ M M₂` asserts `F` is a type of bundled `σ`-semilinear equivs
 `M → M₂`.
 
@@ -190,6 +200,25 @@ lemma _root_.SemilinearEquivClass.semilinearEquiv_apply {F : Type*} [EquivLike F
     SemilinearEquivClass.semilinearEquiv (M₂ := M₂) f x = f x := rfl
 
 end
+
+/-- Pack congruence for the type `M ≃ₗ[R] N`. -/
+@[dsimp_congr] theorem pack_congr.{ur, um, un} {R : Type ur} [Semiring R]
+    {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module R N] [Module R N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R) N = SModPack.mk N') :
+    (M ≃ₗ[R] N) = (M' ≃ₗ[R] N') := by
+  cases hM; cases hN; rfl
+
+/-- Lens: the coercion pack of `M ≃ₗ[R] N` follows the module packs of `M` and `N`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ur, um, un} {R : Type ur} [Semiring R]
+    {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module R N] [Module R N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R) N = SModPack.mk N') :
+    FunLikePack.mk (M ≃ₗ[R] N) M (fun _ => N) =
+      FunLikePack.mk (M' ≃ₗ[R] N') M' (fun _ => N') := by
+  cases hM; cases hN; rfl
 
 section
 

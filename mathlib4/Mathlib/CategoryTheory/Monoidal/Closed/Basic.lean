@@ -48,6 +48,20 @@ class MonoidalClosed (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] wher
 
 attribute [instance_reducible, instance 100] MonoidalClosed.closed
 
+/-- Pack: an object of a monoidal category with a `Closed` instance. -/
+structure ClosedPack.{va, ua} (C : Type ua) [Category.{va} C] [MonoidalCategory.{va} C] where
+  /-- The object. -/
+  X : C
+  /-- The instance. -/
+  [cl : Closed X]
+
+/-- Lens: the `Closed` pack of an object of a monoidal closed category follows the object. -/
+@[dsimp_congr] theorem MonoidalClosed.closed.packLens.{va, ua} {C : Type ua} [Category.{va} C]
+    [MonoidalCategory.{va} C] [MonoidalClosed C] {X X' : C} (h : X = X') :
+    @ClosedPack.mk C _ _ X (MonoidalClosed.closed X) =
+      @ClosedPack.mk C _ _ X' (MonoidalClosed.closed X') := by
+  cases h; rfl
+
 variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 
 /-- If `X` and `Y` are closed then `X ⊗ Y` is.
@@ -149,6 +163,29 @@ def curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X) :=
 /-- Uncurrying in a monoidal closed category. -/
 def uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X) :=
   ((ihom.adjunction A).homEquiv _ _).symm
+
+/-- Pack congruence for the internal hom functor. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.ihom_pack_congr.{va, ua} {C : Type ua}
+    [Category.{va} C] [MonoidalCategory.{va} C] {X X' : C} [i : Closed X] [i' : Closed X']
+    (h : ClosedPack.mk X = ClosedPack.mk X') :
+    ihom X = ihom X' := by
+  cases h; rfl
+
+/-- Pack congruence for currying. -/
+@[dsimp_congr] theorem curry_pack_congr.{va, ua} {C : Type ua} [Category.{va} C]
+    [MonoidalCategory.{va} C] {A A' X X' Y Y' : C} [i : Closed A] [i' : Closed A']
+    (h : ClosedPack.mk A = ClosedPack.mk A') (hX : X = X') (hY : Y = Y')
+    (f : A ⊗ Y ⟶ X) (f' : A' ⊗ Y' ⟶ X') (hf : HEq f f') :
+    HEq (curry f) (curry f') := by
+  cases h; cases hX; cases hY; cases hf; rfl
+
+/-- Pack congruence for uncurrying. -/
+@[dsimp_congr] theorem uncurry_pack_congr.{va, ua} {C : Type ua} [Category.{va} C]
+    [MonoidalCategory.{va} C] {A A' X X' Y Y' : C} [i : Closed A] [i' : Closed A']
+    (h : ClosedPack.mk A = ClosedPack.mk A') (hX : X = X') (hY : Y = Y')
+    (f : Y ⟶ (ihom A).obj X) (f' : Y' ⟶ (ihom A').obj X') (hf : HEq f f') :
+    HEq (uncurry f) (uncurry f') := by
+  cases h; cases hX; cases hY; cases hf; rfl
 
 theorem homEquiv_apply_eq (f : A ⊗ Y ⟶ X) : (ihom.adjunction A).homEquiv _ _ f = curry f :=
   rfl
@@ -283,6 +320,33 @@ theorem pre_comm_ihom_map {W X Y Z : C} [Closed W] [Closed X] (f : W ⟶ X) (g :
     (pre f).app Y ≫ (ihom W).map g = (ihom X).map g ≫ (pre f).app Z := by simp
 
 end Pre
+
+/-- Pack congruence for `ihom.adjunction`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.ihom.adjunction_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.Closed X] [i' : CategoryTheory.Closed X']
+    (h : CategoryTheory.ClosedPack.mk X = CategoryTheory.ClosedPack.mk X') :
+    HEq (CategoryTheory.ihom.adjunction X) (CategoryTheory.ihom.adjunction X') := by
+  cases h; rfl
+
+/-- Pack congruence for `ihom.ev`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.ihom.ev_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.Closed X] [i' : CategoryTheory.Closed X']
+    (h : CategoryTheory.ClosedPack.mk X = CategoryTheory.ClosedPack.mk X') :
+    HEq (CategoryTheory.ihom.ev X) (CategoryTheory.ihom.ev X') := by
+  cases h; rfl
+
+/-- Pack congruence for `MonoidalClosed.pre`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.MonoidalClosed.pre_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {A A' B B' : C}
+    [i : CategoryTheory.Closed A] [i' : CategoryTheory.Closed A']
+    [j : CategoryTheory.Closed B] [j' : CategoryTheory.Closed B']
+    (hA : CategoryTheory.ClosedPack.mk A = CategoryTheory.ClosedPack.mk A')
+    (hB : CategoryTheory.ClosedPack.mk B = CategoryTheory.ClosedPack.mk B')
+    (f : B ⟶ A) (f' : B' ⟶ A') (hf : HEq f f') :
+    HEq (CategoryTheory.MonoidalClosed.pre f) (CategoryTheory.MonoidalClosed.pre f') := by
+  cases hA; cases hB; cases hf; rfl
 
 /-- The internal hom functor given by the monoidal closed structure. -/
 @[simps]

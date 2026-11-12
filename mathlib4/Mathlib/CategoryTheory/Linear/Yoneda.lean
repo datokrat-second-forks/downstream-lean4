@@ -43,6 +43,13 @@ def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
     { app := fun Y => @ModuleCat.ofHom R _ (Y.unop ⟶ X₁) (Y.unop ⟶ X₂) _ _ _ _
         (Linear.rightComp R _ f) }
 
+/-- The object `((linearYoneda R C).obj X).obj Y`, stated with `ModuleCat.of`. -/
+@[simp] lemma _root_.CategoryTheory.linearYoneda_obj_obj_of.{ur, uc, vc} (R : Type ur) [Ring R]
+    {C : Type uc} [CategoryTheory.Category.{vc} C] [CategoryTheory.Preadditive C]
+    [CategoryTheory.Linear R C] (X : C) (Y : Cᵒᵖ) :
+    ((CategoryTheory.linearYoneda R C).obj X).obj Y = ModuleCat.of R (Opposite.unop Y ⟶ X) :=
+  rfl
+
 /-- The Yoneda embedding for `R`-linear categories `C`,
 sending an object `Y : Cᵒᵖ` to the `ModuleCat R`-valued copresheaf on `C`,
 with value on `X : C` given by `ModuleCat.of R (unop Y ⟶ X)`. -/

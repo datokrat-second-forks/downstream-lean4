@@ -207,8 +207,7 @@ theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) := 
   ext f
   rw [← left_invariant, hfdifferential_apply, hfdifferential_apply, L_mul, fdifferential_comp,
     fdifferential_apply]
-  (set_option backward.dsimp.instanceTypes false in
-  simp only [ContMDiffMap.comp_apply, LinearMap.comp_apply])
+  simp only [ContMDiffMap.comp_apply, LinearMap.comp_apply]
   rw [fdifferential_apply, ← hfdifferential_apply (smoothLeftMul_one I h), left_invariant]
 
 theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by

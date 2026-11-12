@@ -297,10 +297,9 @@ lemma associator_hom_unit_unit (x y z : C) :
       (corepresentableBy₂' F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂ F G H |>.ofIso
           (associatorCorepresentingIso F G H).symm |>.homEquiv (𝟙 _))
-  (
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
-    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
+    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢
   simp only [whiskerLeft_id, Category.comp_id, Category.assoc] at this
   simp only [Category.assoc, this]
   dsimp [Functor.FullyFaithful.homEquiv, Equivalence.fullyFaithfulFunctor, prod.associativity]
@@ -323,10 +322,9 @@ lemma associator_inv_unit_unit (x y z : C) :
       (corepresentableBy₂ F G H).homEquiv.rightInverse_symm
         (corepresentableBy₂' F G H |>.ofIso
           (associatorCorepresentingIso F G H) |>.homEquiv (𝟙 _))
-  (
   dsimp [associator, Coyoneda.fullyFaithful, corepresentableBy₂,
     corepresentableBy₂', Functor.CorepresentableBy.ofIso, corepresentableBy₂,
-    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢)
+    Functor.corepresentableByEquiv, associatorCorepresentingIso] at this ⊢
   simp only [whiskerRight_tensor, id_whiskerRight, Category.id_comp, Iso.inv_hom_id] at this
   simp only [this]
   dsimp [Functor.FullyFaithful.homEquiv, Equivalence.fullyFaithfulFunctor, prod.associativity]
@@ -582,10 +580,9 @@ lemma leftUnitor_hom_unit_app (y : C) :
   have := congrArg (fun t ↦ t.app (.mk PUnit.unit, y)) <|
       (corepresentableByLeft U F).homEquiv.rightInverse_symm <|
         ((leftUnitorCorepresentingIso F).symm.hom.app F) (𝟙 _)
-  (set_option backward.dsimp.instanceTypes false in
   dsimp [leftUnitor, Coyoneda.fullyFaithful, corepresentableByLeft,
     leftUnitorCorepresentingIso, Functor.CorepresentableBy.ofIso,
-    Functor.corepresentableByEquiv] at this ⊢)
+    Functor.corepresentableByEquiv] at this ⊢
   simp only [whiskerLeft_id, Category.comp_id] at this
   simp only [Category.comp_id, this]
   simp [prod.leftUnitorEquivalence, Equivalence.congrLeft, Equivalence.fullyFaithfulFunctor,
@@ -634,10 +631,9 @@ lemma rightUnitor_hom_unit_app (x : C) :
   have := congrArg (fun t ↦ t.app (x, .mk PUnit.unit)) <|
       (corepresentableByRight U F).homEquiv.rightInverse_symm <|
         ((rightUnitorCorepresentingIso F).symm.hom.app F) (𝟙 _)
-  (set_option backward.dsimp.instanceTypes false in
   dsimp [rightUnitor, Coyoneda.fullyFaithful, corepresentableByRight,
     rightUnitorCorepresentingIso, Functor.CorepresentableBy.ofIso,
-    Functor.corepresentableByEquiv] at this ⊢)
+    Functor.corepresentableByEquiv] at this ⊢
   simp only [MonoidalCategory.whiskerRight_id, Category.id_comp, Iso.hom_inv_id,
     Category.comp_id] at this
   simp only [Category.comp_id, this]

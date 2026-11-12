@@ -6,6 +6,7 @@ Authors: David Wärn, Kim Morrison
 module
 
 public import Mathlib.Basic.Opposite
+public import Mathlib.Tactic.PackLens
 
 /-!
 # Quivers
@@ -46,6 +47,15 @@ Notation for the type of edges/arrows/morphisms between a given source and targe
 in a quiver or category.
 -/
 infixr:10 " ⟶ " => Quiver.Hom
+
+/-- Pack congruence for the type of arrows of a quiver. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Quiver.Hom_pack_congr.{vq, uq} {V V' : Type uq} [i : Quiver.{vq} V]
+    [i' : Quiver.{vq} V']
+    (h : @ClassPack.mk Quiver.{vq, uq} V i = @ClassPack.mk Quiver.{vq, uq} V' i')
+    (a : V) (a' : V') (ha : HEq a a') (b : V) (b' : V') (hb : HEq b b') :
+    (a ⟶ b) = (a' ⟶ b') := by
+  cases h; cases ha; cases hb; rfl
 
 namespace Quiver
 

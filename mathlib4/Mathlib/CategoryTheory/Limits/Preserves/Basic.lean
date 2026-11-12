@@ -67,6 +67,19 @@ class PreservesColimit (K : J ⥤ C) (F : C ⥤ D) : Prop where
 class PreservesLimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) : Prop where
   preservesLimit : ∀ {K : J ⥤ C}, PreservesLimit K F := by infer_instance
 
+/-- Pack congruence for `PreservesLimitsOfShape`. -/
+@[dsimp_congr] theorem PreservesLimitsOfShape.pack_congr.{vj, vc, vd, uj, uc, ud}
+    {J J' : Type uj} {C C' : Type uc} {D D' : Type ud}
+    [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
+    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
+    (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') :
+    PreservesLimitsOfShape J F = PreservesLimitsOfShape J' F' := by
+  cases hC; cases hD; cases hJ; cases hF; rfl
+
 /-- We say that `F` preserves colimits of shape `J` if `F` preserves colimits for every diagram
 `K : J ⥤ C`, i.e., `F` maps colimit cocones over `K` to colimit cocones. -/
 class PreservesColimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) : Prop where

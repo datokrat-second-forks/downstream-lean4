@@ -55,6 +55,17 @@ instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
   id F := NatTrans.id F
   comp α β := vcomp α β
 
+/-- Lens: the category pack of `C ⥤ D` follows the packs of `C` and `D`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Functor.category.packLens.{vc, vd, uc, ud} {C C' : Type uc}
+    {D D' : Type ud} {iC : Category.{vc} C} {iC' : Category.{vc} C'}
+    {iD : Category.{vd} D} {iD' : Category.{vd} D'}
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD') :
+    @ClassPack.mk Category.{max uc vd, max vc vd uc ud} (C ⥤ D) Functor.category =
+      @ClassPack.mk Category.{max uc vd, max vc vd uc ud} (C' ⥤ D') Functor.category := by
+  cases hC; cases hD; rfl
+
 namespace NatTrans
 
 @[ext, grind ext, to_dual self]

@@ -34,9 +34,26 @@ def tensorAlgebra (R : Type u) [CommRing R] : ModuleCat.{w} R ⥤ AlgCat.{max u 
   obj M := ↧(TensorAlgebra R M)
   map f := AlgCat.ofHom (TensorAlgebra.lift _ (TensorAlgebra.ι _ ∘ₗ f.hom))
 
+/-- Pack root lemma: the group-module pack of the tensor algebra object. -/
+@[simp] theorem tensorAlgebra_obj_gmodPack.{u', w'} (R : Type u') [CommRing R]
+    (M : ModuleCat.{w'} R) :
+    GModPack.mk (R := R) ((AlgCat.tensorAlgebra R).obj M) = GModPack.mk (TensorAlgebra R M) :=
+  rfl
+
+/-- Pack root lemma: the algebra pack of the tensor algebra object. -/
+@[simp] theorem tensorAlgebra_obj_sAlgPack.{u', w'} (R : Type u') [CommRing R]
+    (M : ModuleCat.{w'} R) :
+    SAlgPack.mk (R := R) ((AlgCat.tensorAlgebra R).obj M) = SAlgPack.mk (TensorAlgebra R M) :=
+  rfl
+
+/-- Pack root lemma: the module pack of the tensor algebra object. -/
+@[simp] theorem tensorAlgebra_obj_smodPack.{u', w'} (R : Type u') [CommRing R]
+    (M : ModuleCat.{w'} R) :
+    SModPack.mk (R := R) ((AlgCat.tensorAlgebra R).obj M) = SModPack.mk (TensorAlgebra R M) :=
+  rfl
+
 variable (R : Type u) [CommRing R]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in

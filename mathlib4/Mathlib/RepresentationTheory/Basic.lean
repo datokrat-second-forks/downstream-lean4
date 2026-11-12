@@ -61,6 +61,13 @@ variable (k G V : Type*) [Semiring k] [Monoid G] [AddCommMonoid V] [Module k V]
 def trivial : Representation k G V :=
   1
 
+/-- Pack congruence for `Representation.trivial`: it follows the module pack of `V`. -/
+@[dsimp_congr] theorem _root_.Representation.trivial_pack_congr.{uk, uG, uV} {k : Type uk}
+    {G : Type uG} [Semiring k] [Monoid G] {V V' : Type uV} [AddCommMonoid V] [AddCommMonoid V']
+    [Module k V] [Module k V'] (h : SModPack.mk (R := k) V = SModPack.mk V') :
+    HEq (Representation.trivial k G V) (Representation.trivial k G V') := by
+  cases h; rfl
+
 variable {G V}
 
 @[simp]

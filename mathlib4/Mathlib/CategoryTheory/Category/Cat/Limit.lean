@@ -98,7 +98,6 @@ def limitCone (F : J ⥤ Cat.{v, v}) : Cone F where
         CategoryTheory.Functor.ext (fun X => (congr_hom (limit.w (F ⋙ Cat.objects) f) X).symm)
           fun X Y h => (congr_hom (limit.w (homDiagram X Y) f) h).symm }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 attribute [-simp] homDiagram_obj Functor.comp_obj in
 set_option backward.isDefEq.respectTransparency false in

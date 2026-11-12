@@ -117,7 +117,6 @@ theorem ofModuleMonoidAlgebra_obj_ρ (M : ModuleCat.{w} k[G]) :
     (ofModuleMonoidAlgebra.obj M).ρ = Representation.ofModule M :=
   rfl
 
-set_option backward.dsimp.instanceTypes false in
 /-- Auxiliary definition for `equivalenceModuleMonoidAlgebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{w} k[G]} :
     (ofModuleMonoidAlgebra ⋙ toModuleMonoidAlgebra).obj M ≃+ M := by

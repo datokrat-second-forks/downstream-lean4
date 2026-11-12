@@ -240,6 +240,14 @@ noncomputable instance : AddCommGroup (Ext X Y n) :=
   letI := HasDerivedCategory.standard C
   homEquiv.addCommGroup
 
+/-- Lens: the group pack of `Ext X Y n` follows `X` and `Y`. -/
+@[dsimp_congr] theorem instAddCommGroup.packLens.{we, ve, ue}
+    {C : Type ue} [Category.{ve} C] [Abelian C] [HasExt.{we} C] {X X' Y Y' : C} {n : ℕ}
+    (hX : X = X') (hY : Y = Y') :
+    @ClassPack.mk AddCommGroup (Ext X Y n) instAddCommGroup =
+      @ClassPack.mk AddCommGroup (Ext X' Y' n) instAddCommGroup := by
+  cases hX; cases hY; rfl
+
 /-- The map from `Ext X Y n` to a `ShiftedHom` type in the *constructed* derived
 category given by `HasDerivedCategory.standard`: this definition is introduced
 only in order to prove properties of the abelian group structure on `Ext`-groups.
@@ -429,6 +437,7 @@ noncomputable def extFunctorObj (X : C) (n : ℕ) : C ⥤ AddCommGrpCat.{w} wher
     apply Ext.comp_assoc
     lia
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -444,8 +453,9 @@ noncomputable def extFunctor (n : ℕ) : Cᵒᵖ ⥤ C ⥤ AddCommGrpCat.{w} whe
         ext α
         dsimp
         symm
+        -- pack-regime: adapted to the new dsimp result, three side goals (R43)
         apply Ext.comp_assoc
-        lia }
+        all_goals lia }
   map_comp {X₁ X₂ X₃} f f' := by
     ext Y α
     simp

@@ -922,7 +922,6 @@ lemma extendRestrictScalarsAdj_unit_app_apply
 -- With the instance type check, `dsimp%` keeps `(restrictScalars f ⋙ extendScalars f).obj M` in
 -- the type arguments of the coercion (as in `chosenCoend.map_apply`), and the statement no longer
 -- matches its uses in `Mathlib.Algebra.Category.ModuleCat.Monoidal.Adjunction`.
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
 lemma extendRestrictScalarsAdj_counit_app_apply_one_tmul (M : ModuleCat S) (m : M) :

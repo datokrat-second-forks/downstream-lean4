@@ -68,6 +68,24 @@ instance : EquivLike (X ≃ₜ Y) X Y where
   right_inv h := h.right_inv
   coe_injective' _ _ H _ := toEquiv_injective <| DFunLike.ext' H
 
+/-- Pack congruence for the type `α ≃ₜ β` of homeomorphisms. -/
+@[dsimp_congr] theorem pack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
+    [iα : TopologicalSpace α] [iα' : TopologicalSpace α'] [iβ : TopologicalSpace β]
+    [iβ' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
+    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ') :
+    (α ≃ₜ β) = (α' ≃ₜ β') := by
+  cases hα; cases hβ; rfl
+
+/-- Lens: the coercion pack of `α ≃ₜ β` follows the topology packs of `α` and `β`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
+    [iα : TopologicalSpace α] [iα' : TopologicalSpace α'] [iβ : TopologicalSpace β]
+    [iβ' : TopologicalSpace β']
+    (hα : @ClassPack.mk TopologicalSpace α iα = @ClassPack.mk TopologicalSpace α' iα')
+    (hβ : @ClassPack.mk TopologicalSpace β iβ = @ClassPack.mk TopologicalSpace β' iβ') :
+    FunLikePack.mk (α ≃ₜ β) α (fun _ => β) = FunLikePack.mk (α' ≃ₜ β') α' (fun _ => β') := by
+  cases hα; cases hβ; rfl
+
 @[simp] theorem homeomorph_mk_coe (a : X ≃ Y) (b c) : (Homeomorph.mk a b c : X → Y) = a :=
   rfl
 

@@ -66,6 +66,13 @@ map to `Q`, i.e. in the following diagram, if `f` is injective then there is an 
     (f : X →ₗ[R] Y) (_ : Function.Injective f) (g : X →ₗ[R] Q),
     ∃ h : Y →ₗ[R] Q, ∀ x, h (f x) = g x
 
+/-- Pack congruence for the class `Module.Injective`. -/
+@[dsimp_congr] theorem Module.Injective.pack_congr.{ur, uq} {R : Type ur} [Ring R]
+    {Q Q' : Type uq} [AddCommGroup Q] [AddCommGroup Q'] [Module R Q] [Module R Q']
+    (h : GModPack.mk (R := R) Q = GModPack.mk Q') :
+    Module.Injective R Q = Module.Injective R Q' := by
+  cases h; rfl
+
 /-- An `R`-module `Q` satisfies Baer's criterion if any `R`-linear map from an `Ideal R` extends to
 an `R`-linear map `R ⟶ Q` -/
 def Module.Baer : Prop :=

@@ -43,6 +43,11 @@ assert_not_exists Monoid
 
 open Function Nat Set
 
+/-- Lens: the `LE` pack of `Fin n` follows `n`. -/
+@[dsimp_congr] theorem Fin.lePack_congr {n n' : ℕ} (h : n = n') :
+    @ClassPack.mk LE (Fin n) instLEFin = @ClassPack.mk LE (Fin n') instLEFin := by
+  cases h; rfl
+
 namespace Fin
 variable {m n : ℕ}
 

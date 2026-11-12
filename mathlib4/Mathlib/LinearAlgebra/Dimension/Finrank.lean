@@ -61,6 +61,12 @@ Note that if `R` is not a field then there can exist modules `M` with `¬(Module
 noncomputable def finrank (R M : Type*) [Semiring R] [AddCommMonoid M] [Module R M] : ℕ :=
   Cardinal.toNat (Module.rank R M)
 
+/-- Pack congruence for `Module.finrank`. -/
+@[dsimp_congr] theorem finrank_pack_congr.{ur, um} {R : Type ur} [Semiring R] {M M' : Type um}
+    [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') : finrank R M = finrank R M' := by
+  cases h; rfl
+
 @[simp] theorem finrank_subsingleton [Subsingleton R] : finrank R M = 1 := by
   rw [finrank, rank_subsingleton, map_one]
 

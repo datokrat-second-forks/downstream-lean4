@@ -56,6 +56,29 @@ instance : CoeSort (Rep k G) (Type w) := ⟨Rep.V⟩
 
 attribute [coe] V
 
+/-- Lens: the module pack of the carrier of `X : Rep k G` follows `X`. -/
+@[dsimp_congr] theorem _root_.Rep.smodPack_congr.{wa, uk, uG} {k : Type uk} {G : Type uG}
+    [Semiring k] [Monoid G] {X X' : Rep.{wa} k G} (h : X = X') :
+    SModPack.mk (R := k) X = SModPack.mk X' := by
+  cases h; rfl
+
+/-- Lens: the coercion pack of the intertwining maps `X.ρ.IntertwiningMap Y.ρ` between objects
+of `Rep k G` follows `X` and `Y`. -/
+@[dsimp_congr] theorem _root_.Rep.intertwiningMap_funLikePack_congr.{wa, uk, uG} {k : Type uk}
+    {G : Type uG} [Semiring k] [Monoid G] {X X' Y Y' : Rep.{wa} k G} (hX : X = X')
+    (hY : Y = Y') :
+    FunLikePack.mk (X.ρ.IntertwiningMap Y.ρ) X (fun _ => Y) =
+      FunLikePack.mk (X'.ρ.IntertwiningMap Y'.ρ) X' (fun _ => Y') := by
+  cases hX; cases hY; rfl
+
+/-- Pack congruence for `Representation.IntertwiningMap.toLinearMap` between objects of
+`Rep k G`. -/
+@[dsimp_congr] theorem _root_.Rep.toLinearMap_pack_congr.{wa, uk, uG} {k : Type uk} {G : Type uG}
+    [Semiring k] [Monoid G] {X X' Y Y' : Rep.{wa} k G} (hX : X = X') (hY : Y = Y')
+    (f : X.ρ.IntertwiningMap Y.ρ) (f' : X'.ρ.IntertwiningMap Y'.ρ) (hf : HEq f f') :
+    HEq f.toLinearMap f'.toLinearMap := by
+  cases hX; cases hY; cases hf; rfl
+
 variable (ρ) in
 /-- The object in the category of representations associated to a type equipped a representation.
 This is the preferred way to construct a term of `Rep k G`. -/
@@ -777,6 +800,11 @@ protected noncomputable def ihom : Rep k G ⥤ Rep k G where
     ext; simp [Representation.IntertwiningMap.toLinearMap_apply, ← hom_comm_apply]⟩
   map_id := fun _ => by ext; rfl
   map_comp := fun _ _ => by ext; rfl
+
+/-- The object `(Rep.ihom A).obj B`, stated with `Rep.of`. -/
+@[simp] lemma _root_.Rep.ihom_obj_of.{ua, va} {k : Type ua} {G : Type va} [CommRing k] [Group G]
+    (A B : Rep.{ua} k G) :
+    (Rep.ihom A).obj B = Rep.of (Representation.linHom A.ρ B.ρ) := rfl
 
 @[simp] theorem ihom_obj_ρ_apply {A B : Rep k G} (g : G) (x : A →ₗ[k] B) :
     -- Hint to put this lemma into `simp`-normal form.

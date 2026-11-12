@@ -46,6 +46,75 @@ structure HMulPack.{ua, va, wa} where
     @HMulPack.mk α α α (@instHMul α i) = @HMulPack.mk α' α' α' (@instHMul α' i') := by
   cases h; rfl
 
+/-- Pack: the hidden arguments of `HSMul.hSMul`. -/
+structure HSMulPack.{ua, va, wa} where
+  /-- The type of the scalar. -/
+  α : Type ua
+  /-- The type of the argument. -/
+  β : Type va
+  /-- The type of the result. -/
+  γ : Type wa
+  /-- The scalar multiplication instance. -/
+  [inst : HSMul α β γ]
+
+-- This theorem belongs to Lean core, next to `HSMul`. It is here, next to `HSMulPack`.
+/-- Pack congruence for `HSMul.hSMul`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem HSMul.hSMul_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
+    {γ γ' : Type wa} [i : HSMul α β γ] [i' : HSMul α' β' γ']
+    (h : HSMulPack.mk α β γ = HSMulPack.mk α' β' γ')
+    (a : α) (a' : α') (ha : HEq a a') (b : β) (b' : β') (hb : HEq b b') :
+    HEq (a • b) (a' • b') := by
+  cases h; cases ha; cases hb; rfl
+
+-- This theorem belongs to Lean core, next to `instHSMul`. It is here, next to `HSMulPack`.
+/-- Lens: the scalar multiplication pack of `instHSMul` follows the `SMul α` pack of the
+argument type. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem instHSMul.hSMulPack_congr.{ua, va} {α : Type ua} {β β' : Type va}
+    [i : SMul α β] [i' : SMul α β']
+    (h : @ClassPack.mk (SMul α) β i = @ClassPack.mk (SMul α) β' i') :
+    @HSMulPack.mk α β β (@instHSMul α β i) = @HSMulPack.mk α β' β' (@instHSMul α β' i') := by
+  cases h; rfl
+
+/-- Pack: the hidden arguments of `HAdd.hAdd`. -/
+structure HAddPack.{ua, va, wa} where
+  /-- The type of the left summand. -/
+  α : Type ua
+  /-- The type of the right summand. -/
+  β : Type va
+  /-- The type of the sum. -/
+  γ : Type wa
+  /-- The addition instance. -/
+  [inst : HAdd α β γ]
+
+-- This theorem belongs to Lean core, next to `HAdd`. It is here, next to `HAddPack`.
+/-- Pack congruence for `HAdd.hAdd`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem HAdd.hAdd_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
+    {γ γ' : Type wa} [i : HAdd α β γ] [i' : HAdd α' β' γ']
+    (h : HAddPack.mk α β γ = HAddPack.mk α' β' γ')
+    (a : α) (a' : α') (ha : HEq a a') (b : β) (b' : β') (hb : HEq b b') :
+    HEq (a + b) (a' + b') := by
+  cases h; cases ha; cases hb; rfl
+
+-- This theorem belongs to Lean core, next to `instHAdd`. It is here, next to `HAddPack`.
+/-- Lens: the addition pack of `instHAdd` follows the `Add` pack. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem instHAdd.hAddPack_congr.{ua} {α α' : Type ua} [i : Add α] [i' : Add α']
+    (h : @ClassPack.mk Add α i = @ClassPack.mk Add α' i') :
+    @HAddPack.mk α α α (@instHAdd α i) = @HAddPack.mk α' α' α' (@instHAdd α' i') := by
+  cases h; rfl
+
+-- This theorem belongs to Lean core, next to `Neg`. It is here, next to the pack congruences for
+-- the other arithmetic operators.
+/-- Pack congruence for negation. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem Neg.neg_pack_congr.{ua} {α α' : Type ua} [i : Neg α] [i' : Neg α']
+    (h : @ClassPack.mk Neg α i = @ClassPack.mk Neg α' i') (a : α) (a' : α') (ha : HEq a a') :
+    HEq (-a) (-a') := by
+  cases h; cases ha; rfl
+
 variable {G : Type*}
 
 /-- A `Group` is a `Monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
@@ -154,6 +223,14 @@ instance (priority := 100) CommGroup.toCancelCommMonoid : CancelCommMonoid G :=
 @[to_additive]
 instance (priority := 100) CommGroup.toDivisionCommMonoid : DivisionCommMonoid G :=
   { ‹CommGroup G›, Group.toDivisionMonoid with }
+
+/-- Lens: the `SubtractionCommMonoid` pack follows the `AddCommGroup` pack. -/
+@[dsimp_congr] theorem AddCommGroup.toDivisionAddCommMonoid.packLens.{u_pack} {α α' : Type u_pack}
+    {i : AddCommGroup α} {i' : AddCommGroup α'}
+    (h : @ClassPack.mk AddCommGroup α i = @ClassPack.mk AddCommGroup α' i') :
+    @ClassPack.mk SubtractionCommMonoid α (@AddCommGroup.toDivisionAddCommMonoid α i) =
+      @ClassPack.mk SubtractionCommMonoid α' (@AddCommGroup.toDivisionAddCommMonoid α' i') := by
+  cases h; rfl
 
 @[to_additive (attr := simp)] lemma inv_mul_cancel_comm (a b : G) : a⁻¹ * b * a = b := by
   rw [mul_comm, mul_inv_cancel_left]

@@ -42,6 +42,12 @@ variable {R : Type*} {M : Type*} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 @[inherit_doc] scoped[TensorProduct] notation:max "⨂[" R "]^" n:arg => TensorPower R n
 
+/-- Lens: the module pack of `⨂[R]^n M` follows `n`. -/
+@[dsimp_congr] theorem TensorPower.smodPack_congr.{ur, um} {R : Type ur} [CommSemiring R]
+    {M : Type um} [AddCommMonoid M] [Module R M] {n n' : ℕ} (h : n = n') :
+    SModPack.mk (R := R) (⨂[R]^n M) = SModPack.mk (R := R) (⨂[R]^n' M) := by
+  cases h; rfl
+
 namespace PiTensorProduct
 
 set_option backward.isDefEq.respectTransparency false in

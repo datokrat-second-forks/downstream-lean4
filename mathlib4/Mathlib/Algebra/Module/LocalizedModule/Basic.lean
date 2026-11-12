@@ -916,6 +916,18 @@ noncomputable def lift (g : M →ₗ[R] M'')
     (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x)) : M' →ₗ[R] M'' :=
   (LocalizedModule.lift S g h).comp (iso S f).symm.toLinearMap
 
+/-- Pack congruence for `IsLocalizedModule.lift`: the module pack of the target. -/
+@[dsimp_congr] theorem lift_pack_congr.{ur, um, um', un} {R : Type ur}
+    [CommSemiring R] (S : Submonoid R) {M : Type um} {M' : Type um'} [AddCommMonoid M]
+    [AddCommMonoid M'] [Module R M] [Module R M'] (f : M →ₗ[R] M') [IsLocalizedModule S f]
+    {N N' : Type un} [AddCommMonoid N] [AddCommMonoid N'] [Module R N] [Module R N']
+    (hN : SModPack.mk (R := R) N = SModPack.mk N')
+    (g : M →ₗ[R] N) (g' : M →ₗ[R] N') (hg : HEq g g')
+    (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R N)) x))
+    {h' : ∀ x : S, IsUnit ((algebraMap R (Module.End R N')) x)} (hh : HEq h h') :
+    HEq (IsLocalizedModule.lift S f g h) (IsLocalizedModule.lift S f g' h') := by
+  cases hN; cases hg; cases hh; rfl
+
 theorem lift_comp (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x)) :
     (lift S f g h).comp f = g := by
   dsimp only [IsLocalizedModule.lift]

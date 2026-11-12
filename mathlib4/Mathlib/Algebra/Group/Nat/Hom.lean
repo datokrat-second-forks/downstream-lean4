@@ -53,6 +53,13 @@ def multiplesHom : M ≃ (ℕ →+ M) where
   left_inv := one_nsmul
   right_inv f := AddMonoidHom.ext_nat <| one_nsmul (f 1)
 
+/-- Pack congruence for `multiplesHom`. -/
+@[dsimp_congr] theorem multiplesHom_pack_congr.{um} {M M' : Type um}
+    [i : AddMonoid M] [i' : AddMonoid M']
+    (h : @ClassPack.mk AddMonoid M i = @ClassPack.mk AddMonoid M' i') :
+    HEq (multiplesHom M) (multiplesHom M') := by
+  cases h; rfl
+
 @[simp] lemma multiplesHom_apply (x : M) (n : ℕ) : multiplesHom M x n = n • x := rfl
 
 @[simp] lemma multiplesHom_symm_apply (f : ℕ →+ M) : (multiplesHom M).symm f = f 1 := rfl

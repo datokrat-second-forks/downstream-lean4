@@ -416,7 +416,18 @@ def freeObj (X : TopCat.{v}) : TopModuleCat.{max v u} R :=
 
 lemma coe_freeObj (X : TopCat.{v}) : freeObj R X = (X →₀ R) := rfl
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack root lemma: the module pack of the carrier of `freeObj R X`. -/
+@[simp] theorem freeObj_smodPack (R : Type u) [Ring R] [TopologicalSpace R] (X : TopCat.{v}) :
+    SModPack.mk (R := R) (freeObj R X).toModuleCat = SModPack.mk (X →₀ R) :=
+  rfl
+
+/-- Pack root lemma: the `AddCommGroup` pack of the carrier of `freeObj R X`. -/
+@[simp] theorem freeObj_addCommGroupPack (R : Type u) [Ring R] [TopologicalSpace R]
+    (X : TopCat.{v}) :
+    @ClassPack.mk AddCommGroup (freeObj R X).toModuleCat (freeObj R X).toModuleCat.isAddCommGroup =
+      @ClassPack.mk AddCommGroup (X →₀ R) (by infer_instance) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The free topological module over a topological space is functorial. -/

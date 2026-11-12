@@ -55,6 +55,15 @@ class IsLocalization : Prop where
   /-- the induced functor from the constructed localized category is an equivalence -/
   isEquivalence : IsEquivalence (Localization.Construction.lift L inverts)
 
+/-- Pack congruence for `Functor.IsLocalization`: the category pack of the target. -/
+@[dsimp_congr] theorem IsLocalization.pack_congr.{vc, uc, vd, ud}
+    {C : Type uc} [Category.{vc} C] {D D' : Type ud}
+    [i : Category.{vd} D] [i' : Category.{vd} D']
+    (h : @ClassPack.mk Category.{vd, ud} D i = @ClassPack.mk Category.{vd, ud} D' i')
+    (L : C ⥤ D) (L' : C ⥤ D') (hL : HEq L L') (W : MorphismProperty C) :
+    L.IsLocalization W = L'.IsLocalization W := by
+  cases h; cases hL; rfl
+
 instance q_isLocalization : W.Q.IsLocalization W where
   inverts := W.Q_inverts
   isEquivalence := by

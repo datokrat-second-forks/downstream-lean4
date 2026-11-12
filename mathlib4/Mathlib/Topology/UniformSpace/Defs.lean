@@ -209,6 +209,13 @@ class UniformSpace (α : Type u) extends TopologicalSpace α where
 def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
   @UniformSpace.uniformity α _
 
+/-- Pack congruence for `uniformity`. -/
+@[dsimp_congr] theorem uniformity_pack_congr {α α' : Type ua}
+    [i : UniformSpace α] [i' : UniformSpace α']
+    (h : @ClassPack.mk UniformSpace α i = @ClassPack.mk UniformSpace α' i') :
+    HEq (uniformity α) (uniformity α') := by
+  cases h; rfl
+
 /-- Notation for the uniformity filter with respect to a non-standard `UniformSpace` instance. -/
 scoped[Uniformity] notation "𝓤[" u "]" => @uniformity _ u
 

@@ -41,7 +41,6 @@ section
 
 variable {F₁ F₂ F₂' F₃ F₃' : J ⥤ C}
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -99,7 +98,6 @@ lemma homEquiv_naturality_two_symm (f₂ : F₂ ⟶ F₂') (g : F₂' ⟶ functo
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [← uncurry_natural_left])
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

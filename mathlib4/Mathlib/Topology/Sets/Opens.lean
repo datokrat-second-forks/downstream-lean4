@@ -75,6 +75,13 @@ instance : SetLike (Opens α) α where
   coe := Opens.carrier
   coe_injective := fun ⟨_, _⟩ ⟨_, _⟩ _ => by congr
 
+/-- Lens: the set-like pack of `Opens α` follows the topology pack of `α`. -/
+@[dsimp_congr] theorem setLikePack_congr.{ua} {α α' : Type ua}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α']
+    (h : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i') :
+    SetLikePack.mk (Opens α) α = SetLikePack.mk (Opens α') α' := by
+  cases h; rfl
+
 instance : PartialOrder (Opens α) := fast_instance% .ofSetLike (Opens α)
 
 instance : CanLift (Set α) (Opens α) (↑) IsOpen :=
@@ -159,6 +166,21 @@ instance : CompleteLattice (Opens α) :=
     (funext fun _ => ext sSup_image.symm)
     -- sInf
     _ rfl
+
+/-- Pack congruence for the type `Opens α` of open sets. -/
+@[dsimp_congr] theorem pack_congr.{ua} {α α' : Type ua}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α']
+    (h : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i') :
+    Opens α = Opens α' := by
+  cases h; rfl
+
+/-- Lens: the `Top` pack of `Opens α` follows the topology pack of `α`. -/
+@[dsimp_congr] theorem topPack_congr.{ua} {α α' : Type ua}
+    [i : TopologicalSpace α] [i' : TopologicalSpace α']
+    (h : @ClassPack.mk TopologicalSpace α i = @ClassPack.mk TopologicalSpace α' i') :
+    @ClassPack.mk Top (Opens α) (by infer_instance) =
+      @ClassPack.mk Top (Opens α') (by infer_instance) := by
+  cases h; rfl
 
 @[simp]
 theorem mk_inf_mk {U V : Set α} {hU : IsOpen U} {hV : IsOpen V} :

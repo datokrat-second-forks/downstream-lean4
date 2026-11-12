@@ -76,6 +76,12 @@ instance nonempty_linearIndependent_set : Nonempty {s : Set M // LinearIndepOn R
 
 end
 
+/-- Pack congruence for `Module.rank`. -/
+@[dsimp_congr] theorem Module.rank_pack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') : Module.rank R M = Module.rank R M' := by
+  cases h; rfl
+
 namespace LinearIndependent
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 

@@ -101,6 +101,29 @@ structure Comon where
 
 attribute [instance] Comon.comon
 
+/-- Pack congruence for `ComonObj.counit`: the counit follows the pack `Comon.mk X`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.ComonObj.counit_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.ComonObj X] [i' : CategoryTheory.ComonObj X']
+    (h : CategoryTheory.Comon.mk X = CategoryTheory.Comon.mk X') :
+    HEq (CategoryTheory.ComonObj.counit (X := X)) (CategoryTheory.ComonObj.counit (X := X')) := by
+  cases h; rfl
+
+/-- Pack congruence for `ComonObj.comul`: the comultiplication follows the pack `Comon.mk X`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.ComonObj.comul_pack_congr.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] {X X' : C}
+    [i : CategoryTheory.ComonObj X] [i' : CategoryTheory.ComonObj X']
+    (h : CategoryTheory.Comon.mk X = CategoryTheory.Comon.mk X') :
+    HEq (CategoryTheory.ComonObj.comul (X := X)) (CategoryTheory.ComonObj.comul (X := X')) := by
+  cases h; rfl
+
+/-- Lens: the pack of `M.X` with the instance `M.comon` follows `M`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Comon.comon.packLens.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    {M M' : CategoryTheory.Comon C} (h : M = M') :
+    @CategoryTheory.Comon.mk C _ _ M.X M.comon = @CategoryTheory.Comon.mk C _ _ M'.X M'.comon := by
+  cases h; rfl
+
 namespace Comon
 
 attribute [local instance] ComonObj.instTensorUnit in
@@ -264,9 +287,34 @@ Turn a comonoid object into a monoid object in the opposite category.
   X := op A.X
   mon := ComonToMonOpOpObjMon A
 
+/-- Pack root lemma for `ComonToMonOpOpObj`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.ComonToMonOpOpObj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Comon C) :
+    @CategoryTheory.Mon.mk Cᵒᵖ _ _ (CategoryTheory.Comon.ComonToMonOpOpObj A).X
+        (CategoryTheory.Comon.ComonToMonOpOpObj A).mon =
+      @CategoryTheory.Mon.mk Cᵒᵖ _ _ (Opposite.op A.X)
+        (CategoryTheory.Comon.ComonToMonOpOpObjMon A) := rfl
+
+/-- The unit of `ComonToMonOpOpObjMon A` is the opposite of the counit of `A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.ComonToMonOpOpObjMon_one.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Comon C) :
+    @CategoryTheory.MonObj.one Cᵒᵖ _ _ (Opposite.op A.X)
+        (CategoryTheory.Comon.ComonToMonOpOpObjMon A) =
+      (CategoryTheory.ComonObj.counit (X := A.X)).op := rfl
+
+/-- The multiplication of `ComonToMonOpOpObjMon A` is the opposite of the comultiplication of
+`A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.ComonToMonOpOpObjMon_mul.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Comon C) :
+    @CategoryTheory.MonObj.mul Cᵒᵖ _ _ (Opposite.op A.X)
+        (CategoryTheory.Comon.ComonToMonOpOpObjMon A) =
+      (CategoryTheory.ComonObj.comul (X := A.X)).op := rfl
+
 set_option backward.defeqAttrib.useBackward true in
 variable (C) in
-set_option backward.dsimp.instanceTypes false in
 /--
 The contravariant functor turning comonoid objects into monoid objects in the opposite category.
 -/
@@ -295,9 +343,34 @@ Turn a monoid object in the opposite category into a comonoid object.
   X := unop A.X
   comon := MonOpOpToComonObjComon A
 
+/-- Pack root lemma for `MonOpOpToComonObj`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.MonOpOpToComonObj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Mon Cᵒᵖ) :
+    @CategoryTheory.Comon.mk C _ _ (CategoryTheory.Comon.MonOpOpToComonObj A).X
+        (CategoryTheory.Comon.MonOpOpToComonObj A).comon =
+      @CategoryTheory.Comon.mk C _ _ (Opposite.unop A.X)
+        (CategoryTheory.Comon.MonOpOpToComonObjComon A) := rfl
+
+/-- The counit of `MonOpOpToComonObjComon A` is the unop of the unit of `A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.MonOpOpToComonObjComon_counit.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Mon Cᵒᵖ) :
+    @CategoryTheory.ComonObj.counit C _ _ (Opposite.unop A.X)
+        (CategoryTheory.Comon.MonOpOpToComonObjComon A) =
+      (CategoryTheory.MonObj.one (X := A.X)).unop := rfl
+
+/-- The comultiplication of `MonOpOpToComonObjComon A` is the unop of the multiplication of
+`A.X`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.MonOpOpToComonObjComon_comul.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    (A : CategoryTheory.Mon Cᵒᵖ) :
+    @CategoryTheory.ComonObj.comul C _ _ (Opposite.unop A.X)
+        (CategoryTheory.Comon.MonOpOpToComonObjComon A) =
+      (CategoryTheory.MonObj.mul (X := A.X)).unop := rfl
+
 variable (C)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /--
 The contravariant functor turning monoid objects in the opposite category into comonoid objects.
@@ -331,7 +404,6 @@ So we spell out all the other ones.
 set_option backward.isDefEq.respectTransparency.types false in
 -- So does the instance type check of `dsimp`: `monoidal_tensorObj_comon_comul` would be stated in
 -- `C` with `tensorμ` instead of via `Quiver.Hom.unop`, which its uses are written for.
-set_option backward.dsimp.instanceTypes false in
 /--
 Comonoid objects in a braided category form a monoidal category.
 
@@ -354,6 +426,40 @@ theorem tensorObj_X (A B : Comon C) : (A ⊗ B).X = A.X ⊗ B.X := rfl
 
 instance (A B : C) [ComonObj A] [ComonObj B] : ComonObj (A ⊗ B) :=
   inferInstanceAs <| ComonObj (Comon.mk A ⊗ Comon.mk B).X
+
+/-- Pack root lemma: the pack of `(A ⊗ B).X` is the pack of `A.X ⊗ B.X`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.tensorObj_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] (A B : CategoryTheory.Comon C) :
+    @CategoryTheory.Comon.mk C _ _
+        (CategoryTheory.MonoidalCategoryStruct.tensorObj A B).X
+        (CategoryTheory.MonoidalCategoryStruct.tensorObj A B).comon =
+      @CategoryTheory.Comon.mk C _ _ (CategoryTheory.MonoidalCategoryStruct.tensorObj A.X B.X)
+        (CategoryTheory.Comon.instComonObjTensorObj A.X B.X) := rfl
+
+/-- Pack root lemma: the pack of `(𝟙_ (Comon C)).X` is the pack of `𝟙_ C`. -/
+@[simp] theorem _root_.CategoryTheory.Comon.tensorUnit_pack.{va, ua} {C : Type ua}
+    [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] :
+    @CategoryTheory.Comon.mk C _ _
+        (CategoryTheory.MonoidalCategoryStruct.tensorUnit (CategoryTheory.Comon C)).X
+        (CategoryTheory.MonoidalCategoryStruct.tensorUnit (CategoryTheory.Comon C)).comon =
+      @CategoryTheory.Comon.mk C _ _ (CategoryTheory.MonoidalCategoryStruct.tensorUnit C)
+        (CategoryTheory.ComonObj.instTensorUnit C) := rfl
+
+/-- Lens: the comonoid pack of `A ⊗ B` follows the packs of `A` and `B`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Comon.instComonObjTensorObj.packLens.{va, ua}
+    {C : Type ua} [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C]
+    [CategoryTheory.BraidedCategory C] {A A' B B' : C}
+    [iA : CategoryTheory.ComonObj A] [iA' : CategoryTheory.ComonObj A']
+    [iB : CategoryTheory.ComonObj B] [iB' : CategoryTheory.ComonObj B']
+    (hA : CategoryTheory.Comon.mk A = CategoryTheory.Comon.mk A')
+    (hB : CategoryTheory.Comon.mk B = CategoryTheory.Comon.mk B') :
+    @CategoryTheory.Comon.mk C _ _ (CategoryTheory.MonoidalCategoryStruct.tensorObj A B)
+        (CategoryTheory.Comon.instComonObjTensorObj A B) =
+      @CategoryTheory.Comon.mk C _ _ (CategoryTheory.MonoidalCategoryStruct.tensorObj A' B')
+        (CategoryTheory.Comon.instComonObjTensorObj A' B') := by
+  cases hA; cases hB; rfl
 
 @[simp]
 theorem tensorObj_counit (A B : C) [ComonObj A] [ComonObj B] :

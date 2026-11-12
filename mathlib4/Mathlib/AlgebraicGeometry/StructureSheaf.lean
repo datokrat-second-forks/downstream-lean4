@@ -236,6 +236,26 @@ instance (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
   .of_algebraMap_smul fun r m ↦ Subtype.ext <| funext fun x ↦
     IsScalarTower.algebraMap_smul (Localizations R x.1) r (m.1 x)
 
+/-- Pack root lemma: the `CommRing` pack of `(structurePresheafInCommRingCat R).obj U` is that of
+the sections. -/
+@[simp]
+theorem structurePresheafInCommRingCat_obj_classPack (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
+    @ClassPack.mk CommRing ((structurePresheafInCommRingCat R).obj U)
+        ((structurePresheafInCommRingCat R).obj U).commRing =
+      @ClassPack.mk CommRing ((structureSheafInType R R).obj.obj U)
+        (instCommRingObjOppositeOpensCarrierTopObjFunctorTypeIsSheafGrothendieckTopologyStructureSheafInType U) :=
+  rfl
+
+/-- Pack root lemma: the `AddCommGroup` pack of `(structurePresheafInModuleCat R M).obj U` is that of
+the sections. -/
+@[simp]
+theorem structurePresheafInModuleCat_obj_classPack (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
+    @ClassPack.mk AddCommGroup ((structurePresheafInModuleCat R M).obj U)
+        ((structurePresheafInModuleCat R M).obj U).isAddCommGroup =
+      @ClassPack.mk AddCommGroup ((structureSheafInType R M).obj.obj U)
+        (instAddCommGroupObjOppositeOpensCarrierTopObjFunctorTypeIsSheafGrothendieckTopologyStructureSheafInType U) :=
+  rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable (R M) in
@@ -486,7 +506,6 @@ theorem exists_le_iSup_basicOpen_and_smul_eq_smul_and_eq_const
       simp [Submonoid.smul_def, pow_succ', mul_smul]
     · simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 theorem toBasicOpenₗ_surjective (f : R) : Function.Surjective (toBasicOpenₗ R M f) := by
   intro s
@@ -1165,7 +1184,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.Top
     Subtype.ext <|
       funext fun p => by
         rw [comap_apply, Localization.localRingHom_comp _ (PrimeSpectrum.comap g p.1).asIdeal] <;>
-        (
+        (set_option backward.dsimp.instanceTypes false in
         set_option backward.isDefEq.respectTransparency.instanceTypes false in
         simp)
 

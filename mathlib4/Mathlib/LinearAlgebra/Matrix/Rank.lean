@@ -456,8 +456,9 @@ theorem exists_rank_normal_form [Fintype m] [DecidableEq m] (M : Matrix m m R) :
       Finset.mem_filter, Finset.mem_univ, true_and, ite_not]
     split_ifs with h1 h2 <;> first | rw [← h1, h2] | rw [← h1, inv_mul_cancel₀ h2] | rfl
   have hs : s.card = M.rank := by
+    -- pack-regime: adapted to the new simp result (R43)
     simp [← rank_mul_eq_right_of_isUnit_det V M hVdet, ← rank_mul_eq_left_of_isUnit_det U (V * M)
-      hUdet, hM, rank_diagonal]
+      hUdet, hM, rank_diagonal, Fintype.card_subtype]
   set e : m ≃ Fin M.rank ⊕ Fin (Fintype.card m - M.rank) :=
     (Equiv.sumCompl (· ∈ s)).symm.trans <| (Finset.equivFinOfCardEq hs).sumCongr <|
       Fintype.equivFinOfCardEq <| by rw [Fintype.card_subtype_compl, Fintype.card_coe, hs] with he

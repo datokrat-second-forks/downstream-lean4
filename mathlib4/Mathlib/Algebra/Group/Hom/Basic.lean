@@ -247,6 +247,16 @@ instance mul : Mul (M →* N) :=
 `f + g` is the additive monoid morphism sending `x` to `f x + g x`. -/
 add_decl_doc AddMonoidHom.add
 
+/-- Lens: the `Add` pack of `M →+ N` follows the packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.AddMonoidHom.addPack_congr.{um, un} {M M' : Type um}
+    {N N' : Type un} [i : AddZeroClass M] [i' : AddZeroClass M'] [j : AddCommMonoid N]
+    [j' : AddCommMonoid N']
+    (hM : @ClassPack.mk AddZeroClass M i = @ClassPack.mk AddZeroClass M' i')
+    (hN : @ClassPack.mk AddCommMonoid N j = @ClassPack.mk AddCommMonoid N' j') :
+    @ClassPack.mk Add (M →+ N) AddMonoidHom.add =
+      @ClassPack.mk Add (M' →+ N') AddMonoidHom.add := by
+  cases hM; cases hN; rfl
+
 @[to_additive (attr := simp)] lemma mul_apply (f g : M →* N) (x : M) : (f * g) x = f x * g x := rfl
 
 @[to_additive]

@@ -363,6 +363,15 @@ structure IsometryEquiv (α : Type u) (β : Type v) [PseudoEMetricSpace α] [Pse
 @[inherit_doc]
 infixl:25 " ≃ᵢ " => IsometryEquiv
 
+/-- Pack congruence for the type `α ≃ᵢ β` of isometric equivalences. -/
+@[dsimp_congr] theorem IsometryEquiv.pack_congr.{ua, ub} {α α' : Type ua} {β β' : Type ub}
+    [iα : PseudoEMetricSpace α] [iα' : PseudoEMetricSpace α'] [iβ : PseudoEMetricSpace β]
+    [iβ' : PseudoEMetricSpace β']
+    (hα : @ClassPack.mk PseudoEMetricSpace α iα = @ClassPack.mk PseudoEMetricSpace α' iα')
+    (hβ : @ClassPack.mk PseudoEMetricSpace β iβ = @ClassPack.mk PseudoEMetricSpace β' iβ') :
+    (α ≃ᵢ β) = (α' ≃ᵢ β') := by
+  cases hα; cases hβ; rfl
+
 namespace IsometryEquiv
 
 section PseudoEMetricSpace

@@ -88,7 +88,6 @@ def associatorImpl (X Y Z : Dial C) :
 set_option backward.isDefEq.respectTransparency.types false in
 -- So do the instance type checks: `leftUnitor_hom_f` would keep `(prod.leftUnitor X.src).hom`
 -- instead of `π₂` (similarly for the other unitors), which its uses are written for.
-set_option backward.dsimp.instanceTypes false in
 @[simps!]
 instance : MonoidalCategoryStruct (Dial C) where
   tensorUnit := tensorUnitImpl

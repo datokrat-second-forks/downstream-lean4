@@ -105,6 +105,7 @@ section Products
 def piLimitFan ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.Fan F :=
   Limits.Fan.mk (@of (∀ j : J, F j) _) fun j => CategoryTheory.Pi.eval _ j
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
@@ -113,8 +114,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.IsLimit 
     (by
       intros
       dsimp only [piLimitFan]
-      (set_option backward.dsimp.instanceTypes false in
-      simp [comp_eq_comp]))
+      simp [comp_eq_comp])
     (by
       intro s m w
       apply Functor.pi_ext

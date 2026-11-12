@@ -43,6 +43,19 @@ variable {s t : Set α}
 def toFinset (s : Set α) [Fintype s] : Finset α :=
   (@Finset.univ s _).map <| Function.Embedding.subtype _
 
+/-- Pack: a set with a `Fintype` instance for its elements. -/
+structure FintypePack.{ua} (α : Type ua) where
+  /-- The set. -/
+  s : Set α
+  /-- The `Fintype` instance of the subtype. -/
+  [inst : Fintype ↑s]
+
+/-- Pack congruence for `Set.toFinset`. -/
+@[dsimp_congr] theorem toFinset_pack_congr.{ua} {α : Type ua} {s s' : Set α}
+    [i : Fintype ↑s] [i' : Fintype ↑s'] (h : Set.FintypePack.mk s = Set.FintypePack.mk s') :
+    s.toFinset = s'.toFinset := by
+  cases h; rfl
+
 @[congr]
 theorem toFinset_congr {s t : Set α} [Fintype s] [Fintype t] (h : s = t) :
     toFinset s = toFinset t := by subst h; congr!
@@ -260,6 +273,14 @@ theorem Fintype.univ_Prop [DecidableEq Prop] : (Finset.univ : Finset Prop) = {Tr
 
 instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fintype { x // p x } :=
   Fintype.subtype (univ.filter p) (by simp)
+
+/-- Lens: the `Fintype` pack of a set with decidable membership follows the set. -/
+@[dsimp_congr] theorem Set.fintypePack_subtype.{ua} {α : Type ua} [Fintype α] {s s' : Set α}
+    [d : DecidablePred (Membership.mem s)] {d' : DecidablePred (Membership.mem s')} (h : s = s')
+    (hd : HEq d d') :
+    @Set.FintypePack.mk α s (Subtype.fintype (Membership.mem s)) =
+      @Set.FintypePack.mk α s' (@Subtype.fintype α (Membership.mem s') d' _) := by
+  cases h; cases hd; rfl
 
 /-- A set on a fintype, when coerced to a type, is a fintype. -/
 @[instance_reducible]

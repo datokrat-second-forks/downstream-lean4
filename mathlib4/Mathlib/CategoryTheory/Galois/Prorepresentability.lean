@@ -331,7 +331,8 @@ noncomputable def autIsoFibers :
   NatIso.ofComponents (fun A ↦ ((evaluationEquivOfIsGalois F A A.pt).toIso))
     (fun f ↦ by
       ext
-      (simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp]))
+      (set_option backward.dsimp.instanceTypes false in
+      simp [evaluationEquivOfIsGalois, -Hom.comp, ← f.comp]))
 
 lemma autIsoFibers_inv_app (A : PointedGaloisObject F) (b : F.obj A) :
     (autIsoFibers F).inv.app A b = (evaluationEquivOfIsGalois F A A.pt).symm b :=

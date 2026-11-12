@@ -148,6 +148,13 @@ noncomputable def presheaf : Cᵒᵖ ⥤ Ab where
 lemma presheaf_obj_coe (X : Cᵒᵖ) :
     (M.presheaf.obj X : Type _) = M.obj X := rfl
 
+/-- Pack root lemma: the group pack of `M.presheaf.obj X` is that of `M.obj X`. -/
+@[simp]
+theorem presheaf_obj_classPack (X : Cᵒᵖ) :
+    @ClassPack.mk AddCommGroup (M.presheaf.obj X) (M.presheaf.obj X).str =
+      @ClassPack.mk AddCommGroup (M.obj X) (M.obj X).isAddCommGroup :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 @[simp]
 lemma presheaf_map_apply_coe {X Y : Cᵒᵖ} (f : X ⟶ Y) (x : M.obj X) :
@@ -225,7 +232,8 @@ noncomputable def homMk (φ : M₁.presheaf ⟶ M₂.presheaf)
   app X := ModuleCat.ofHom
     { toFun := φ.app X
       map_add' := by
-        (simp +instances)
+        (set_option backward.dsimp.instanceTypes false in
+        simp +instances)
       map_smul' := hφ X }
   naturality := fun f ↦ by
     ext x

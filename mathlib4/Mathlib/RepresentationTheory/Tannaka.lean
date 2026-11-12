@@ -119,7 +119,7 @@ lemma equivHom_injective [Nontrivial k] : Function.Injective (equivHom k G) := b
   intro s t h
   classical
   apply_fun (fun x ↦ (x.asIso.hom.hom.app rightFDRep).hom (single t 1) 1) at h
-  (set_option backward.dsimp.instanceTypes false in simp_all [single_apply])
+  (simp_all [single_apply])
 
 /-- The `FDRep k G` morphism induced by multiplication on `G → k`. -/
 def mulRepHom : rightFDRep (k := k) (G := G) ⊗ rightFDRep ⟶ rightFDRep where

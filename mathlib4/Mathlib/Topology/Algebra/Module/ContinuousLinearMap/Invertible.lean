@@ -42,6 +42,32 @@ for calculus. -/
 noncomputable def inverse : (M →L[R] M₂) → M₂ →L[R] M := fun f =>
   if h : f.IsInvertible then ((Classical.choose h).symm : M₂ →L[R] M) else 0
 
+/-- Pack congruence for `ContinuousLinearMap.inverse`. -/
+@[dsimp_congr] theorem inverse_pack_congr.{ur, um, un} {R : Type ur}
+    [Semiring R] {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module R N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module R N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := R) N = TopModPack.mk N')
+    (f : M →L[R] N) (f' : M' →L[R] N') (hf : HEq f f') :
+    HEq (ContinuousLinearMap.inverse f) (ContinuousLinearMap.inverse f') := by
+  cases hM; cases hN; cases hf; rfl
+
+/-- Pack congruence for `ContinuousLinearMap.IsInvertible`. -/
+@[dsimp_congr] theorem IsInvertible.pack_congr.{ur, um, un} {R : Type ur}
+    [Semiring R] {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module R N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module R N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := R) N = TopModPack.mk N')
+    (f : M →L[R] N) (f' : M' →L[R] N') (hf : HEq f f') :
+    ContinuousLinearMap.IsInvertible f = ContinuousLinearMap.IsInvertible f' := by
+  cases hM; cases hN; cases hf; rfl
+
 @[simp] lemma isInvertible_equiv {f : M ≃L[R] M₂} : IsInvertible (f : M →L[R] M₂) := ⟨f, rfl⟩
 
 /-- By definition, if `f` is invertible then `inverse f = f.symm`. -/

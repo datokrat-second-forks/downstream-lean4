@@ -92,8 +92,10 @@ lemma comap_freeLocus_le {A} [CommRing A] [Algebra R A] :
   let algebra : Algebra Rₚ Aₚ := (Localization.localRingHom
     (comap (algebraMap R A) p).asIdeal p.asIdeal (algebraMap R A) rfl).toAlgebra
   have : IsScalarTower R Rₚ Aₚ := IsScalarTower.of_algebraMap_eq'
-    (by simp [Rₚ, Aₚ, algebra, RingHom.algebraMap_toAlgebra, Localization.localRingHom,
-        ← IsScalarTower.algebraMap_eq])
+    (by
+      -- pack-regime workaround (R45): without `-comap_asIdeal` the term gets two spellings
+      simp [Rₚ, Aₚ, algebra, RingHom.algebraMap_toAlgebra, Localization.localRingHom,
+        ← IsScalarTower.algebraMap_eq, -comap_asIdeal])
   let e := AlgebraTensorModule.cancelBaseChange R Rₚ Aₚ Aₚ M ≪≫ₗ
     (AlgebraTensorModule.cancelBaseChange R A Aₚ Aₚ M).symm
   exact .of_equiv e

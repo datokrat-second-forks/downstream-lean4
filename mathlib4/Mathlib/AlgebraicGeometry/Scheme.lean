@@ -49,6 +49,14 @@ namespace Scheme
 instance : CoeSort Scheme Type* where
   coe X := X.carrier
 
+/-- Lens: the topology pack of the carrier of a scheme follows the scheme. -/
+@[dsimp_congr] theorem topPack_congr.{ux} {X X' : Scheme.{ux}} (h : X = X') :
+    @ClassPack.mk TopologicalSpace X
+        (PresheafedSpace.instTopologicalSpaceCarrierCarrier X.toPresheafedSpace) =
+      @ClassPack.mk TopologicalSpace X'
+        (PresheafedSpace.instTopologicalSpaceCarrierCarrier X'.toPresheafedSpace) := by
+  cases h; rfl
+
 open Lean PrettyPrinter.Delaborator SubExpr in
 /-- Pretty printer for coercing schemes to types. -/
 @[app_delab TopCat.carrier]
@@ -721,6 +729,13 @@ theorem basicOpen_one : X.basicOpen (1 : Γ(X, U)) = U :=
 instance algebra_section_section_basicOpen {X : Scheme} {U : X.Opens} (f : Γ(X, U)) :
     Algebra Γ(X, U) Γ(X, X.basicOpen f) :=
   (X.presheaf.map (homOfLE <| X.basicOpen_le f : _ ⟶ U).op).hom.toAlgebra
+
+/-- Lens: the algebra pack of `Γ(X, U) → Γ(X, X.basicOpen f)` follows `U` and `f`. -/
+@[dsimp_congr] theorem algebra_section_section_basicOpen.cAlgPackLens.{ux}
+    {X : Scheme.{ux}} {U U' : X.Opens} (hU : U = U')
+    {f : Γ(X, U)} {f' : Γ(X, U')} (hf : HEq f f') :
+    CAlgPack.mk Γ(X, U) Γ(X, X.basicOpen f) = CAlgPack.mk Γ(X, U') Γ(X, X.basicOpen f') := by
+  cases hU; cases hf; rfl
 
 @[simp]
 lemma _root_.AlgebraicGeometry.SpecMap_preimage_basicOpen {R S : CommRingCat} (f : R ⟶ S) (r : R) :

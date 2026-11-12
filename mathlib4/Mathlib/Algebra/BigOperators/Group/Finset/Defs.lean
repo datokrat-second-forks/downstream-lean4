@@ -67,6 +67,14 @@ When the index type is a `Fintype`, the notation `∑ x, f x`, is a shorthand fo
 protected def prod [CommMonoid M] (s : Finset ι) (f : ι → M) : M :=
   (s.1.map f).prod
 
+/-- Pack congruence for `Finset.sum`: the sum follows the pack of the additive monoid. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem sum_pack_congr.{ui, um} {ι : Type ui} {M M' : Type um}
+    [i : AddCommMonoid M] [i' : AddCommMonoid M']
+    (h : @ClassPack.mk AddCommMonoid M i = @ClassPack.mk AddCommMonoid M' i') :
+    HEq (@Finset.sum ι M i) (@Finset.sum ι M' i') := by
+  cases h; rfl
+
 @[to_additive (attr := simp)]
 theorem prod_mk [CommMonoid M] (s : Multiset ι) (hs : s.Nodup) (f : ι → M) :
     (⟨s, hs⟩ : Finset ι).prod f = (s.map f).prod :=

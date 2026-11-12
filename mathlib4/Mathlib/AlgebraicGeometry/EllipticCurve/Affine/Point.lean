@@ -414,7 +414,7 @@ lemma norm_smul_basis (p q : R[X]) : Algebra.norm R[X] (p • (1 : W'.Coordinate
 
 lemma coe_norm_smul_basis (p q : R[X]) : Algebra.norm R[X] (p • 1 + q • mk W' Y) =
     mk W' ((C p + C q * X) * (C p + C q * (-(Y : R[X][Y]) - C (C W'.a₁ * X + C W'.a₃)))) :=
-  AdjoinRoot.mk_eq_mk.mpr ⟨C q ^ 2, by simp only [norm_smul_basis, polynomial]; C_simp; ring1⟩
+  AdjoinRoot.mk_eq_mk.mpr ⟨C q ^ 2, by rw [norm_smul_basis]; simp only [polynomial]; C_simp; ring1⟩
 
 lemma degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
     (Algebra.norm R[X] <| p • 1 + q • mk W' Y).degree = max (2 • p.degree) (2 • q.degree + 3) := by

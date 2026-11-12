@@ -160,6 +160,16 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
   isLUB_csSup _ _ _ := isLUB_sSup _
   isGLB_csInf _ _ _ := isGLB_sInf _
 
+/-- Lens: the conditionally complete lattice pack follows the complete lattice pack. -/
+@[dsimp_congr] theorem CompleteLattice.toConditionallyCompleteLattice.packLens.{ua}
+    {α α' : Type ua} {i : CompleteLattice α} {i' : CompleteLattice α'}
+    (h : @ClassPack.mk CompleteLattice α i = @ClassPack.mk CompleteLattice α' i') :
+    @ClassPack.mk ConditionallyCompleteLattice α
+        (@CompleteLattice.toConditionallyCompleteLattice α i) =
+      @ClassPack.mk ConditionallyCompleteLattice α'
+        (@CompleteLattice.toConditionallyCompleteLattice α' i') := by
+  cases h; rfl
+
 -- see Note [lower instance priority]
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type*}
     [h : CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α where

@@ -354,7 +354,6 @@ noncomputable def coinvariantsFunctor : Rep.{w} k G ⥤ ModuleCat k where
   map_id _ := by simp
   map_comp _ _ := by ext; simp
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The quotient map from a representation to its coinvariants induces a natural transformation
 from the forgetful functor `Rep k G ⥤ ModuleCat k` to the coinvariants functor. -/
@@ -384,7 +383,11 @@ variable (k G)
 instance : (coinvariantsFunctor k G).Additive where
 instance : (coinvariantsFunctor k G).Linear k where
 
-set_option backward.dsimp.instanceTypes false in
+/-- The object `(coinvariantsFunctor k G).obj A`, stated with `ModuleCat.of`. -/
+@[simp] lemma _root_.Rep.coinvariantsFunctor_obj_of.{wa, ua, va} {k : Type ua} {G : Type va}
+    [CommRing k] [Monoid G] (A : Rep.{wa} k G) :
+    (Rep.coinvariantsFunctor k G).obj A = ModuleCat.of k A.ρ.Coinvariants := rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 /-- The adjunction between the functor sending a representation to its coinvariants and the functor
 equipping a module with the trivial representation. -/
@@ -405,9 +408,9 @@ theorem coinvariantsAdjunction_homEquiv_symm_apply_hom {X : Rep.{w} k G} {Y : Mo
     (f : X ⟶ (trivialFunctor k G).obj Y) :
     ((coinvariantsAdjunction k G).homEquiv X Y).symm f = desc f := by
   ext
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp [coinvariantsAdjunction, Adjunction.homEquiv_symm_apply])
+  -- pack-regime: adapted to the new simp result (R43)
+  rw [Adjunction.homEquiv_symm_apply]
+  simp [coinvariantsAdjunction]
 
 instance : (coinvariantsFunctor k G).PreservesZeroMorphisms where
 instance : (coinvariantsFunctor k G).IsLeftAdjoint := (coinvariantsAdjunction k G).isLeftAdjoint

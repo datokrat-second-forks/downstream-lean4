@@ -168,15 +168,24 @@ instance : (opOpEquivalence C).functor.CommShift ℤ :=
 instance : (opOpEquivalence C).inverse.CommShift ℤ :=
   inferInstanceAs ((opOp C).CommShift ℤ)
 
+/-- Pack root lemma: the `CommShift` pack of the functor of `opOpEquivalence C`. -/
+@[simp] theorem opOpEquivalence_functor_commShiftPack (C : Type*) [Category* C] [HasShift C ℤ] :
+    Functor.CommShiftPack.mk (A := ℤ) (opOpEquivalence C).functor =
+      Functor.CommShiftPack.mk (A := ℤ) (unopUnop C) := rfl
+
+/-- Pack root lemma: the `CommShift` pack of the inverse of `opOpEquivalence C`. -/
+@[simp] theorem opOpEquivalence_inverse_commShiftPack (C : Type*) [Category* C] [HasShift C ℤ] :
+    Functor.CommShiftPack.mk (A := ℤ) (opOpEquivalence C).inverse =
+      Functor.CommShiftPack.mk (A := ℤ) (opOp C) := rfl
+
 instance : (opOpEquivalence C).CommShift ℤ :=
   Equivalence.CommShift.mk'' _ _
     { shift_comm n := by
         ext X
-        (set_option backward.dsimp.instanceTypes false in
         simp [Functor.commShiftIso_comp_hom_app,
           commShiftIso_opOp_hom_app _ n (-n),
           commShiftIso_unopUnop_hom_app _ n (-n),
-          ← unop_comp_assoc]) }
+          ← unop_comp_assoc] }
 
 variable [Preadditive C] [HasZeroObject C] [∀ (n : ℤ), (shiftFunctor C n).Additive]
   [Pretriangulated C]

@@ -1250,7 +1250,6 @@ def uliftYonedaMap (X : C) :
 -- With the instance type check, `dsimp%` keeps `(F.op ⋙ uliftYoneda.obj (F.obj Y)).obj X` in the
 -- type arguments of the coercion (as in `chosenCoend.map_apply`), and the statement no longer
 -- matches its uses.
-set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma uliftYonedaMap_app_apply {Y : C} {X : Cᵒᵖ} (f : X.unop ⟶ Y) :
     dsimp% (uliftYonedaMap.{w} F Y).app X (ULift.up f) = ULift.up (F.map f) := rfl

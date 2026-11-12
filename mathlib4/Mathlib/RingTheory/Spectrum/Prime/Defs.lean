@@ -37,6 +37,13 @@ structure PrimeSpectrum (R : Type*) [CommSemiring R] where
 
 attribute [instance] PrimeSpectrum.isPrime
 
+/-- Pack congruence for the type `PrimeSpectrum R`. -/
+@[dsimp_congr] theorem PrimeSpectrum.pack_congr.{ua} {R R' : Type ua}
+    [i : CommSemiring R] [i' : CommSemiring R']
+    (h : @ClassPack.mk CommSemiring R i = @ClassPack.mk CommSemiring R' i') :
+    PrimeSpectrum R = PrimeSpectrum R' := by
+  cases h; rfl
+
 namespace PrimeSpectrum
 
 /-!

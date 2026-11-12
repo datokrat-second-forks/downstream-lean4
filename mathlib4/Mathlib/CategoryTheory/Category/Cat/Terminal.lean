@@ -30,11 +30,12 @@ open CategoryTheory Limits Functor
 
 namespace CategoryTheory.Cat
 
+set_option backward.dsimp.instanceTypes false in
 /-- A discrete category with a unique object is terminal. -/
 def isTerminalOfUniqueOfIsDiscrete {T : Type u} [Category.{v} T] [Unique T] [IsDiscrete T] :
     IsTerminal (Cat.of T) :=
   IsTerminal.ofUniqueHom (fun X ↦ ((const X).obj (default : T)).toCatHom)
-    (fun _ _ ↦ Cat.Hom.ext <| (set_option backward.dsimp.instanceTypes false in
+    (fun _ _ ↦ Cat.Hom.ext <| (
       Functor.ext (by simp [eq_iff_true_of_subsingleton])))
 
 instance : HasTerminal Cat.{v, u} := by

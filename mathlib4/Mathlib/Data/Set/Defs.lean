@@ -6,6 +6,7 @@ Authors: Leonardo de Moura
 module
 
 public import Batteries.Util.ExtendedBinder
+public import Mathlib.Tactic.PackLens
 public import Mathlib.Tactic.SetNotationForOrder
 public import Mathlib.Tactic.ToDual
 
@@ -110,6 +111,12 @@ protected def Subset (s₁ s₂ : Set α) :=
 to subset hypotheses. -/
 instance : LE (Set α) :=
   ⟨Set.Subset⟩
+
+/-- Lens: the `LE` pack of `Set α` follows `α`. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem lePack_congr.{ua} {α α' : Type ua} (h : α = α') :
+    @ClassPack.mk LE (Set α) Set.instLE = @ClassPack.mk LE (Set α') Set.instLE := by
+  cases h; rfl
 
 end Set
 

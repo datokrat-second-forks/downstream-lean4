@@ -120,6 +120,28 @@ structure AlgPack.{ua, va} where
     HEq (algebraMap R A) (algebraMap R' A') := by
   cases h; rfl
 
+/-- Pack: a commutative algebra over a fixed commutative semiring. -/
+structure CSAlgPack.{ur, ua} (R : Type ur) [CommSemiring R] where
+  /-- The carrier. -/
+  A : Type ua
+  /-- The ring structure. -/
+  [csr : CommSemiring A]
+  /-- The algebra structure. -/
+  [alg : Algebra R A]
+
+/-- Pack: a commutative algebra over a varying commutative base. -/
+structure CAlgPack.{ur, ua} where
+  /-- The base. -/
+  R : Type ur
+  /-- The carrier. -/
+  A : Type ua
+  /-- The base ring structure. -/
+  [cr : CommSemiring R]
+  /-- The ring structure. -/
+  [csr : CommSemiring A]
+  /-- The algebra structure. -/
+  [alg : Algebra R A]
+
 /-- Pack: an algebra over both rings of a scalar tower `R → S`. -/
 structure STowerPack.{ur, us, ua} (R : Type ur) (S : Type us) [CommSemiring R] [CommSemiring S]
     [Algebra R S] where
@@ -131,6 +153,18 @@ structure STowerPack.{ur, us, ua} (R : Type ur) (S : Type us) [CommSemiring R] [
   [algS : Algebra S A]
   /-- The algebra structure over `R`. -/
   [algR : Algebra R A]
+
+/-- Pack: the middle ring of a scalar tower `R → S → A`. -/
+structure TowerMidPack.{ur, us, ua} (R : Type ur) (A : Type ua) [CommSemiring R] [Semiring A]
+    [Algebra R A] where
+  /-- The middle ring. -/
+  S : Type us
+  /-- The ring structure. -/
+  [cs : CommSemiring S]
+  /-- The algebra structure over `R`. -/
+  [algRS : Algebra R S]
+  /-- The algebra structure of `A`. -/
+  [algSA : Algebra S A]
 
 theorem Algebra.subsingleton (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] [Algebra R A]
     [Subsingleton R] : Subsingleton A :=

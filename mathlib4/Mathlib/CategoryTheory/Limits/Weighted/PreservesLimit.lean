@@ -46,7 +46,6 @@ noncomputable def π (j : J) : c.pt.obj.obj j → (s.pt ⟶ F.obj j) :=
 
 -- With the instance type check, `dsimp%` keeps `((const K).obj c.pt).obj k` in the type arguments
 -- of the coercion (as in `chosenCoend.map_apply`), and the statement no longer matches its uses.
-set_option backward.dsimp.instanceTypes false in
 @[simp]
 lemma π_ι_app_hom_app_apply ⦃j : J⦄ ⦃k : K⦄ (x : (G.obj k).obj.obj j) :
     dsimp% π hc s j ((c.ι.app k).hom.app j x) =

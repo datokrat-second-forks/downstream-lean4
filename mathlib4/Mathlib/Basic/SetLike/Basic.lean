@@ -111,6 +111,22 @@ class SetLike (A : Type*) (B : outParam Type*) where
 
 attribute [coe] SetLike.coe
 
+/-- Pack: the hidden arguments of `SetLike.coe`. -/
+structure SetLikePack.{ua, ub} where
+  /-- The type of the set-like objects. -/
+  A : Type ua
+  /-- The type of the elements. -/
+  B : Type ub
+  /-- The instance. -/
+  [inst : SetLike A B]
+
+/-- Pack congruence for `SetLike.coe`. -/
+@[dsimp_congr] theorem SetLike.coe_pack_congr.{ua, ub} {A A' : Type ua} {B B' : Type ub}
+    [i : SetLike A B] [i' : SetLike A' B'] (h : SetLikePack.mk A B = SetLikePack.mk A' B')
+    (s : A) (s' : A') (hs : HEq s s') :
+    HEq (SetLike.coe s) (SetLike.coe s') := by
+  cases h; cases hs; rfl
+
 namespace SetLike
 
 variable {A : Type*} {B : Type*} [i : SetLike A B]

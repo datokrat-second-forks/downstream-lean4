@@ -311,6 +311,15 @@ abbrev Hom.hom {X Y : CommMonCat.{u}} (f : Hom X Y) :=
 abbrev ofHom {X Y : Type u} [CommMonoid X] [CommMonoid Y] (f : X →* Y) : of X ⟶ of Y :=
   ConcreteCategory.ofHom (C := CommMonCat) f
 
+/-- Pack congruence for `AddCommMonCat.ofHom`. -/
+@[dsimp_congr] theorem _root_.AddCommMonCat.ofHom_pack_congr.{ua} {X X' Y Y' : Type ua}
+    [i : AddCommMonoid X] [i' : AddCommMonoid X'] [j : AddCommMonoid Y] [j' : AddCommMonoid Y']
+    (hX : @ClassPack.mk AddCommMonoid X i = @ClassPack.mk AddCommMonoid X' i')
+    (hY : @ClassPack.mk AddCommMonoid Y j = @ClassPack.mk AddCommMonoid Y' j')
+    (f : X →+ Y) (f' : X' →+ Y') (hf : HEq f f') :
+    HEq (AddCommMonCat.ofHom f) (AddCommMonCat.ofHom f') := by
+  cases hX; cases hY; cases hf; rfl
+
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
 @[to_additive /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/]
 def Hom.Simps.hom (X Y : CommMonCat.{u}) (f : Hom X Y) :=

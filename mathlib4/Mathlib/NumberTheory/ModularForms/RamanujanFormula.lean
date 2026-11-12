@@ -67,8 +67,7 @@ theorem serreDerivative_E₆ : serreDerivative 6 E₆ = (-2⁻¹ : ℂ) • E₄
     simpa using (tendsto_E_atImInfty).pow 2
   coe_pow E₄ 2 ▸ serreDerivative_eq_smul (F := serreDerivativeMF 6 E₆) (g := E₄.pow 2) rfl
     (by
-      (set_option backward.dsimp.instanceTypes false in
-      simpa [Nat.ModEq] using dimension_level_one 8 ⟨4, rfl⟩)) E₆.holo'
+      simpa [Nat.ModEq] using dimension_level_one 8 ⟨4, rfl⟩) E₆.holo'
     tendsto_E_atImInfty hlim (by norm_num)
 
 /-- The normalized derivative of the modular defect `D2 γ` is `-(γ₁₀)² / denom γ ²`. -/

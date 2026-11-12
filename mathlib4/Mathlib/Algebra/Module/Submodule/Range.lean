@@ -57,6 +57,27 @@ See Note [range copy pattern]. -/
 def range [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) : Submodule R₂ M₂ :=
   (map f ⊤).copy (Set.range f) Set.image_univ.symm
 
+/-- Pack congruence for `LinearMap.range` of a linear map `M →ₗ[R] N`, with a fixed codomain. -/
+@[dsimp_congr] theorem range_pack_congr.{ur, um, un} {R : Type ur} [Semiring R]
+    {M M' : Type um} {N : Type un} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [Module R M] [Module R M'] [Module R N]
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (f : M →ₗ[R] N) (f' : M' →ₗ[R] N) (hf : HEq f f') :
+    LinearMap.range f = LinearMap.range f' := by
+  cases hM; cases hf; rfl
+
+/-- Pack congruence for `LinearMap.range` of a semilinear map: the range follows the module packs
+of the domain and the codomain and the map. -/
+@[dsimp_congr] theorem _root_.LinearMap.range_pack_congr₂.{ur, us, um, un} {R : Type ur}
+    {R₂ : Type us} [Semiring R] [Semiring R₂] {τ₁₂ : R →+* R₂} [RingHomSurjective τ₁₂]
+    {M M' : Type um} {M₂ M₂' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [Module R M]
+    [Module R M'] [AddCommMonoid M₂] [AddCommMonoid M₂'] [Module R₂ M₂] [Module R₂ M₂']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hM₂ : SModPack.mk (R := R₂) M₂ = SModPack.mk M₂')
+    (f : M →ₛₗ[τ₁₂] M₂) (f' : M' →ₛₗ[τ₁₂] M₂') (hf : HEq f f') :
+    HEq (LinearMap.range f) (LinearMap.range f') := by
+  cases hM; cases hM₂; cases hf; rfl
+
 theorem coe_range [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) : (range f : Set M₂) = Set.range f :=
   rfl
 

@@ -155,7 +155,6 @@ def Cover.copy [P.RespectsIso] {X : Scheme.{u}} (𝒰 : X.Cover (precoverage P))
 -- `Precoverage.ZeroHypercover.bind`, `Cover.mkOfCovers`, `coverOfIso`
 -- With the instance type check, `simps!` states `pushforwardIso_X`/`_f` with `(e x).snd`, which
 -- no longer matches their uses in `Pullbacks.lean`.
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The pushforward of a cover along an isomorphism. -/
 @[simps! I₀ X f, implicit_reducible]

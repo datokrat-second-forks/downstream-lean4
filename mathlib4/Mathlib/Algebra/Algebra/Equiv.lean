@@ -572,6 +572,40 @@ theorem trans_toLinearMap (f : A₁ ≃ₐ[R] A₂) (g : A₂ ≃ₐ[R] A₃) :
 noncomputable def ofBijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective f) : A₁ ≃ₐ[R] A₂ :=
   { RingEquiv.ofBijective (f : A₁ →+* A₂) hf, f with }
 
+/-- Pack congruence for the type `A ≃ₐ[R] B`. -/
+@[dsimp_congr] theorem _root_.AlgEquiv.pack_congr.{ur, ua, ub} {R : Type ur} [CommSemiring R]
+    {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B] [Semiring B']
+    [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B') :
+    (A ≃ₐ[R] B) = (A' ≃ₐ[R] B') := by
+  cases hA; cases hB; rfl
+
+/-- Lens: the coercion pack of `A ≃ₐ[R] B` follows the algebra packs of `A` and `B`. -/
+@[dsimp_congr] theorem _root_.AlgEquiv.funLikePack_congr.{ur, ua, ub} {R : Type ur}
+    [CommSemiring R] {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B]
+    [Semiring B'] [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B') :
+    FunLikePack.mk (A ≃ₐ[R] B) A (fun _ => B) = FunLikePack.mk (A' ≃ₐ[R] B') A' (fun _ => B') := by
+  cases hA; cases hB; rfl
+
+/-- Pack congruence for `AlgEquiv.symm`. -/
+@[dsimp_congr] theorem _root_.AlgEquiv.symm_pack_congr.{ur, ua, ub} {R : Type ur}
+    [CommSemiring R] {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B]
+    [Semiring B'] [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (e : A ≃ₐ[R] B) (e' : A' ≃ₐ[R] B') (he : HEq e e') : HEq e.symm e'.symm := by
+  cases hA; cases hB; cases he; rfl
+
+/-- Pack congruence for `AlgEquiv.ofBijective`. -/
+@[dsimp_congr] theorem _root_.AlgEquiv.ofBijective_pack_congr.{ur, ua, ub} {R : Type ur}
+    [CommSemiring R] {A A' : Type ua} {B B' : Type ub} [Semiring A] [Semiring A'] [Semiring B]
+    [Semiring B'] [Algebra R A] [Algebra R A'] [Algebra R B] [Algebra R B']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') (hB : SAlgPack.mk (R := R) B = SAlgPack.mk B')
+    (f : A →ₐ[R] B) (f' : A' →ₐ[R] B') (hf : HEq f f') (hb : Function.Bijective f)
+    (hb' : Function.Bijective f') (hh : HEq hb hb') :
+    HEq (AlgEquiv.ofBijective f hb) (AlgEquiv.ofBijective f' hb') := by
+  cases hA; cases hB; cases hf; rfl
+
 @[simp]
 lemma coe_ofBijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective f) :
     (ofBijective f hf : A₁ → A₂) = f := rfl

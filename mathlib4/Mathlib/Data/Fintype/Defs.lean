@@ -92,6 +92,12 @@ variable [Fintype α] {s : Finset α}
 def univ : Finset α :=
   @Fintype.elems α _
 
+/-- Pack congruence for `Finset.univ`. -/
+@[dsimp_congr] theorem univ_pack_congr.{ua} {α α' : Type ua} [i : Fintype α] [i' : Fintype α']
+    (h : @ClassPack.mk Fintype α i = @ClassPack.mk Fintype α' i') :
+    HEq (@Finset.univ α i) (@Finset.univ α' i') := by
+  cases h; rfl
+
 @[simp, grind ←]
 theorem mem_univ (x : α) : x ∈ (univ : Finset α) :=
   Fintype.complete x

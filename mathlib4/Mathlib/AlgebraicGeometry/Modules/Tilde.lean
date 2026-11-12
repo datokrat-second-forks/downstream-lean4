@@ -284,9 +284,8 @@ noncomputable def Scheme.Modules.fromTildeΓ (M : (Spec R).Modules) :
         · dsimp [← ModuleCat.hom_comp]
           rw [tilde.toOpen_res_assoc]
           ext x
-          (set_option backward.dsimp.instanceTypes false in
           set_option backward.isDefEq.respectTransparency.instanceTypes false in
-          dsimp)
+          dsimp
           (set_option backward.isDefEq.respectTransparency.instanceTypes false in
           simp only [IsLocalizedModule.lift_apply, ← ModuleCat.comp_apply, ← Functor.map_comp])
           rfl }⟩
@@ -328,9 +327,8 @@ noncomputable def Scheme.Modules.fromTildeΓNatTrans :
       change Submonoid.powers _ ≤ (IsUnit.submonoid _).comap _
       simp only [Submonoid.powers_le, Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
       exact N.isUnit_algebraMap_end_of_le_basicOpen r.unop le_rfl
-    (
     dsimp [TopCat.Sheaf.restrictHomEquivHom, Functor.IsCoverDense.restrictHomEquivHom,
-      moduleSpecΓFunctor, Sheaf.forget])
+      moduleSpecΓFunctor, Sheaf.forget]
     simp only [← ModuleCat.hom_comp, Functor.map_comp]
     congr 1
     erw [tilde.toOpen_map_app_assoc, toOpen_fromTildeΓ_app N (PrimeSpectrum.basicOpen r.unop),

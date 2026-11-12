@@ -86,6 +86,11 @@ instance : Group (DihedralGroup n) where
     · congrm r $(neg_add_cancel a)
     · congrm r $(sub_self a)
 
+/-- Lens: the `Mul` pack of `DihedralGroup n` follows `n`. -/
+@[dsimp_congr] theorem mulPack_congr {n n' : ℕ} (h : n = n') :
+    ClassPack.mk (c := Mul) (DihedralGroup n) = ClassPack.mk (c := Mul) (DihedralGroup n') := by
+  cases h; rfl
+
 @[simp]
 theorem r_mul_r (i j : ZMod n) : r i * r j = r (i + j) :=
   rfl

@@ -441,8 +441,26 @@ instance monoidalUnopUnop : (unopUnop C).Monoidal where
 instance : (opOpEquivalence C).functor.Monoidal := monoidalUnopUnop
 instance : (opOpEquivalence C).inverse.Monoidal := monoidalOpOp
 
+/-- Pack root lemma for the monoidal structure of `(opOpEquivalence C).inverse`. -/
+@[simp] theorem _root_.CategoryTheory.opOpEquivalence_inverse_monoidalPack.{va, ua}
+    (C : Type ua) [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] :
+    @CategoryTheory.Functor.MonoidalPack.mk C _ _ Cᵒᵖᵒᵖ _ _
+        (CategoryTheory.opOpEquivalence C).inverse
+        CategoryTheory.instMonoidalOppositeInverseOpOpEquivalence =
+      @CategoryTheory.Functor.MonoidalPack.mk C _ _ Cᵒᵖᵒᵖ _ _ (CategoryTheory.opOp C)
+        CategoryTheory.monoidalOpOp := rfl
+
+/-- Pack root lemma for the monoidal structure of `(opOpEquivalence C).functor`. -/
+@[simp] theorem _root_.CategoryTheory.opOpEquivalence_functor_monoidalPack.{va, ua}
+    (C : Type ua) [CategoryTheory.Category.{va} C] [CategoryTheory.MonoidalCategory.{va} C] :
+    @CategoryTheory.Functor.MonoidalPack.mk Cᵒᵖᵒᵖ _ _ C _ _
+        (CategoryTheory.opOpEquivalence C).functor
+        CategoryTheory.instMonoidalOppositeFunctorOpOpEquivalence =
+      @CategoryTheory.Functor.MonoidalPack.mk Cᵒᵖᵒᵖ _ _ C _ _ (CategoryTheory.unopUnop C)
+        CategoryTheory.monoidalUnopUnop := rfl
+
 instance : (opOpEquivalence C).IsMonoidal where
-  leftAdjoint_ε := by (set_option backward.dsimp.instanceTypes false in simp [opOpEquivalence])
-  leftAdjoint_μ := by (set_option backward.dsimp.instanceTypes false in simp [opOpEquivalence])
+  leftAdjoint_ε := by (simp [opOpEquivalence])
+  leftAdjoint_μ := by (simp [opOpEquivalence])
 
 end CategoryTheory

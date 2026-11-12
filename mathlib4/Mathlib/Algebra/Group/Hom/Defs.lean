@@ -665,6 +665,51 @@ end MonoidHom
     HEq (AddMonoidHom.mk' f h) (AddMonoidHom.mk' f' h') := by
   cases hM; cases hG; cases hf; rfl
 
+/-- Pack congruence for `ZeroHom.mk`. -/
+@[dsimp_congr] theorem ZeroHom.mk_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : Zero M] [i' : Zero M'] [j : Zero N] [j' : Zero N']
+    (hM : @ClassPack.mk Zero M i = @ClassPack.mk Zero M' i')
+    (hN : @ClassPack.mk Zero N j = @ClassPack.mk Zero N' j')
+    (f : M → N) (f' : M' → N') (hf : HEq f f') (h : f 0 = 0) {h' : f' 0 = 0} (hh : HEq h h') :
+    HEq (ZeroHom.mk f h) (ZeroHom.mk f' h') := by
+  cases hM; cases hN; cases hf; rfl
+
+/-- Pack congruence for `AddMonoidHom.mk`. -/
+@[dsimp_congr] theorem AddMonoidHom.mk_pack_congr.{ua, va} {M M' : Type ua} {N N' : Type va}
+    [i : AddZero M] [i' : AddZero M'] [j : AddZero N] [j' : AddZero N']
+    (hM : @ClassPack.mk AddZero M i = @ClassPack.mk AddZero M' i')
+    (hN : @ClassPack.mk AddZero N j = @ClassPack.mk AddZero N' j')
+    (f : ZeroHom M N) (f' : ZeroHom M' N') (hf : HEq f f')
+    (h : ∀ x y, f.toFun (x + y) = f.toFun x + f.toFun y)
+    {h' : ∀ x y, f'.toFun (x + y) = f'.toFun x + f'.toFun y} (hh : HEq h h') :
+    HEq (AddMonoidHom.mk f h) (AddMonoidHom.mk f' h') := by
+  cases hM; cases hN; cases hf; rfl
+
+/-- Pack: the hidden arguments of `AddMonoidHom.ofClass`. -/
+structure AddHomClassPack.{uF, uM, uN} where
+  /-- The type of the maps. -/
+  F : Type uF
+  /-- The domain. -/
+  M : Type uM
+  /-- The codomain. -/
+  N : Type uN
+  /-- The additive structure of the domain. -/
+  [zm : AddZero M]
+  /-- The additive structure of the codomain. -/
+  [zn : AddZero N]
+  /-- The coercion to functions. -/
+  [fl : FunLike F M N]
+
+/-- Pack congruence for the coercion to `M →+ N`. -/
+@[dsimp_congr] theorem AddMonoidHom.ofClass_pack_congr.{uF, uM, uN} {F F' : Type uF}
+    {M M' : Type uM} {N N' : Type uN} [AddZero M] [AddZero M'] [AddZero N] [AddZero N']
+    [FunLike F M N] [FunLike F' M' N']
+    (h : AddHomClassPack.mk F M N = AddHomClassPack.mk F' M' N')
+    [c : AddMonoidHomClass F M N] {c' : AddMonoidHomClass F' M' N'} (hc : HEq c c')
+    (f : F) (f' : F') (hf : HEq f f') :
+    HEq (@AddMonoidHom.ofClass M N F _ _ _ c f) (@AddMonoidHom.ofClass M' N' F' _ _ _ c' f') := by
+  cases h; cases hf; rfl
+
 @[to_additive (attr := simp)]
 theorem OneHom.mk_coe [One M] [One N] (f : OneHom M N) (h1) : OneHom.mk f h1 = f :=
   OneHom.ext fun _ => rfl

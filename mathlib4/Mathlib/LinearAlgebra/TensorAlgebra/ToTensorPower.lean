@@ -129,7 +129,7 @@ theorem _root_.TensorPower.list_prod_gradedMonoid_mk_single (n : ℕ) (x : Fin n
     simp_rw [Function.comp_def, Fin.cons_zero, Fin.cons_succ]
     rw [ih, GradedMonoid.mk_mul_mk, TensorPower.tprod_mul_tprod]
     refine TensorPower.gradedMonoid_eq_of_cast (add_comm _ _) ?_
-    (set_option backward.dsimp.instanceTypes false in dsimp only [GradedMonoid.mk])
+    (dsimp only [GradedMonoid.mk])
     rw [TensorPower.cast_tprod]
     simp_rw [Fin.append_left_eq_cons, Function.comp_def]
     congr 1 with i

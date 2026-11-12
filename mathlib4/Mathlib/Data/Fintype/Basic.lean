@@ -32,6 +32,12 @@ open Finset
 instance Fin.fintype (n : ℕ) : Fintype (Fin n) :=
   ⟨⟨List.finRange n, List.nodup_finRange n⟩, List.mem_finRange⟩
 
+/-- Lens: the `Fintype` pack of `Fin n` follows `n`. -/
+@[dsimp_congr] theorem Fin.fintypePack_congr {n n' : ℕ} (h : n = n') :
+    @ClassPack.mk Fintype (Fin n) (Fin.fintype n) =
+      @ClassPack.mk Fintype (Fin n') (Fin.fintype n') := by
+  cases h; rfl
+
 theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, List.nodup_finRange n⟩ :=
   rfl
 

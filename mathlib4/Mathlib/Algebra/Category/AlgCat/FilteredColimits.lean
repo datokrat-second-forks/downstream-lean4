@@ -43,9 +43,8 @@ private abbrev AlgCat.algebraOfIsFiltered (hc : IsColimit c) (j : J) : Algebra R
     intro r x
     obtain ⟨k, hjk, y, rfl⟩ := Concrete.exists_hom_ι_eq_of_isColimit _ hc x j
     -- pack-regime workaround (B)
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [← dsimp% c.w hjk, ← dsimp% (c.ι.app k).hom.map_mul, Algebra.commutes', -map_mul])
+    simp [← dsimp% c.w hjk, ← dsimp% (c.ι.app k).hom.map_mul, Algebra.commutes', -map_mul]
 
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in

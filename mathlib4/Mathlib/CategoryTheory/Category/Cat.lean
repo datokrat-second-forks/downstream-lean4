@@ -55,6 +55,17 @@ instance str (C : Cat.{v, u}) : Category.{v, u} C :=
 def of (C : Type u) [Category.{v} C] : Cat.{v, u} :=
   Bundled.of C
 
+/-- Lens: the category pack of the carrier of `C : Cat` follows `C`. -/
+@[dsimp_congr] theorem str.packLens.{vc, uc} {C C' : Cat.{vc, uc}} (h : C = C') :
+    @ClassPack.mk Category.{vc, uc} C C.str = @ClassPack.mk Category.{vc, uc} C' C'.str := by
+  cases h; rfl
+
+/-- Pack root lemma: the category pack of `Cat.of C`. -/
+@[simp] theorem of_classPack.{vc, uc} (C : Type uc) [i : Category.{vc} C] :
+    @ClassPack.mk Category.{vc, uc} (Cat.of C) (Cat.of C).str =
+      @ClassPack.mk Category.{vc, uc} C i :=
+  rfl
+
 open Lean.PrettyPrinter.Delaborator in
 /-- This prints `CategoryTheory.Cat.of X` as `↧X`. -/
 @[app_delab CategoryTheory.Cat.of]

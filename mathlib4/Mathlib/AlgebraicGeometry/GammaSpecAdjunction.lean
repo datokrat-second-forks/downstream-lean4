@@ -72,9 +72,8 @@ def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
 set_option backward.isDefEq.respectTransparency false in
 theorem notMem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
     r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.presheaf.Γgerm x r) := by
-  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simp [toΓSpecFun, IsLocalRing.closedPoint])
+  simp [toΓSpecFun, IsLocalRing.closedPoint]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic
@@ -82,7 +81,7 @@ open in `X` defined by the same element (they are equal as sets). -/
 theorem toΓSpec_preimage_basicOpen_eq (r : Γ.obj (op X)) :
     X.toΓSpecFun ⁻¹' basicOpen r = SetLike.coe (X.toRingedSpace.basicOpen r) := by
       ext
-      (set_option backward.dsimp.instanceTypes false in dsimp)
+      (dsimp)
       (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       simp only [Set.mem_preimage, SetLike.mem_coe])
       rw [X.toRingedSpace.mem_top_basicOpen]
@@ -322,9 +321,8 @@ theorem right_triangle (R : CommRingCat) :
       𝟙 _ := by
   apply LocallyRingedSpace.comp_ring_hom_ext
   · ext (p : PrimeSpectrum R)
-    (
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    dsimp)
+    dsimp
     refine PrimeSpectrum.ext (Ideal.ext fun x => ?_)
     rw [← IsLocalization.AtPrime.to_map_mem_maximal_iff ((structureSheaf R).presheaf.stalk p)
         p.asIdeal x]

@@ -147,9 +147,8 @@ instance {G : Type v'} [Group G] (S : Subgroup G) :
     let x (g : G) : X := X.ρ (γ g) (s (y.1 (i (Quotient.mk' g))))
     refine ⟨⟨x, fun _ _ => ?_⟩, Subtype.ext <| funext fun g => ?_⟩
     · simp [x, ← Module.End.mul_apply, ← map_mul, hmk, hγ]
-    · (set_option backward.dsimp.instanceTypes false in
-      simp only [coindFunctor_obj, coindFunctor_map, hom_ofHom,
-        Representation.coindMap_coe_apply_apply, hom_comm_apply, x])
+    · simp only [coindFunctor_obj, coindFunctor_map, hom_ofHom,
+        Representation.coindMap_coe_apply_apply, hom_comm_apply, x]
       simp_all [← y.2 (γ g), γ]
 
 end Coind
@@ -237,7 +236,7 @@ noncomputable def coindFunctorIso : coindFunctor k φ ≅ coindFunctor' k φ :=
   NatIso.ofComponents (coindIso φ) fun _ => by
     ext
     exact coind'_ext _ fun _ ↦ by
-      (set_option backward.dsimp.instanceTypes false in simp [coindIso, coindMap'])
+      (simp [coindIso, coindMap'])
 
 end CoindIso
 

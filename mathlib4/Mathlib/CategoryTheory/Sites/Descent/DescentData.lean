@@ -599,7 +599,8 @@ lemma IsPrestackFor.isSheafFor'
     Presieve.IsSheafFor (F.presheafHom M N) R.arrows := by
   rw [isPrestackFor_iff_isSheafFor'] at hF
   obtain ⟨S, a, rfl⟩ := S.mk_surjective
-  simpa using hF M N a
+  -- pack-regime workaround (R46): without `-Over.mk_left` the term gets two spellings
+  simpa [-Over.mk_left] using hF M N a
 
 variable {J : GrothendieckTopology C}
 

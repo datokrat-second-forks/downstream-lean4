@@ -59,6 +59,19 @@ set of `x : M` such that `f x = 0`. The kernel is a submodule of `M`. -/
 def ker (f : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
   comap f ⊥
 
+/-- Pack congruence for `LinearMap.ker`: the kernel follows the module packs of the domain and the
+codomain and the map. -/
+-- pack-regime: the attribute `dsimp_congr` is off, the fixed parameters `R`, `R₂`, `τ₁₂` get no visit (record R45).
+theorem _root_.LinearMap.ker_pack_congr₂.{ur, us, um, un} {R : Type ur}
+    {R₂ : Type us} [Semiring R] [Semiring R₂] {τ₁₂ : R →+* R₂} {M M' : Type um}
+    {M₂ M₂' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    [AddCommMonoid M₂] [AddCommMonoid M₂'] [Module R₂ M₂] [Module R₂ M₂']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hM₂ : SModPack.mk (R := R₂) M₂ = SModPack.mk M₂')
+    (f : M →ₛₗ[τ₁₂] M₂) (f' : M' →ₛₗ[τ₁₂] M₂') (hf : HEq f f') :
+    HEq (LinearMap.ker f) (LinearMap.ker f') := by
+  cases hM; cases hM₂; cases hf; rfl
+
 @[simp]
 theorem mem_ker {f : M →ₛₗ[τ₁₂] M₂} {y} : y ∈ ker f ↔ f y = 0 :=
   mem_bot R₂

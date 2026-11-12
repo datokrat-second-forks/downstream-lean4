@@ -403,10 +403,9 @@ lemma H1InfRes_exact : (H1InfRes A S).Exact := by
   rw [moduleCat_exact_iff_ker_sub_range]
   intro x hx
   induction x using H1_induction_on with | @h x =>
-  (set_option backward.dsimp.instanceTypes false in
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp_all only [HInfRes_X₂, HInfRes_X₃, HInfRes_g, HInfRes_X₁, LinearMap.mem_ker,
-    H1π_comp_map_apply S.subtype, HInfRes_f])
+    H1π_comp_map_apply S.subtype, HInfRes_f]
   rcases (H1π_eq_zero_iff _).1 hx with ⟨(y : A), hy⟩
   have h1 := (mem_cocycles₁_iff x).1 x.2
   have h2 : ∀ s ∈ S, x s = A.ρ s y - y :=
@@ -526,6 +525,11 @@ noncomputable def cochainsFunctor : Rep k G ⥤ CochainComplex (ModuleCat k) ℕ
   map f := cochainsMap (MonoidHom.id _) f
   map_id _ := cochainsMap_id
   map_comp φ ψ := cochainsMap_comp (MonoidHom.id G) (MonoidHom.id G) φ ψ
+
+/-- The `i`-th object of `(cochainsFunctor k G).obj A`, stated with `ModuleCat.of`. -/
+@[simp] lemma _root_.groupCohomology.cochainsFunctor_obj_X_of.{ua} {k G : Type ua} [CommRing k]
+    [Group G] (A : Rep k G) (i : ℕ) :
+    ((groupCohomology.cochainsFunctor k G).obj A).X i = ModuleCat.of k ((Fin i → G) → A) := rfl
 
 instance : (cochainsFunctor k G).PreservesZeroMorphisms where
 instance : (cochainsFunctor k G).Additive where

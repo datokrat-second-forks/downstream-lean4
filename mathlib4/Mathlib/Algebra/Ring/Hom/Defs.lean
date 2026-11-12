@@ -602,6 +602,26 @@ variable {_ : NonAssocSemiring γ}
 def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
   { g.toNonUnitalRingHom.comp f.toNonUnitalRingHom with toFun x := g (f x), map_one' := by simp }
 
+/-- Pack congruence for `RingHom.id`. -/
+@[dsimp_congr] theorem _root_.RingHom.id_pack_congr.{ua} {α α' : Type ua} [i : NonAssocSemiring α]
+    [i' : NonAssocSemiring α']
+    (h : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i') :
+    HEq (RingHom.id α) (RingHom.id α') := by
+  cases h; rfl
+
+/-- Pack congruence for `RingHom.comp`. -/
+@[dsimp_congr] theorem _root_.RingHom.comp_pack_congr.{ua, va, wa} {α α' : Type ua}
+    {β β' : Type va} {γ γ' : Type wa} [i : NonAssocSemiring α] [i' : NonAssocSemiring α']
+    [j : NonAssocSemiring β] [j' : NonAssocSemiring β'] [k : NonAssocSemiring γ]
+    [k' : NonAssocSemiring γ']
+    (hα : @ClassPack.mk NonAssocSemiring α i = @ClassPack.mk NonAssocSemiring α' i')
+    (hβ : @ClassPack.mk NonAssocSemiring β j = @ClassPack.mk NonAssocSemiring β' j')
+    (hγ : @ClassPack.mk NonAssocSemiring γ k = @ClassPack.mk NonAssocSemiring γ' k')
+    (g : β →+* γ) (g' : β' →+* γ') (hg : HEq g g') (f : α →+* β) (f' : α' →+* β')
+    (hf : HEq f f') :
+    HEq (g.comp f) (g'.comp f') := by
+  cases hα; cases hβ; cases hγ; cases hg; cases hf; rfl
+
 /-- Composition of semiring homomorphisms is associative. -/
 theorem comp_assoc {δ} {_ : NonAssocSemiring δ} (f : α →+* β) (g : β →+* γ) (h : γ →+* δ) :
     (h.comp g).comp f = h.comp (g.comp f) :=

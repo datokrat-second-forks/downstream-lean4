@@ -45,6 +45,15 @@ structure ShortComplex where
   /-- the composition of the two given morphisms is zero -/
   zero : f ≫ g = 0 := by cat_disch
 
+/-- Pack congruence for the type `ShortComplex C`: the category and its zero morphisms form one
+pack. -/
+@[dsimp_congr] theorem ShortComplex.pack_congr.{vc, uc} {C C' : Type uc}
+    [i : Category.{vc} C] [i' : Category.{vc} C']
+    [z : HasZeroMorphisms C] [z' : HasZeroMorphisms C']
+    (h : @HasZeroMorphismsPack.mk C i z = @HasZeroMorphismsPack.mk C' i' z') :
+    ShortComplex C = ShortComplex C' := by
+  cases h; rfl
+
 namespace ShortComplex
 
 attribute [reassoc (attr := simp)] ShortComplex.zero

@@ -134,6 +134,14 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
       exact ⟨_, (union_zeroLocus s t).symm⟩)
 
+/-- Lens: the topology pack of `PrimeSpectrum R` follows the `CommSemiring` pack of `R`. -/
+@[dsimp_congr] theorem zariskiTopology.packLens.{ua} {R R' : Type ua}
+    [i : CommSemiring R] [i' : CommSemiring R']
+    (h : @ClassPack.mk CommSemiring R i = @ClassPack.mk CommSemiring R' i') :
+    @ClassPack.mk TopologicalSpace (PrimeSpectrum R) PrimeSpectrum.zariskiTopology =
+      @ClassPack.mk TopologicalSpace (PrimeSpectrum R') PrimeSpectrum.zariskiTopology := by
+  cases h; rfl
+
 theorem isOpen_iff (U : Set (PrimeSpectrum R)) : IsOpen U ↔ ∃ s, Uᶜ = zeroLocus s := by
   simp only [@eq_comm _ Uᶜ]; rfl
 
@@ -504,6 +512,14 @@ section BasicOpen
 def basicOpen (r : R) : TopologicalSpace.Opens (PrimeSpectrum R) where
   carrier := { x | r ∉ x.asIdeal }
   is_open' := ⟨{r}, Set.ext fun _ => Set.singleton_subset_iff.trans Classical.not_not.symm⟩
+
+/-- Pack congruence for `PrimeSpectrum.basicOpen`. -/
+@[dsimp_congr] theorem basicOpen_pack_congr.{ua} {R R' : Type ua}
+    [i : CommSemiring R] [i' : CommSemiring R']
+    (h : @ClassPack.mk CommSemiring R i = @ClassPack.mk CommSemiring R' i')
+    (r : R) (r' : R') (hr : HEq r r') :
+    HEq (PrimeSpectrum.basicOpen r) (PrimeSpectrum.basicOpen r') := by
+  cases h; cases hr; rfl
 
 @[simp]
 theorem mem_basicOpen (f : R) (x : PrimeSpectrum R) : x ∈ basicOpen f ↔ f ∉ x.asIdeal :=

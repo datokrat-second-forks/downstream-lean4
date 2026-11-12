@@ -96,6 +96,17 @@ on bounded subsets. `StrongDual R M` is an abbreviation for `M →L[R] R`. -/
 abbrev StrongDual (R : Type*) [Semiring R] [TopologicalSpace R]
   (M : Type*) [TopologicalSpace M] [AddCommMonoid M] [Module R M] : Type _ := M →L[R] R
 
+/-- Pack: a topological module over a fixed semiring. -/
+structure TopModPack.{ur, um} (R : Type ur) [Semiring R] where
+  /-- The carrier. -/
+  M : Type um
+  /-- The topology. -/
+  [top : TopologicalSpace M]
+  /-- The additive structure. -/
+  [acm : AddCommMonoid M]
+  /-- The module structure. -/
+  [mod : Module R M]
+
 namespace ContinuousLinearMap
 
 section Semiring
@@ -125,6 +136,31 @@ theorem coe_injective : Function.Injective ((↑) : (M₁ →SL[σ₁₂] M₂) 
 instance funLike : FunLike (M₁ →SL[σ₁₂] M₂) M₁ M₂ where
   coe f := f.toLinearMap
   coe_injective _ _ h := coe_injective (DFunLike.coe_injective h)
+
+/-- Pack congruence for the type `M →SL[σ] N`. -/
+@[dsimp_congr] theorem pack_congr.{ur, us, um, un} {R : Type ur} {S : Type us}
+    [Semiring R] [Semiring S] {σ : R →+* S} {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module S N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module S N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := S) N = TopModPack.mk N') :
+    (M →SL[σ] N) = (M' →SL[σ] N') := by
+  cases hM; cases hN; rfl
+
+/-- Lens: the coercion pack of `M →SL[σ] N` follows the packs of `M` and `N`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ur, us, um, un} {R : Type ur}
+    {S : Type us} [Semiring R] [Semiring S] {σ : R →+* S} {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module S N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module S N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := S) N = TopModPack.mk N') :
+    FunLikePack.mk (M →SL[σ] N) M (fun _ => N) =
+      FunLikePack.mk (M' →SL[σ] N') M' (fun _ => N') := by
+  cases hM; cases hN; rfl
 
 instance continuousSemilinearMapClass :
     ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁ M₂ where
@@ -455,6 +491,25 @@ variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 /-- Composition of continuous linear maps. -/
 def comp (g : M₂ →SL[σ₂₃] M₃) (f : M₁ →SL[σ₁₂] M₂) : M₁ →SL[σ₁₃] M₃ :=
   ⟨(g : M₂ →ₛₗ[σ₂₃] M₃).comp (f : M₁ →ₛₗ[σ₁₂] M₂), g.2.comp f.2⟩
+
+/-- Pack congruence for `ContinuousLinearMap.comp`. -/
+@[dsimp_congr] theorem comp_pack_congr.{u1, u2, u3, v1, v2, v3}
+    {R₁ : Type u1} {R₂ : Type u2} {R₃ : Type u3} [Semiring R₁] [Semiring R₂] [Semiring R₃]
+    {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R₁ →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+    {M₁ M₁' : Type v1} {M₂ M₂' : Type v2} {M₃ M₃' : Type v3}
+    [TopologicalSpace M₁] [AddCommMonoid M₁] [Module R₁ M₁]
+    [TopologicalSpace M₁'] [AddCommMonoid M₁'] [Module R₁ M₁']
+    [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R₂ M₂]
+    [TopologicalSpace M₂'] [AddCommMonoid M₂'] [Module R₂ M₂']
+    [TopologicalSpace M₃] [AddCommMonoid M₃] [Module R₃ M₃]
+    [TopologicalSpace M₃'] [AddCommMonoid M₃'] [Module R₃ M₃']
+    (h₁ : TopModPack.mk (R := R₁) M₁ = TopModPack.mk M₁')
+    (h₂ : TopModPack.mk (R := R₂) M₂ = TopModPack.mk M₂')
+    (h₃ : TopModPack.mk (R := R₃) M₃ = TopModPack.mk M₃')
+    (g : M₂ →SL[σ₂₃] M₃) (g' : M₂' →SL[σ₂₃] M₃') (hg : HEq g g')
+    (f : M₁ →SL[σ₁₂] M₂) (f' : M₁' →SL[σ₁₂] M₂') (hf : HEq f f') :
+    HEq (g.comp f) (g'.comp f') := by
+  cases h₁; cases h₂; cases h₃; cases hg; cases hf; rfl
 
 @[inherit_doc comp]
 infixr:80 " ∘L " =>

@@ -49,6 +49,25 @@ deriving instance SMul S, AddCommGroup, Module (R ⧸ I), Module S, IsScalarTowe
 variable [IsNoetherian R I] in
 deriving instance IsNoetherian R for Cotangent I
 
+/-- Lens: the module pack of `I.Cotangent` over a base `S` follows the ideal `I`. -/
+@[dsimp_congr] theorem Cotangent.smodPack_congr.{ur, us} {R : Type ur} {S : Type us} [CommRing R]
+    [CommSemiring S] [Algebra S R] {I I' : Ideal R} (h : I = I') :
+    @SModPack.mk S _ I.Cotangent I.instAddCommGroupCotangent.toAddCommMonoid
+        I.instModuleCotangentOfAlgebra =
+      @SModPack.mk S _ I'.Cotangent I'.instAddCommGroupCotangent.toAddCommMonoid
+        I'.instModuleCotangentOfAlgebra := by
+  cases h; rfl
+
+/-- Lens: the two-base module pack of `I.Cotangent` follows the ideal `I`. -/
+@[dsimp_congr] theorem Cotangent.smod2Pack_congr.{ur, us, ut} {R : Type ur} {S : Type us}
+    {T : Type ut} [CommRing R] [CommSemiring S] [Algebra S R] [CommSemiring T] [Algebra T R]
+    {I I' : Ideal R} (h : I = I') :
+    @SMod2Pack.mk S T _ _ I.Cotangent I.instAddCommGroupCotangent.toAddCommMonoid
+        I.instModuleCotangentOfAlgebra I.instModuleCotangentOfAlgebra =
+      @SMod2Pack.mk S T _ _ I'.Cotangent I'.instAddCommGroupCotangent.toAddCommMonoid
+        I'.instModuleCotangentOfAlgebra I'.instModuleCotangentOfAlgebra := by
+  cases h; rfl
+
 /-- The quotient map from `I` to `I ⧸ I ^ 2`. -/
 @[simps! -isSimp apply]
 def toCotangent : I →ₗ[R] I.Cotangent := Submodule.mkQ _

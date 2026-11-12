@@ -408,7 +408,6 @@ theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.obj) :
       (coyoneda.obj (op ((G.op ⋙ ℱ).obj X))) ℱ'.property⟩)
     (whiskerRight α (coyoneda.obj _)) hf.some.map (𝟙 _)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 variable (G) in
 set_option backward.isDefEq.respectTransparency false in

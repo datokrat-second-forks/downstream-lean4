@@ -152,6 +152,24 @@ variable {A}
 
 export CommShift (commShiftIso commShiftIso_zero commShiftIso_add)
 
+set_option checkBinderAnnotations false in
+/-- Pack: a functor with an instance of `F.CommShift A`. -/
+structure CommShiftPack.{vc, uc, vd, ud, ua} (C : Type uc) (D : Type ud) [Category.{vc} C]
+    [Category.{vd} D] (A : Type ua) [AddMonoid A] [HasShift C A] [HasShift D A] where
+  /-- The functor. -/
+  F : C ⥤ D
+  /-- The instance. -/
+  [inst : F.CommShift A]
+
+/-- Pack congruence for `Functor.commShiftIso`. -/
+@[dsimp_congr] theorem commShiftIso_pack_congr.{vc, uc, vd, ud, ua} {C : Type uc} {D : Type ud}
+    [Category.{vc} C] [Category.{vd} D] {A : Type ua} [AddMonoid A] [HasShift C A]
+    [HasShift D A] {F F' : C ⥤ D} [i : F.CommShift A] [i' : F'.CommShift A]
+    (h : @CommShiftPack.mk C D _ _ A _ _ _ F i = @CommShiftPack.mk C D _ _ A _ _ _ F' i')
+    (a : A) :
+    HEq (CommShift.commShiftIso F a) (CommShift.commShiftIso F' a) := by
+  cases h; rfl
+
 section
 
 variable [F.CommShift A]
@@ -210,6 +228,19 @@ instance comp [F.CommShift A] [G.CommShift A] : (F ⋙ G).CommShift A where
     dsimp
     simp only [comp_id, id_comp, assoc, ← Functor.map_comp_assoc, Iso.inv_hom_id_app, comp_obj]
     simp only [map_comp, assoc, commShiftIso_hom_naturality_assoc]
+
+/-- Lens: the pack of `F ⋙ G` with `CommShift.comp` follows the packs of `F` and `G`. -/
+@[dsimp_congr] theorem comp.packLens.{vc, uc, vd, ud, ve, ue, ua} {C : Type uc} {D : Type ud}
+    {E : Type ue} [Category.{vc} C] [Category.{vd} D] [Category.{ve} E] {A : Type ua}
+    [AddMonoid A] [HasShift C A] [HasShift D A] [HasShift E A]
+    {F F' : C ⥤ D} {G G' : D ⥤ E} {i : F.CommShift A} {i' : F'.CommShift A}
+    {j : G.CommShift A} {j' : G'.CommShift A}
+    (hF : @CommShiftPack.mk C D _ _ A _ _ _ F i = @CommShiftPack.mk C D _ _ A _ _ _ F' i')
+    (hG : @CommShiftPack.mk D E _ _ A _ _ _ G j = @CommShiftPack.mk D E _ _ A _ _ _ G' j') :
+    @CommShiftPack.mk C E _ _ A _ _ _ (F ⋙ G) (@CommShift.comp _ _ _ _ _ _ F G A _ _ _ _ i j) =
+      @CommShiftPack.mk C E _ _ A _ _ _ (F' ⋙ G')
+        (@CommShift.comp _ _ _ _ _ _ F' G' A _ _ _ _ i' j') := by
+  cases hF; cases hG; rfl
 
 end CommShift
 

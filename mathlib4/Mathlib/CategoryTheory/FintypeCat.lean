@@ -56,6 +56,12 @@ Prefer the `Finite` instance if possible. -/
 noncomputable def fintype {X : FintypeCat} : Fintype X :=
   Fintype.ofFinite X.obj
 
+/-- Lens: the `Fintype` pack of the carrier of `X : FintypeCat` follows `X`. -/
+@[dsimp_congr] theorem fintype.packLens.{ua} {X X' : FintypeCat.{ua}} (h : X = X') :
+    @ClassPack.mk Fintype X.obj (@FintypeCat.fintype X) =
+      @ClassPack.mk Fintype X'.obj (@FintypeCat.fintype X') := by
+  cases h; rfl
+
 /-- The fully faithful embedding of `FintypeCat` into the category of types. -/
 @[simps!]
 abbrev incl : FintypeCat ⥤ Type* := ObjectProperty.ι _
@@ -241,8 +247,7 @@ attribute [local instance] FintypeCat.fintype in
 theorem incl_mk_nat_card (n : ℕ) :
     Fintype.card (incl.obj (mk n)) = n := by
   convert Finset.card_fin n
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [incl, mk, len])
+  dsimp [incl, mk, len]
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   convert! (Fintype.ofEquiv_card Equiv.ulift).symm)
 

@@ -198,6 +198,26 @@ instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] (P :
 instance module (P : Submodule R M) : Module R (M ⧸ P) :=
   Quotient.module' P
 
+/-- Lens: the module pack of the quotient `M ⧸ p` follows the submodule `p`. -/
+@[dsimp_congr] theorem smodPack_congr.{ur, um} {R : Type ur} [Ring R] {M : Type um}
+    [AddCommGroup M] [Module R M] {p p' : Submodule R M} (h : p = p') :
+    @SModPack.mk R _ (M ⧸ p) (Submodule.Quotient.addCommMonoid p)
+        (Submodule.Quotient.module p) =
+      @SModPack.mk R _ (M ⧸ p') (Submodule.Quotient.addCommMonoid p')
+        (Submodule.Quotient.module p') := by
+  cases h; rfl
+
+/-- Lens: the group-module pack of the quotient `M ⧸ p` follows the group-module pack of the
+ambient module `M` and the submodule `p`. -/
+@[dsimp_congr] theorem _root_.Submodule.Quotient.gmodPack_congr₂.{ur, um} {R : Type ur} [Ring R]
+    {M M' : Type um} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
+    (hM : GModPack.mk (R := R) M = GModPack.mk M')
+    (p : Submodule R M) (p' : Submodule R M') (hp : HEq p p') :
+    @GModPack.mk R _ (M ⧸ p) (Submodule.Quotient.addCommGroup p) (Submodule.Quotient.module p) =
+      @GModPack.mk R _ (M' ⧸ p') (Submodule.Quotient.addCommGroup p')
+        (Submodule.Quotient.module p') := by
+  cases hM; cases hp; rfl
+
 end Module
 
 @[elab_as_elim]

@@ -45,6 +45,16 @@ namespace CategoryTheory
 
 universe w₁ w₂ w₃ v₁ v₂ v₃ u₁ u₂ u₃
 
+/-- Lens: the category pack of `a ⟶ b` in a bicategory follows `a` and `b`.
+
+This theorem belongs to `Mathlib/CategoryTheory/Bicategory/Basic.lean`. It is here because this
+file imports both that file and `ClassPack`. -/
+@[dsimp_congr] theorem Bicategory.homCategory.packLens.{wb, vb, ub} {B : Type ub}
+    [Bicategory.{wb, vb} B] {a a' b b' : B} (ha : a = a') (hb : b = b') :
+    @ClassPack.mk Category.{wb, vb} (a ⟶ b) (Bicategory.homCategory a b) =
+      @ClassPack.mk Category.{wb, vb} (a' ⟶ b') (Bicategory.homCategory a' b') := by
+  cases ha; cases hb; rfl
+
 section
 
 variable (B : Type u₁) [Quiver.{v₁} B] [∀ a b : B, Quiver.{w₁} (a ⟶ b)]

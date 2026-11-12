@@ -84,6 +84,12 @@ export ENorm (enorm)
 @[inherit_doc] notation "‖" e "‖₊" => nnnorm e
 @[inherit_doc] notation "‖" e "‖ₑ" => enorm e
 
+/-- Pack congruence for `enorm`. -/
+@[dsimp_congr] theorem enorm_pack_congr.{ua} {E E' : Type ua} [i : ENorm E] [i' : ENorm E']
+    (h : @ClassPack.mk ENorm E i = @ClassPack.mk ENorm E' i') (x : E) (x' : E') (hx : HEq x x') :
+    ‖x‖ₑ = ‖x'‖ₑ := by
+  cases h; cases hx; rfl
+
 section ENorm
 variable {E : Type*} [NNNorm E] {x : E} {r : ℝ≥0}
 

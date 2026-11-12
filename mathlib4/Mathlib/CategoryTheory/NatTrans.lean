@@ -66,6 +66,19 @@ attribute [map (attr := reassoc (attr := simp))] NatTrans.naturality
 
 attribute [grind _=_] NatTrans.naturality
 
+/-- Pack congruence for the component of a natural transformation. -/
+-- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+theorem NatTrans.app_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
+    {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (hD : @ClassPack.mk Category.{vd, ud} D iD = @ClassPack.mk Category.{vd, ud} D' iD')
+    {F G : C ⥤ D} {F' G' : C' ⥤ D'} (hF : HEq F F') (hG : HEq G G')
+    (α : NatTrans F G) (α' : NatTrans F' G') (hα : HEq α α')
+    (X : C) (X' : C') (hX : HEq X X') :
+    HEq (α.app X) (α'.app X') := by
+  cases hC; cases hD; cases hF; cases hG; cases hα; cases hX; rfl
+
 @[to_dual self]
 theorem congr_app {F G : C ⥤ D} {α β : NatTrans F G} (h : α = β) (X : C) : α.app X = β.app X := by
   cat_disch

@@ -105,6 +105,13 @@ def Subobject (X : C) :=
 instance (X : C) : PartialOrder (Subobject X) :=
   inferInstanceAs <| PartialOrder (ThinSkeleton (MonoOver X))
 
+/-- Lens: the partial order pack of `Subobject X` follows `X`. -/
+@[dsimp_congr] theorem Subobject.instPartialOrder.packLens.{vc, uc} {C : Type uc}
+    [Category.{vc} C] {X X' : C} (h : X = X') :
+    @ClassPack.mk PartialOrder (Subobject X) (instPartialOrderSubobject X) =
+      @ClassPack.mk PartialOrder (Subobject X') (instPartialOrderSubobject X') := by
+  cases h; rfl
+
 namespace Subobject
 
 lemma skeletal (X : C) : Skeletal (Subobject X) := ThinSkeleton.skeletal

@@ -242,6 +242,13 @@ def ker (f : G →* M) : Subgroup G :=
         f x⁻¹ = f x * f x⁻¹ := by rw [hx, one_mul]
         _ = 1 := by rw [← map_mul, mul_inv_cancel, map_one] }
 
+/-- Pack congruence for `MonoidHom.ker`. -/
+@[dsimp_congr] theorem ker_pack_congr.{ug, um} {G : Type ug} [Group G] {M M' : Type um}
+    [i : MulOneClass M] [i' : MulOneClass M']
+    (h : @ClassPack.mk MulOneClass M i = @ClassPack.mk MulOneClass M' i')
+    (f : G →* M) (f' : G →* M') (hf : HEq f f') : f.ker = f'.ker := by
+  cases h; cases hf; rfl
+
 @[to_additive (attr := simp)]
 theorem ker_toSubmonoid (f : G →* M) : f.ker.toSubmonoid = MonoidHom.mker f := rfl
 

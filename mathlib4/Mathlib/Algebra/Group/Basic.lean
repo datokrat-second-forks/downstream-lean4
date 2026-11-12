@@ -416,6 +416,14 @@ instance (priority := 100) DivisionMonoid.toDivInvOneMonoid : DivInvOneMonoid α
   { DivisionMonoid.toDivInvMonoid with
     inv_one := by simpa only [one_div, inv_inv] using (inv_div (1 : α) 1).symm }
 
+/-- Lens: the `SubNegZeroMonoid` pack follows the `SubtractionMonoid` pack. -/
+@[dsimp_congr] theorem SubtractionMonoid.toSubNegZeroMonoid.packLens.{u_pack} {α α' : Type u_pack}
+    {i : SubtractionMonoid α} {i' : SubtractionMonoid α'}
+    (h : @ClassPack.mk SubtractionMonoid α i = @ClassPack.mk SubtractionMonoid α' i') :
+    @ClassPack.mk SubNegZeroMonoid α (@SubtractionMonoid.toSubNegZeroMonoid α i) =
+      @ClassPack.mk SubNegZeroMonoid α' (@SubtractionMonoid.toSubNegZeroMonoid α' i') := by
+  cases h; rfl
+
 @[to_additive (attr := simp)]
 lemma inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
   | 0 => by rw [pow_zero, pow_zero, inv_one]

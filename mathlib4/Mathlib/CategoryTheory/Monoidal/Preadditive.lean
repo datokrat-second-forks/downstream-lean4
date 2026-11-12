@@ -117,6 +117,7 @@ theorem sum_tensor {P Q R S : C} {J : Type*} (s : Finset J) (f : P ⟶ Q) (g : J
     (∑ j ∈ s, g j) ⊗ₘ f = ∑ j ∈ s, g j ⊗ₘ f := by
   simp only [tensorHom_def, sum_whiskerRight, Preadditive.sum_comp]
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 -- In a closed monoidal category, this would hold because
@@ -127,12 +128,12 @@ instance (X : C) : PreservesFiniteBiproducts (tensorLeft X) where
     let ⟨_⟩ := nonempty_fintype J
     { preserves := fun {f} =>
         { preserves := fun {b} i => ⟨isBilimitOfTotal _ (by
-            (set_option backward.dsimp.instanceTypes false in
-            dsimp)
+            dsimp
             simp_rw [← id_tensorHom]
             simp only [tensorHom_comp_tensorHom, Category.comp_id, ← tensor_sum, ← id_tensorHom_id,
               IsBilimit.total i])⟩ } }
 
+set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
@@ -140,8 +141,7 @@ instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
     let ⟨_⟩ := nonempty_fintype J
     { preserves := fun {f} =>
         { preserves := fun {b} i => ⟨isBilimitOfTotal _ (by
-            (set_option backward.dsimp.instanceTypes false in
-            dsimp)
+            dsimp
             simp_rw [← tensorHom_id]
             simp only [tensorHom_comp_tensorHom, Category.comp_id, ← sum_tensor, ← id_tensorHom_id,
                IsBilimit.total i])⟩ } }

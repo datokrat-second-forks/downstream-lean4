@@ -580,6 +580,13 @@ class PathConnectedSpace (X : Type*) [TopologicalSpace X] : Prop where
   /-- Any two points in a path-connected space must be joined by a continuous path. -/
   joined : ∀ x y : X, Joined x y
 
+/-- Pack congruence for `PathConnectedSpace`. -/
+@[dsimp_congr] theorem PathConnectedSpace.pack_congr.{ux} {X X' : Type ux}
+    [i : TopologicalSpace X] [i' : TopologicalSpace X']
+    (h : @ClassPack.mk TopologicalSpace X i = @ClassPack.mk TopologicalSpace X' i') :
+    PathConnectedSpace X = PathConnectedSpace X' := by
+  cases h; rfl
+
 theorem pathConnectedSpace_iff_zerothHomotopy :
     PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) := by
   let := pathSetoid X

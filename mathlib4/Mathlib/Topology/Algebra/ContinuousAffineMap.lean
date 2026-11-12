@@ -36,6 +36,21 @@ structure ContinuousAffineMap (R : Type*) {V W : Type*} (P Q : Type*) [Ring R] [
 /-- A continuous map of affine spaces -/
 notation:25 P " →ᴬ[" R "] " Q => ContinuousAffineMap R P Q
 
+/-- Pack: an affine space over a fixed ring with a topology on the points. -/
+structure TopAffPack.{ur, uv, up} (R : Type ur) [Ring R] where
+  /-- The vector space. -/
+  V : Type uv
+  /-- The point space. -/
+  P : Type up
+  /-- The additive structure of the vector space. -/
+  [acg : AddCommGroup V]
+  /-- The module structure of the vector space. -/
+  [mod : Module R V]
+  /-- The topology of the point space. -/
+  [top : TopologicalSpace P]
+  /-- The torsor structure. -/
+  [tor : AddTorsor V P]
+
 namespace ContinuousAffineMap
 
 variable {R V W P Q : Type*} [Ring R]
@@ -57,6 +72,31 @@ theorem toAffineMap_injective {f g : P →ᴬ[R] Q} (h : (f : P →ᵃ[R] Q) = (
 instance : FunLike (P →ᴬ[R] Q) P Q where
   coe f := f.toAffineMap
   coe_injective _ _ h := toAffineMap_injective <| DFunLike.coe_injective h
+
+/-- Pack congruence for the type `P →ᴬ[R] Q`. -/
+@[dsimp_congr] theorem pack_congr.{ur, uv, up, uw, uq} {R : Type ur} [Ring R]
+    {V V' : Type uv} {P P' : Type up} {W W' : Type uw} {Q Q' : Type uq}
+    [AddCommGroup V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
+    [AddCommGroup V'] [Module R V'] [TopologicalSpace P'] [AddTorsor V' P']
+    [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
+    [AddCommGroup W'] [Module R W'] [TopologicalSpace Q'] [AddTorsor W' Q']
+    (hP : TopAffPack.mk (R := R) V P = TopAffPack.mk V' P')
+    (hQ : TopAffPack.mk (R := R) W Q = TopAffPack.mk W' Q') :
+    (P →ᴬ[R] Q) = (P' →ᴬ[R] Q') := by
+  cases hP; cases hQ; rfl
+
+/-- Lens: the coercion pack of `P →ᴬ[R] Q` follows the packs of `P` and `Q`. -/
+@[dsimp_congr] theorem funLikePack_congr.{ur, uv, up, uw, uq} {R : Type ur}
+    [Ring R] {V V' : Type uv} {P P' : Type up} {W W' : Type uw} {Q Q' : Type uq}
+    [AddCommGroup V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
+    [AddCommGroup V'] [Module R V'] [TopologicalSpace P'] [AddTorsor V' P']
+    [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
+    [AddCommGroup W'] [Module R W'] [TopologicalSpace Q'] [AddTorsor W' Q']
+    (hP : TopAffPack.mk (R := R) V P = TopAffPack.mk V' P')
+    (hQ : TopAffPack.mk (R := R) W Q = TopAffPack.mk W' Q') :
+    FunLikePack.mk (P →ᴬ[R] Q) P (fun _ => Q) =
+      FunLikePack.mk (P' →ᴬ[R] Q') P' (fun _ => Q') := by
+  cases hP; cases hQ; rfl
 
 instance : ContinuousMapClass (P →ᴬ[R] Q) P Q where
   map_continuous := cont

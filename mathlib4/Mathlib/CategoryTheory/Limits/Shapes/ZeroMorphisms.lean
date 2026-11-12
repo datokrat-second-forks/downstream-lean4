@@ -58,6 +58,16 @@ attribute [to_dual self] HasZeroMorphisms.zero
 attribute [to_dual existing zero_comp] HasZeroMorphisms.comp_zero
 attribute [to_dual self (reorder := comp_zero zero_comp (X f Z), zero (X Y))] HasZeroMorphisms.mk
 
+set_option checkBinderAnnotations false in
+/-- Pack: a category with zero morphisms. -/
+structure HasZeroMorphismsPack.{vc, uc} where
+  /-- The carrier. -/
+  C : Type uc
+  /-- The category. -/
+  [cat : Category.{vc} C]
+  /-- The zero morphisms. -/
+  [zero : HasZeroMorphisms C]
+
 variable {C D}
 
 @[to_dual (attr := simp) zero_comp]

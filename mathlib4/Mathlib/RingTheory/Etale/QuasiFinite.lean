@@ -369,8 +369,9 @@ lemma Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq_aux₂
   refine RingHom.finite_algebraMap.mp ?_
   convert equiv.symm.toRingEquiv.finite.comp hf
   apply IsLocalization.ringHom_ext (.powers f)
+  -- pack-regime workaround (R45): without `-Algebra.ofId_apply` the term gets two spellings
   dsimp [-AlgEquiv.symm_toRingEquiv,
-    ← AlgEquiv.toAlgHom_toRingHom, -AlgHomClass.toRingHom_ofClass]
+    ← AlgEquiv.toAlgHom_toRingHom, -AlgHomClass.toRingHom_ofClass, -Algebra.ofId_apply]
   simp only [← IsScalarTower.algebraMap_eq, RingHom.comp_assoc, AlgHom.comp_algebraMap_of_tower]
 
 /--

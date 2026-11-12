@@ -61,6 +61,13 @@ variable {ι : Type*} (R S : Type*) [Ring R] [Ring S] (M : Type*) [AddCommGroup 
 @[mk_iff] class IsSimpleModule extends
   IsSimpleOrder (Submodule R M)
 
+/-- Pack congruence for the class `IsSimpleModule`. -/
+@[dsimp_congr] theorem IsSimpleModule.pack_congr.{ur, um} {R : Type ur} [Ring R]
+    {M M' : Type um} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
+    (h : GModPack.mk (R := R) M = GModPack.mk M') :
+    IsSimpleModule R M = IsSimpleModule R M' := by
+  cases h; rfl
+
 /-- A module is semisimple when every submodule has a complement, or equivalently, the module
   is a direct sum of simple modules. -/
 @[mk_iff] class IsSemisimpleModule extends

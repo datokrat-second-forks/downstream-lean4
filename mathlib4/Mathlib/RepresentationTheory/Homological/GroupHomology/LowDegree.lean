@@ -116,7 +116,7 @@ set_option backward.defeqAttrib.useBackward true in
 @[reassoc (attr := simp), elementwise (attr := simp)]
 lemma d₁₀_comp_coinvariantsMk : d₁₀ A ≫ (coinvariantsMk k G).app A = 0 := by
   ext
-  (set_option backward.dsimp.instanceTypes false in simp [d₁₀])
+  (simp [d₁₀])
 
 /-- The 0th differential in the complex of inhomogeneous chains of a `G`-representation `A` as a
 linear map into the `k`-submodule of `A` spanned by elements of the form
@@ -936,8 +936,7 @@ lemma H1π_eq_zero_iff (x : cycles₁ A) : H1π A x = 0 ↔ x.1 ∈ boundaries�
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  (set_option backward.dsimp.instanceTypes false in
-  simp [LinearMap.range_codRestrict, boundaries₁, shortComplexH1, cycles₁])
+  simp [LinearMap.range_codRestrict, boundaries₁, shortComplexH1, cycles₁]
 
 lemma H1π_eq_iff (x y : cycles₁ A) :
     H1π A x = H1π A y ↔ x.1 - y.1 ∈ boundaries₁ A := by
@@ -958,7 +957,6 @@ def H1Iso : H1 A ≅ (shortComplexH1 A).moduleCatLeftHomologyData.H :=
 
 -- With the instance type check, `elementwise` states `π_comp_H1Iso_hom_apply` differently, and
 -- `simp` no longer uses it in `H1ToTensorOfIsTrivial_H1π_single`.
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp), elementwise (attr := simp)]
@@ -1005,9 +1003,8 @@ def H1ToTensorOfIsTrivial : H1 A →ₗ[ℤ] (Additive <| Abelianization G) ⊗[
   ((QuotientAddGroup.lift _ ((Finsupp.liftAddHom fun g => AddMonoidHom.ofClass
     (TensorProduct.mk ℤ _ _ (Additive.ofMul (Abelianization.of g)))).comp
       (cycles₁ A).toAddSubgroup.subtype) fun ⟨y, hy⟩ ⟨z, hz⟩ => AddMonoidHom.mem_ker.2 <| by
-      (set_option backward.dsimp.instanceTypes false in
       simp [← hz, d₂₁, sum_sum_index, sum_add_index', tmul_add, sum_sub_index, tmul_sub,
-        shortComplexH1, isTrivial_apply])).comp <|
+        shortComplexH1, isTrivial_apply]).comp <|
           (set_option backward.isDefEq.respectTransparency.instanceTypes false in
           AddMonoidHom.ofClass (H1Iso A).hom.hom)).toIntLinearMap
 
@@ -1021,10 +1018,9 @@ lemma H1ToTensorOfIsTrivial_H1π_single (g : G) (a : A) :
   simp only [H1ToTensorOfIsTrivial, H1π, AddMonoidHom.coe_toIntLinearMap, AddMonoidHom.coe_comp]
   -- todo: change this proof so that we don't need `change` that abuses defeq.
   change QuotientAddGroup.lift _ _ _ ((H1Iso A).hom _) = _
-  (
   set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp [π_comp_H1Iso_hom_apply, ← Submodule.Quotient.quotientAddGroupMk_eq_mk, Submodule.mkQ,
-    AddSubgroup.subtype, cycles₁IsoOfIsTrivial])
+    AddSubgroup.subtype, cycles₁IsoOfIsTrivial]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- If a `G`-representation on `A` is trivial, this is the group isomorphism between
@@ -1093,8 +1089,7 @@ lemma H2π_eq_zero_iff (x : cycles₂ A) : H2π A x = 0 ↔ x.1 ∈ boundaries�
     cyclesMapIso'_inv, leftHomologyπ, ← h, ← leftHomologyMapIso'_inv, ModuleCat.hom_comp,
     LinearMap.coe_comp, Function.comp_apply, map_eq_zero_iff _
     ((ModuleCat.mono_iff_injective _).1 inferInstance)]
-  (set_option backward.dsimp.instanceTypes false in
-  simp [LinearMap.range_codRestrict, boundaries₂, shortComplexH2, cycles₂])
+  simp [LinearMap.range_codRestrict, boundaries₂, shortComplexH2, cycles₂]
 
 lemma H2π_eq_iff (x y : cycles₂ A) :
     H2π A x = H2π A y ↔ x.1 - y.1 ∈ boundaries₂ A := by

@@ -747,9 +747,8 @@ lemma exists_appTop_map_eq_zero_of_isLimit [∀ {i j} (f : i ⟶ j), IsAffineHom
     obtain ⟨j, f, hj⟩ := exists_appTop_map_eq_zero_of_isAffine_of_isLimit _ _
       (isLimitOpensCone D c hc i U) (.mk (𝟙 i)) (((opensDiagramι D i U).app _).appTop s) (by
         convert congr((c.pt.presheaf.map (homOfLE le_top).op).hom $hs)
-        · (
-          simp [Scheme.Hom.app_eq_appLE, Scheme.Hom.resLE_appLE,
-            ← ConcreteCategory.comp_apply]); rfl
+        · simp [Scheme.Hom.app_eq_appLE, Scheme.Hom.resLE_appLE,
+            ← ConcreteCategory.comp_apply]; rfl
         · simp)
     refine ⟨U, hU, hxU, j.left, j.hom, ?_⟩
     have hf : f.left = j.hom := by simpa using Over.w f
@@ -1047,7 +1046,7 @@ lemma Scheme.exists_isAffine_of_isLimit [IsCofiltered I]
   have : ∀ {i j : I} (f : i ⟶ j), IsAffineHom ((D ⋙ Γ.rightOp ⋙ Scheme.Spec).map f) := by
     dsimp; infer_instance
   have (j : _) : CompactSpace ((D ⋙ Γ.rightOp ⋙ Scheme.Spec).obj j) := by
-    (set_option backward.dsimp.instanceTypes false in dsimp); infer_instance
+    (dsimp); infer_instance
   obtain ⟨j, fij, hj⟩ := exists_map_eq_top _ _
     (isLimitOfPreserves (Scheme.Γ.rightOp ⋙ Scheme.Spec) hc) (D.obj i).toSpecΓ.opensRange
     ((preimage_opensRange_toSpecΓ (X := c.pt) (c.π.app i)).trans
@@ -1335,7 +1334,6 @@ lemma Scheme.exists_π_app_comp_eq_of_locallyOfFinitePresentation
   · refine 𝒲.hom_ext _ _ fun j ↦ ?_
     simp [F, Cover.ι_glueMorphisms_assoc, hak]; rfl
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `Hom_S(-, X)` sends a cofiltered limit of qcqs `S`-schemes with affine transition maps

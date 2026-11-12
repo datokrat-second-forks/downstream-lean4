@@ -120,6 +120,22 @@ class HasColimitsOfShape : Prop where
   /-- All `F : J ⥤ C` have colimits for a fixed `J` -/
   has_colimit : ∀ F : J ⥤ C, HasColimit F := by infer_instance
 
+/-- Pack congruence for `HasLimitsOfShape`: the category pack of the target. -/
+@[dsimp_congr] theorem HasLimitsOfShape.pack_congr.{vj, uj, vc, uc}
+    {J : Type uj} [Category.{vj} J] {C C' : Type uc}
+    [i : Category.{vc} C] [i' : Category.{vc} C']
+    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
+    HasLimitsOfShape J C = HasLimitsOfShape J C' := by
+  cases h; rfl
+
+/-- Pack congruence for `HasColimitsOfShape`: the category pack of the target. -/
+@[dsimp_congr] theorem HasColimitsOfShape.pack_congr.{vj, uj, vc, uc}
+    {J : Type uj} [Category.{vj} J] {C C' : Type uc}
+    [i : Category.{vc} C] [i' : Category.{vc} C']
+    (h : @ClassPack.mk Category.{vc, uc} C i = @ClassPack.mk Category.{vc, uc} C' i') :
+    HasColimitsOfShape J C = HasColimitsOfShape J C' := by
+  cases h; rfl
+
 /-- `C` has all limits of size `v₁ u₁` (`HasLimitsOfSize.{v₁ u₁} C`)
 if it has limits of every shape `J : Type u₁` with `[Category.{v₁} J]`.
 -/
@@ -197,6 +213,29 @@ theorem colimit.eqToHom_comp_ι (F : J ⥤ C) [HasColimit F] {j j' : J} (hj : j 
     eqToHom (by subst hj; rfl) ≫ colimit.ι F j = colimit.ι F j' := by
   subst hj
   simp
+
+/-- Pack congruence for the colimit object. -/
+@[dsimp_congr] theorem colimit_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
+    {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (F : J ⥤ C) (F' : J' ⥤ C') (hF : HEq F F')
+    [h : HasColimit F] {h' : HasColimit F'} (hh : HEq h h') :
+    HEq (@colimit J iJ C iC F h) (@colimit J' iJ' C' iC' F' h') := by
+  cases hJ; cases hC; cases hF; rfl
+
+/-- Pack congruence for the coprojection to a colimit. -/
+@[dsimp_congr] theorem colimit.ι_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
+    {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    (F : J ⥤ C) (F' : J' ⥤ C') (hF : HEq F F')
+    [h : HasColimit F] {h' : HasColimit F'} (hh : HEq h h')
+    (j : J) (j' : J') (hj : HEq j j') :
+    HEq (@colimit.ι J iJ C iC F h j) (@colimit.ι J' iJ' C' iC' F' h' j') := by
+  cases hJ; cases hC; cases hF; cases hj; rfl
 
 @[to_dual (attr := simp)]
 theorem limit.cone_x {F : J ⥤ C} [HasLimit F] : (limit.cone F).pt = limit F :=
@@ -564,6 +603,16 @@ def lim : (J ⥤ C) ⥤ C where
 @[to_dual (attr := simps) ι /-- The natural transformation induced by `colimit.ι`. -/]
 def lim.π (j : J) : lim ⟶ (evaluation J C).obj j where
   app F := limit.π F j
+
+/-- Pack congruence for the colimit functor. -/
+@[dsimp_congr] theorem colim_pack_congr.{vj, vc, uj, uc} {J J' : Type uj}
+    {C C' : Type uc} [iJ : Category.{vj} J] [iJ' : Category.{vj} J']
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hJ : @ClassPack.mk Category.{vj, uj} J iJ = @ClassPack.mk Category.{vj, uj} J' iJ')
+    (hC : @ClassPack.mk Category.{vc, uc} C iC = @ClassPack.mk Category.{vc, uc} C' iC')
+    [h : HasColimitsOfShape J C] {h' : HasColimitsOfShape J' C'} (hh : HEq h h') :
+    HEq (@colim J iJ C iC h) (@colim J' iJ' C' iC' h') := by
+  cases hJ; cases hC; rfl
 
 variable {G : J ⥤ C} (α : F ⟶ G)
 

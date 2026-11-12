@@ -42,6 +42,14 @@ variable (f : M → N) (g : N → P) (g' : P → P')
   `g y = 0` iff `y` belongs to the image of `f`. -/]
 def MulExact [One P] : Prop := ∀ y, g y = 1 ↔ y ∈ Set.range f
 
+/-- Pack congruence for `Function.Exact`: the `Zero` pack of the last type. -/
+@[dsimp_congr] theorem Exact.pack_congr.{um, un, up} {M M' : Type um} {N N' : Type un}
+    {P P' : Type up} [i : Zero P] [i' : Zero P'] (hM : M = M') (hN : N = N')
+    (h : @ClassPack.mk Zero P i = @ClassPack.mk Zero P' i')
+    (f : M → N) (f' : M' → N') (hf : HEq f f') (g : N → P) (g' : N' → P') (hg : HEq g g') :
+    Function.Exact f g = Function.Exact f' g' := by
+  cases hM; cases hN; cases h; cases hf; cases hg; rfl
+
 variable {f g}
 
 namespace MulExact
