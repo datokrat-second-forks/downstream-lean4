@@ -87,8 +87,8 @@ variable [HasDerivedCategory.{w} C]
 def DerivedCategory : Type (max u v) := HomologicalComplexUpToQuasiIso C (ComplexShape.up ℤ)
 deriving Category
 
-/-- Pack root lemma: the category pack of `DerivedCategory C` is that of the localized category. -/
-@[simp]
+/-- Pack root lemma: the category pack of `DerivedCategory C` is that of the localized category.
+It is not a `simp` lemma, because `simp` does not unfold `DerivedCategory C` by itself. -/
 theorem DerivedCategory.category_classPack :
     @CategoryPack.mk.{w, max u v} (DerivedCategory C) (instCategoryDerivedCategory C) =
       @CategoryPack.mk.{w, max u v} (HomologicalComplexUpToQuasiIso C (ComplexShape.up ℤ))
@@ -139,7 +139,7 @@ lemma quotientCompQhIso_inv_naturality {K L : CochainComplex C ℤ} (f : K ⟶ L
 
 set_option backward.isDefEq.respectTransparency false in
 instance : Qh.IsLocalization (HomotopyCategory.quasiIso C (ComplexShape.up ℤ)) := by
-  dsimp [Qh, DerivedCategory]
+  dsimp [Qh, DerivedCategory, DerivedCategory.category_classPack]
   infer_instance
 
 instance : Qh.IsLocalization (HomotopyCategory.subcategoryAcyclic C).trW := by
