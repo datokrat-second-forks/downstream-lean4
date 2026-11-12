@@ -43,7 +43,7 @@ public section
 -- This theorem belongs to Lean core, next to `LE`. It is here, in the first file of order
 -- notation that imports the pack of `LE`.
 /-- Pack congruence for `≤`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem LE.le_pack_congr.{ua} {α α' : Type ua} [i : LE α] [i' : LE α']
     (h : @LEPack.mk α i = @LEPack.mk α' i') (a : α) (a' : α') (ha : HEq a a')
     (b : α) (b' : α') (hb : HEq b b') : (a ≤ b) = (a' ≤ b') := by
@@ -65,7 +65,7 @@ initialize_simps_projections Compl
 class_pack Compl
 
 /-- Pack congruence for the complement. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Compl.compl_pack_congr.{ua} {α α' : Type ua} [i : Compl α]
     [i' : Compl α'] (h : @ComplPack.mk α i = @ComplPack.mk α' i') (a : α) (a' : α')
     (ha : HEq a a') :
@@ -215,7 +215,7 @@ notation "⊤" => Top.top
 notation "⊥" => Bot.bot
 
 /-- Pack congruence for `⊤`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Top.top_pack_congr.{ua} {α α' : Type ua} [i : Top α] [i' : Top α']
     (h : @TopPack.mk α i = @TopPack.mk α' i') :
     HEq (⊤ : α) (⊤ : α') := by

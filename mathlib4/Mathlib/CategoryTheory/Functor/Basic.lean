@@ -61,7 +61,7 @@ attribute [to_dual self (reorder := map (X Y), map_comp (X Z, f g))] Functor.mk
 attribute [to_dual self (reorder := mk (map (X Y), map_comp (X Z, f g)))] Functor.casesOn
 
 /-- Pack congruence for the type of functors. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Functor.pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
@@ -71,7 +71,7 @@ theorem Functor.pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
   cases hC; cases hD; rfl
 
 /-- Pack congruence for the object map of a functor. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Functor.obj_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
@@ -82,7 +82,7 @@ theorem Functor.obj_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
   cases hC; cases hD; cases hF; cases hX; rfl
 
 /-- Pack congruence for the morphism map of a functor. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Functor.map_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
@@ -133,7 +133,7 @@ theorem id_map {X Y : C} (f : X ⟶ Y) : (𝟭 C).map f = f := rfl
 end
 
 /-- Pack congruence for the identity functor. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem id_pack_congr.{vc, uc} {C C' : Type uc}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
     (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC') :
@@ -169,7 +169,7 @@ theorem comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) :
     (F ⋙ G).map f = G.map (F.map f) := rfl
 
 /-- Pack congruence for the composition of functors. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem comp_pack_congr.{vc, vd, ve, uc, ud, ue}
     {C C' : Type uc} {D D' : Type ud} {E E' : Type ue}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']

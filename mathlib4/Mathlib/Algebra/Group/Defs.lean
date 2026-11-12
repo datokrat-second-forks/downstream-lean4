@@ -59,7 +59,7 @@ structure HSMulPack.{ua, va, wa} where
 
 -- This theorem belongs to Lean core, next to `HSMul`. It is here, next to `HSMulPack`.
 /-- Pack congruence for `HSMul.hSMul`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem HSMul.hSMul_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
     {γ γ' : Type wa} [i : HSMul α β γ] [i' : HSMul α' β' γ']
     (h : HSMulPack.mk α β γ = HSMulPack.mk α' β' γ')
@@ -70,7 +70,7 @@ theorem HSMul.hSMul_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va
 -- This theorem belongs to Lean core, next to `instHSMul`. It is here, next to `HSMulPack`.
 /-- Lens: the scalar multiplication pack of `instHSMul` follows the `SMul α` pack of the
 argument type. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem instHSMul.hSMulPack_congr.{ua, va} {α : Type ua} {β β' : Type va}
     [i : SMul α β] [i' : SMul α β']
     (h : @SMulPack.mk α β i = @SMulPack.mk α β' i') :
@@ -90,7 +90,7 @@ structure HAddPack.{ua, va, wa} where
 
 -- This theorem belongs to Lean core, next to `HAdd`. It is here, next to `HAddPack`.
 /-- Pack congruence for `HAdd.hAdd`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem HAdd.hAdd_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
     {γ γ' : Type wa} [i : HAdd α β γ] [i' : HAdd α' β' γ']
     (h : HAddPack.mk α β γ = HAddPack.mk α' β' γ')
@@ -100,7 +100,7 @@ theorem HAdd.hAdd_pack_congr.{ua, va, wa} {α α' : Type ua} {β β' : Type va}
 
 -- This theorem belongs to Lean core, next to `instHAdd`. It is here, next to `HAddPack`.
 /-- Lens: the addition pack of `instHAdd` follows the `Add` pack. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem instHAdd.hAddPack_congr.{ua} {α α' : Type ua} [i : Add α] [i' : Add α']
     (h : @AddPack.mk α i = @AddPack.mk α' i') :
     @HAddPack.mk α α α (@instHAdd α i) = @HAddPack.mk α' α' α' (@instHAdd α' i') := by
@@ -109,7 +109,7 @@ theorem instHAdd.hAddPack_congr.{ua} {α α' : Type ua} [i : Add α] [i' : Add �
 -- This theorem belongs to Lean core, next to `Neg`. It is here, next to the pack congruences for
 -- the other arithmetic operators.
 /-- Pack congruence for negation. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Neg.neg_pack_congr.{ua} {α α' : Type ua} [i : Neg α] [i' : Neg α']
     (h : @NegPack.mk α i = @NegPack.mk α' i') (a : α) (a' : α') (ha : HEq a a') :
     HEq (-a) (-a') := by

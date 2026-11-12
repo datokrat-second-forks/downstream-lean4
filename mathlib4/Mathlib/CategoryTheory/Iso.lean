@@ -71,7 +71,7 @@ attribute [reassoc +to_dual (attr := simp), grind =] Iso.hom_inv_id Iso.inv_hom_
 infixr:10 " ≅ " => Iso -- type as \cong or \iso
 
 /-- Pack congruence for the forward morphism of an isomorphism. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Iso.hom_pack_congr.{vc, uc} {C C' : Type uc}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
     (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
@@ -81,7 +81,7 @@ theorem Iso.hom_pack_congr.{vc, uc} {C C' : Type uc}
   cases hC; cases hX; cases hY; cases he; rfl
 
 /-- Pack congruence for the backward morphism of an isomorphism. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Iso.inv_pack_congr.{vc, uc} {C C' : Type uc}
     [iC : Category.{vc} C] [iC' : Category.{vc} C']
     (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')

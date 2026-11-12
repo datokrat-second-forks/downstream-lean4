@@ -113,7 +113,7 @@ theorem mem_univ (x : α) : x ∈ @univ α := trivial
 instance : Compl (Set α) := ⟨fun s ↦ {x | x ∉ s}⟩
 
 /-- Lens: the complement pack of `Set α` follows `α`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem instCompl.packLens.{ua} {α α' : Type ua} (h : α = α') :
     @ComplPack.mk (Set α) Set.instCompl = @ComplPack.mk (Set α') Set.instCompl := by
   cases h; rfl

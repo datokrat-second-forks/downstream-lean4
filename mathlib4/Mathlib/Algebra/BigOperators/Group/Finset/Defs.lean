@@ -69,8 +69,7 @@ protected def prod [CommMonoid M] (s : Finset ι) (f : ι → M) : M :=
 
 /-- Pack congruence for `Finset.sum`: the sum follows the pack of the additive monoid. `simp` gets
 the hypothesis `x ∈ s'` for the summand, as with `Finset.sum_congr`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
--- With the attribute on, `Finset.sum_congr` must not be a `congr` theorem (record R66).
+@[dsimp_congr]
 theorem sum_pack_congr.{ui, um} {ι : Type ui} {M M' : Type um}
     [i : AddCommMonoid M] [i' : AddCommMonoid M'] {s s' : Finset ι} {f : ι → M} {f' : ι → M'}
     (h : @AddCommMonoidPack.mk M i = @AddCommMonoidPack.mk M' i') (hs : s = s')

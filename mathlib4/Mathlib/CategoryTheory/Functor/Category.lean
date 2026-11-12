@@ -56,7 +56,7 @@ instance Functor.category : Category.{max u₁ v₂} (C ⥤ D) where
   comp α β := vcomp α β
 
 /-- Lens: the category pack of `C ⥤ D` follows the packs of `C` and `D`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Functor.category.packLens.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} {iC : Category.{vc} C} {iC' : Category.{vc} C'}
     {iD : Category.{vd} D} {iD' : Category.{vd} D'}

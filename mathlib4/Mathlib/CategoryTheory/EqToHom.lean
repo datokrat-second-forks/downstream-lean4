@@ -48,7 +48,7 @@ def eqToHom {C : Type u₁} [CategoryStruct.{v₁} C] {X Y : C} (p : X = Y) :
 to_dual_for eqToHom := eqToHom p.symm
 
 /-- Pack congruence for `eqToHom`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem eqToHom_pack_congr.{vc, uc} {C C' : Type uc}
     [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
     (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i')

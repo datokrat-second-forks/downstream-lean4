@@ -56,7 +56,7 @@ in a quiver or category.
 infixr:10 " ⟶ " => Quiver.Hom
 
 /-- Pack congruence for the type of arrows of a quiver. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Quiver.Hom_pack_congr.{vq, uq} {V V' : Type uq} [i : Quiver.{vq} V]
     [i' : Quiver.{vq} V']
     (h : @QuiverPack.mk.{vq, uq} V i = @QuiverPack.mk.{vq, uq} V' i')

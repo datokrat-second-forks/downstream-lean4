@@ -113,7 +113,7 @@ instance : LE (Set α) :=
   ⟨Set.Subset⟩
 
 /-- Lens: the `LE` pack of `Set α` follows `α`. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem lePack_congr.{ua} {α α' : Type ua} (h : α = α') :
     @LEPack.mk (Set α) Set.instLE = @LEPack.mk (Set α') Set.instLE := by
   cases h; rfl

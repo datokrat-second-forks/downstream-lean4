@@ -145,7 +145,7 @@ scoped notation "𝟙" => CategoryStruct.id  -- type as \b1
 scoped infixr:80 " ≫ " => CategoryStruct.comp -- type as \gg
 
 /-- Lens: the quiver pack follows the pack of the category structure. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem CategoryStruct.toQuiver.packLens.{vc, uc} {C C' : Type uc}
     {i : CategoryStruct.{vc} C} {i' : CategoryStruct.{vc} C'}
     (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i') :
@@ -153,7 +153,7 @@ theorem CategoryStruct.toQuiver.packLens.{vc, uc} {C C' : Type uc}
   cases h; rfl
 
 /-- Pack congruence for the composition of morphisms. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem CategoryStruct.comp_pack_congr.{vc, uc} {C C' : Type uc}
     [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
     (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i')
@@ -163,7 +163,7 @@ theorem CategoryStruct.comp_pack_congr.{vc, uc} {C C' : Type uc}
   cases h; cases hX; cases hY; cases hZ; cases hf; cases hg; rfl
 
 /-- Pack congruence for the identity morphism. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem CategoryStruct.id_pack_congr.{vc, uc} {C C' : Type uc}
     [i : CategoryStruct.{vc} C] [i' : CategoryStruct.{vc} C']
     (h : @CategoryStructPack.mk.{vc, uc} C i = @CategoryStructPack.mk.{vc, uc} C' i')
@@ -291,7 +291,7 @@ initialize_simps_projections Category (-Hom)
 to_dual_for Category.mk := {}
 
 /-- Lens: the pack of the category structure follows the category pack. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem Category.toCategoryStruct.packLens.{vc, uc} {C C' : Type uc}
     {i : Category.{vc} C} {i' : Category.{vc} C'}
     (h : @CategoryPack.mk.{vc, uc} C i = @CategoryPack.mk.{vc, uc} C' i') :

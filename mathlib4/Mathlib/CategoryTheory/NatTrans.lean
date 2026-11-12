@@ -67,7 +67,7 @@ attribute [map (attr := reassoc (attr := simp))] NatTrans.naturality
 attribute [grind _=_] NatTrans.naturality
 
 /-- Pack congruence for the component of a natural transformation. -/
--- pack-regime: the attribute `dsimp_congr` is off for this ubiquitous head (record R44).
+@[dsimp_congr]
 theorem NatTrans.app_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
     {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
     [iD : Category.{vd} D] [iD' : Category.{vd} D']
