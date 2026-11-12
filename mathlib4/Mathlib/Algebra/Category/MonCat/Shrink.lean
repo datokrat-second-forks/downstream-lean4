@@ -36,6 +36,14 @@ noncomputable def MonCat.shrinkFunctor (F : C ⥤ MonCat.{w'}) [∀ X, Small.{w}
   map {X Y} f := MonCat.ofHom <|
     (Shrink.mulEquiv.symm.toMonoidHom.comp (F.map f).hom).comp Shrink.mulEquiv.toMonoidHom
 
+/-- Pack root lemma: the monoid pack of `(MonCat.shrinkFunctor F).obj X`. -/
+@[simp] theorem MonCat.shrinkFunctor_obj_classPack.{ws, wf, vc, uc} {C : Type uc}
+    [Category.{vc} C] (F : C ⥤ MonCat.{wf}) [∀ X, Small.{ws} (F.obj X)] (X : C) :
+    @ClassPack.mk Monoid ((MonCat.shrinkFunctor.{ws} F).obj X)
+        ((MonCat.shrinkFunctor.{ws} F).obj X).str =
+      @ClassPack.mk Monoid (Shrink.{ws} (F.obj X)) (@Shrink.instMonoid _ _ (F.obj X).str) :=
+  rfl
+
 /-- The natural transformation `MonCat.shrinkFunctor.{w} F ⟶ MonCat.shrinkFunctor.{w} G`
 induces by a natural transformation `τ : F ⟶ G` between `w`-small functors to monoids. -/
 @[simps]

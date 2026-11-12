@@ -101,6 +101,14 @@ instance [MulOneClass α] : MulOneClass (Shrink.{v} α) :=
 instance [Monoid α] : Monoid (Shrink.{v} α) :=
   fast_instance% (equivShrink α).symm.monoid
 
+/-- Lens: the `Monoid` pack of `Shrink α` follows the `Monoid` pack of `α`. -/
+@[dsimp_congr] theorem _root_.Shrink.instMonoid.packLens.{va, ua} {α α' : Type ua}
+    [s : Small.{va} α] [s' : Small.{va} α'] [i : Monoid α] [i' : Monoid α']
+    (h : @ClassPack.mk Monoid α i = @ClassPack.mk Monoid α' i') :
+    @ClassPack.mk Monoid (Shrink.{va} α) Shrink.instMonoid =
+      @ClassPack.mk Monoid (Shrink.{va} α') Shrink.instMonoid := by
+  cases h; rfl
+
 @[to_additive]
 instance [CommMonoid α] : CommMonoid (Shrink.{v} α) :=
   fast_instance% (equivShrink α).symm.commMonoid
