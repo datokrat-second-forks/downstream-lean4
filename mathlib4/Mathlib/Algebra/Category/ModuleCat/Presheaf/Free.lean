@@ -80,7 +80,6 @@ noncomputable def freeAdjunctionUnit : F ⟶ (freeObj (R := R) F).presheaf ⋙ f
   app X := ↾fun x ↦ ModuleCat.freeMk x
   naturality X Y f := by ext; simp [presheaf]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The bijection `(freeObj F ⟶ G) ≃ (F ⟶ G.presheaf ⋙ forget _)` when
@@ -96,7 +95,6 @@ lemma free_hom_ext {ψ ψ' : freeObj F ⟶ G}
       freeAdjunctionUnit R F ≫ Functor.whiskerRight ((toPresheaf _).map ψ') _) : ψ = ψ' :=
   freeHomEquiv.injective h
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable (R) in

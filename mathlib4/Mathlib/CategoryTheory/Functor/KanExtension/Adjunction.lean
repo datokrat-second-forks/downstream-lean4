@@ -231,7 +231,6 @@ noncomputable def colimitIsoColimitGrothendieck :
   _ ≅ colimit (CostructuredArrow.grothendieckProj L ⋙ G) :=
         colimitFiberwiseColimitIso _
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[reassoc (attr := simp)]

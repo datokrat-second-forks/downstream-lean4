@@ -312,8 +312,7 @@ theorem isIso_specMap_stalkMap_localization (R : CommRingCat.{u}) (M : Submonoid
         (CommRingCat.ofHom (algebraMap R (Localization M))).op).stalkMap x) := by
   dsimp only [Spec.toPresheafedSpace_map, Quiver.Hom.unop_op]
   rw [← localRingHom_comp_stalkIso, ConcreteCategory.isIso_iff_bijective]
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   dsimp)
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   simp only [EquivLike.bijective_comp])
