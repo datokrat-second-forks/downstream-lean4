@@ -444,6 +444,9 @@ noncomputable instance summandAction (i : ι) : MulAction (G i) (NormalWord d) :
       exact (equivPair i).symm_apply_apply _
     mul_smul := fun _ _ _ => by
       dsimp +instances [instHSMul]
+      -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+      -- `dsimp +instances` leaves that head folded.
+      try dsimp +instances [instHSMul]
       simp [mul_assoc, Equiv.apply_symm_apply] }
 
 theorem summand_smul_def' {i : ι} (g : G i) (w : NormalWord d) :

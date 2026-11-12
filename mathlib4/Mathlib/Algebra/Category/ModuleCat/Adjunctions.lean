@@ -257,9 +257,15 @@ instance : Preadditive (Free R C) where
   homGroup _ _ := Finsupp.instAddCommGroup
   add_comp X Y Z f f' g := by
     dsimp +instances [CategoryTheory.categoryFree]
+    -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+    -- `dsimp +instances` leaves that head folded.
+    try dsimp only [CategoryStruct.comp]
     rw [Finsupp.sum_add_index'] <;> · simp [add_mul]
   comp_add X Y Z f g g' := by
     dsimp +instances [CategoryTheory.categoryFree]
+    -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+    -- `dsimp +instances` leaves that head folded.
+    try dsimp only [CategoryStruct.comp]
     rw [← Finsupp.sum_add]
     congr; ext r h
     rw [Finsupp.sum_add_index'] <;> · simp [mul_add]
@@ -268,9 +274,15 @@ instance : Linear R (Free R C) where
   homModule _ _ := Finsupp.module _ R
   smul_comp X Y Z r f g := by
     dsimp +instances [CategoryTheory.categoryFree]
+    -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+    -- `dsimp +instances` leaves that head folded.
+    try dsimp only [CategoryStruct.comp]
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_assoc]
   comp_smul X Y Z f r g := by
     dsimp +instances [CategoryTheory.categoryFree]
+    -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+    -- `dsimp +instances` leaves that head folded.
+    try dsimp only [CategoryStruct.comp]
     simp_rw [Finsupp.smul_sum]
     congr; ext h s
     rw [Finsupp.sum_smul_index] <;> simp [mul_left_comm]

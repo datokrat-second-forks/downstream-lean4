@@ -481,6 +481,9 @@ instance summandAction (i) : MulAction (M i) (Word M) where
     simp [equivPair]
   mul_smul m m' w := by
     dsimp +instances [instHSMul]
+    -- pack-regime: workaround, not analyzed. With a pack congruence at the outer head,
+    -- `dsimp +instances` leaves that head folded.
+    try dsimp +instances [instHSMul]
     simp [mul_assoc, ← equivPair_symm, Equiv.apply_symm_apply]
 
 instance : MulAction (CoprodI M) (Word M) :=
