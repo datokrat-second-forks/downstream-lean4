@@ -320,8 +320,7 @@ these categories.) -/
   mapComp_hom_τl mapComp_hom_τr mapComp_inv_τl mapComp_inv_τr]
 def pseudofunctor :
     Pseudofunctor (LocallyDiscrete Scheme.{u}ᵒᵖ) (Adj Cat) :=
-  (set_option backward.dsimp.instanceTypes false in
-  LocallyDiscrete.mkPseudofunctor
+  (LocallyDiscrete.mkPseudofunctor
     (fun X ↦ Adj.mk ↧X.unop.Modules)
     (fun f ↦ .mk (pullbackPushforwardAdjunction f.unop).toCat)
     (fun _ ↦ Adj.iso₂Mk (Cat.Hom.isoMk (pullbackId _))

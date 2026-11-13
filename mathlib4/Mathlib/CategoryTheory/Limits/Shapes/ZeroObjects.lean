@@ -164,6 +164,13 @@ class HasZeroObject : Prop where
   /-- there exists a zero object -/
   zero : ∃ X : C, IsZero X
 
+/-- Pack congruence for `HasZeroObject`: the category pack. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Limits.HasZeroObject.pack_congr.{vc, uc} {C C' : Type uc}
+    [i : Category.{vc} C] [i' : Category.{vc} C']
+    (h : @CategoryPack.mk.{vc, uc} C i = @CategoryPack.mk.{vc, uc} C' i') :
+    HasZeroObject C = HasZeroObject C' := by
+  cases h; rfl
+
 instance hasZeroObject_pUnit : HasZeroObject (Discrete PUnit) where zero :=
   ⟨⟨⟨⟩⟩,
     { unique_to := fun ⟨⟨⟩⟩ =>

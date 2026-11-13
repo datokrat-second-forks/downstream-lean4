@@ -203,6 +203,23 @@ def associator (F : C ⥤ D) (G : D ⥤ E) (H : E ⥤ E') :
   hom := { app := fun _ => 𝟙 _ }
   inv := { app := fun _ => 𝟙 _ }
 
+/-- Pack congruence for `Functor.associator`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Functor.associator_pack_congr.{vc, vd, ve, vf, uc, ud, ue, uf}
+    {C C' : Type uc} {D D' : Type ud} {E E' : Type ue} {E₂ E₂' : Type uf}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    [iE : Category.{ve} E] [iE' : Category.{ve} E']
+    [iE₂ : Category.{vf} E₂] [iE₂' : Category.{vf} E₂']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hE : @CategoryPack.mk.{ve, ue} E iE = @CategoryPack.mk.{ve, ue} E' iE')
+    (hE₂ : @CategoryPack.mk.{vf, uf} E₂ iE₂ = @CategoryPack.mk.{vf, uf} E₂' iE₂')
+    (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F') (G : D ⥤ E) (G' : D' ⥤ E') (hG : HEq G G')
+    (H : E ⥤ E₂) (H' : E' ⥤ E₂') (hH : HEq H H') :
+    HEq (Functor.associator F G H) (Functor.associator F' G' H') := by
+  cases hC; cases hD; cases hE; cases hE₂; cases hF; cases hG; cases hH; rfl
+
 protected theorem assoc (F : C ⥤ D) (G : D ⥤ E) (H : E ⥤ E') : (F ⋙ G) ⋙ H = F ⋙ G ⋙ H :=
   rfl
 

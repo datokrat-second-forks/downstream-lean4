@@ -875,6 +875,13 @@ variable (R M) in
 /-- `Module.annihilator R M` is the ideal of all elements `r : R` such that `r • M = 0`. -/
 def Module.annihilator : Ideal R := RingHom.ker (Module.toAddMonoidEnd R M)
 
+/-- Pack congruence for `Module.annihilator`: the module pack. -/
+@[dsimp_congr] theorem _root_.Module.annihilator_pack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    Module.annihilator R M = Module.annihilator R M' := by
+  cases h; rfl
+
 theorem Module.mem_annihilator {r} : r ∈ Module.annihilator R M ↔ ∀ m : M, r • m = 0 :=
   ⟨fun h ↦ (congr($h ·)), (AddMonoidHom.ext ·)⟩
 

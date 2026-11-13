@@ -67,6 +67,19 @@ protected def StandardEtalePair.Ring := R[X][Y] ⧸ Ideal.span {C P.f, Y * C P.g
 
 namespace StandardEtalePair
 
+/-- Pack lemma: the ring pack of `P.Ring`. -/
+theorem ring_commRingPack :
+    @CommRingPack.mk P.Ring (StandardEtalePair.instCommRingRing P) =
+      @CommRingPack.mk (R[X][Y] ⧸ Ideal.span {C P.f, Y * C P.g - 1}) (Ideal.Quotient.commRing _) :=
+  rfl
+
+/-- Pack lemma: the algebra pack of `P.Ring`. -/
+theorem ring_sAlgPack :
+    @SAlgPack.mk R _ P.Ring CommRing.toCommSemiring.toSemiring (StandardEtalePair.instAlgebraRing P) =
+      @SAlgPack.mk R _ (R[X][Y] ⧸ Ideal.span {C P.f, Y * C P.g - 1})
+        CommRing.toCommSemiring.toSemiring (Ideal.Quotient.algebra R) :=
+  rfl
+
 /-- The `X` in the standard etale algebra `R[X][Y]/⟨f, Yg-1⟩`. -/
 protected def X : P.Ring := Ideal.Quotient.mk _ (C .X)
 
@@ -83,8 +96,7 @@ def lift (x : S) (h : P.HasMap x) : P.Ring →ₐ[R] S :=
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma lift_X (x : S) (h : P.HasMap x) : P.lift x h P.X = x := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp [lift, StandardEtalePair.Ring, StandardEtalePair.X])
+  simp [lift, StandardEtalePair.X, ring_sAlgPack]
 
 variable {P} in
 lemma HasMap.map {x : S} (h : P.HasMap x) (f : S →ₐ[R] T) : P.HasMap (f x) :=
@@ -97,14 +109,13 @@ lemma HasMap.isUnit_derivative_f {x : S} (h : P.HasMap x) :
     ⟨_, by simpa [h.1] using congr(aeval x $e.symm)⟩
   exact isUnit_of_dvd_unit this (.pow _ h.2)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 lemma aeval_X_g_mul_mk_X : aeval P.X P.g * Ideal.Quotient.mk _ .X = 1 := by
   have : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
-    ext; simp [StandardEtalePair.Ring, StandardEtalePair.X]
+    ext; simp [StandardEtalePair.Ring, StandardEtalePair.X, ring_sAlgPack]
   rw [this]
-  dsimp [StandardEtalePair.Ring]
+  dsimp [StandardEtalePair.Ring, ring_commRingPack, ring_sAlgPack]
   rw [← map_mul, ← map_one (Ideal.Quotient.mk _), ← sub_eq_zero, ← map_sub, mul_comm]
   exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_insert_of_mem _ rfl))
 
@@ -113,9 +124,8 @@ variable {P} in
 lemma hasMap_X : P.HasMap P.X :=
   have : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [StandardEtalePair.Ring, StandardEtalePair.X])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [StandardEtalePair.Ring, StandardEtalePair.X, ring_sAlgPack])
   ⟨this ▸ Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_insert _ _)),
     IsUnit.of_mul_eq_one _ P.aeval_X_g_mul_mk_X⟩
 
@@ -127,9 +137,8 @@ lemma hom_ext {f g : P.Ring →ₐ[R] S} (H : f P.X = g P.X) : f = g := by
     (g.comp (Ideal.Quotient.mkₐ R _)).comp CAlgHom := Polynomial.algHom_ext (by simpa)
   have H' : aeval (R := R) P.X = (Ideal.Quotient.mkₐ _ _).comp Polynomial.CAlgHom := by
     ext
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [StandardEtalePair.Ring, StandardEtalePair.X])
+    (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+    simp [StandardEtalePair.Ring, StandardEtalePair.X, ring_sAlgPack])
   refine Ideal.Quotient.algHom_ext _ (Polynomial.algHom_ext' H ?_)
   change f.toMonoidHom (Ideal.Quotient.mk _ .X) = g.toMonoidHom (Ideal.Quotient.mk _ .X)
   rw [← show (↑P.hasMap_X.2.unit⁻¹ : P.Ring) = Ideal.Quotient.mk _ .X from
@@ -249,8 +258,7 @@ set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma equivMvPolynomialQuotient_symm_apply :
     P.equivMvPolynomialQuotient.symm (Ideal.Quotient.mk _ (.X 0)) = P.X := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp [equivMvPolynomialQuotient, StandardEtalePair.Ring]); rfl
+  simp [equivMvPolynomialQuotient, StandardEtalePair.Ring, ring_sAlgPack]; rfl
 
 /-- Mapping a standard etale pair under a ring homomorphism. -/
 @[simps] protected noncomputable def map (f : R →+* S) : StandardEtalePair S where

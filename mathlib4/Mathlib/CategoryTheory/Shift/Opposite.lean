@@ -86,10 +86,15 @@ instance : Category (OppositeShift C A) := inferInstanceAs (Category Cᵒᵖ)
 instance : HasShift (OppositeShift C A) A :=
   hasShiftMk Cᵒᵖ A (HasShift.mkShiftCoreOp C A)
 
+/-- Pack lemma: the category pack of `OppositeShift C A`. -/
+theorem OppositeShift.category_classPack :
+    @CategoryPack.mk (OppositeShift C A) (instCategoryOppositeShift C A) =
+      @CategoryPack.mk Cᵒᵖ Category.opposite :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 instance [HasZeroObject C] : HasZeroObject (OppositeShift C A) := by
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp only [OppositeShift])
+  dsimp only [OppositeShift, OppositeShift.category_classPack]
   infer_instance
 
 instance [Preadditive C] : Preadditive (OppositeShift C A) :=

@@ -437,7 +437,12 @@ variable {ι : Type w} (P : Generators R S ι)
 def cotangentSpaceBasis : Basis ι S P.toExtension.CotangentSpace :=
   (mvPolynomialBasis _ _).baseChange (R := P.Ring) _
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack lemma: the cotangent space of `P.toExtension` as a module over `S`. -/
+theorem toExtension_cotangentSpace_sModPack :
+    @SModPack.mk S _ P.toExtension.CotangentSpace TensorProduct.addCommMonoid
+        TensorProduct.leftModule =
+      SModPack.mk (S ⊗[P.Ring] Ω[P.Ring⁄R]) := rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
@@ -445,7 +450,7 @@ lemma cotangentSpaceBasis_repr_tmul (r x i) :
     P.cotangentSpaceBasis.repr (r ⊗ₜ[P.Ring] KaehlerDifferential.D R P.Ring x : _) i =
       r * aeval P.val (pderiv i x) := by
   simp only [cotangentSpaceBasis, Basis.baseChange_repr_tmul, mvPolynomialBasis_repr_apply,
-    Algebra.smul_def, mul_comm r, algebraMap_apply, toExtension]
+    Algebra.smul_def, mul_comm r, algebraMap_apply, toExtension_cotangentSpace_sModPack]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -457,7 +462,7 @@ lemma cotangentSpaceBasis_repr_one_tmul (x i) :
 set_option backward.isDefEq.respectTransparency false in
 lemma cotangentSpaceBasis_apply (i) :
     P.cotangentSpaceBasis i = ((1 : S) ⊗ₜ[P.Ring] D R P.Ring (.X i) :) := by
-  (set_option backward.dsimp.instanceTypes false in simp [cotangentSpaceBasis, toExtension])
+  simp [cotangentSpaceBasis, toExtension_cotangentSpace_sModPack]
 
 instance (P : Generators R S ι) : Module.Free S P.toExtension.CotangentSpace :=
   .of_basis P.cotangentSpaceBasis
@@ -494,14 +499,18 @@ universe w'' u'' v''
 
 open Extension
 
+/-- `CotangentSpace.map_tmul` for a tensor that is spelled with `P.Ring`. -/
+lemma cotangentSpaceMap_toExtensionHom_tmul (f : Hom P P') (x : S) (y : P.Ring) :
+    CotangentSpace.map f.toExtensionHom (x ⊗ₜ[P.Ring] D R P.Ring y) =
+      algebraMap S S' x ⊗ₜ[P'.Ring] D R' P'.Ring (f.toAlgHom y) :=
+  CotangentSpace.map_tmul ..
+
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 lemma repr_CotangentSpaceMap (f : Hom P P') (i j) :
     P'.cotangentSpaceBasis.repr (CotangentSpace.map f.toExtensionHom (P.cotangentSpaceBasis i)) j =
       aeval P'.val (pderiv j (f.val i)) := by
-  rw [cotangentSpaceBasis_apply]
-  (set_option backward.dsimp.instanceTypes false in simp only [toExtension])
-  rw [CotangentSpace.map_tmul, map_one]
+  rw [cotangentSpaceBasis_apply, cotangentSpaceMap_toExtensionHom_tmul, map_one]
   erw [cotangentSpaceBasis_repr_one_tmul, Hom.toAlgHom_X]
 
 set_option backward.defeqAttrib.useBackward true in
@@ -509,9 +518,10 @@ set_option backward.isDefEq.respectTransparency false in
 lemma toKaehler_tmul_D (i) :
     P.toExtension.toKaehler (1 ⊗ₜ D R P.Ring (X i)) = D _ _ (P.val i) :=
   (KaehlerDifferential.mapBaseChange_tmul ..).trans (by
-    (set_option backward.dsimp.instanceTypes false in
-    set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp))
+    -- pack-regime workaround: `simp` cannot move the ring `P.toExtension.Ring` to `P.Ring`,
+    -- because it is the carrier and also the scalar ring of `Ω[P.toExtension.Ring⁄R]`.
+    rw [one_smul]
+    exact (KaehlerDifferential.map_D R R P.Ring S (X i)).trans (by simp))
 
 @[simp]
 lemma toKaehler_cotangentSpaceBasis (i) :

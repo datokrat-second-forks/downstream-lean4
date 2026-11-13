@@ -53,3 +53,9 @@ class AddCommGroupWithOne (R : Type u)
   extends AddCommGroup R, AddGroupWithOne R, AddCommMonoidWithOne R
 
 derive_pack_edges
+
+/-- Pack congruence for `Int.cast`. -/
+@[dsimp_congr] theorem _root_.Int.cast_pack_congr.{uR} {R R' : Type uR} [i : IntCast R] [i' : IntCast R']
+    (h : @IntCastPack.mk R i = @IntCastPack.mk R' i') (z : ℤ) :
+    HEq (@Int.cast R i z) (@Int.cast R' i' z) := by
+  cases h; rfl

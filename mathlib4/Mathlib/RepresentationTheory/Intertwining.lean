@@ -37,6 +37,17 @@ structure IntertwiningMap extends V →ₗ[A] W where
   /-- An underlying `A`-linear map of the underlying `A`-modules. -/
   isIntertwining' (g : G) : toLinearMap ∘ₗ ρ g = σ g ∘ₗ toLinearMap
 
+/-- Pack congruence for the type `ρ.IntertwiningMap σ`. -/
+@[dsimp_congr] theorem _root_.Representation.IntertwiningMap.pack_congr.{uk, uG, uv, uw}
+    {k : Type uk} {G : Type uG} [Semiring k] [Monoid G] {V V' : Type uv} {W W' : Type uw}
+    [AddCommMonoid V] [AddCommMonoid V'] [AddCommMonoid W] [AddCommMonoid W'] [Module k V]
+    [Module k V'] [Module k W] [Module k W']
+    (hV : SModPack.mk (R := k) V = SModPack.mk V') (hW : SModPack.mk (R := k) W = SModPack.mk W')
+    (ρ : Representation k G V) (ρ' : Representation k G V') (hρ : HEq ρ ρ')
+    (σ : Representation k G W) (σ' : Representation k G W') (hσ : HEq σ σ') :
+    Representation.IntertwiningMap ρ σ = Representation.IntertwiningMap ρ' σ' := by
+  cases hV; cases hW; cases hρ; cases hσ; rfl
+
 /-- An intertwining map constructed form the linear map and the fact that it is intertwining. -/
 def _root_.LinearMap.intertwiningMap_of_isIntertwiningMap
     (hf : ∀ (g : G), ∀ (v : V), f (ρ g v) = σ g (f v)) : IntertwiningMap ρ σ :=

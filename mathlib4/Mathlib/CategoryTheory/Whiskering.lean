@@ -47,6 +47,22 @@ def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) :
   app X := α.app (F.obj X)
   naturality X Y f := by rw [Functor.comp_map, Functor.comp_map, α.naturality]
 
+/-- Pack congruence for `Functor.whiskerLeft`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Functor.whiskerLeft_pack_congr.{vc, vd, ve, uc, ud, ue}
+    {C C' : Type uc} {D D' : Type ud} {E E' : Type ue}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    [iE : Category.{ve} E] [iE' : Category.{ve} E']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hE : @CategoryPack.mk.{ve, ue} E iE = @CategoryPack.mk.{ve, ue} E' iE')
+    (F : C ⥤ D) (F' : C' ⥤ D') (hF : HEq F F')
+    {G H : D ⥤ E} {G' H' : D' ⥤ E'} (hG : HEq G G') (hH : HEq H H')
+    (α : G ⟶ H) (α' : G' ⟶ H') (hα : HEq α α') :
+    HEq (Functor.whiskerLeft F α) (Functor.whiskerLeft F' α') := by
+  cases hC; cases hD; cases hE; cases hF; cases hG; cases hH; cases hα; rfl
+
 @[simp, to_dual self]
 lemma id_hcomp (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : 𝟙 F ◫ α = whiskerLeft F α := by
   ext
@@ -59,6 +75,22 @@ def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) :
   app X := F.map (α.app X)
   naturality X Y f := by
     rw [Functor.comp_map, Functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
+
+/-- Pack congruence for `Functor.whiskerRight`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Functor.whiskerRight_pack_congr.{vc, vd, ve, uc, ud, ue}
+    {C C' : Type uc} {D D' : Type ud} {E E' : Type ue}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    [iE : Category.{ve} E] [iE' : Category.{ve} E']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hE : @CategoryPack.mk.{ve, ue} E iE = @CategoryPack.mk.{ve, ue} E' iE')
+    {G H : C ⥤ D} {G' H' : C' ⥤ D'} (hG : HEq G G') (hH : HEq H H')
+    (α : G ⟶ H) (α' : G' ⟶ H') (hα : HEq α α')
+    (F : D ⥤ E) (F' : D' ⥤ E') (hF : HEq F F') :
+    HEq (Functor.whiskerRight α F) (Functor.whiskerRight α' F') := by
+  cases hC; cases hD; cases hE; cases hG; cases hH; cases hα; cases hF; rfl
 
 @[simp, to_dual self]
 lemma hcomp_id {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : α ◫ 𝟙 F = whiskerRight α F := by

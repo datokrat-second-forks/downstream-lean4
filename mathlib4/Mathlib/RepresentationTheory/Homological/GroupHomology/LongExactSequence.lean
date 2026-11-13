@@ -48,10 +48,9 @@ lemma map_chainsFunctor_shortExact :
     exact := by
       have : LinearMap.range X.f.hom.toLinearMap = LinearMap.ker X.g.hom.toLinearMap :=
         (hX.exact.map (forget₂ (Rep k G) (ModuleCat k))).moduleCat_range_eq_ker
-      (set_option backward.dsimp.instanceTypes false in
       simp [moduleCat_exact_iff_range_eq_ker, ker_mapRange,
         range_mapRange_linearMap X.f.hom.toLinearMap (LinearMap.ker_eq_bot.2 <|
-        (Rep.mono_iff_injective X.f).1 hX.mono_f), this])
+        (Rep.mono_iff_injective X.f).1 hX.mono_f), this]
     mono_f := chainsMap_id_f_map_mono X.f i
     epi_g := letI := hX.epi_g; chainsMap_id_f_map_epi X.g i }
 

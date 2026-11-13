@@ -53,9 +53,8 @@ lemma map_cochainsFunctor_shortExact :
     exact := by
       have : LinearMap.range X.f.hom.toLinearMap = LinearMap.ker X.g.hom.toLinearMap :=
         (hX.exact.map (forget₂ (Rep k G) (ModuleCat k))).moduleCat_range_eq_ker
-      (set_option backward.dsimp.instanceTypes false in
       simp [moduleCat_exact_iff_range_eq_ker, LinearMap.range_compLeft,
-        LinearMap.ker_compLeft, this])
+        LinearMap.ker_compLeft, this]
     mono_f := letI := hX.mono_f; cochainsMap_id_f_map_mono X.f i
     epi_g := letI := hX.epi_g; cochainsMap_id_f_map_epi X.g i }
 

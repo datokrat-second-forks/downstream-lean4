@@ -478,6 +478,14 @@ def id : 𝟭 C ⊣ 𝟭 C where
   unit := 𝟙 _
   counit := 𝟙 _
 
+/-- Pack congruence for `Adjunction.id`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Adjunction.id_pack_congr.{vc, uc} {C C' : Type uc}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC') :
+    HEq (CategoryTheory.Adjunction.id (C := C)) (CategoryTheory.Adjunction.id (C := C')) := by
+  cases hC; rfl
+
 -- Satisfy the inhabited linter.
 instance : Inhabited (Adjunction (𝟭 C) (𝟭 C)) :=
   ⟨id⟩
@@ -570,6 +578,24 @@ def comp : F ⋙ H ⊣ I ⋙ G :=
       (associator _ _ _).inv) G ≫ (associator _ _ _).hom
     counit := (associator _ _ _).inv ≫ whiskerRight ((associator _ _ _).hom ≫
       whiskerLeft _ adj₁.counit ≫ I.rightUnitor.hom) _ ≫ adj₂.counit }
+
+/-- Pack congruence for `Adjunction.comp`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.Adjunction.comp_pack_congr.{vc, vd, ve, uc, ud, ue}
+    {C C' : Type uc} {D D' : Type ud} {E E' : Type ue}
+    [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    [iE : Category.{ve} E] [iE' : Category.{ve} E']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    (hE : @CategoryPack.mk.{ve, ue} E iE = @CategoryPack.mk.{ve, ue} E' iE')
+    {F : C ⥤ D} {F' : C' ⥤ D'} {G : D ⥤ C} {G' : D' ⥤ C'}
+    {H : D ⥤ E} {H' : D' ⥤ E'} {I : E ⥤ D} {I' : E' ⥤ D'}
+    (hF : HEq F F') (hG : HEq G G') (hH : HEq H H') (hI : HEq I I')
+    (adj₁ : F ⊣ G) (adj₁' : F' ⊣ G') (h₁ : HEq adj₁ adj₁')
+    (adj₂ : H ⊣ I) (adj₂' : H' ⊣ I') (h₂ : HEq adj₂ adj₂') :
+    HEq (adj₁.comp adj₂) (adj₁'.comp adj₂') := by
+  cases hC; cases hD; cases hE; cases hF; cases hG; cases hH; cases hI; cases h₁; cases h₂; rfl
 
 lemma comp_unit_app (X : C) : dsimp%
     (adj₁.comp adj₂).unit.app X = adj₁.unit.app X ≫ G.map (adj₂.unit.app (F.obj X)) := by

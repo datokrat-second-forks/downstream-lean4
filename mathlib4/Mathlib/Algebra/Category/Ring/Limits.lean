@@ -59,6 +59,14 @@ instance limitSemiring :
   let _ : Semiring (F ⋙ forget SemiRingCat).sections := (sectionsSubsemiring F).toSemiring
   inferInstanceAs <| Semiring (Shrink (F ⋙ forget SemiRingCat).sections)
 
+/-- Pack lemma: the semiring on the limit cone point is the semiring of the shrunk type of
+sections. -/
+@[simp] theorem limitSemiring_classPack :
+    @SemiringPack.mk (Types.Small.limitCone.{v, u} (F ⋙ forget SemiRingCat.{u})).pt
+        (limitSemiring F) =
+      @SemiringPack.mk (Shrink (F ⋙ forget SemiRingCat.{u}).sections) (by infer_instance) :=
+  rfl
+
 /-- `limit.π (F ⋙ forget SemiRingCat) j` as a `RingHom`. -/
 def limitπRingHom (j) :
     (Types.Small.limitCone.{v, u} (F ⋙ forget SemiRingCat)).pt →+* (F ⋙ forget SemiRingCat).obj j :=
@@ -88,7 +96,6 @@ def limitCone : Cone F where
         ext
         simpa using! (Types.Small.limitCone (F ⋙ forget _)).π.naturality_apply f _ }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Witness that the limit cone in `SemiRingCat` is a limit cone.

@@ -40,6 +40,19 @@ instance moduleObj (j) :
     Module.{u, w} R ((F ⋙ forget (ModuleCat R)).obj j) :=
   inferInstanceAs <| Module R (F.obj j)
 
+/-- Pack lemma: the additive commutative group on `(F ⋙ forget _).obj j` is that of `F.obj j`. -/
+@[simp] theorem addCommGroupObj_classPack (j : J) :
+    @AddCommGroupPack.mk ((F ⋙ forget (ModuleCat R)).obj j) (addCommGroupObj F j) =
+      @AddCommGroupPack.mk (F.obj j) (by infer_instance) :=
+  rfl
+
+/-- Pack lemma: the module on `(F ⋙ forget _).obj j` is the module of `F.obj j`. -/
+@[simp] theorem moduleObj_smodPack (j : J) :
+    @SModPack.mk R _ ((F ⋙ forget (ModuleCat R)).obj j) (addCommGroupObj F j).toAddCommMonoid
+        (moduleObj F j) =
+      @SModPack.mk R _ (F.obj j) (by infer_instance) (by infer_instance) :=
+  rfl
+
 /-- The flat sections of a functor into `ModuleCat R` form a submodule of all sections.
 -/
 def sectionsSubmodule : Submodule R (∀ j, F.obj j) :=
@@ -77,7 +90,32 @@ instance limitModule :
     Module R (Types.Small.limitCone.{v, w} (F ⋙ forget (ModuleCat.{w} R))).pt :=
   inferInstanceAs <| Module R (Shrink (sectionsSubmodule F))
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack lemma: the additive commutative monoid on the limit cone point is that of the shrunk
+type of sections. -/
+@[simp] theorem limitAddCommMonoid_classPack :
+    @AddCommMonoidPack.mk (Types.Small.limitCone.{v, w} (F ⋙ forget (ModuleCat.{w} R))).pt
+        (limitAddCommMonoid F) =
+      @AddCommMonoidPack.mk (Shrink (F ⋙ forget (ModuleCat.{w} R)).sections) (by infer_instance) :=
+  rfl
+
+/-- Pack lemma: the additive commutative group on the limit cone point is that of the shrunk
+type of sections. -/
+@[simp] theorem limitAddCommGroup_classPack :
+    @AddCommGroupPack.mk (Types.Small.limitCone.{v, w} (F ⋙ forget (ModuleCat.{w} R))).pt
+        (limitAddCommGroup F) =
+      @AddCommGroupPack.mk (Shrink (F ⋙ forget (ModuleCat.{w} R)).sections)
+        (by change AddCommGroup (Shrink (sectionsSubmodule F)); infer_instance) :=
+  rfl
+
+/-- Pack lemma: the module on the limit cone point is the module of the shrunk type of
+sections. -/
+@[simp] theorem limitModule_smodPack :
+    @SModPack.mk R _ (Types.Small.limitCone.{v, w} (F ⋙ forget (ModuleCat.{w} R))).pt
+        (limitAddCommMonoid F) (limitModule F) =
+      @SModPack.mk R _ (Shrink (F ⋙ forget (ModuleCat.{w} R)).sections) (by infer_instance)
+        (by infer_instance) :=
+  rfl
+
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- `limit.π (F ⋙ forget (ModuleCat.{w} R)) j` as an `R`-linear map. -/
@@ -104,7 +142,6 @@ def limitCone : Cone F where
         ext
         simpa using! (Types.Small.limitCone (F ⋙ forget _)).π.naturality_apply f _ }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Witness that the limit cone in `ModuleCat R` is a limit cone.

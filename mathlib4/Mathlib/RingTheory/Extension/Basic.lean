@@ -175,6 +175,39 @@ def baseChange {T} [CommRing T] [Algebra R T] (P : Extension R S) : Extension T 
         (P₀.baseChange (T := T₀)).instRingOfIsScalarTower =
       AlgPack.mk T₀ (TensorProduct R₀ T₀ P₀.Ring) := rfl
 
+/-- Pack lemma: `P.baseChange.Ring` as the middle ring of the tower `T → T ⊗[R] P.Ring → T ⊗[R] S`. -/
+theorem _root_.Algebra.Extension.baseChange_towerMidPack_tower {R₀ S₀ T₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] [CommRing T₀] [Algebra R₀ T₀] (P₀ : Algebra.Extension R₀ S₀) :
+    @TowerMidPack.mk T₀ (T₀ ⊗[R₀] S₀) _ _ _ (P₀.baseChange (T := T₀)).Ring _
+        (P₀.baseChange (T := T₀)).instRingOfIsScalarTower (P₀.baseChange (T := T₀)).algebra₂ =
+      @TowerMidPack.mk T₀ (T₀ ⊗[R₀] S₀) _ _ _ (T₀ ⊗[R₀] P₀.Ring) _ _
+        (Algebra.TensorProduct.map (AlgHom.id T₀ T₀)
+          (IsScalarTower.toAlgHom R₀ P₀.Ring S₀)).toRingHom.toAlgebra := rfl
+
+/-- Pack lemma: the algebra `T → P.baseChange.Ring`, through the tower instance, over a fixed base. -/
+theorem _root_.Algebra.Extension.baseChange_sAlgPack_tower {R₀ S₀ T₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] [CommRing T₀] [Algebra R₀ T₀] (P₀ : Algebra.Extension R₀ S₀) :
+    @SAlgPack.mk T₀ _ (P₀.baseChange (T := T₀)).Ring _
+        (P₀.baseChange (T := T₀)).instRingOfIsScalarTower =
+      SAlgPack.mk (T₀ ⊗[R₀] P₀.Ring) := rfl
+
+/-- Lens: the tower `T → T ⊗[R] B → T ⊗[R] S` of a base change follows the tower `R → B → S`. -/
+@[dsimp_congr] theorem _root_.Algebra.Extension.baseChange_towerMidPack.packLens.{ur, us, ut, ub}
+    {R₀ : Type ur} {S₀ : Type us} {T₀ : Type ut} {B B' : Type ub} [CommSemiring R₀]
+    [CommSemiring S₀] [Algebra R₀ S₀] [CommSemiring T₀] [Algebra R₀ T₀] [CommSemiring B]
+    [CommSemiring B'] [Algebra R₀ B] [Algebra R₀ B'] [Algebra B S₀] [Algebra B' S₀]
+    [IsScalarTower R₀ B S₀] [IsScalarTower R₀ B' S₀]
+    (h : TowerMidPack.mk (R := R₀) (A := S₀) B = TowerMidPack.mk B') :
+    @TowerMidPack.mk T₀ (T₀ ⊗[R₀] S₀) _ _ _ (T₀ ⊗[R₀] B) Algebra.TensorProduct.instCommSemiring
+        Algebra.TensorProduct.leftAlgebra
+        (Algebra.TensorProduct.map (AlgHom.id T₀ T₀)
+          (IsScalarTower.toAlgHom R₀ B S₀)).toRingHom.toAlgebra =
+      @TowerMidPack.mk T₀ (T₀ ⊗[R₀] S₀) _ _ _ (T₀ ⊗[R₀] B') Algebra.TensorProduct.instCommSemiring
+        Algebra.TensorProduct.leftAlgebra
+        (Algebra.TensorProduct.map (AlgHom.id T₀ T₀)
+          (IsScalarTower.toAlgHom R₀ B' S₀)).toRingHom.toAlgebra := by
+  cases h; rfl
+
 variable (T) in
 lemma ker_baseChange :
     (P.baseChange (T := T)).ker = P.ker.map Algebra.TensorProduct.includeRight.toRingHom :=

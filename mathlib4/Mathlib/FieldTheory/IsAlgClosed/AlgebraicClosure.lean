@@ -167,12 +167,27 @@ instance instField : Field (AlgebraicClosure k) where
   qsmul_def q x := Quotient.inductionOn x fun p ↦ congr(Quotient.mk'' $(by
     ext; simp [MvPolynomial.algebraMap_eq, Rat.smul_def]))
 
+/-- Pack lemma: the algebra pack of `AlgebraicClosure k` over `k`. -/
+theorem algPack :
+    @AlgPack.mk k (AlgebraicClosure k) _ (instCommRing k).toCommSemiring.toSemiring
+        (instAlgebra k) =
+      @AlgPack.mk k (MvPolynomial (Vars k) k ⧸ maxIdeal k) _
+        (Ideal.Quotient.semiring (maxIdeal k)) (Ideal.instAlgebraQuotient k (maxIdeal k)) :=
+  rfl
+
+/-- Pack lemma: the semiring pack of `AlgebraicClosure k`, for the instance below `Field`. -/
+theorem field_semiringPack :
+    @SemiringPack.mk (AlgebraicClosure k) (instField k).toSemifield.toCommSemiring.toSemiring =
+      @SemiringPack.mk (MvPolynomial (Vars k) k ⧸ maxIdeal k)
+        (Ideal.Quotient.semiring (maxIdeal k)) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 theorem Monics.map_eq_prod {f : Monics k} :
     f.1.map (algebraMap k (AlgebraicClosure k)) =
       ∏ i, map (Ideal.Quotient.mk <| maxIdeal k) (X - C (MvPolynomial.X ⟨f, i⟩)) := by
   ext
-  (set_option backward.dsimp.instanceTypes false in dsimp [AlgebraicClosure])
+  dsimp [AlgebraicClosure, algPack, field_semiringPack]
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   rw [← Ideal.Quotient.mk_comp_algebraMap, ← map_map, ← Polynomial.map_prod, ← sub_eq_zero,
     ← coeff_sub, ← Polynomial.map_sub, ← subProdXSubC, coeff_map, Ideal.Quotient.eq_zero_iff_mem])

@@ -275,9 +275,8 @@ theorem exists_ker_toSpanSingleton_eq_annihilator [Module.Finite R M] :
     e.symm.map_eq_zero_iff, Prod.ext_iff, Finsupp.ext_iff, DFinsupp.ext_iff] at h
   obtain _ | m := m
   · rw [← mul_one x, ← smul_eq_mul, e.annihilator_eq, annihilator_prod]
-    (set_option backward.dsimp.instanceTypes false in
-    simp_rw [annihilator_eq_top_iff.mpr inferInstance, DirectSum, annihilator_dfinsupp,
-      top_inf_eq, mem_iInf, Ideal.annihilator_quotient, ← Quotient.mk_eq_zero])
+    simp_rw [annihilator_eq_top_iff.mpr inferInstance, DirectSum.smodPack, annihilator_dfinsupp,
+      top_inf_eq, mem_iInf, Ideal.annihilator_quotient, ← Quotient.mk_eq_zero]
     exact h.2
   · rw [show x = 0 by simpa using h.1 0]
     exact zero_mem _

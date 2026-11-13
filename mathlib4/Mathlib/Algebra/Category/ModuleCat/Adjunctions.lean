@@ -48,6 +48,13 @@ def monoidAlgebraFree : Type u ⥤ ModuleCat.{u} R where
   obj X := ↧R[X]
   map f := ofHom (MonoidAlgebra.mapDomainLinearMap R R f)
 
+/-- Pack lemma: the module pack of the carrier of `(ModuleCat.monoidAlgebraFree R).obj X`. -/
+@[simp] theorem _root_.ModuleCat.monoidAlgebraFree_obj_smodPack.{ux} {R : Type ux} [Ring R]
+    (X : Type ux) :
+    SModPack.mk (R := R) ((ModuleCat.monoidAlgebraFree R).obj X) =
+      SModPack.mk (R := R) (MonoidAlgebra R X) :=
+  rfl
+
 variable {R}
 
 /-- Constructor for elements in the module `(free R).obj X`. -/

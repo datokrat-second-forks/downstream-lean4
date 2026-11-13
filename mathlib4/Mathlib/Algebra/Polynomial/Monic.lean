@@ -587,4 +587,14 @@ theorem isUnit_leadingCoeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {q 
 
 end NotZeroDivisor
 
+/-- Pack congruence for `MonicDegreeEq.map`. -/
+@[dsimp_congr] theorem _root_.Polynomial.MonicDegreeEq.map_pack_congr.{ua, ub} {A A' : Type ua} {B B' : Type ub}
+    {d : ℕ} [Semiring A] [Semiring A'] [Semiring B] [Semiring B']
+    (hA : @SemiringPack.mk A _ = @SemiringPack.mk A' _)
+    (hB : @SemiringPack.mk B _ = @SemiringPack.mk B' _)
+    (q : MonicDegreeEq A d) (q' : MonicDegreeEq A' d) (hq : HEq q q')
+    (f : A →+* B) (f' : A' →+* B') (hf : HEq f f') :
+    HEq (q.map f) (q'.map f') := by
+  cases hA; cases hB; cases hq; cases hf; rfl
+
 end Polynomial

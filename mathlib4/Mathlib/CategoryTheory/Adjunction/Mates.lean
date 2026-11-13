@@ -271,6 +271,20 @@ def conjugateEquiv : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
     _ ≃ _ := mateEquiv adj₁ adj₂
     _ ≃ (R₁ ⟶ R₂) := R₁.rightUnitor.homCongr R₂.leftUnitor
 
+/-- Pack congruence for `conjugateEquiv`. -/
+@[dsimp_congr]
+theorem _root_.CategoryTheory.conjugateEquiv_pack_congr.{vc, vd, uc, ud} {C C' : Type uc}
+    {D D' : Type ud} [iC : Category.{vc} C] [iC' : Category.{vc} C']
+    [iD : Category.{vd} D] [iD' : Category.{vd} D']
+    (hC : @CategoryPack.mk.{vc, uc} C iC = @CategoryPack.mk.{vc, uc} C' iC')
+    (hD : @CategoryPack.mk.{vd, ud} D iD = @CategoryPack.mk.{vd, ud} D' iD')
+    {L₁ L₂ : C ⥤ D} {L₁' L₂' : C' ⥤ D'} {R₁ R₂ : D ⥤ C} {R₁' R₂' : D' ⥤ C'}
+    (hL₁ : HEq L₁ L₁') (hL₂ : HEq L₂ L₂') (hR₁ : HEq R₁ R₁') (hR₂ : HEq R₂ R₂')
+    (adj₁ : L₁ ⊣ R₁) (adj₁' : L₁' ⊣ R₁') (h₁ : HEq adj₁ adj₁')
+    (adj₂ : L₂ ⊣ R₂) (adj₂' : L₂' ⊣ R₂') (h₂ : HEq adj₂ adj₂') :
+    HEq (conjugateEquiv adj₁ adj₂) (conjugateEquiv adj₁' adj₂') := by
+  cases hC; cases hD; cases hL₁; cases hL₂; cases hR₁; cases hR₂; cases h₁; cases h₂; rfl
+
 /-- A component of a transposed form of the conjugation definition. -/
 theorem conjugateEquiv_counit (α : L₂ ⟶ L₁) (d : D) :
     L₂.map ((conjugateEquiv adj₁ adj₂ α).app _) ≫ adj₂.counit.app d =

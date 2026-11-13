@@ -425,3 +425,17 @@ theorem subtype_comp_inclusion (p q : Submodule R M) (h : p ≤ q) :
 end AddCommMonoid
 
 end Submodule
+
+/-- Pack congruence for the type `Submodule R M`. -/
+@[dsimp_congr] theorem _root_.Submodule.pack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') : Submodule R M = Submodule R M' := by
+  cases h; rfl
+
+/-- Lens: the membership pack of `Submodule R M` follows the module pack. -/
+@[dsimp_congr] theorem _root_.Submodule.memPack_congr.{ur, um} {R : Type ur} [Semiring R]
+    {M M' : Type um} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']
+    (h : SModPack.mk (R := R) M = SModPack.mk M') :
+    @MemPack.mk M (Submodule R M) SetLike.instMembership =
+      @MemPack.mk M' (Submodule R M') SetLike.instMembership := by
+  cases h; rfl

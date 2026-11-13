@@ -327,9 +327,10 @@ theorem of_source_openCover [IsAffine Y]
   let S i : X.affineOpens := ⟨_, isAffineOpen_opensRange (𝒰.f i)⟩
   induction U using of_affine_open_cover S 𝒰.iSup_opensRange with
   | basicOpen U r H =>
-    (set_option backward.dsimp.instanceTypes false in
-    simp_rw [Scheme.affineBasicOpen_coe,
-      ← f.appLE_map (U := ⊤) le_top (homOfLE (X.basicOpen_le r)).op])
+    -- pack-regime workaround: `Q` is a variable and has no pack congruence, so `simp` cannot rewrite
+    -- the ring in its hidden arguments. `change` states the goal with the other spelling of the open set.
+    change Q (f.appLE ⊤ (X.basicOpen r) (by simp)).hom
+    rw [← f.appLE_map (U := ⊤) le_top (homOfLE (X.basicOpen_le r)).op]
     have := U.2.isLocalization_basicOpen r
     (set_option backward.isDefEq.respectTransparency.instanceTypes false in
     exact (isLocal_ringHomProperty P).StableUnderCompositionWithLocalizationAwayTarget _ r _ H)

@@ -259,6 +259,13 @@ This is a stronger variant of the linear map `Polynomial.leval`. -/
 def aeval : R[X] →ₐ[R] A :=
   aevalEquiv R A x
 
+/-- Pack congruence for `Polynomial.aeval`. -/
+@[dsimp_congr] theorem _root_.Polynomial.aeval_pack_congr.{ur, ua} {R : Type ur} [CommSemiring R]
+    {A A' : Type ua} [Semiring A] [Semiring A'] [Algebra R A] [Algebra R A']
+    (hA : SAlgPack.mk (R := R) A = SAlgPack.mk A') {x : A} {x' : A'} (hx : HEq x x') :
+    HEq (aeval (R := R) x) (aeval (R := R) x') := by
+  cases hA; cases hx; rfl
+
 lemma aevalEquiv_apply (x : A) : aevalEquiv R A x = aeval x :=
   rfl
 

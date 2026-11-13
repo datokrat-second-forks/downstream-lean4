@@ -61,7 +61,7 @@ def ker (f : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
 
 /-- Pack congruence for `LinearMap.ker`: the kernel follows the module packs of the domain and the
 codomain and the map. -/
--- pack-regime: the attribute `dsimp_congr` is off, the fixed parameters `R`, `R₂`, `τ₁₂` get no visit (record R45).
+@[dsimp_congr]
 theorem _root_.LinearMap.ker_pack_congr₂.{ur, us, um, un} {R : Type ur}
     {R₂ : Type us} [Semiring R] [Semiring R₂] {τ₁₂ : R →+* R₂} {M M' : Type um}
     {M₂ M₂' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [Module R M] [Module R M']

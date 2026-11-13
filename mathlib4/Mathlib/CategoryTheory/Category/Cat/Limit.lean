@@ -133,7 +133,12 @@ theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ C
   subst h
   simp [-homDiagram_obj]
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack lemma: the category of `limitConeX F` is the category on the limit of the objects. -/
+@[simp] theorem limitConeX_classPack (F : J ⥤ Cat.{v, v}) :
+    @CategoryPack.mk.{v, v} (limitConeX F) (limitConeX F).str =
+      @CategoryPack.mk.{v, v} (limit (F ⋙ Cat.objects)) (instCategoryLimitCompObjects F) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

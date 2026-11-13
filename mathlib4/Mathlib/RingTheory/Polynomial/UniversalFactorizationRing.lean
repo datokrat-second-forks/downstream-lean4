@@ -441,6 +441,26 @@ lemma UniversalFactorizationRing.factor₁_mul_factor₂ :
   (MvPolynomial.universalFactorizationMapLiftEquiv _ _ n m k hn _
     ⟨fromTensor m k hn p, fromTensor_comp_universalFactorizationMap' m k hn p⟩).2
 
+attribute [-instance] leftModule in
+/-- Pack lemma: the ring structure of the universal factorization ring. -/
+theorem UniversalFactorizationRing.commRingPack :
+    letI := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
+    letI := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
+    @CommRingPack.mk 𝓡 (instCommRingUniversalFactorizationRing m k hn p) =
+      @CommRingPack.mk (R ⊗[MvPolynomial (Fin n) R]
+        (MvPolynomial (Fin m) R ⊗[R] MvPolynomial (Fin k) R)) _ :=
+  rfl
+
+attribute [-instance] leftModule in
+/-- Pack lemma: the universal factorization ring as an algebra over `R`. -/
+theorem UniversalFactorizationRing.sAlgPack :
+    letI := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
+    letI := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
+    @SAlgPack.mk R _ 𝓡 _ (instAlgebraUniversalFactorizationRing m k hn p) =
+      SAlgPack.mk (R ⊗[MvPolynomial (Fin n) R]
+        (MvPolynomial (Fin m) R ⊗[R] MvPolynomial (Fin k) R)) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 attribute [-instance] leftModule in
 /-- The universal factorization ring represents
@@ -480,10 +500,10 @@ def UniversalFactorizationRing.homEquiv :
   right_inv q := by
     let := (MvPolynomial.universalFactorizationMap R n m k hn).toAlgebra
     let := ((MvPolynomial.mapEquivMonic R _ n).symm p).toAlgebra
-    (set_option backward.dsimp.instanceTypes false in
-    simp only [UniversalFactorizationRing, MvPolynomial.mapEquivMonic, AlgHom.toRingHom_eq_coe,
+    simp only [UniversalFactorizationRing.commRingPack, UniversalFactorizationRing.sAlgPack,
+      MvPolynomial.mapEquivMonic, AlgHom.toRingHom_eq_coe,
       Equiv.coe_fn_symm_mk, MvPolynomial.coe_aeval_eq_eval, factor₁,
-      MvPolynomial.universalFactorizationMapLiftEquiv, Equiv.coe_fn_mk, fromTensor, factor₂])
+      MvPolynomial.universalFactorizationMapLiftEquiv, Equiv.coe_fn_mk, fromTensor, factor₂]
     ext <;>
       (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       simp +contextual [coeff_freeMonic, apply_dite, MonicDegreeEq.coeff_of_ge])

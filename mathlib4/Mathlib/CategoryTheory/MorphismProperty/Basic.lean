@@ -73,12 +73,29 @@ lemma of_eq_top {P : MorphismProperty C} (h : P = ⊤) {X Y : C} (f : X ⟶ Y) :
 lemma sup_iff (W W' : MorphismProperty C) {X Y : C} (f : X ⟶ Y) : (W ⊔ W') f ↔ W f ∨ W' f :=
   Iff.rfl
 
+/-- Pack lemma: the `SupSet` pack of `MorphismProperty C`. -/
+theorem supSet_classPack (C : Type u) [CategoryStruct.{v} C] :
+    @SupSetPack.mk (MorphismProperty C)
+        (instCompleteBooleanAlgebra C).toCompleteSemilatticeSup.toSupSet =
+      @SupSetPack.mk (∀ ⦃X Y : C⦄ (_ : X ⟶ Y), Prop)
+        (@Pi.supSet C _ fun X => @Pi.supSet C _ fun Y => @Pi.supSet (X ⟶ Y) _ fun _ =>
+          Prop.instCompleteLattice.toCompleteSemilatticeSup.toSupSet) :=
+  rfl
+
+/-- Pack lemma: the `InfSet` pack of `MorphismProperty C`. -/
+theorem infSet_classPack (C : Type u) [CategoryStruct.{v} C] :
+    @InfSetPack.mk (MorphismProperty C)
+        (instCompleteBooleanAlgebra C).toCompleteSemilatticeInf.toInfSet =
+      @InfSetPack.mk (∀ ⦃X Y : C⦄ (_ : X ⟶ Y), Prop)
+        (@Pi.infSet C _ fun X => @Pi.infSet C _ fun Y => @Pi.infSet (X ⟶ Y) _ fun _ =>
+          Prop.instCompleteLattice.toCompleteSemilatticeInf.toInfSet) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 lemma sSup_iff (S : Set (MorphismProperty C)) {X Y : C} (f : X ⟶ Y) :
     sSup S f ↔ ∃ W ∈ S, W f := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp +instances [MorphismProperty])
+  simp [MorphismProperty, supSet_classPack]
 
 @[simp]
 lemma iSup_iff {ι : Sort*} (W : ι → MorphismProperty C) {X Y : C} (f : X ⟶ Y) :
@@ -93,8 +110,7 @@ set_option backward.isDefEq.respectTransparency.types false in
 @[simp]
 lemma sInf_iff (S : Set (MorphismProperty C)) {X Y : C} (f : X ⟶ Y) :
     sInf S f ↔ ∀ W ∈ S, W f := by
-  (set_option backward.dsimp.instanceTypes false in
-  simp +instances [MorphismProperty])
+  simp [MorphismProperty, infSet_classPack]
 
 @[simp]
 lemma iInf_iff {ι : Type*} (W : ι → MorphismProperty C) {X Y : C} (f : X ⟶ Y) :

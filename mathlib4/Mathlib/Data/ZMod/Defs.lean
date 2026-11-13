@@ -226,6 +226,17 @@ instance commRing (n : ℕ) : CommRing (ZMod n) where
     ((inferInstance : CommRing ℤ)).npow_succ
     fun n => ((inferInstance : CommRing (Fin n.succ))).npow_succ
 
+/-- Pack lemma: the commutative ring pack of `ZMod (n + 1)`. -/
+theorem _root_.ZMod.commRing_succ_classPack (n : ℕ) :
+    @CommRingPack.mk (ZMod (n + 1)) (ZMod.commRing (n + 1)) =
+      @CommRingPack.mk (Fin (n + 1)) (Fin.instCommRing (n + 1)) :=
+  rfl
+
+/-- Pack lemma: the commutative ring pack of `ZMod 0`. -/
+theorem _root_.ZMod.commRing_zero_classPack :
+    @CommRingPack.mk (ZMod 0) (ZMod.commRing 0) = @CommRingPack.mk ℤ Int.instCommRing :=
+  rfl
+
 instance inhabited (n : ℕ) : Inhabited (ZMod n) :=
   ⟨0⟩
 

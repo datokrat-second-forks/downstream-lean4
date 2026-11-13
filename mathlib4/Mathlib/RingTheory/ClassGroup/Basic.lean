@@ -203,6 +203,13 @@ def ClassGroup.equiv :
   exact QuotientGroup.congr (toPrincipalIdeal R (FractionRing R)).range (toPrincipalIdeal R K).range
     (Units.mapEquiv (FractionalIdeal.canonicalEquiv R⁰ (FractionRing R) K).toMulEquiv) this
 
+/-- Pack lemma: the group structure of the class group. -/
+theorem ClassGroup.commGroupPack :
+    @CommGroupPack.mk (ClassGroup R) (instCommGroupClassGroup R) =
+      @CommGroupPack.mk
+        ((FractionalIdeal R⁰ (FractionRing R))ˣ ⧸ (toPrincipalIdeal R (FractionRing R)).range) _ :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem ClassGroup.equiv_mk (K' : Type*) [Field K'] [Algebra R K'] [IsFractionRing R K']
@@ -211,7 +218,7 @@ theorem ClassGroup.equiv_mk (K' : Type*) [Field K'] [Algebra R K'] [IsFractionRi
       QuotientGroup.mk' _ (Units.mapEquiv (↑(FractionalIdeal.canonicalEquiv R⁰ K K')) I) := by
   -- `simp` can't apply `ClassGroup.mk_def` and `rw` can't unfold `ClassGroup`.
   rw [ClassGroup.equiv, ClassGroup.mk_def]
-  (set_option backward.dsimp.instanceTypes false in simp only [ClassGroup, QuotientGroup.congr_mk'])
+  simp only [ClassGroup.commGroupPack, QuotientGroup.congr_mk']
   congr
   rw [← Units.val_inj, Units.coe_mapEquiv, Units.coe_mapEquiv, Units.coe_map]
   exact FractionalIdeal.canonicalEquiv_canonicalEquiv _ _ _ _ _

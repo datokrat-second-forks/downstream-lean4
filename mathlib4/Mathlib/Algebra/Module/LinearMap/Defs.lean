@@ -181,6 +181,14 @@ structure SModPack.{ua, va} (R : Type ua) [Semiring R] where
   /-- The module structure. -/
   [mod : Module R M]
 
+/-- Lens: the `SMul R` pack of a module follows the module pack. -/
+@[dsimp_congr] theorem _root_.Module.smulPack_lens.{ur, um} {R : Type ur} [Semiring R] {M M' : Type um}
+    [iM : AddCommMonoid M] [iM' : AddCommMonoid M'] [mM : Module R M] [mM' : Module R M']
+    (h : @SModPack.mk R _ M iM mM = @SModPack.mk R _ M' iM' mM') :
+    @SMulPack.mk R M mM.toDistribMulAction.toDistribSMul.toSMul =
+      @SMulPack.mk R M' mM'.toDistribMulAction.toDistribSMul.toSMul := by
+  cases h; rfl
+
 /-- Pack: a module over a ring whose carrier is an additive commutative group. -/
 structure GModPack.{ua, va} (R : Type ua) [Ring R] where
   /-- The carrier. -/

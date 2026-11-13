@@ -114,6 +114,13 @@ instance instFunLike : FunLike (α →₀ M) α M :=
     ext a
     exact (hf _).trans (hg _).symm⟩
 
+/-- Lens: the coercion pack of `α →₀ M` follows the `Zero` pack of `M`. -/
+@[dsimp_congr] theorem _root_.Finsupp.funLikePack_congr.{ua, um} {α : Type ua} {M M' : Type um}
+    [i : Zero M] [i' : Zero M'] (h : @ZeroPack.mk M i = @ZeroPack.mk M' i') :
+    @FunLikePack.mk (α →₀ M) α (fun _ => M) Finsupp.instFunLike =
+      @FunLikePack.mk (α →₀ M') α (fun _ => M') Finsupp.instFunLike := by
+  cases h; rfl
+
 initialize_simps_projections Finsupp (toFun → apply)
 
 @[ext, grind ext]

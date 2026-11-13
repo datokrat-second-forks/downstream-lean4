@@ -93,7 +93,12 @@ def yoneda₀ (x : B) : Pseudofunctor Bᵒᵖ Cat.{w, v} where
   mapId a := leftUnitorNatIsoCat (unop a) x
   mapComp f g := associatorNatIsoRightCat g.unop f.unop x
 
-set_option backward.dsimp.instanceTypes false in
+/-- Pack lemma: the category of `(yoneda₀ x).obj y` is the hom category `unop y ⟶ x`. -/
+@[simp] theorem yoneda₀_obj_classPack (x : B) (y : Bᵒᵖ) :
+    @CategoryPack.mk.{w, v} ((yoneda₀ x).obj y) ((yoneda₀ x).obj y).str =
+      @CategoryPack.mk.{w, v} (unop y ⟶ x) (homCategory (unop y) x) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -115,7 +120,6 @@ def postcomposing₂ (a b : B) : (a ⟶ b) ⥤ (yoneda₀ a ⟶ yoneda₀ b) whe
   obj := postcomp₂
   map η := { as := { app x := (postcomposingCat (unop x) a b).map η } }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

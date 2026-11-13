@@ -215,6 +215,13 @@ def toExtension : Extension R S where
     @TowerMidPack.mk R₀ S₀ _ _ _ P₀.toExtension.Ring _ P₀.toExtension.instRingOfIsScalarTower
         P₀.toExtension.algebra₂ = TowerMidPack.mk P₀.Ring := rfl
 
+/-- Pack lemma: the action of `P.toExtension.Ring` on the cotangent module is the action of
+`P.Ring`. -/
+@[simp] theorem _root_.Algebra.Generators.toExtension_cotangent_hSMulPack {R₀ S₀ ι₀ : Type*} [CommRing R₀]
+    [CommRing S₀] [Algebra R₀ S₀] (P₀ : Algebra.Generators R₀ S₀ ι₀) :
+    @HSMulPack.mk P₀.toExtension.Ring P₀.toExtension.Cotangent P₀.toExtension.Cotangent instHSMul =
+      @HSMulPack.mk P₀.Ring P₀.toExtension.Cotangent P₀.toExtension.Cotangent instHSMul := rfl
+
 /-- Transport generators along an algebra isomorphism. -/
 noncomputable def ofAlgEquiv
     (P : Generators R S ι) {T : Type*} [CommRing T] [Algebra R T] (e : S ≃ₐ[R] T) :
@@ -325,11 +332,11 @@ a map of extensions. -/
 noncomputable def baseChangeFromBaseChange :
     (P.toExtension.baseChange (T := T)).Hom (P.baseChange (T := T)).toExtension :=
   .ofAlgHom (MvPolynomial.algebraTensorAlgEquiv R T).toAlgHom <| by
-    (set_option backward.dsimp.instanceTypes false in dsimp [Extension.baseChange])
+    dsimp [Extension.baseChange, Extension.baseChange_towerMidPack_tower,
+      Extension.baseChange_sAlgPack_tower]
     ext
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [RingHom.algebraMap_toAlgebra])
+    simp [RingHom.algebraMap_toAlgebra]
 
 set_option backward.defeqAttrib.useBackward true in
 @[simp]
@@ -345,11 +352,11 @@ a map of extensions. -/
 noncomputable def baseChangeToBaseChange :
     (P.baseChange (T := T)).toExtension.Hom (P.toExtension.baseChange (T := T)) :=
   .ofAlgHom (MvPolynomial.algebraTensorAlgEquiv R T).symm.toAlgHom <| by
-    (set_option backward.dsimp.instanceTypes false in dsimp [Extension.baseChange])
+    dsimp [Extension.baseChange, Extension.baseChange_towerMidPack_tower,
+      Extension.baseChange_sAlgPack_tower]
     ext
-    (set_option backward.dsimp.instanceTypes false in
     set_option backward.isDefEq.respectTransparency.instanceTypes false in
-    simp [RingHom.algebraMap_toAlgebra])
+    simp [RingHom.algebraMap_toAlgebra]
 
 set_option backward.defeqAttrib.useBackward true in
 @[simp]

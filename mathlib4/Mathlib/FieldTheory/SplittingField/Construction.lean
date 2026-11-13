@@ -177,6 +177,12 @@ protected theorem splits (n : ℕ) :
     rw [Polynomial.map_mul]
     exact Splits.mul ((Splits.X_sub_C _).map _) (ih _ (natDegree_removeFactor' hf))
 
+/-- Pack lemma: the field pack of `SplittingFieldAux (n + 1) f`. -/
+theorem succ_fieldPack (n : ℕ) (f : K[X]) :
+    @FieldPack.mk (SplittingFieldAux (n + 1) f) (field (n + 1) f) =
+      @FieldPack.mk (SplittingFieldAux n f.removeFactor) (field n f.removeFactor) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 theorem adjoin_rootSet (n : ℕ) :
     ∀ {K : Type u} [Field K],
@@ -196,7 +202,7 @@ theorem adjoin_rootSet (n : ℕ) :
     rw [algebraMap_succ, ← map_map, ← X_sub_C_mul_removeFactor _ hndf, Polynomial.map_mul] at hmf0 ⊢
     rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.toFinset_add,
       Finset.coe_union, Multiset.toFinset_singleton, Finset.coe_singleton, ← Set.image_singleton]
-    (set_option backward.dsimp.instanceTypes false in simp only [SplittingFieldAux.succ])
+    simp only [SplittingFieldAux.succ, succ_fieldPack]
     rw [← Algebra.adjoin_eq_adjoin_union K {AdjoinRoot.root f.factor}
       ((map (algebraMap (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor))
         f.removeFactor).roots.toFinset : Set (SplittingFieldAux n f.removeFactor))

@@ -42,6 +42,14 @@ variable {M : ι → Type w} [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)
 instance : Module R (⨁ i, M i) :=
   inferInstanceAs <| Module R (Π₀ i, M i)
 
+/-- Pack lemma: the module pack of `⨁ i, M i`. -/
+theorem _root_.DirectSum.smodPack.{ur, ui, um} {R : Type ur} [Semiring R] {ι : Type ui}
+    (M : ι → Type um) [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)] :
+    @SModPack.mk R _ (⨁ i, M i) (DirectSum.instAddCommMonoid ι fun i => M i)
+        DirectSum.instModule =
+      @SModPack.mk R _ (Π₀ i, M i) DFinsupp.addCommMonoid DFinsupp.module :=
+  rfl
+
 instance {S : Type*} [Semiring S] [∀ i, Module S (M i)] [∀ i, SMulCommClass R S (M i)] :
     SMulCommClass R S (⨁ i, M i) :=
   inferInstanceAs <| SMulCommClass R S (Π₀ i, M i)

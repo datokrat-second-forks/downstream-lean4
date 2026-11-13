@@ -94,6 +94,18 @@ export SupSet (sSup)
 
 export InfSet (sInf)
 
+/-- Pack congruence for `sSup`: the `SupSet` pack of the carrier. -/
+@[dsimp_congr] theorem _root_.sSup_pack_congr.{ua} {α α' : Type ua} [i : SupSet α] [i' : SupSet α']
+    (h : @SupSetPack.mk α i = @SupSetPack.mk α' i') (s : Set α) (s' : Set α') (hs : HEq s s') :
+    HEq (@sSup α i s) (@sSup α' i' s') := by
+  cases h; cases hs; rfl
+
+/-- Pack congruence for `sInf`: the `InfSet` pack of the carrier. -/
+@[dsimp_congr] theorem _root_.sInf_pack_congr.{ua} {α α' : Type ua} [i : InfSet α] [i' : InfSet α']
+    (h : @InfSetPack.mk α i = @InfSetPack.mk α' i') (s : Set α) (s' : Set α') (hs : HEq s s') :
+    HEq (@sInf α i s) (@sInf α' i' s') := by
+  cases h; cases hs; rfl
+
 /-- `OrderSupSet α` expresses that `α` is equipped with the operation `sSup` that returns
 the least upper bound of a set whenever one exists. -/
 class OrderSupSet (α : Type*) [LE α] extends SupSet α where

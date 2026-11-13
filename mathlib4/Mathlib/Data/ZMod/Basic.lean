@@ -39,6 +39,7 @@ open Function ZMod
 
 namespace ZMod
 
+
 instance : IsDomain (ZMod 0) := inferInstanceAs (IsDomain ℤ)
 
 /-- For non-zero `n : ℕ`, the ring `Fin n` is equivalent to `ZMod n`. -/
@@ -219,7 +220,7 @@ ring, see `ZMod.intCast_cast`. -/
 @[norm_cast]
 theorem intCast_zmod_cast (a : ZMod n) : ((cast a : ℤ) : ZMod n) = a := by
   cases n
-  · (set_option backward.dsimp.instanceTypes false in simp [ZMod.cast, ZMod])
+  · simp [ZMod.cast, ZMod, commRing_zero_classPack]
   · dsimp [ZMod.cast]
     rw [Int.cast_natCast, natCast_zmod_val]
 
@@ -547,14 +548,14 @@ theorem val_neg_one (n : ℕ) : (-1 : ZMod n.succ).val = n := by
   dsimp [val, Fin.val_neg']
   cases n
   · simp
-  · (set_option backward.dsimp.instanceTypes false in dsimp [ZMod, ZMod.cast])
+  · dsimp [ZMod, ZMod.cast, commRing_succ_classPack]
     rw [Fin.coe_neg_one]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- `-1 : ZMod n` lifts to `n - 1 : R`. This avoids the characteristic assumption in `cast_neg`. -/
 theorem cast_neg_one {R : Type*} [Ring R] (n : ℕ) : cast (-1 : ZMod n) = (n - 1 : R) := by
   rcases n with - | n
-  · (set_option backward.dsimp.instanceTypes false in dsimp [ZMod, ZMod.cast]); simp
+  · dsimp [ZMod, ZMod.cast, commRing_zero_classPack]; simp
   · rw [← natCast_val, val_neg_one, Nat.cast_succ, add_sub_cancel_right]
 
 set_option backward.isDefEq.respectTransparency false in

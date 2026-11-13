@@ -245,6 +245,18 @@ instance leftAlgebra [SMulCommClass R S A] : Algebra S (A ⊗[R] B) :=
 lemma algebraMap_def [SMulCommClass R S A] :
     algebraMap S (A ⊗[R] B) = includeLeftRingHom.comp (algebraMap S A) := rfl
 
+/-- Lens: the left algebra structure of `A ⊗[R] B` follows the algebra pack of `B`. -/
+@[dsimp_congr] theorem _root_.Algebra.TensorProduct.leftAlgebra.packLens.{ur, us, ua, ub}
+    {R₀ : Type ur} {S₀ : Type us} {A : Type ua} {B B' : Type ub} [CommSemiring R₀]
+    [CommSemiring S₀] [Semiring A] [Algebra R₀ A] [Algebra S₀ A] [SMulCommClass R₀ S₀ A]
+    [Semiring B] [Semiring B'] [Algebra R₀ B] [Algebra R₀ B']
+    (h : SAlgPack.mk (R := R₀) B = SAlgPack.mk B') :
+    @SAlgPack.mk S₀ _ (A ⊗[R₀] B) Algebra.TensorProduct.instSemiring
+        Algebra.TensorProduct.leftAlgebra =
+      @SAlgPack.mk S₀ _ (A ⊗[R₀] B') Algebra.TensorProduct.instSemiring
+        Algebra.TensorProduct.leftAlgebra := by
+  cases h; rfl
+
 example : (Semiring.toNatAlgebra : Algebra ℕ (ℕ ⊗[ℕ] B)) = leftAlgebra := rfl
 
 -- This is for the `undergrad.yaml` list.

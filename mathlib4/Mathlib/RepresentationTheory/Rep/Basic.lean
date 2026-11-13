@@ -660,6 +660,12 @@ lemma comp_smul {M N O : Rep k G} (f : M ⟶ N) (r : k) (g : N ⟶ O) :
 instance {M N : Rep k G} : Module k (M ⟶ N) := fast_instance% hom_injective.module
   _ ⟨⟨_, zero_hom⟩, add_hom⟩ <| by simp [smul_hom]
 
+/-- Lens: the `SMul k` pack of the hom type `M ⟶ N` of `Rep k G` follows `M` and `N`. -/
+@[dsimp_congr] theorem _root_.Rep.hom_smulPack_congr.{wa, uk, uG} {k : Type uk} {G : Type uG}
+    [CommSemiring k] [Monoid G] {M M' N N' : Rep.{wa} k G} (hM : M = M') (hN : N = N') :
+    @SMulPack.mk k (M ⟶ N) _ = @SMulPack.mk k (M' ⟶ N') _ := by
+  cases hM; cases hN; rfl
+
 instance : Linear k (Rep k G) where
   smul_comp := by simp [smul_comp]
   comp_smul := by simp [comp_smul]

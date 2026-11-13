@@ -63,6 +63,12 @@ meta def delabOf : Delab := CategoryTheory.delabOf
 theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
   rfl
 
+/-- Pack lemma: the category pack of `Grpd.of C`. -/
+@[simp] theorem of_classPack.{vc, uc} (C : Type uc) [i : Groupoid.{vc} C] :
+    @CategoryPack.mk.{vc, uc} (Grpd.of C) (Grpd.of C).str'.toCategory =
+      @CategoryPack.mk.{vc, uc} C i.toCategory :=
+  rfl
+
 /-- Category structure on `Grpd` -/
 instance category : LargeCategory.{max v u} Grpd.{v, u} where
   Hom C D := C ⥤ D
@@ -105,7 +111,6 @@ section Products
 def piLimitFan ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.Fan F :=
   Limits.Fan.mk (@of (∀ j : J, F j) _) fun j => CategoryTheory.Pi.eval _ j
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/

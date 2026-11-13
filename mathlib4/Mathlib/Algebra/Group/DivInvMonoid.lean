@@ -372,3 +372,11 @@ initialize_simps_projections DivisionCommMonoid
 initialize_simps_projections SubtractionCommMonoid
 
 derive_pack_edges
+
+/-- Lens: the `SMul ℤ` pack of a `SubNegMonoid` follows the `SubNegMonoid` pack. -/
+@[dsimp_congr] theorem _root_.SubNegMonoid.zsmul_smulPack_lens.{u} {G G' : Type u}
+    [i : SubNegMonoid G] [i' : SubNegMonoid G']
+    (h : @SubNegMonoidPack.mk G i = @SubNegMonoidPack.mk G' i') :
+    @SMulPack.mk ℤ G (@ZSMul.toSMul G (@SubNegMonoid.toZSMul G i)) =
+      @SMulPack.mk ℤ G' (@ZSMul.toSMul G' (@SubNegMonoid.toZSMul G' i')) := by
+  cases h; rfl

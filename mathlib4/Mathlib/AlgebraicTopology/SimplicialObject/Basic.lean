@@ -688,6 +688,12 @@ def Truncated (n : ℕ) :=
   SimplexCategory.Truncated n ⥤ C
 deriving Category
 
+/-- Pack lemma: the category pack of `CosimplicialObject.Truncated C n`. -/
+theorem Truncated.category_classPack (n : ℕ) :
+    @CategoryPack.mk (Truncated C n) (instCategoryTruncated C n) =
+      @CategoryPack.mk (SimplexCategory.Truncated n ⥤ C) Functor.category :=
+  rfl
+
 variable {C}
 
 namespace Truncated
@@ -695,8 +701,7 @@ namespace Truncated
 set_option backward.isDefEq.respectTransparency false in
 instance {n} {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
     HasLimitsOfShape J (CosimplicialObject.Truncated C n) := by
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [Truncated])
+  dsimp only [Truncated, Truncated.category_classPack]
   infer_instance
 
 instance {n} [HasLimits C] : HasLimits (CosimplicialObject.Truncated C n) :=
@@ -705,8 +710,7 @@ instance {n} [HasLimits C] : HasLimits (CosimplicialObject.Truncated C n) :=
 set_option backward.isDefEq.respectTransparency false in
 instance {n} {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
     HasColimitsOfShape J (CosimplicialObject.Truncated C n) := by
-  (set_option backward.dsimp.instanceTypes false in
-  dsimp [Truncated])
+  dsimp only [Truncated, Truncated.category_classPack]
   infer_instance
 
 instance {n} [HasColimits C] : HasColimits (CosimplicialObject.Truncated C n) :=

@@ -119,6 +119,14 @@ instance instFunLike : FunLike (Basis ι R M) ι M where
       FunLikePack.mk (Module.Basis ι' R M) ι' (fun _ => M) := by
   cases h; rfl
 
+/-- Lens: the coercion pack of `Module.Basis ι R M` follows the module pack. -/
+@[dsimp_congr] theorem _root_.Module.Basis.funLikePack_module_congr.{ui, ur, um} {ι₀ : Type ui}
+    {R₀ : Type ur} {M M' : Type um} [Semiring R₀] [AddCommMonoid M] [AddCommMonoid M']
+    [Module R₀ M] [Module R₀ M'] (h : SModPack.mk (R := R₀) M = SModPack.mk M') :
+    FunLikePack.mk (Module.Basis ι₀ R₀ M) ι₀ (fun _ => M) =
+      FunLikePack.mk (Module.Basis ι₀ R₀ M') ι₀ (fun _ => M') := by
+  cases h; rfl
+
 @[simp]
 theorem coe_ofRepr (e : M ≃ₗ[R] ι →₀ R) : ⇑(ofRepr e) = fun i => e.symm (Finsupp.single i 1) :=
   rfl

@@ -62,6 +62,15 @@ variable [Semiring R] [Semiring S] [Module R S] {s t : Set M} {x : S[M]}
 @[to_additive (dont_translate := R)]
 instance : Module R S[M] := fast_instance% coeffAddEquiv.module _
 
+/-- Lens: the module pack of `MonoidAlgebra R M` over a ring follows the type `M`. -/
+@[dsimp_congr] theorem _root_.MonoidAlgebra.smodPack_ring_congr.{ur, um} {R : Type ur} [Ring R]
+    {M M' : Type um} (h : M = M') :
+    @SModPack.mk R _ (MonoidAlgebra R M) MonoidAlgebra.addCommGroup.toAddCommMonoid
+        MonoidAlgebra.instModule =
+      @SModPack.mk R _ (MonoidAlgebra R M') MonoidAlgebra.addCommGroup.toAddCommMonoid
+        MonoidAlgebra.instModule := by
+  cases h; rfl
+
 @[to_additive]
 instance instIsTorsionFree [IsTorsionFree R S] : IsTorsionFree R S[M] :=
   coeffAddEquiv.moduleIsTorsionFree _

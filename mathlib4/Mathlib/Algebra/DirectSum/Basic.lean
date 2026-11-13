@@ -66,6 +66,12 @@ instance {R : Type u} [Semiring R] [∀ i, AddCommMonoid (β i)] [∀ i, Module 
 
 deriving instance AddCommMonoid, Inhabited, DFunLike for DirectSum
 
+/-- Pack lemma: the `AddCommMonoid` pack of `⨁ i, β i`. -/
+theorem _root_.DirectSum.addCommMonoid_classPack (ι : Type*) (β : ι → Type*) [∀ i, AddCommMonoid (β i)] :
+    @AddCommMonoidPack.mk (⨁ i, β i) (instAddCommMonoid ι fun i => β i) =
+      @AddCommMonoidPack.mk (Π₀ i, β i) DFinsupp.addCommMonoid :=
+  rfl
+
 instance [DecidableEq ι] [∀ i, AddCommMonoid (β i)] [∀ i, DecidableEq (β i)] :
     DecidableEq (DirectSum ι β) :=
   inferInstanceAs <| DecidableEq (Π₀ i, β i)

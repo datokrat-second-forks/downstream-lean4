@@ -89,8 +89,7 @@ lemma FormallySmooth.comp_surjective [FormallySmooth R A] (I : Ideal B) (hI : I 
       Module.projective_lifting_property _ _ P.toExtension.toKaehler_surjective⟩).2
   obtain ⟨g, hg⟩ := retractionKerCotangentToTensorEquivSection (R := R) P.algebraMap_surjective
     ⟨⟨⟨Cotangent.val, by simp⟩, by
-      (set_option backward.dsimp.instanceTypes false in
-      simpa using! Cotangent.val_smul' (P := P.toExtension))⟩ ∘ₗ
+      simpa using! Cotangent.val_smul' (P := P.toExtension)⟩ ∘ₗ
       (set_option backward.isDefEq.respectTransparency.instanceTypes false in
       l.restrictScalars P.toExtension.Ring), LinearMap.ext fun x ↦ congr($hl x)⟩
   let σ := Function.surjInv (f := algebraMap B (B ⧸ I)) Ideal.Quotient.mk_surjective

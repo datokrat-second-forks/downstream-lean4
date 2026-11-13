@@ -340,7 +340,6 @@ def compAsSmallFunctorEquivalence :
   counitIso := Iso.refl _
   unitIso := Iso.refl _
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 variable {F} in
@@ -359,7 +358,7 @@ def mapWhiskerRightAsSmallFunctor (α : F ⟶ G) :
       · set_option backward.isDefEq.respectTransparency.instanceTypes false in
         simp only [compAsSmallFunctorEquivalence_functor, compAsSmallFunctorEquivalence_inverse,
         comp_obj, compAsSmallFunctorEquivalenceInverse_obj_base, map_obj_base,
-        compAsSmallFunctorEquivalenceFunctor_obj_base, Cat.asSmallFunctor_obj, Cat.of_α,
+        compAsSmallFunctorEquivalenceFunctor_obj_base, Cat.asSmallFunctor_obj, Cat.of_classPack,
         Iso.refl_hom, Functor.comp_map, comp_base, id_base,
         compAsSmallFunctorEquivalenceInverse_map_base, map_map_base,
         compAsSmallFunctorEquivalenceFunctor_map_base, Cat.asSmallFunctor_map, toCatHom_toFunctor,
