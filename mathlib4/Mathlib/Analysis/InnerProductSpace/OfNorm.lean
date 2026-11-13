@@ -141,8 +141,6 @@ theorem inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
 
 variable [InnerProductSpaceable E]
 
--- pack-regime finding: `module_nf` needs 185000 heartbeats here, the declaration 206000.
-set_option maxHeartbeats 250000 in
 set_option backward.privateInPublic true in
 set_option backward.privateInPublic.warn false in
 theorem add_left (x y z : E) : inner_ 𝕜 (x + y) z = inner_ 𝕜 x z + inner_ 𝕜 y z := by
