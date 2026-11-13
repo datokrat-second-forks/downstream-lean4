@@ -123,6 +123,16 @@ instance : CommRing ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| CommRi
 
 instance : Algebra R ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| Algebra R A
 
+/-- Lens: the algebra pack of the carrier of `X : CommAlgCat R` with the instance on
+`(forget (CommAlgCat R)).obj X` follows `X`. -/
+@[dsimp_congr] theorem _root_.CommAlgCat.instAlgebraObjForget.packLens.{ua, va} {R : Type ua}
+    [CommRing R] {X X' : CommAlgCat.{va} R} (h : X = X') :
+    @SAlgPack.mk R _ X (@CommSemiring.toSemiring X (@CommRing.toCommSemiring X X.commRing))
+        (@CommAlgCat.instAlgebraObjForgetAlgHomCarrier R _ X) =
+      @SAlgPack.mk R _ X' (@CommSemiring.toSemiring X' (@CommRing.toCommSemiring X' X'.commRing))
+        (@CommAlgCat.instAlgebraObjForgetAlgHomCarrier R _ X') := by
+  cases h; rfl
+
 instance hasForgetToCommRingCat : HasForget₂ (CommAlgCat.{v} R) CommRingCat.{v} where
   forget₂.obj A := ↧A
   forget₂.map f := CommRingCat.ofHom f.hom.toRingHom

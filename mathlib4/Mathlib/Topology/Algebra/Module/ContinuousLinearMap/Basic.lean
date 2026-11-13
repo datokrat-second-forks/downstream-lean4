@@ -162,6 +162,35 @@ instance funLike : FunLike (M₁ →SL[σ₁₂] M₂) M₁ M₂ where
       FunLikePack.mk (M' →SL[σ] N') M' (fun _ => N') := by
   cases hM; cases hN; rfl
 
+/-- Pack congruence for `ContinuousLinearMap.toLinearMap`. -/
+@[dsimp_congr] theorem _root_.ContinuousLinearMap.toLinearMap_pack_congr.{ur, us, um, un}
+    {R : Type ur} {S : Type us} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module S N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module S N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := S) N = TopModPack.mk N')
+    (f : M →SL[σ] N) (f' : M' →SL[σ] N') (hf : HEq f f') :
+    HEq f.toLinearMap f'.toLinearMap := by
+  cases hM; cases hN; cases hf; rfl
+
+/-- Pack congruence for the constructor `ContinuousLinearMap.mk`. -/
+@[dsimp_congr] theorem _root_.ContinuousLinearMap.mk_pack_congr.{ur, us, um, un}
+    {R : Type ur} {S : Type us} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type um} {N N' : Type un}
+    [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M'] [AddCommMonoid M'] [Module R M']
+    [TopologicalSpace N] [AddCommMonoid N] [Module S N]
+    [TopologicalSpace N'] [AddCommMonoid N'] [Module S N']
+    (hM : TopModPack.mk (R := R) M = TopModPack.mk M')
+    (hN : TopModPack.mk (R := S) N = TopModPack.mk N')
+    (f : M →ₛₗ[σ] N) (f' : M' →ₛₗ[σ] N') (hf : HEq f f')
+    (hc : Continuous f.toFun) {hc' : Continuous f'.toFun} (hh : HEq hc hc') :
+    HEq (ContinuousLinearMap.mk f hc) (ContinuousLinearMap.mk f' hc') := by
+  cases hM; cases hN; cases hf; rfl
+
 instance continuousSemilinearMapClass :
     ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁ M₂ where
   map_add f := map_add f.toLinearMap

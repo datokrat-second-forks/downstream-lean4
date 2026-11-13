@@ -80,6 +80,20 @@ commutative ring, field of fractions
       @CommSemiringPack.mk (Localization.Away x') OreLocalization.instCommSemiring := by
   cases hx; rfl
 
+/-- Lens: the `Mul` pack of `Localization.Away x` follows `x`. -/
+@[dsimp_congr] theorem Localization.Away.mulPackLens.{ua} {S : Type ua} [CommSemiring S]
+    {x x' : S} (hx : x = x') :
+    @MulPack.mk (Localization.Away x) OreLocalization.instMul =
+      @MulPack.mk (Localization.Away x') OreLocalization.instMul := by
+  cases hx; rfl
+
+/-- Lens: the `Monoid` pack of `Localization.Away x` follows `x`. -/
+@[dsimp_congr] theorem Localization.Away.monoidPackLens.{ua} {S : Type ua} [CommSemiring S]
+    {x x' : S} (hx : x = x') :
+    @MonoidPack.mk (Localization.Away x) OreLocalization.instMonoid =
+      @MonoidPack.mk (Localization.Away x') OreLocalization.instMonoid := by
+  cases hx; rfl
+
 section CommSemiring
 
 variable {R : Type*} [CommSemiring R] (M : Submonoid R) {S : Type*} [CommSemiring S]

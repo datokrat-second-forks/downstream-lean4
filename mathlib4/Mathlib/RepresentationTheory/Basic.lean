@@ -642,6 +642,18 @@ noncomputable def tprod : Representation k G (V ⊗[k] W) where
   map_one' := by simp only [map_one, TensorProduct.map_one]
   map_mul' g h := by simp only [map_mul, TensorProduct.map_mul]
 
+/-- Pack congruence for `Representation.tprod`. -/
+@[dsimp_congr] theorem _root_.Representation.tprod_pack_congr.{uk, ug, uv, uw} {k₀ : Type uk}
+    {G₀ : Type ug} [CommSemiring k₀] [Monoid G₀] {V V' : Type uv} {W W' : Type uw}
+    [AddCommMonoid V] [AddCommMonoid V'] [Module k₀ V] [Module k₀ V'] [AddCommMonoid W]
+    [AddCommMonoid W'] [Module k₀ W] [Module k₀ W']
+    (hV : SModPack.mk (R := k₀) V = SModPack.mk V')
+    (hW : SModPack.mk (R := k₀) W = SModPack.mk W')
+    (ρV : Representation k₀ G₀ V) (ρV' : Representation k₀ G₀ V') (hρV : HEq ρV ρV')
+    (ρW : Representation k₀ G₀ W) (ρW' : Representation k₀ G₀ W') (hρW : HEq ρW ρW') :
+    HEq (ρV.tprod ρW) (ρV'.tprod ρW') := by
+  cases hV; cases hW; cases hρV; cases hρW; rfl
+
 local notation ρV " ⊗ " ρW => tprod ρV ρW
 
 @[simp]

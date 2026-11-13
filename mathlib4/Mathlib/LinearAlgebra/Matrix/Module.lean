@@ -46,6 +46,24 @@ scoped instance matrixModule : Module (Matrix ι ι R) (ι → M) where
     simp [add_smul, Finset.sum_add_distrib]
   zero_smul v := funext fun i ↦ show ∑ _, _ = _ by simp
 
+/-- Lens: the `Matrix ι ι R` module pack of `ι → M` follows the `R` module pack of `M`. -/
+@[dsimp_congr] theorem matrixModule.packLens.{ui, ur, um} {ι₀ : Type ui}
+    {R₀ : Type ur} [Ring R₀] [Fintype ι₀] [DecidableEq ι₀] {M M' : Type um} [AddCommGroup M]
+    [AddCommGroup M'] [Module R₀ M] [Module R₀ M']
+    (h : GModPack.mk (R := R₀) M = GModPack.mk M') :
+    @SModPack.mk (Matrix ι₀ ι₀ R₀) _ (ι₀ → M) Pi.addCommMonoid Matrix.Module.matrixModule =
+      @SModPack.mk (Matrix ι₀ ι₀ R₀) _ (ι₀ → M') Pi.addCommMonoid Matrix.Module.matrixModule := by
+  cases h; rfl
+
+/-- Lens: the `Matrix ι ι R` group-module pack of `ι → M` follows the `R` module pack of `M`. -/
+@[dsimp_congr] theorem matrixModule.gmodPackLens.{ui, ur, um} {ι₀ : Type ui}
+    {R₀ : Type ur} [Ring R₀] [Fintype ι₀] [DecidableEq ι₀] {M M' : Type um} [AddCommGroup M]
+    [AddCommGroup M'] [Module R₀ M] [Module R₀ M']
+    (h : GModPack.mk (R := R₀) M = GModPack.mk M') :
+    @GModPack.mk (Matrix ι₀ ι₀ R₀) _ (ι₀ → M) Pi.addCommGroup Matrix.Module.matrixModule =
+      @GModPack.mk (Matrix ι₀ ι₀ R₀) _ (ι₀ → M') Pi.addCommGroup Matrix.Module.matrixModule := by
+  cases h; rfl
+
 lemma smul_def (N : Matrix ι ι R) (v : ι → M) :
     N • v = fun i ↦ ∑ j : ι, N i j • v j := rfl
 
@@ -93,6 +111,17 @@ def mapMatrixModule (f : M →ₗ[R] N) : (ι → M) →ₗ[Matrix ι ι R] (ι 
   toFun := LinearMap.compLeft f ι
   map_add' := map_add _
   map_smul' _ _ := by ext; simp
+
+/-- Pack congruence for `LinearMap.mapMatrixModule`. -/
+@[dsimp_congr] theorem mapMatrixModule_pack_congr.{ui, ur, um, un} (ι₀ : Type ui)
+    {R₀ : Type ur} [Ring R₀] [Fintype ι₀] [DecidableEq ι₀] {M M' : Type um} {N N' : Type un}
+    [AddCommGroup M] [AddCommGroup M'] [Module R₀ M] [Module R₀ M']
+    [AddCommGroup N] [AddCommGroup N'] [Module R₀ N] [Module R₀ N']
+    (hM : GModPack.mk (R := R₀) M = GModPack.mk M')
+    (hN : GModPack.mk (R := R₀) N = GModPack.mk N')
+    (f : M →ₗ[R₀] N) (f' : M' →ₗ[R₀] N') (hf : HEq f f') :
+    HEq (LinearMap.mapMatrixModule ι₀ f) (LinearMap.mapMatrixModule ι₀ f') := by
+  cases hM; cases hN; cases hf; rfl
 
 @[simp]
 lemma mapMatrixModule_id :

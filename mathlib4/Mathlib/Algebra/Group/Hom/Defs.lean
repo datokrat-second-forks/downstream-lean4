@@ -121,6 +121,14 @@ structure AddHom (M : Type*) (N : Type*) [Add M] [Add N] where
 /-- `M →ₙ+ N` denotes the type of addition-preserving maps from `M` to `N`. -/
 infixr:25 " →ₙ+ " => AddHom
 
+/-- Pack congruence for `AddHom.toFun`. -/
+@[dsimp_congr] theorem _root_.AddHom.toFun_pack_congr.{ua, va} {M M' : Type ua}
+    {N N' : Type va} [i : Add M] [i' : Add M'] [j : Add N] [j' : Add N']
+    (hM : @AddPack.mk M i = @AddPack.mk M' i') (hN : @AddPack.mk N j = @AddPack.mk N' j')
+    (f : M →ₙ+ N) (f' : M' →ₙ+ N') (hf : HEq f f') :
+    HEq f.toFun f'.toFun := by
+  cases hM; cases hN; cases hf; rfl
+
 /-- `AddHomClass F M N` states that `F` is a type of addition-preserving homomorphisms.
 You should declare an instance of this typeclass when you extend `AddHom`.
 -/

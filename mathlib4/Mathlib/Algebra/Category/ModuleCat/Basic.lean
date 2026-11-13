@@ -119,6 +119,16 @@ abbrev ofHom {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y] [Modu
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   ConcreteCategory.ofHom (C := ModuleCat R) f
 
+/-- Pack congruence for `ModuleCat.ofHom`. -/
+@[dsimp_congr] theorem ofHom_pack_congr.{ur, va} {R₀ : Type ur} [Ring R₀]
+    {X X' Y Y' : Type va} [AddCommGroup X] [AddCommGroup X'] [Module R₀ X] [Module R₀ X']
+    [AddCommGroup Y] [AddCommGroup Y'] [Module R₀ Y] [Module R₀ Y']
+    (hX : GModPack.mk (R := R₀) X = GModPack.mk X')
+    (hY : GModPack.mk (R := R₀) Y = GModPack.mk Y')
+    (f : X →ₗ[R₀] Y) (f' : X' →ₗ[R₀] Y') (hf : HEq f f') :
+    HEq (ModuleCat.ofHom f) (ModuleCat.ofHom f') := by
+  cases hX; cases hY; cases hf; rfl
+
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
 def Hom.Simps.hom (A B : ModuleCat.{v} R) (f : Hom A B) :=
   f.hom

@@ -104,6 +104,15 @@ def FiniteEtale.baseChange : FiniteEtale.{v} R ⥤ FiniteEtale.{max w v} S where
   obj A := ↧(S ⊗[R] A)
   map {A B} f := FiniteEtale.ofHom (Algebra.TensorProduct.map (.id _ _) f.hom.hom)
 
+/-- Pack lemma: the `S`-algebra pack of the carrier of `(baseChange R S).obj A`. -/
+@[simp] theorem FiniteEtale.baseChange_obj_sAlgPack (A : FiniteEtale.{v} R) :
+    @SAlgPack.mk S _ ((baseChange R S).obj A).obj
+        (@CommSemiring.toSemiring _
+          (@CommRing.toCommSemiring _ ((baseChange R S).obj A).obj.commRing))
+        (@CommAlgCat.instAlgebraObjForgetAlgHomCarrier S _ ((baseChange R S).obj A).obj) =
+      SAlgPack.mk (R := S) (S ⊗[R] A.obj) :=
+  rfl
+
 /-- Base change from `R` to `R` is isomorphic to the identity. -/
 @[expose]
 def FiniteEtale.baseChangeSelfIso : baseChange R R ≅ 𝟭 (FiniteEtale R) :=
@@ -127,7 +136,6 @@ def FiniteEtale.finiteSpec (k : Type u) [Field k] : (FiniteEtale.{v} k)ᵒᵖ �
   obj R := ↧(PrimeSpectrum R.unop.obj)
   map f := FintypeCat.homMk (PrimeSpectrum.comap f.unop.hom.hom)
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 /-- If the geometric point `Ω` factors through `S`, the fiber can be computed after base change
 to `S`. -/

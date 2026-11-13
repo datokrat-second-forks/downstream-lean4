@@ -143,6 +143,13 @@ noncomputable def lift : (X → M) ≃+ ((X →₀ R) →ₗ[R] M) :=
   (AddEquiv.arrowCongr (Equiv.refl X) (ringLmapEquivSelf R ℕ M).toAddEquiv.symm).trans
     (lsum _ : _ ≃ₗ[ℕ] _).toAddEquiv
 
+/-- Pack congruence for `Finsupp.lift`. -/
+@[dsimp_congr] theorem _root_.Finsupp.lift_pack_congr.{um, ur, ux} {M M' : Type um}
+    {R : Type ur} [Semiring R] {X X' : Type ux} [AddCommMonoid M] [AddCommMonoid M']
+    [Module R M] [Module R M'] (hM : SModPack.mk (R := R) M = SModPack.mk M') (hX : X = X') :
+    HEq (Finsupp.lift M R X) (Finsupp.lift M' R X') := by
+  cases hM; cases hX; rfl
+
 @[simp]
 theorem lift_symm_apply (f) (x) : ((lift M R X).symm f) x = f (single x 1) :=
   rfl

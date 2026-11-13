@@ -322,6 +322,18 @@ instance leftModule : Module R'' (M ⊗[R] N) :=
 instance : Module R (M ⊗[R] N) :=
   TensorProduct.leftModule
 
+/-- Lens: the two-base module pack of `M ⊗[R] N` (both bases `R`) follows `M` and `N`. -/
+@[dsimp_congr] theorem _root_.TensorProduct.smod2Pack_congr.{ur, um, un} {R₀ : Type ur}
+    [CommSemiring R₀] {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M']
+    [AddCommMonoid N] [AddCommMonoid N'] [Module R₀ M] [Module R₀ M'] [Module R₀ N]
+    [Module R₀ N'] (hM : SModPack.mk (R := R₀) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R₀) N = SModPack.mk N') :
+    @SMod2Pack.mk R₀ R₀ _ _ (TensorProduct R₀ M N) TensorProduct.addCommMonoid
+        TensorProduct.instModule TensorProduct.instModule =
+      @SMod2Pack.mk R₀ R₀ _ _ (TensorProduct R₀ M' N') TensorProduct.addCommMonoid
+        TensorProduct.instModule TensorProduct.instModule := by
+  cases hM; cases hN; rfl
+
 instance [Module R''ᵐᵒᵖ M] [IsCentralScalar R'' M] : IsCentralScalar R'' (M ⊗[R] N) where
   op_smul_eq_smul r x :=
     x.inductionOn
@@ -373,6 +385,15 @@ variable (R M N) in
 def mk : M →ₗ[R] N →ₗ[R] M ⊗[R] N :=
   LinearMap.mk₂ R (· ⊗ₜ ·) add_tmul (fun c m n => by simp_rw [smul_tmul, tmul_smul])
     tmul_add tmul_smul
+
+/-- Pack congruence for `TensorProduct.mk`. -/
+@[dsimp_congr] theorem _root_.TensorProduct.mk_pack_congr.{ur, um, un} (R₀ : Type ur)
+    [CommSemiring R₀] {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M']
+    [AddCommMonoid N] [AddCommMonoid N'] [Module R₀ M] [Module R₀ M'] [Module R₀ N]
+    [Module R₀ N'] (hM : SModPack.mk (R := R₀) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R₀) N = SModPack.mk N') :
+    HEq (TensorProduct.mk R₀ M N) (TensorProduct.mk R₀ M' N') := by
+  cases hM; cases hN; rfl
 
 @[simp]
 theorem mk_apply (m : M) (n : N) : mk R M N m n = m ⊗ₜ n :=

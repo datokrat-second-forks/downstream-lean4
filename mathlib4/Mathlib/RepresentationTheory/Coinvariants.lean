@@ -64,6 +64,16 @@ instance : Module k (Coinvariants ρ) :=
   (set_option backward.isDefEq.respectTransparency.instanceTypes false in
   inferInstanceAs <| Module k (_ ⧸ _))
 
+/-- Lens: the two-base module pack of `Coinvariants ρ` (both bases `k`) follows `ρ`. -/
+@[dsimp_congr] theorem _root_.Representation.Coinvariants.smod2Pack_congr.{uk, ug, uv}
+    {k₀ : Type uk} {G₀ : Type ug} [CommRing k₀] [Monoid G₀] {V V' : Type uv} [AddCommGroup V]
+    [AddCommGroup V'] [Module k₀ V] [Module k₀ V']
+    (hV : GModPack.mk (R := k₀) V = GModPack.mk V')
+    (ρ : Representation k₀ G₀ V) (ρ' : Representation k₀ G₀ V') (hρ : HEq ρ ρ') :
+    SMod2Pack.mk (R := k₀) (S := k₀) (Representation.Coinvariants ρ) =
+      SMod2Pack.mk (R := k₀) (S := k₀) (Representation.Coinvariants ρ') := by
+  cases hV; cases hρ; rfl
+
 instance [Module.Finite k V] : Module.Finite k (Coinvariants ρ) :=
   inferInstanceAs <| Module.Finite k (V ⧸ Coinvariants.ker ρ)
 
@@ -79,6 +89,15 @@ variable (ρ)
 
 /-- The quotient map from a representation to its coinvariants as a linear map. -/
 def mk : V →ₗ[k] Coinvariants ρ := Submodule.mkQ (ker ρ)
+
+/-- Pack congruence for `Representation.Coinvariants.mk`. -/
+@[dsimp_congr] theorem _root_.Representation.Coinvariants.mk_pack_congr.{uk, ug, uv}
+    {k₀ : Type uk} {G₀ : Type ug} [CommRing k₀] [Monoid G₀] {V V' : Type uv} [AddCommGroup V]
+    [AddCommGroup V'] [Module k₀ V] [Module k₀ V']
+    (hV : GModPack.mk (R := k₀) V = GModPack.mk V')
+    (ρ : Representation k₀ G₀ V) (ρ' : Representation k₀ G₀ V') (hρ : HEq ρ ρ') :
+    HEq (Representation.Coinvariants.mk ρ) (Representation.Coinvariants.mk ρ') := by
+  cases hV; cases hρ; rfl
 
 theorem mk_eq_iff {x y : V} :
     mk ρ x = mk ρ y ↔ x - y ∈ Coinvariants.ker ρ :=
@@ -420,6 +439,12 @@ sending `A, B` to `A ⊗[k[G]] B`, where we give `A` the `k[G]ᵐᵒᵖ`-module 
 `g • a := A.ρ g⁻¹ a`. -/
 noncomputable abbrev coinvariantsTensor : Rep k G ⥤ Rep k G ⥤ ModuleCat k :=
   (Functor.postcompose₂.obj (coinvariantsFunctor k G)).obj (MonoidalCategory.curriedTensor _)
+
+/-- Pack lemma: the two-base module pack of `((coinvariantsTensor k G).obj A).obj B`. -/
+@[simp] theorem _root_.Rep.coinvariantsTensor_obj_obj_smod2Pack {k₀ G₀ : Type u}
+    [CommRing k₀] [Group G₀] (A₀ B₀ : Rep k₀ G₀) :
+    SMod2Pack.mk (R := k₀) (S := k₀) (((Rep.coinvariantsTensor k₀ G₀).obj A₀).obj B₀) =
+      SMod2Pack.mk (R := k₀) (S := k₀) (A₀.ρ.tprod B₀.ρ).Coinvariants := rfl
 
 variable {k G} (A B)
 

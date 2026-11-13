@@ -396,6 +396,17 @@ instance addCommGroup : AddCommGroup (M ⊗[R] N) where
       ← add_smul, ← sub_eq_add_neg, sub_self, zero_smul, add_zero]
     rfl
 
+/-- Lens: the group-module pack of `M ⊗[R] N` follows the packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.TensorProduct.gmodPack_congr.{ur, um, un} {R₀ : Type ur}
+    [CommRing R₀] {M M' : Type um} {N N' : Type un} [AddCommGroup M] [AddCommGroup M']
+    [AddCommMonoid N] [AddCommMonoid N'] [Module R₀ M] [Module R₀ M'] [Module R₀ N]
+    [Module R₀ N'] (hM : GModPack.mk (R := R₀) M = GModPack.mk M')
+    (hN : SModPack.mk (R := R₀) N = SModPack.mk N') :
+    @GModPack.mk R₀ _ (TensorProduct R₀ M N) TensorProduct.addCommGroup TensorProduct.instModule =
+      @GModPack.mk R₀ _ (TensorProduct R₀ M' N') TensorProduct.addCommGroup
+        TensorProduct.instModule := by
+  cases hM; cases hN; rfl
+
 theorem neg_tmul (m : M) (n : N) : (-m) ⊗ₜ n = -m ⊗ₜ[R] n :=
   rfl
 

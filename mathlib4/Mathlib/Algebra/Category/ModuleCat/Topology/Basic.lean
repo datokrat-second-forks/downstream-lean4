@@ -179,6 +179,14 @@ end CommRing
 instance (M : TopModuleCat R) : TopologicalSpace M := M.2
 instance (M : TopModuleCat R) : IsTopologicalAddGroup M := M.3
 
+/-- Lens: the topological module pack of the carrier of `M : TopModuleCat R` follows `M`. -/
+@[dsimp_congr] theorem topModPack_congr {M M' : TopModuleCat.{v} R} (h : M = M') :
+    @TopModPack.mk R _ M.toModuleCat M.topologicalSpace M.isAddCommGroup.toAddCommMonoid
+        M.isModule =
+      @TopModPack.mk R _ M'.toModuleCat M'.topologicalSpace M'.isAddCommGroup.toAddCommMonoid
+        M'.isModule := by
+  cases h; rfl
+
 instance : HasForget₂ (TopModuleCat R) (ModuleCat R) where
   forget₂ :=
   { obj M := ↧M
@@ -458,7 +466,6 @@ def free : TopCat.{v} ⥤ TopModuleCat.{max v u} R :=
     map_id M := by ext x; congrm $(Finsupp.lmapDomain_id _ _) x
     map_comp f g := by ext; congrm $(Finsupp.lmapDomain_comp _ _ f.hom g.hom) _ }
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in

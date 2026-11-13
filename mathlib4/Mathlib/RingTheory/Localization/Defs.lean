@@ -245,6 +245,16 @@ variable {M}
 noncomputable def mk' (x : R) (y : M) : S :=
   (toLocalizationMap M S).mk' x y
 
+/-- Pack congruence for `IsLocalization.mk'`. -/
+@[dsimp_congr] theorem _root_.IsLocalization.mk'_pack_congr.{ur, us} {R : Type ur}
+    [CommSemiring R] {M M' : Submonoid R} (hM : M = M') {S S' : Type us} [CommSemiring S]
+    [CommSemiring S'] [Algebra R S] [Algebra R S']
+    (hS : CSAlgPack.mk (R := R) S = CSAlgPack.mk S')
+    (l : IsLocalization M S) {l' : IsLocalization M' S'} (hl : HEq l l')
+    (x x' : R) (hx : x = x') (y : M) (y' : M') (hy : HEq y y') :
+    HEq (IsLocalization.mk' S x y) (IsLocalization.mk' S' x' y') := by
+  cases hM; cases hS; cases hl; cases hx; cases hy; rfl
+
 @[simp]
 theorem mk'_sec (z : S) : mk' S (IsLocalization.sec M z).1 (IsLocalization.sec M z).2 = z :=
   (toLocalizationMap M S).mk'_sec _

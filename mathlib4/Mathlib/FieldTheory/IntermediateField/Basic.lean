@@ -409,6 +409,18 @@ instance algebra' {R' K L : Type*} [Field K] [Field L] [Algebra K L] (S : Interm
     [CommSemiring R'] [SMul R' K] [Algebra R' L] [IsScalarTower R' K L] : Algebra R' S :=
   inferInstanceAs (Algebra R' S.toSubalgebra)
 
+section PackCongr
+universe uk ul
+
+/-- Lens: the algebra pack of the carrier of a subfield follows the subfield. -/
+@[dsimp_congr] theorem _root_.IntermediateField.sAlgPack_congr {K : Type uk} {L : Type ul}
+    [Field K] [Field L] [Algebra K L] {S S' : IntermediateField K L} (h : S = S') :
+    SAlgPack.mk (R := K) ↥S (sr := S.toField.toSemifield.toSemiring) (alg := S.algebra') =
+      SAlgPack.mk (R := K) ↥S' (sr := S'.toField.toSemifield.toSemiring) (alg := S'.algebra') := by
+  cases h; rfl
+
+end PackCongr
+
 -- Over `ℚ`, the algebra structure inherited from the ambient field and the one coming from the
 -- `DivisionRing` structure of the intermediate field are the same instance.
 example {L : Type*} [Field L] [CharZero L] (S : IntermediateField ℚ L) :

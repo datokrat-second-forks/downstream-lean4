@@ -547,9 +547,10 @@ theorem injective_mvfderiv_subtypeVal_sphere {n : ℕ} [Fact (finrank ℝ E = n 
   refine Eq.subst this.symm ?_
   rw [ContinuousLinearMap.coe_comp, ContinuousLinearEquiv.coe_coe]
   set_option backward.isDefEq.respectTransparency false in
-  (set_option backward.dsimp.instanceTypes false in
-  set_option backward.isDefEq.respectTransparency.instanceTypes false in
-  simpa [-Subtype.val_injective] using Subtype.val_injective)
+  (set_option backward.isDefEq.respectTransparency.instanceTypes false in
+  -- pack-regime workaround: the local variable `U` has `↑(-v)` in its type, so `simp` must not
+  -- respell it.
+  simpa [-Subtype.val_injective, -coe_neg_sphere] using Subtype.val_injective)
 
 @[deprecated injective_mvfderiv_subtypeVal_sphere +typeChanged (since := "2026-08-02")]
 theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :

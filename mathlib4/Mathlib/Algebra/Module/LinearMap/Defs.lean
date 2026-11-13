@@ -918,6 +918,28 @@ instance : Add (M →ₛₗ[σ₁₂] M₂) :=
       map_add' := by simp [add_comm, add_left_comm]
       map_smul' := by simp [smul_add] }⟩
 
+/-- Lens: the `Add` pack of `M →ₛₗ[σ] N` follows the module packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.LinearMap.instAdd.packLens.{ur, us, um, un} {R : Type ur}
+    {S : Type us} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module S N] [Module S N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hN : SModPack.mk (R := S) N = SModPack.mk N') :
+    @AddPack.mk (M →ₛₗ[σ] N) LinearMap.instAdd =
+      @AddPack.mk (M' →ₛₗ[σ] N') LinearMap.instAdd := by
+  cases hM; cases hN; rfl
+
+/-- Pack congruence for `LinearMap.toAddHom`. -/
+@[dsimp_congr] theorem _root_.LinearMap.toAddHom_pack_congr.{ur, us, um, un} {R : Type ur}
+    {S : Type us} [Semiring R] [Semiring S] {σ : R →+* S}
+    {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N]
+    [AddCommMonoid N'] [Module R M] [Module R M'] [Module S N] [Module S N']
+    (hM : SModPack.mk (R := R) M = SModPack.mk M')
+    (hN : SModPack.mk (R := S) N = SModPack.mk N')
+    (f : M →ₛₗ[σ] N) (f' : M' →ₛₗ[σ] N') (hf : HEq f f') :
+    HEq f.toAddHom f'.toAddHom := by
+  cases hM; cases hN; cases hf; rfl
+
 @[simp] protected theorem coe_add (f g : M →ₛₗ[σ₁₂] M₂) : ⇑(f + g) = ⇑f + ⇑g := rfl
 
 @[simp]
@@ -1043,6 +1065,16 @@ variable [Semiring S] [Module S M] [Module S M₂] [SMulCommClass R₂ S M₂]
 instance module : Module S (M →ₛₗ[σ₁₂] M₂) where
   add_smul _ _ _ := ext fun _ ↦ add_smul _ _ _
   zero_smul _ := ext fun _ ↦ zero_smul _ _
+
+/-- Lens: the module pack of `M →ₗ[k] N` follows the module packs of `M` and `N`. -/
+@[dsimp_congr] theorem _root_.LinearMap.module.packLens.{ur, um, un} {R₀ : Type ur}
+    [CommSemiring R₀] {M M' : Type um} {N N' : Type un} [AddCommMonoid M] [AddCommMonoid M']
+    [AddCommMonoid N] [AddCommMonoid N'] [Module R₀ M] [Module R₀ M'] [Module R₀ N]
+    [Module R₀ N'] (hM : SModPack.mk (R := R₀) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R₀) N = SModPack.mk N') :
+    @SModPack.mk R₀ _ (M →ₗ[R₀] N) LinearMap.addCommMonoid LinearMap.module =
+      @SModPack.mk R₀ _ (M' →ₗ[R₀] N') LinearMap.addCommMonoid LinearMap.module := by
+  cases hM; cases hN; rfl
 
 end Module
 

@@ -56,6 +56,26 @@ def extendScalars {R : Type u} {S : Type v} [CommRing R] [CommRing S] [Algebra R
   σ := P.σ
   algebraMap_σ := P.algebraMap_σ
 
+/-- Pack lemma: the `R`-algebra pack of `P.extendScalars.Ring`. -/
+@[simp] theorem extendScalars_sAlgPack (P : Extension.{w} R S) :
+    SAlgPack.mk (R := R) P.extendScalars.Ring =
+      @SAlgPack.mk R _ P.Ring _ (Algebra.compHom P.Ring (algebraMap R P.Ring)) :=
+  rfl
+
+/-- Pack lemma: `P.extendScalars.Ring` as the middle ring of the tower `R → _ → S`. -/
+@[simp] theorem extendScalars_towerMidPack (P : Extension.{w} R S) :
+    TowerMidPack.mk (R := R) (A := S) P.extendScalars.Ring =
+      @TowerMidPack.mk R S _ _ _ P.Ring _ (Algebra.compHom P.Ring (algebraMap R P.Ring))
+        P.algebra₂ :=
+  rfl
+
+/-- Pack lemma: `P.extendScalars.Ring` as the top ring of the tower `R → P.Ring → _`. -/
+@[simp] theorem extendScalars_sTowerPack (P : Extension.{w} R S) :
+    STowerPack.mk (R := R) (S := P.Ring) P.extendScalars.Ring =
+      @STowerPack.mk R P.Ring _ _ _ P.Ring _ (Algebra.compHom P.Ring (algebraMap P.Ring P.Ring))
+        (Algebra.compHom P.Ring (algebraMap R P.Ring)) :=
+  rfl
+
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- The canonical homomorphism from `P` to `P.extendScalars` induced by the identity map
@@ -66,7 +86,7 @@ def toExtendScalars {R : Type u} {S : Type v} [CommRing R] [CommRing S] [Algebra
     (P : Extension.{w} R S) : P.Hom P.extendScalars :=
   .ofAlgHom (IsScalarTower.toAlgHom R P.Ring P.extendScalars.Ring)
     (by
-      (set_option backward.dsimp.instanceTypes false in dsimp)
+      dsimp
       ext
       (set_option backward.isDefEq.respectTransparency.instanceTypes false in simp))
 

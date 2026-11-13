@@ -380,6 +380,27 @@ def compr₂ [Module R A] [Module A M] [Module A Qₗ]
   map_add' _ _ := by ext; simp
   map_smul' _ _ := by ext; simp
 
+/-- Pack congruence for `LinearMap.compr₂`. -/
+@[dsimp_congr] theorem _root_.LinearMap.compr₂_pack_congr.{ua, ur, um, un, up, uq}
+    {A₀ : Type ua} {R₀ : Type ur} [Semiring A₀] [CommSemiring R₀] [Module R₀ A₀]
+    {M M' : Type um} {N N' : Type un} {P P' : Type up} {Q Q' : Type uq}
+    [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid N] [AddCommMonoid N']
+    [AddCommMonoid P] [AddCommMonoid P'] [AddCommMonoid Q] [AddCommMonoid Q']
+    [Module A₀ M] [Module A₀ M'] [Module R₀ N] [Module R₀ N']
+    [Module R₀ P] [Module R₀ P'] [Module A₀ P] [Module A₀ P']
+    [Module R₀ Q] [Module R₀ Q'] [Module A₀ Q] [Module A₀ Q']
+    [SMulCommClass R₀ A₀ P] [SMulCommClass R₀ A₀ P'] [SMulCommClass R₀ A₀ Q]
+    [SMulCommClass R₀ A₀ Q'] [IsScalarTower R₀ A₀ Q] [IsScalarTower R₀ A₀ Q']
+    [IsScalarTower R₀ A₀ P] [IsScalarTower R₀ A₀ P']
+    (hM : SModPack.mk (R := A₀) M = SModPack.mk M')
+    (hN : SModPack.mk (R := R₀) N = SModPack.mk N')
+    (hP : SMod2Pack.mk (R := R₀) (S := A₀) P = SMod2Pack.mk P')
+    (hQ : SMod2Pack.mk (R := R₀) (S := A₀) Q = SMod2Pack.mk Q')
+    (f : M →ₗ[A₀] N →ₗ[R₀] P) (f' : M' →ₗ[A₀] N' →ₗ[R₀] P') (hf : HEq f f')
+    (g : P →ₗ[A₀] Q) (g' : P' →ₗ[A₀] Q') (hg : HEq g g') :
+    HEq (f.compr₂ g) (f'.compr₂ g') := by
+  cases hM; cases hN; cases hP; cases hQ; cases hf; cases hg; rfl
+
 omit [Module R M] in
 @[simp]
 theorem compr₂_apply [Module R A] [Module A M] [Module A Qₗ]

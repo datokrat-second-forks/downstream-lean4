@@ -197,6 +197,16 @@ variable {A B R S Y Z : C} {f : R ⟶ X} {g : S ⟶ X}
 
 instance : (Over.pullback f).Braided := .ofChosenFiniteProducts _
 
+/-- Lens: the lax monoidal pack of `Over.pullback f` follows `f`. -/
+@[dsimp_congr] theorem _root_.CategoryTheory.Over.pullback_laxMonoidal_packLens.{vc, uc}
+    {C : Type uc} [CategoryTheory.Category.{vc} C] [CategoryTheory.Limits.HasPullbacks C]
+    {X R : C} {f f' : R ⟶ X} (h : f = f') :
+    @CategoryTheory.Functor.LaxMonoidalPack.mk _ _ _ _ _ _ (CategoryTheory.Over.pullback f)
+        (CategoryTheory.Over.instBraidedPullback (f := f)).toLaxBraided.toLaxMonoidal =
+      @CategoryTheory.Functor.LaxMonoidalPack.mk _ _ _ _ _ _ (CategoryTheory.Over.pullback f')
+        (CategoryTheory.Over.instBraidedPullback (f := f')).toLaxBraided.toLaxMonoidal := by
+  cases h; rfl
+
 @[simp]
 lemma η_pullback_left : (OplaxMonoidal.η (Over.pullback f)).left = (pullback.snd (𝟙 _) f) := rfl
 

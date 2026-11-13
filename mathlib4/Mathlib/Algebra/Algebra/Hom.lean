@@ -499,6 +499,25 @@ ring. -/
     HEq (toAlgHom R S A) (toAlgHom R S' A) := by
   cases h; rfl
 
+/-- Variant of `IsScalarTower.toAlgHom_mid_pack_congr` with the tower proof as a proof
+argument. -/
+@[dsimp_congr] theorem _root_.IsScalarTower.toAlgHom_mid_pack_congr'.{ur, us, ua} (R : Type ur)
+    {S S' : Type us} (A : Type ua) [CommSemiring R] [CommSemiring S] [CommSemiring S'] [Semiring A]
+    [Algebra R S] [Algebra R S'] [Algebra S A] [Algebra S' A] [Algebra R A]
+    (h : TowerMidPack.mk (R := R) (A := A) S = TowerMidPack.mk S')
+    (t : IsScalarTower R S A) {t' : IsScalarTower R S' A} (ht : HEq t t') :
+    HEq (IsScalarTower.toAlgHom R S A) (IsScalarTower.toAlgHom R S' A) := by
+  cases h; cases ht; rfl
+
+/-- Variant of `IsScalarTower.toAlgHom_pack_congr` with the tower proof as a proof argument. -/
+@[dsimp_congr] theorem _root_.IsScalarTower.toAlgHom_pack_congr'.{ur, us, ua} (R : Type ur)
+    (S : Type us) {A A' : Type ua} [CommSemiring R] [CommSemiring S] [Algebra R S] [Semiring A]
+    [Semiring A'] [Algebra S A] [Algebra S A'] [Algebra R A] [Algebra R A']
+    (h : STowerPack.mk (R := R) (S := S) A = STowerPack.mk A')
+    (t : IsScalarTower R S A) {t' : IsScalarTower R S A'} (ht : HEq t t') :
+    HEq (IsScalarTower.toAlgHom R S A) (IsScalarTower.toAlgHom R S A') := by
+  cases h; cases ht; rfl
+
 end IsScalarTower
 
 /-- The algebra morphism underlying `algebraMap`. -/

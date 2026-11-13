@@ -114,6 +114,18 @@ def MatrixModCat.toModuleCat (i : ι) : ModuleCat (Matrix ι ι R) ⥤ ModuleCat
     map_id _ := rfl
     map_comp _ _ := rfl }
 
+/-- Pack lemma: the `R` module pack of `(toModuleCat R i).obj M` is that of
+`toModuleCatObj R M i`. -/
+@[simp] lemma MatrixModCat.toModuleCat_obj_gmodPack (i : ι) (M : ModuleCat (Matrix ι ι R)) :
+    @GModPack.mk R _ ((MatrixModCat.toModuleCat R i).obj M)
+        ((MatrixModCat.toModuleCat R i).obj M).isAddCommGroup
+        ((MatrixModCat.toModuleCat R i).obj M).isModule =
+      @GModPack.mk R _
+        (@MatrixModCat.toModuleCatObj R ι _ _ _ M _ _ (Module.compHom M (Matrix.scalar (α := R) ι))
+          (MatrixModCat.isScalarTower_toModuleCat R M) i)
+        (@Submodule.addCommGroup R M _ _ (Module.compHom M (Matrix.scalar (α := R) ι)) _)
+        (@Submodule.module R M _ _ (Module.compHom M (Matrix.scalar (α := R) ι)) _) := rfl
+
 open MatrixModCat Matrix
 
 /-- The linear equiv induced by the equality `toModuleCat (toMatrixModCat M) = Eᵢᵢ • Mⁿ`. -/
@@ -180,7 +192,6 @@ def toModuleCatFromModuleCatLinearEquiv (M : ModuleCat (Matrix ι ι R)) (j : ι
     obtain ⟨y, hy⟩ := by simpa [-SetLike.coe_mem] using (v i).2
     simp [← mul_smul, ← hy]
 
-set_option backward.dsimp.instanceTypes false in
 set_option backward.isDefEq.respectTransparency.instanceTypes false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The natural isomorphism showing that `toMatrixModCat` is the right inverse of `toModuleCat`. -/

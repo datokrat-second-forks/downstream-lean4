@@ -70,6 +70,13 @@ lemma support_add_eq [DecidableEq ι] (h : Disjoint g₁.support g₂.support) :
 instance instAddZeroClass : AddZeroClass (ι →₀ M) :=
   fast_instance% DFunLike.coe_injective.addZeroClass _ coe_zero coe_add
 
+/-- Lens: the `AddZeroClass` pack of `ι →₀ M` follows `ι`. -/
+@[dsimp_congr] theorem _root_.Finsupp.instAddZeroClass.packLens.{ui, um} {ι ι' : Type ui}
+    {M : Type um} [AddZeroClass M] (h : ι = ι') :
+    @AddZeroClassPack.mk (ι →₀ M) Finsupp.instAddZeroClass =
+      @AddZeroClassPack.mk (ι' →₀ M) Finsupp.instAddZeroClass := by
+  cases h; rfl
+
 instance instIsLeftCancelAdd [IsLeftCancelAdd M] : IsLeftCancelAdd (ι →₀ M) where
   add_left_cancel _ _ _ h := ext fun x => add_left_cancel congr($h x)
 
@@ -347,6 +354,13 @@ lemma nsmul_apply (n : ℕ) (f : ι →₀ M) (x : ι) : (n • f) x = n • f x
 
 instance instAddMonoid : AddMonoid (ι →₀ M) :=
   fast_instance% DFunLike.coe_injective.addMonoid _ coe_zero coe_add fun _ _ => rfl
+
+/-- Lens: the `AddMonoid` pack of `ι →₀ M` follows `ι`. -/
+@[dsimp_congr] theorem _root_.Finsupp.instAddMonoid.packLens.{ui, um} {ι ι' : Type ui}
+    {M : Type um} [AddMonoid M] (h : ι = ι') :
+    @AddMonoidPack.mk (ι →₀ M) Finsupp.instAddMonoid =
+      @AddMonoidPack.mk (ι' →₀ M) Finsupp.instAddMonoid := by
+  cases h; rfl
 
 instance instIsAddTorsionFree [IsAddTorsionFree M] : IsAddTorsionFree (ι →₀ M) :=
   DFunLike.coe_injective.isAddTorsionFree coeFnAddHom
