@@ -124,10 +124,10 @@ set_option backward.isDefEq.respectTransparency.instances false in
 @[to_dual]
 instance : (incl : C ⥤ _).Faithful where
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- Map `WithTerminal` with respect to a functor `F : C ⥤ D`. -/
 @[to_dual (attr := implicit_reducible, simps)
 /-- Map `WithInitial` with respect to a functor `F : C ⥤ D`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def map {D : Type*} [Category* D] (F : C ⥤ D) : WithTerminal C ⥤ WithTerminal D where
   obj X :=
     match X with
@@ -139,31 +139,31 @@ def map {D : Type*} [Category* D] (F : C ⥤ D) : WithTerminal C ⥤ WithTermina
     | of _, star, _ => PUnit.unit
     | star, star, _ => PUnit.unit
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- A natural isomorphism between the functor `map (𝟭 C)` and `𝟭 (WithTerminal C)`. -/
 @[to_dual (attr := simps!)
 /-- A natural isomorphism between the functor `map (𝟭 C)` and `𝟭 (WithInitial C)`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def mapId (C : Type*) [Category* C] : map (𝟭 C) ≅ 𝟭 (WithTerminal C) :=
   NatIso.ofComponents (fun X => match X with
     | of _ => Iso.refl _
     | star => Iso.refl _) (by cat_disch)
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- A natural isomorphism between the functor `map (F ⋙ G) ` and `map F ⋙ map G `. -/
 @[to_dual (attr := simps!)
 /-- A natural isomorphism between the functor `map (F ⋙ G) ` and `map F ⋙ map G `. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def mapComp {D E : Type*} [Category* D] [Category* E] (F : C ⥤ D) (G : D ⥤ E) :
     map (F ⋙ G) ≅ map F ⋙ map G :=
   NatIso.ofComponents (fun X => match X with
     | of _ => Iso.refl _
     | star => Iso.refl _) (by cat_disch)
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- From a natural transformation of functors `C ⥤ D`, the induced natural transformation
 of functors `WithTerminal C ⥤ WithTerminal D`. -/
 @[to_dual (attr := simps)
 /-- From a natural transformation of functors `C ⥤ D`, the induced natural transformation
 of functors `WithInitial C ⥤ WithInitial D`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def map₂ {D : Type*} [Category* D] {F G : C ⥤ D} (η : F ⟶ G) : map F ⟶ map G where
   app := fun X => match X with
     | of x => η.app x
@@ -175,10 +175,10 @@ def map₂ {D : Type*} [Category* D] {F G : C ⥤ D} (η : F ⟶ G) : map F ⟶ 
     | of x, star, _ => rfl
     | star, star, _ => rfl
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- The prelax functor from `Cat` to `Cat` defined with `WithTerminal`. -/
 @[to_dual (attr := simps, implicit_reducible)
 /-- The prelax functor from `Cat` to `Cat` defined with `WithInitial`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def prelaxfunctor : PrelaxFunctor Cat Cat where
   obj C := ↧(WithTerminal C)
   map F := (map F.toFunctor).toCatHom
@@ -192,11 +192,11 @@ def prelaxfunctor : PrelaxFunctor Cat Cat where
     ext X
     cases X <;> rfl
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The pseudofunctor from `Cat` to `Cat` defined with `WithTerminal`. -/
 @[to_dual (attr := simps)
 /-- The pseudofunctor from `Cat` to `Cat` defined with `WithInitial`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def pseudofunctor : Pseudofunctor Cat Cat where
   toPrelaxFunctor := prelaxfunctor
   mapId C := Cat.Hom.isoMk (mapId C)

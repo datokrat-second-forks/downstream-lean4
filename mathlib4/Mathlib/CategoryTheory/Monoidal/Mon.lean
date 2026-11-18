@@ -1169,10 +1169,10 @@ theorem isMonHom_counitIsoAux (F : Mon C) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/
 @[to_additive (attr := simps!)
 /-- Implementation of `AddMon.equivLaxMonoidalFunctorPUnit`. -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def counitIso : monToLaxMonoidal.{w} C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon C) :=
   NatIso.ofComponents fun F ↦
     letI : IsMonHom (counitIsoAux.{w} C F).hom := isMonHom_counitIsoAux C F
@@ -1187,6 +1187,7 @@ attribute [local simp] eqToIso_map
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 
+set_option backward.isDefEq.respectTransparency.instances false in
 /--
 Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
 -/
@@ -1195,7 +1196,6 @@ Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal
   Additive monoid objects in `C` are "just" lax monoidal functors from
   the trivial monoidal category to `C`.
   -/]
-set_option backward.isDefEq.respectTransparency.instances false in
 def equivLaxMonoidalFunctorPUnit : LaxMonoidalFunctor (Discrete PUnit.{w + 1}) C ≌ Mon C where
   functor := laxMonoidalToMon C
   inverse := monToLaxMonoidal C
