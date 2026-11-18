@@ -427,6 +427,7 @@ end Functor
 
 namespace NatTrans
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 /-- A natural transformation induces a natural transformation between the `map_presheaf` functors.
 -/

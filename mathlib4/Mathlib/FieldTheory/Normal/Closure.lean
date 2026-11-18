@@ -96,6 +96,7 @@ lemma isNormalClosure_iff : IsNormalClosure F K L ↔
 
 set_option backward.isDefEq.respectTransparency false in
 include splits in
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- `normalClosure F K L` is a valid normal closure if `K/F` is algebraic
   and all minimal polynomials of `K/F` splits in `L/F`. -/
 lemma isNormalClosure_normalClosure : IsNormalClosure F K (normalClosure F K L) := by
