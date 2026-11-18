@@ -119,6 +119,7 @@ theorem id (X : PresheafedSpace.{_, _, v} C) (x : X) :
   ext
   simp
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
 theorem comp {X Y Z : PresheafedSpace.{_, _, v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x : X) :
