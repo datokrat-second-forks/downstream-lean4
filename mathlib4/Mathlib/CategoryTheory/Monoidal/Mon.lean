@@ -1160,6 +1160,7 @@ theorem monToLaxMonoidal_laxMonoidalToMon_obj_mul (F : Mon C) :
     μ[((monToLaxMonoidal C ⋙ laxMonoidalToMon C).obj F).X] = μ[F.X] ≫ 𝟙 _ :=
   rfl
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[to_additive]
@@ -1171,6 +1172,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/
 @[to_additive (attr := simps!)
 /-- Implementation of `AddMon.equivLaxMonoidalFunctorPUnit`. -/]
+set_option backward.isDefEq.respectTransparency.instances false in
 def counitIso : monToLaxMonoidal.{w} C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon C) :=
   NatIso.ofComponents fun F ↦
     letI : IsMonHom (counitIsoAux.{w} C F).hom := isMonHom_counitIsoAux C F
@@ -1193,6 +1195,7 @@ Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal
   Additive monoid objects in `C` are "just" lax monoidal functors from
   the trivial monoidal category to `C`.
   -/]
+set_option backward.isDefEq.respectTransparency.instances false in
 def equivLaxMonoidalFunctorPUnit : LaxMonoidalFunctor (Discrete PUnit.{w + 1}) C ≌ Mon C where
   functor := laxMonoidalToMon C
   inverse := monToLaxMonoidal C

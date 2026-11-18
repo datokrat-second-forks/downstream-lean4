@@ -123,6 +123,7 @@ theorem ofStabilizer.conjMap_apply (x : ofStabilizer G a) :
 
 set_option backward.isDefEq.respectTransparency false in
 variable {hg hh hk} in
+set_option backward.isDefEq.respectTransparency.instances false in
 @[to_additive]
 theorem _root_.MulAction.stabilizerEquivStabilizer_compTriple (H : k = h * g) :
     CompTriple (stabilizerEquivStabilizer hg)
