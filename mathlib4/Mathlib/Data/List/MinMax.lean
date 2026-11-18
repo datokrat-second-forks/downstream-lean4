@@ -219,6 +219,8 @@ theorem maximum_eq_bot {l : List α} : l.maximum = ⊥ ↔ l = [] :=
 theorem not_maximum_lt_of_mem : a ∈ l → (maximum l : WithBot α) = m → ¬m < a :=
   not_lt_of_mem_argmax
 
+set_option backward.isDefEq.respectTransparency.instances false in
+set_option backward.isDefEq.respectTransparency.instances.natural false in
 @[to_dual not_lt_minimum_of_mem']
 theorem not_maximum_lt_of_mem' (ha : a ∈ l) : ¬maximum l < (a : WithBot α) := by
   cases h : l.maximum <;> simp_all [not_maximum_lt_of_mem ha]
