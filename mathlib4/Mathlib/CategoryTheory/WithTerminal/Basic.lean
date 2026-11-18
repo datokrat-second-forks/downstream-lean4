@@ -120,11 +120,9 @@ def incl : C ⥤ WithTerminal C where
 instance : (incl : C ⥤ _).Full where
   map_surjective f := ⟨f, rfl⟩
 
-set_option backward.isDefEq.respectTransparency.instances false in
 @[to_dual]
 instance : (incl : C ⥤ _).Faithful where
 
-set_option backward.isDefEq.respectTransparency.instances false in
 /-- Map `WithTerminal` with respect to a functor `F : C ⥤ D`. -/
 @[to_dual (attr := implicit_reducible, simps)
 /-- Map `WithInitial` with respect to a functor `F : C ⥤ D`. -/]
@@ -139,7 +137,6 @@ def map {D : Type*} [Category* D] (F : C ⥤ D) : WithTerminal C ⥤ WithTermina
     | of _, star, _ => PUnit.unit
     | star, star, _ => PUnit.unit
 
-set_option backward.isDefEq.respectTransparency.instances false in
 /-- A natural isomorphism between the functor `map (𝟭 C)` and `𝟭 (WithTerminal C)`. -/
 @[to_dual (attr := simps!)
 /-- A natural isomorphism between the functor `map (𝟭 C)` and `𝟭 (WithInitial C)`. -/]
@@ -148,7 +145,6 @@ def mapId (C : Type*) [Category* C] : map (𝟭 C) ≅ 𝟭 (WithTerminal C) :=
     | of _ => Iso.refl _
     | star => Iso.refl _) (by cat_disch)
 
-set_option backward.isDefEq.respectTransparency.instances false in
 /-- A natural isomorphism between the functor `map (F ⋙ G) ` and `map F ⋙ map G `. -/
 @[to_dual (attr := simps!)
 /-- A natural isomorphism between the functor `map (F ⋙ G) ` and `map F ⋙ map G `. -/]
@@ -158,7 +154,6 @@ def mapComp {D E : Type*} [Category* D] [Category* E] (F : C ⥤ D) (G : D ⥤ E
     | of _ => Iso.refl _
     | star => Iso.refl _) (by cat_disch)
 
-set_option backward.isDefEq.respectTransparency.instances false in
 /-- From a natural transformation of functors `C ⥤ D`, the induced natural transformation
 of functors `WithTerminal C ⥤ WithTerminal D`. -/
 @[to_dual (attr := simps)
@@ -175,7 +170,6 @@ def map₂ {D : Type*} [Category* D] {F G : C ⥤ D} (η : F ⟶ G) : map F ⟶ 
     | of x, star, _ => rfl
     | star, star, _ => rfl
 
-set_option backward.isDefEq.respectTransparency.instances false in
 /-- The prelax functor from `Cat` to `Cat` defined with `WithTerminal`. -/
 @[to_dual (attr := simps, implicit_reducible)
 /-- The prelax functor from `Cat` to `Cat` defined with `WithInitial`. -/]

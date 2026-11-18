@@ -1160,7 +1160,6 @@ theorem monToLaxMonoidal_laxMonoidalToMon_obj_mul (F : Mon C) :
     μ[((monToLaxMonoidal C ⋙ laxMonoidalToMon C).obj F).X] = μ[F.X] ≫ 𝟙 _ :=
   rfl
 
-set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 @[to_additive]
@@ -1169,6 +1168,8 @@ theorem isMonHom_counitIsoAux (F : Mon C) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+-- Without this opt-out, the `@[simps!]` lemmas `counitIso_hom_app_hom` and `counitIso_inv_app_hom`
+-- (and their `AddMon` versions) get different statements.
 set_option backward.isDefEq.respectTransparency.instances false in
 /-- Implementation of `Mon.equivLaxMonoidalFunctorPUnit`. -/
 @[to_additive (attr := simps!)
