@@ -233,6 +233,7 @@ def directLimitCocone : Cocone (directLimitDiagram G f) where
         ext
         exact DirectLimit.of_f }
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 /-- The unbundled `directLimit` of modules is a colimit
 in the sense of `CategoryTheory`. -/

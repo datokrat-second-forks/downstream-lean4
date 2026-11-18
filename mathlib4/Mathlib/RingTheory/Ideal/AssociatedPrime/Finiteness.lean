@@ -48,6 +48,7 @@ def Submodule.IsQuotientEquivQuotientPrime (N₁ N₂ : Submodule A M) :=
 
 set_option backward.isDefEq.respectTransparency false in
 open LinearMap in
+set_option backward.isDefEq.respectTransparency.instances false in
 theorem Submodule.isQuotientEquivQuotientPrime_iff {N₁ N₂ : Submodule A M} :
     N₁.IsQuotientEquivQuotientPrime N₂ ↔
       ∃ x, Ideal.IsPrime ((⊥ : Submodule A (M ⧸ N₁)).colon {N₁.mkQ x}) ∧ N₂ = N₁ ⊔ span A {x} := by

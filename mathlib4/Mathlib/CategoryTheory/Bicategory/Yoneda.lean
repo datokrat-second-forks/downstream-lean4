@@ -75,6 +75,7 @@ def associatorNatIsoLeftCat (a : B) {b c d : B} (g : b ⟶ c) (h : c ⟶ d) :
       (postcomposingCat ..).obj (g ≫ h) :=
   Cat.Hom.isoMk <| NatIso.ofComponents (α_ · g h)
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The map on objects underlying the Yoneda embedding. It sends an object `x` to
@@ -100,6 +101,7 @@ def postcomp₂ {a b : B} (f : a ⟶ b) : yoneda₀ a ⟶ yoneda₀ b where
   app x := (postcomposingCat (unop x) a b).obj f
   naturality g := associatorNatIsoMiddleCat g.unop f
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- Postcomposing of `1`-morphisms seen as a functor from `a ⟶ b` to the hom-category of the

@@ -70,6 +70,7 @@ def grothendieckPrecompFunctorToComma : Grothendieck (R ⋙ functor L) ⥤ Comma
   obj P := ⟨P.fiber.left, P.base, P.fiber.hom⟩
   map f := ⟨f.fiber.left, f.base, by simp⟩
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Fibers of `grothendieckPrecompFunctorToComma L R`, composed with `Comma.fst L R`, are isomorphic
 to the projection `proj L (R.obj X)`. -/
