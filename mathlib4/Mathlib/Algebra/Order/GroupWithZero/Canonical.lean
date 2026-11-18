@@ -179,6 +179,7 @@ lemma denselyOrdered_units_iff [Nontrivial αˣ] : DenselyOrdered αˣ ↔ Dense
 
 end LinearOrderedCommGroupWithZero
 
+set_option backward.isDefEq.respectTransparency.instances.natural false in
 instance instLinearOrderedCommMonoidWithZeroMultiplicativeOrderDual
     [LinearOrderedAddCommMonoidWithTop α] :
     LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) where
