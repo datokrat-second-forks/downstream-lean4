@@ -247,6 +247,7 @@ alias isUnit_algebraMap_end_basicOpen := Scheme.Modules.isUnit_algebraMap_end_of
 
 end tilde
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 /-- This is the counit of the tilde-Gamma adjunction. -/
 noncomputable def Scheme.Modules.fromTildeΓ (M : (Spec R).Modules) :

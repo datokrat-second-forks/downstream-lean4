@@ -60,6 +60,7 @@ instance (F : C ⥤ D) [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D] :
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
 open Over in
+set_option backward.isDefEq.respectTransparency.instances false in
 instance (F : C ⥤ D) [∀ a b : C, HasProductsOfShape (a ⟶ b) D] :
     IsClosedUnderColimitsOfShape (fun f : Under F ↦ f.hom.Coequifibered) J := by
   have : IsClosedUnderIsomorphisms fun f : Under F ↦ f.hom.Coequifibered :=

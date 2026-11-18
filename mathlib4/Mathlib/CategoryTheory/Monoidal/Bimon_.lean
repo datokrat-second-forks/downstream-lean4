@@ -136,6 +136,7 @@ theorem ofMonComonObjX_mul (M : Mon (Comon C)) :
 set_option backward.isDefEq.respectTransparency false in
 attribute [local instance] ComonObj.instTensorUnit in
 attribute [local simp] MonObj.tensorObj.one_def MonObj.tensorObj.mul_def tensorμ in
+set_option backward.isDefEq.respectTransparency.instances false in
 /-- The object level part of the backward direction of `Comon (Mon C) ≌ Mon (Comon C)` -/
 @[simps]
 def ofMonComonObj (M : Mon (Comon C)) : Bimon C where

@@ -220,6 +220,7 @@ instance : ObjectProperty.EssentiallySmall.{u} (hasCardinalLTWithTerminal κ) wh
       ⟨⟨IsCardinalFiltered.of_equivalence κ e'.symm.equivalence⟩⟩⟩⟩,
         ⟨CardinalDirectedPoset.ι.preimageIso (PartOrdEmb.Iso.mk (by exact e'.symm))⟩⟩
 
+set_option backward.isDefEq.respectTransparency.instances false in
 set_option backward.isDefEq.respectTransparency false in
 lemma isCardinalPresentable_of_hasCardinalLT_of_le (J : CardinalDirectedPoset κ)
     {κ' : Cardinal.{u}} [Fact κ'.IsRegular] (hJ : HasCardinalLT J.obj κ') (h : κ ≤ κ') :
