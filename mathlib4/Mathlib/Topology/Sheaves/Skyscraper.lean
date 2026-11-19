@@ -72,6 +72,7 @@ def skyscraperPresheaf : Presheaf C X where
       simp only [dite_eq_left hW, dite_eq_left hV, eqToHom_trans]
     · dsimp; rw [dite_eq_right hW]; apply ((ite_eq_right hW).symm.ndrec terminalIsTerminal).hom_ext
 
+set_option backward.isDefEq.respectTransparency.instances.allMVars false in
 theorem skyscraperPresheaf_eq_pushforward
     [hd : ∀ U : Opens (TopCat.of PUnit.{u + 1}), Decidable (PUnit.unit ∈ U)] :
     skyscraperPresheaf p₀ A =
@@ -150,6 +151,7 @@ def skyscraperPresheafCoconeOfSpecializes {y : X} (h : p₀ ⤳ y) :
         · simp only [Functor.comp_obj, Functor.op_obj, skyscraperPresheaf_obj, unop_op,
             Functor.const_obj_obj, eqToHom_trans, Functor.const_obj_map, Category.comp_id] }
 
+set_option backward.isDefEq.respectTransparency.instances.allMVars false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /--
